@@ -64,7 +64,7 @@ import { close } from '../concepts/axium/qualities/close.quality';
 
 // const close: Action = {
 //     type: 'Axium Close'
-// }
+//
 
 // export function closeReducer(state: AxiumQuality, _action: Action) {
 //     state.subscribers.forEach(sub => sub.unsubscribe());
