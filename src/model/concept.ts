@@ -16,9 +16,12 @@ export type Mode = ([action, concept, action$, concepts$]: [
     BehaviorSubject<Concept[]>,
 ]) => void;
 
+export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];
+
 export type Quality = {
     action: Action;
     reducer: Reducer;
+    methodCreator?: MethodCreator;
     method?: Method;
     subject?: Subject<Action>;
 };
@@ -89,14 +92,12 @@ export function unifyConcepts(
 export function createQuality(
   action: Action,
   reducer: Reducer,
-  method?: Method,
-  subject?: Subject<Action>,
+  methodCreator?: MethodCreator
 ): Quality {
   return {
     action,
     reducer,
-    method,
-    subject,
+    methodCreator
   };
 }
 
@@ -104,7 +105,7 @@ export function defaultReducer(state: unknown, _: Action) {
   return state;
 }
 
-export function createDefaultMethodSubject(): [Method, Subject<Action>] {
+export const createDefaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();
   const defaultMethod: Method = defaultSubject.pipe<Action>(
     map((action: Action) => {
@@ -115,4 +116,4 @@ export function createDefaultMethodSubject(): [Method, Subject<Action>] {
     }),
   );
   return [defaultMethod, defaultSubject];
-}
+};

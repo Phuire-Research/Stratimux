@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
+import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
 import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';

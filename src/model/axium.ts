@@ -98,12 +98,15 @@ export function createAxium(initialConcepts: Concept[]) {
     concept.semaphore = _index;
     concept.qualities.forEach((quality, index) => {
       quality.action.semaphore = [_index, index, axiumState.generation];
-      if (quality.method) {
+      if (quality.methodCreator) {
+        const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
+        quality.method = method;
+        quality.subject = subject;
         const methodSub = quality.method.subscribe((action: Action) => {
           if (
             action.strategy &&
-                        action.type !== endOfActionStrategy.type &&
-                        action.type !== badAction.type
+            action.type !== endOfActionStrategy.type &&
+            action.type !== badAction.type
           ) {
             // Allows for reducer next in sequence
             action$.next(action);

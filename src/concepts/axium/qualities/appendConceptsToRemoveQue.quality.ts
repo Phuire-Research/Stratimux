@@ -1,5 +1,5 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, defaultReducer } from '../../../model/concept';
+import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
 import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
 import { Action, createAction } from '../../../model/action';
@@ -12,15 +12,6 @@ export type AppendConceptsToRemoveQuePayload = {
     concepts: Concept[]
 }
 
-const appendConceptsToRemoveQueSubject = new Subject<Action>();
-const appendConceptsToRemoveQueMethod: Method = appendConceptsToRemoveQueSubject.pipe<Action>(
-  map((action: Action) => {
-    if (action.strategy) {
-      return strategySuccess(action.strategy);
-    }
-    return endOfActionStrategy;
-  })
-);
 export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
   const payload = action.payload as AppendConceptsToRemoveQuePayload;
   let removeQue = state.removeConceptQue;
@@ -37,6 +28,5 @@ export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Acti
 export const appendConceptsToRemoveQueQuality = createQuality(
   appendConceptsToRemoveQue,
   appendConceptsToRemoveQueReducer,
-  appendConceptsToRemoveQueMethod,
-  appendConceptsToRemoveQueSubject
+  createDefaultMethodCreator
 );

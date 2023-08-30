@@ -1,3 +1,4 @@
+export { createAxium } from './model/axium';
 export type {
   ActionNode,
   ActionStrategy,
@@ -22,3 +23,5 @@ export type {
   Principle,
   Mode,
 } from './model/concept';
+export { selectState, selectConcept } from './model/selector';
+export { PrincipleFunction } from './model/principle';
