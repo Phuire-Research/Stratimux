@@ -1,8 +1,9 @@
-import { Subscriber } from 'npm:rxjs@^7.8.1';
-import { Action, Concept, Principle } from '../../../mod.ts';
-import { serverPrinciple } from './server.principle.ts';
-import { handleRequestQuality } from './qualities/handleRequest.quality.ts';
-import { createConcept } from '../../model/concept.ts';
+import { Subscriber } from 'rxjs';
+import { Concept, Principle } from '../../model/concept';
+import { Action  } from '../../model/action';
+import { serverPrinciple } from './server.principle';
+import { handleRequestQuality } from './qualities/handleRequest.quality';
+import { createConcept } from '../../model/concept';
 
 export type Server = {
     port: number;
@@ -11,13 +12,13 @@ export type Server = {
 }
 
 const initialServerState: Server = {
-    port: 8080,
-    routes: [] as unknown[],
-}
+  port: 8080,
+  routes: [] as unknown[],
+};
 
 export const serverConcept = createConcept(
-    'server',
-    initialServerState,
-    [handleRequestQuality],
-    [serverPrinciple]
-)
+  'server',
+  initialServerState,
+  [handleRequestQuality],
+  [serverPrinciple]
+);

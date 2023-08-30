@@ -1,17 +1,17 @@
-import { createConcept } from "../../model/concept.ts";
-import { clientWebSocketPrinciple } from "./client.principle.ts";
+import { createConcept } from '../../model/concept';
+import { clientWebSocketPrinciple } from './client.principle';
 
 export type Client = {
-    webSocketTarget: string;
+  webSocketTarget: string;
 };
 
 const initialClientState: Client = {
-    webSocketTarget: 'testing'
-}
+  webSocketTarget: 'testing'
+};
 
 export const clientConcept = createConcept(
-    'client',
-    initialClientState,
-    [],
-    [clientWebSocketPrinciple]
-)
+  'client',
+  initialClientState,
+  [],
+  [clientWebSocketPrinciple]
+);

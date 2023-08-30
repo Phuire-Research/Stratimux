@@ -1,12 +1,12 @@
-import { createConcept } from "../../model/concept.ts";
-import { clientServerPrinciple } from "./clientServer.principle.ts";
-import { appendRequestToQueQuality } from "./qualities/appendRequestEventToQue.quality.ts";
-import { handleClientServerRequestQuality } from "./qualities/handleClientServerRequest.quality.ts";
+import { createConcept } from '../../model/concept';
+import { clientServerPrinciple } from './clientServer.principle';
+import { appendRequestToQueQuality } from './qualities/appendRequestEventToQue.quality';
+import { handleClientServerRequestQuality } from './qualities/handleClientServerRequest.quality';
 
 export type ClientServer = {
     webSocketTarget: string;
     routes: routeHTML[];
-    requestQue: Deno.RequestEvent[]
+    // requestQue: Deno.RequestEvent[]
 };
 
 export type routeHTML = {
@@ -23,14 +23,14 @@ export type routeHTML = {
 }
 
 const initialClientServerState: ClientServer = {
-    webSocketTarget: 'testing',
-    routes: [],
-    requestQue: [],
-}
+  webSocketTarget: 'testing',
+  routes: [],
+  // requestQue: [],
+};
 
 export const clientServerConcept = createConcept(
-    'clientServer',
-    initialClientServerState,
-    [handleClientServerRequestQuality, appendRequestToQueQuality],
-    [clientServerPrinciple]
-)
+  'clientServer',
+  initialClientServerState,
+  [handleClientServerRequestQuality, appendRequestToQueQuality],
+  [clientServerPrinciple]
+);

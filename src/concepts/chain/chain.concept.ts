@@ -8,12 +8,12 @@ export type Chain = {
 };
 
 const initialChainState: Chain = {
-    actionQue: [],
+  actionQue: [],
 };
 
 export const chainConcept = createConcept(
-    'chain',
-    initialChainState,
-    [prepareChainQuality],
-    [chainPrinciple],
+  'chain',
+  initialChainState,
+  [prepareChainQuality],
+  [chainPrinciple],
 );

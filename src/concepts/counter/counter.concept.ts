@@ -1,27 +1,27 @@
-import { Concept } from '../../../mod.ts';
-import { addQuality } from './qualities/add.quality.ts';
-export { add } from './qualities/add.quality.ts';
-import { subtractQuality } from './qualities/subtract.quality.ts';
-export { subtract } from './qualities/subtract.quality.ts';
-import { chainCountQuality } from './qualities/chainCount.quality.ts';
-import { createConcept } from '../../model/concept.ts';
-export { chainCount } from './qualities/chainCount.quality.ts';
-export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy.ts';
+import { Concept } from '../../model/concept';
+import { addQuality } from './qualities/add.quality';
+export { add } from './qualities/add.quality';
+import { subtractQuality } from './qualities/subtract.quality';
+export { subtract } from './qualities/subtract.quality';
+import { chainCountQuality } from './qualities/chainCount.quality';
+import { createConcept } from '../../model/concept';
+export { chainCount } from './qualities/chainCount.quality';
+export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
 export type Counter = {
     count: number
 }
 
 const initialCounterState: Counter = {
-    count: 0
-}
+  count: 0
+};
 
 export const counterConcept = createConcept(
-    'counter',
-    initialCounterState,
-    [
-        addQuality,
-        subtractQuality,
-        chainCountQuality
-    ]
-)
+  'counter',
+  initialCounterState,
+  [
+    addQuality,
+    subtractQuality,
+    chainCountQuality
+  ]
+);
