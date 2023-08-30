@@ -1,13 +1,15 @@
-import { assertEquals } from 'https://deno.land/std@0.167.0/testing/asserts.ts';
-import { createAxium, Concept, strategyBegin, selectState } from '../../mod.ts';
-import { Counter, counterConcept, countingStrategy, primedCountingStrategy } from '../concepts/counter/counter.concept.ts';
-import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy.ts';
-import { log } from '../concepts/axium/qualities/log.quality.ts';
-import { AxiumState } from '../concepts/axium/axium.concept.ts';
+import { createAxium } from '../model/axium';
+import { Concept } from '../model/concept';
+import { strategyBegin } from '../model/actionStrategy';
+import { selectState } from '../model/selector';
+import { Counter, counterConcept, countingStrategy, primedCountingStrategy } from '../concepts/counter/counter.concept';
+import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
+import { log } from '../concepts/axium/qualities/log.quality';
+import { AxiumState } from '../concepts/axium/axium.concept';
 
-Deno.test('Axium Add Concepts Strategy Test', async () => {
+test('Axium add Concepts Strategy Test', () => {
   let count = 0;
-  const axium = await createAxium([]);
+  const axium = createAxium([]);
   console.log('Add Concepts Begin');
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
@@ -26,7 +28,9 @@ Deno.test('Axium Add Concepts Strategy Test', async () => {
         exists = true;
         axium.dispatch(strategyBegin(countingStrategy()));
       }
-      assertEquals(true, exists);
+      it('Should have added the Counter Concept', () => {
+        expect(exists).toBe(true);
+      });
       // sub.unsubscribe();
     }
     if (count > 2) {
@@ -35,7 +39,9 @@ Deno.test('Axium Add Concepts Strategy Test', async () => {
     }
     if (count === 7) {
       const counter = selectState<Counter>(concepts, counterConcept.key);
-      assertEquals(1, counter.count);
+      it('Should count to 1', () => {
+        expect(counter.count).toBe(1);
+      });
     }
   });
 });

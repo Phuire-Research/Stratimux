@@ -1,18 +1,32 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
-import { createAxium, Concept, selectState } from '../../mod.ts';
-import { Counter, counterConcept  } from '../concepts/counter/counter.concept.ts';
+import { createAxium  } from '../model/axium';
+import { Concept } from '../model/concept';
+import { selectState } from '../model/selector';
+import { Counter, counterConcept  } from '../concepts/counter/counter.concept';
 
-Deno.test( "Axium Selector Test", async () => {
+test('Axium Selector Test', () => {
+  it('Counts to 10', async () => {
     const counter = counterConcept;
     const counterState = counterConcept.state as Counter;
     counterState.count = 10;
     const axium = await createAxium([counter]);
     const sub = axium.subscribe((concepts: Concept[]) => {
-        const state = selectState<Counter>(concepts, counter.key);
-        console.log(`Count: ${state.count}`);
-        assertEquals(state.count, 10);
+      const state = selectState<Counter>(concepts, counter.key);
+      expect(state.count).toBe(10);
     });
-},
-    // sanitizeResources: false,
-    // sanitizeOps: false,
-)
+  }, 200);
+});
+
+// Deno.test( 'Axium Selector Test', async () => {
+//   const counter = counterConcept;
+//   const counterState = counterConcept.state as Counter;
+//   counterState.count = 10;
+//   const axium = await createAxium([counter]);
+//   const sub = axium.subscribe((concepts: Concept[]) => {
+//     const state = selectState<Counter>(concepts, counter.key);
+//     console.log(`Count: ${state.count}`);
+//     assertEquals(state.count, 10);
+//   });
+// },
+//   // sanitizeResources: false,
+//   // sanitizeOps: false,
+// );
