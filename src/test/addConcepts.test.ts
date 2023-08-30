@@ -7,7 +7,7 @@ import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategi
 import { log } from '../concepts/axium/qualities/log.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
 
-test('Axium add Concepts Strategy Test', () => {
+test('Axium add Concepts Strategy Test', (done) => {
   let count = 0;
   const axium = createAxium([]);
   console.log('Add Concepts Begin');
@@ -28,9 +28,7 @@ test('Axium add Concepts Strategy Test', () => {
         exists = true;
         axium.dispatch(strategyBegin(countingStrategy()));
       }
-      it('Should have added the Counter Concept', () => {
-        expect(exists).toBe(true);
-      });
+      expect(exists).toBe(true);
       // sub.unsubscribe();
     }
     if (count > 2) {
@@ -39,9 +37,8 @@ test('Axium add Concepts Strategy Test', () => {
     }
     if (count === 7) {
       const counter = selectState<Counter>(concepts, counterConcept.key);
-      it('Should count to 1', () => {
-        expect(counter.count).toBe(1);
-      });
+      expect(counter.count).toBe(1);
+      done();
     }
   });
 });

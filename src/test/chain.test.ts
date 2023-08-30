@@ -6,34 +6,33 @@ import { Counter, counterConcept, chainCount, add, subtract } from '../concepts/
 import { chainConcept } from '../concepts/chain/chain.concept';
 import { PrepareChainPayload, prepareChain } from '../concepts/chain/qualities/prepareChain.quality';
 
-test('Axium Test', async () => {
-  it('Should Count to 2', async () => {
-    const axium = await createAxium([counterConcept, chainConcept]);
-    // ax.subscribe(val=> console.log(val));
-    // ax.subscribe(val => console.log('this value', val));
-    let count = 0;
-    const sub = axium.subscribe((concepts: Concept[]) => {
-      count++;
-      if (count === 1) {
-        const primedPrepareChain = primeAction(concepts, prepareChain);
-        const primedAdd = primeAction(concepts, add);
-        const primedSubtract = primeAction(concepts, subtract);
-        primedPrepareChain.payload = {
-          actions: [
-            primedAdd,
-            primedAdd,
-            primedSubtract,
-            primedAdd,
-            primedSubtract,
-            primedAdd,
-          ]} as PrepareChainPayload;
-        axium.dispatch(primedPrepareChain);
-      }
-      else if (count === 7) {
-        const counter = selectState<Counter>(concepts, counterConcept.key);
-        expect(counter.count).toBe(2);
-        sub.unsubscribe();
-      }
-    });
-  }, 200);
+test('Axium Test', (done) => {
+  const axium = createAxium([counterConcept, chainConcept]);
+  // ax.subscribe(val=> console.log(val));
+  // ax.subscribe(val => console.log('this value', val));
+  let count = 0;
+  const sub = axium.subscribe((concepts: Concept[]) => {
+    count++;
+    if (count === 1) {
+      const primedPrepareChain = primeAction(concepts, prepareChain);
+      const primedAdd = primeAction(concepts, add);
+      const primedSubtract = primeAction(concepts, subtract);
+      primedPrepareChain.payload = {
+        actions: [
+          primedAdd,
+          primedAdd,
+          primedSubtract,
+          primedAdd,
+          primedSubtract,
+          primedAdd,
+        ]} as PrepareChainPayload;
+      axium.dispatch(primedPrepareChain);
+    }
+    else if (count === 7) {
+      const counter = selectState<Counter>(concepts, counterConcept.key);
+      expect(counter.count).toBe(2);
+      sub.unsubscribe();
+      done();
+    }
+  });
 });

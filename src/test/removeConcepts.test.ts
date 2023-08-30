@@ -7,32 +7,31 @@ import { addConceptsToRemovalQueThenBlockStrategy } from '../concepts/axium/stra
 import { log } from '../concepts/axium/qualities/log.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
 
-test('Axium remove Concepts Strategy Test', async () => {
-  it('Counter should not Exist', async () => {
-    let count = 0;
-    const axium = await createAxium([counterConcept]);
-    console.log('Remove Concepts Begin');
-    const sub = axium.subscribe((concepts: Concept[]) => {
-      count++;
-      // const counter = selectState<Counter>(concepts, counterConcept.key);
-      console.log(`${count}: Loaded Concepts: ${concepts.length}`);
-      if (count === 1) {
-        axium.dispatch(
-          strategyBegin(
-            addConceptsToRemovalQueThenBlockStrategy(concepts,[counterConcept])
-          )
-        );
-      }
-      if (count === 2) {
-        let exists = false;
-        concepts.forEach(concept => {
-          if (concept.key === counterConcept.key) {
-            exists = true;
-          }
-        });
-        expect(exists).toBe(false);
-      }
+test('Axium remove Concepts Strategy Test', (done) => {
+  let count = 0;
+  const axium = createAxium([counterConcept]);
+  console.log('Remove Concepts Begin');
+  const sub = axium.subscribe((concepts: Concept[]) => {
+    count++;
+    // const counter = selectState<Counter>(concepts, counterConcept.key);
+    console.log(`${count}: Loaded Concepts: ${concepts.length}`);
+    if (count === 1) {
+      axium.dispatch(
+        strategyBegin(
+          addConceptsToRemovalQueThenBlockStrategy(concepts,[counterConcept])
+        )
+      );
+    }
+    if (count === 2) {
+      let exists = false;
+      concepts.forEach(concept => {
+        if (concept.key === counterConcept.key) {
+          exists = true;
+        }
+      });
+      expect(exists).toBe(false);
+      done();
+    }
     // sub.unsubscribe();
-    });
-  }, 200);
+  });
 });

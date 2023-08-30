@@ -3,17 +3,16 @@ import { Concept } from '../model/concept';
 import { selectState } from '../model/selector';
 import { Counter, counterConcept  } from '../concepts/counter/counter.concept';
 
-test('Axium Selector Test', () => {
-  it('Counts to 10', async () => {
-    const counter = counterConcept;
-    const counterState = counterConcept.state as Counter;
-    counterState.count = 10;
-    const axium = await createAxium([counter]);
-    const sub = axium.subscribe((concepts: Concept[]) => {
-      const state = selectState<Counter>(concepts, counter.key);
-      expect(state.count).toBe(10);
-    });
-  }, 200);
+test('Axium Selector Test', (done) => {
+  const counter = counterConcept;
+  const counterState = counterConcept.state as Counter;
+  counterState.count = 10;
+  const axium = createAxium([counter]);
+  const sub = axium.subscribe((concepts: Concept[]) => {
+    const state = selectState<Counter>(concepts, counter.key);
+    expect(state.count).toBe(10);
+    done();
+  });
 });
 
 // Deno.test( 'Axium Selector Test', async () => {
