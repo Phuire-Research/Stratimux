@@ -3,7 +3,9 @@ import { Action } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { endOfActionStrategy, strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
+import { KeyedSelector } from './selector';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
 
 export type Method = Observable<Action>;
@@ -32,8 +34,11 @@ export type Concept = {
   state: unknown;
   qualities: Quality[];
   principles?: PrincipleFunction[];
+  keyedStateSelectors?: KeyedSelector<unknown, keyof unknown>[];
   mode?: Mode[];
 };
+
+
 
 // deno-lint-ignore no-explicit-any
 
@@ -42,6 +47,7 @@ export function createConcept(
   state: unknown,
   qualities: Quality[],
   principles?: PrincipleFunction[],
+  keyedStateSelectors?: KeyedSelector<unknown, keyof unknown>[],
   mode?: Mode[],
 ): Concept {
   return {
@@ -49,45 +55,47 @@ export function createConcept(
     state,
     qualities,
     principles,
-    mode,
+    keyedStateSelectors,
+    mode
   };
 }
 
-export function unifyConcepts(
-  baseConcept: Concept,
-  targetConcept: Concept,
-  key?: string,
-): Concept {
-  const baseConceptState = baseConcept.state as object;
-  const targetConceptState = targetConcept.state as object;
-  let baseConceptPrinciples: PrincipleFunction[] = [];
-  if (baseConcept.principles) {
-    baseConceptPrinciples = baseConcept.principles;
-  }
-  let targetConceptPrinciples: PrincipleFunction[] = [];
-  if (targetConcept.principles) {
-    targetConceptPrinciples = targetConcept.principles;
-  }
-  let baseConceptMode: Mode[] = [];
-  if (baseConcept.mode) {
-    baseConceptMode = baseConcept.mode;
-  }
-  let targetConceptMode: Mode[] = [];
-  if (targetConcept.mode) {
-    targetConceptMode = targetConcept.mode;
-  }
+// Worry about this Functionality Later
+// export function unifyConcepts(
+//   baseConcept: Concept,
+//   targetConcept: Concept,
+//   key?: string,
+// ): Concept {
+//   const baseConceptState = baseConcept.state as object;
+//   const targetConceptState = targetConcept.state as object;
+//   let baseConceptPrinciples: PrincipleFunction[] = [];
+//   if (baseConcept.principles) {
+//     baseConceptPrinciples = baseConcept.principles;
+//   }
+//   let targetConceptPrinciples: PrincipleFunction[] = [];
+//   if (targetConcept.principles) {
+//     targetConceptPrinciples = targetConcept.principles;
+//   }
+//   let baseConceptMode: Mode[] = [];
+//   if (baseConcept.mode) {
+//     baseConceptMode = baseConcept.mode;
+//   }
+//   let targetConceptMode: Mode[] = [];
+//   if (targetConcept.mode) {
+//     targetConceptMode = targetConcept.mode;
+//   }
 
-  return {
-    key: key ? key : targetConcept.key,
-    qualities: [...baseConcept.qualities, ...targetConcept.qualities],
-    state: {
-      ...baseConceptState,
-      ...targetConceptState,
-    },
-    principles: [...baseConceptPrinciples, ...targetConceptPrinciples],
-    mode: [...baseConceptMode, ...targetConceptMode],
-  };
-}
+//   return {
+//     key: key ? key : targetConcept.key,
+//     qualities: [...baseConcept.qualities, ...targetConcept.qualities],
+//     state: {
+//       ...baseConceptState,
+//       ...targetConceptState,
+//     },
+//     principles: [...baseConceptPrinciples, ...targetConceptPrinciples],
+//     mode: [...baseConceptMode, ...targetConceptMode],
+//   };
+// }
 
 export function createQuality(
   action: Action,

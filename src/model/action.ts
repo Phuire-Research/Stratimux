@@ -1,11 +1,13 @@
 import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
+import { KeyedSelector } from './selector';
 
 export type Action = {
     type: string;
     semaphore: [number, number, number];
     payload?: unknown;
     strategy?: ActionStrategy;
+    keyedSelectors?: KeyedSelector<unknown, keyof unknown>[]
 };
 
 export function primeAction(concepts: Concept[], action: Action): Action {
