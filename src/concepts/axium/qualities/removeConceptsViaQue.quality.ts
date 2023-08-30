@@ -1,5 +1,5 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Mode, Quality, Reducer, defaultReducer } from '../../../model/concept';
+import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
 import { KeyedSub } from '../axium.concept';
 import { Action, } from '../../../model/action';
 import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
@@ -10,16 +10,6 @@ import { createQuality } from '../../../model/concept';
 
 export const removeConceptsViaQue: Action =
     createAction('Axium Remove Concepts via Removal Concept Que');
-
-const removeConceptsViaQueSubject = new Subject<Action>();
-const removeConceptsViaQueMethod: Method = removeConceptsViaQueSubject.pipe<Action>(
-  map((action: Action) => {
-    if (action.strategy) {
-      return strategySuccess(action.strategy);
-    }
-    return endOfActionStrategy;
-  })
-);
 
 export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
   const methodSubscribers = state.methodSubscribers;
@@ -69,6 +59,5 @@ export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) 
 export const removeConceptsViaQueQuality = createQuality(
   removeConceptsViaQue,
   removeConceptsViaQueReducer,
-  removeConceptsViaQueMethod,
-  removeConceptsViaQueSubject
+  createDefaultMethodCreator
 );

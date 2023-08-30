@@ -1,5 +1,5 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, defaultReducer } from '../../../model/concept';
+import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
@@ -13,16 +13,6 @@ export type SetBlockingModePayload = {
     concepts: Concept[]
 }
 
-const setBlockingModeSubject = new Subject<Action>();
-const setBlockingModeMethod: Method = setBlockingModeSubject.pipe<Action>(
-  map((action: Action) => {
-    if (action.strategy) {
-      return strategySuccess(action.strategy);
-    }
-    // console.log('Logging: ', action);
-    return endOfActionStrategy;
-  })
-);
 export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(keyed => keyed.subscriber.unsubscribe());
@@ -62,6 +52,5 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
 export const setBlockingModeQuality = createQuality(
   setBlockingMode,
   setBlockingModeReducer,
-  setBlockingModeMethod,
-  setBlockingModeSubject
+  createDefaultMethodCreator
 );

@@ -1,5 +1,5 @@
 import { map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, Principle  } from '../../../model/concept';
+import { Concept, Method, Quality, Reducer, Principle, createDefaultMethodCreator  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action } from '../../../model/action';
 import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
@@ -13,16 +13,6 @@ export const initializePrinciples: Action =
 export type InitializePrinciplesPayload = {
     concepts: Concept[];
 }
-
-const initializePrinciplesSubject = new Subject<Action>();
-const initializePrinciplesMethod: Method = initializePrinciplesSubject.pipe<Action>(
-  map((action: Action) => {
-    if (action.strategy) {
-      return strategySuccess(action.strategy);
-    }
-    return endOfActionStrategy;
-  })
-);
 
 export function initializePrinciplesReducer(state: AxiumState, _action: Action) {
   const payload = _action.payload as InitializePrinciplesPayload;
@@ -50,6 +40,5 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action) 
 export const initializePrinciplesQuality = createQuality(
   initializePrinciples,
   initializePrinciplesReducer,
-  initializePrinciplesMethod,
-  initializePrinciplesSubject
+  createDefaultMethodCreator
 );
