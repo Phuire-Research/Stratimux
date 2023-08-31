@@ -13,6 +13,7 @@
 
 // export interface OwnershipTicket {
 //   ticket: number;
+//// key = semaphore[0] + keyedSelector.key
 //   key: string;
 // }
 
