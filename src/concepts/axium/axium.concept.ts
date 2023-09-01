@@ -22,6 +22,7 @@ import { appendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRe
 import { removeConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
 import { createConcept } from '../../model/concept';
 export { setDefaultMode } from './qualities/setDefaultMode.quality';
+import { setModeQuality } from './qualities/setMode.quality';
 
 export type KeyedSub = {
   key: string;
@@ -29,6 +30,7 @@ export type KeyedSub = {
 }
 
 export type AxiumState = {
+  open: boolean;
   logging: boolean;
   generation: number;
   modeIndex: number;
@@ -43,6 +45,7 @@ export type AxiumState = {
 }
 
 const initialAxiumState: AxiumState = {
+  open: false,
   logging: true,
   generation: 0,
   modeIndex: 0,
@@ -70,7 +73,8 @@ export const _axium = createConcept(
     addConceptsFromQueQuality,
     appendConceptsToAddQueQuality,
     appendConceptsToRemoveQueQuality,
-    removeConceptsViaQueQuality
+    removeConceptsViaQueQuality,
+    setModeQuality
   ],
   [axiumPrinciple],
   [],

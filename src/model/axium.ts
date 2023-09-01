@@ -146,7 +146,7 @@ export function createAxium(initialConcepts: Concept[]) {
       // This will be where the Ownership Principle will be Loaded
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
-      catchError((err: any, caught: Observable<[Action, Concept[]]>) => {
+      catchError((err: unknown, caught: Observable<[Action, Concept[]]>) => {
         // Will need to Refine this Function Continuously
         console.error('ACTION STREAM ERROR', err);
         return caught;
@@ -159,11 +159,7 @@ export function createAxium(initialConcepts: Concept[]) {
       const modeIndex = _axiumState.modeIndex;
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
-      if (action.type !== setBlockingMode.type) {
-        mode([action, _concepts, action$, concepts$]);
-      } else {
-        blockingMode([action, _concepts, action$, concepts$]);
-      }
+      mode([action, _concepts, action$, concepts$]);
     });
 
   axiumState = concepts[0].state as AxiumState;

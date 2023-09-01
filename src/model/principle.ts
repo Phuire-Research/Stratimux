@@ -1,6 +1,8 @@
-import { Observable, Subject, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
 import { Concept } from './concept';
-import { Action } from './action';
+import { Action, primeAction } from './action';
+import { registerSubscriber, RegisterSubscriberPayload } from '../concepts/axium/qualities/registerSubscriber.quality';
+import { _axium } from '../concepts/axium/axium.concept';
 
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -16,4 +18,10 @@ export function createPrinciple$(
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc(obs, concepts, concepts$);
   });
+}
+
+export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concept[], subscriber: Subscription) {
+  const primedRegisterSubscriber = primeAction(concepts, registerSubscriber);
+  primedRegisterSubscriber.payload = { subscriber, key: _axium.key } as RegisterSubscriberPayload;
+  observer.next(primedRegisterSubscriber);
 }

@@ -38,8 +38,6 @@ export type Concept = {
   mode?: Mode[];
 };
 
-
-
 // deno-lint-ignore no-explicit-any
 
 export function createConcept(

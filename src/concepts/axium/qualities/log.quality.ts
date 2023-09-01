@@ -21,7 +21,6 @@ const createLogMethodCreator: MethodCreator = () => {
   ];
 };
 
-
 export const logQuality = createQuality(
   log,
   defaultReducer,
