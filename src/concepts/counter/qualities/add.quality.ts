@@ -5,6 +5,7 @@ import { strategySuccess, endOfActionStrategy } from '../../../model/actionStrat
 import { Counter } from '../counter.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { keyedSelectCount } from '../counter.selector';
 
 export const add: Action = createAction('Counter Add');
 
@@ -36,4 +37,5 @@ export const addQuality = createQuality(
   add,
   addReducer,
   addMethodCreator,
+  [keyedSelectCount]
 );

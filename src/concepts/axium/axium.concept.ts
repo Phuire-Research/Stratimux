@@ -77,6 +77,5 @@ export const _axium = createConcept(
     setModeQuality
   ],
   [axiumPrinciple],
-  [],
   [blockingMode, defaultMode]
 );

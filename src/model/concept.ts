@@ -26,6 +26,8 @@ export type Quality = {
     methodCreator?: MethodCreator;
     method?: Method;
     subject?: Subject<Action>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    keyedSelectors?: KeyedSelector<any, any>[]
 };
 
 export type Concept = {
@@ -34,7 +36,6 @@ export type Concept = {
   state: unknown;
   qualities: Quality[];
   principles?: PrincipleFunction[];
-  keyedStateSelectors?: KeyedSelector<unknown, keyof unknown>[];
   mode?: Mode[];
 };
 
@@ -45,7 +46,6 @@ export function createConcept(
   state: unknown,
   qualities: Quality[],
   principles?: PrincipleFunction[],
-  keyedStateSelectors?: KeyedSelector<unknown, keyof unknown>[],
   mode?: Mode[],
 ): Concept {
   return {
@@ -53,7 +53,6 @@ export function createConcept(
     state,
     qualities,
     principles,
-    keyedStateSelectors,
     mode
   };
 }
@@ -98,12 +97,15 @@ export function createConcept(
 export function createQuality(
   action: Action,
   reducer: Reducer,
-  methodCreator?: MethodCreator
+  methodCreator?: MethodCreator,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyedSelectors?: KeyedSelector<any, any>[]
 ): Quality {
   return {
     action,
     reducer,
-    methodCreator
+    methodCreator,
+    keyedSelectors
   };
 }
 

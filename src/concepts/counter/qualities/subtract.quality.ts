@@ -4,6 +4,7 @@ import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept'
 import { Counter } from '../counter.concept';
 import { Action, createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { keyedSelectCount } from '../counter.selector';
 
 export const subtract: Action = createAction('Counter Subtract');
 
@@ -31,9 +32,9 @@ const subtractMethodCreator: MethodCreator = () => {
   ];
 };
 
-
 export const subtractQuality = createQuality(
   subtract,
   subtractReducer,
   subtractMethodCreator,
+  [keyedSelectCount]
 );

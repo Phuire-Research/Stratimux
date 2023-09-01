@@ -2,6 +2,7 @@ import { Concept } from './concept';
 
 export type Selector<T, R> = (state: T) => R;
 export type KeyedSelector<T, K extends keyof T> = {
+  conceptKey: string,
   key: K,
   selector: Selector<T, unknown>
 };

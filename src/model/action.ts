@@ -1,13 +1,16 @@
 import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
+import { OwnershipTicket } from './ownership';
 
 export type Action = {
     type: string;
     semaphore: [number, number, number];
     payload?: unknown;
     strategy?: ActionStrategy;
-    keyedSelectors?: KeyedSelector<unknown, keyof unknown>[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    keyedSelectors?: KeyedSelector<any, any>[];
+    stubs?: OwnershipTicket[];
 };
 
 export function primeAction(concepts: Concept[], action: Action): Action {
