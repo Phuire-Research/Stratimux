@@ -6,6 +6,7 @@ import { log } from '../qualities/log.quality';
 import { open } from '../qualities/open.quality';
 import type { RegisterStreamsPayload } from '../qualities/registerStreams.quality';
 
+export const initializeKey = 'Axium Initialize';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
   const primedInit = primeAction(concepts, initializePrinciples);
   const primedRegister = primeAction(concepts, registerStreams);
@@ -39,6 +40,7 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
   };
 
   const params: ActionStrategyParameters = {
+    key: initializeKey,
     initialNode: stepOne,
   };
 

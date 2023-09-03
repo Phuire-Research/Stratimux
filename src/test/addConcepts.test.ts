@@ -2,10 +2,11 @@ import { createAxium } from '../model/axium';
 import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, countingStrategy, primedCountingStrategy } from '../concepts/counter/counter.concept';
+import { Counter, counterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
 import { log } from '../concepts/axium/qualities/log.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
+import { countingKey } from '../concepts/counter/strategies/counting.strategy';
 
 test('Axium add Concepts Strategy Test', (done) => {
   let count = 0;
@@ -22,7 +23,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         )
       );
     }
-    if (count === 2) {
+    if (count === 3) {
       let exists = false;
       if (concepts[1].key === counterConcept.key) {
         exists = true;
@@ -31,12 +32,13 @@ test('Axium add Concepts Strategy Test', (done) => {
       expect(exists).toBe(true);
       // sub.unsubscribe();
     }
-    if (count > 2) {
-      const counter = selectState<Counter>(concepts, counterConcept.key);
+    if (count > 3) {
+      const counter = selectState<Counter>(concepts, counterKey);
       console.log('Counter: ', counter.count);
     }
-    if (count === 7) {
-      const counter = selectState<Counter>(concepts, counterConcept.key);
+    const axiumState = concepts[0].state as AxiumState;
+    if (axiumState.lastStrategy === countingKey) {
+      const counter = selectState<Counter>(concepts, counterKey);
       expect(counter.count).toBe(1);
       done();
     }

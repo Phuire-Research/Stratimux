@@ -9,6 +9,7 @@ import { AppendConceptsToAddQuePayload, appendConceptsToAddQue } from '../qualit
 import { open } from '../qualities/open.quality';
 
 // Step One to Add Concepts to Axium
+export const addConceptsToAddQueThenBlockKey = 'Add Concepts to add que then set Axium Mode to Blocking';
 export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]) {
   // const primedSetBlockingMode = primeAction(conceptualSet, setBlockingMode);
   // const primedAppendConceptsToAddQue = primeAction(conceptualSet, appendConceptsToAddQue);
@@ -28,11 +29,13 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   };
 
   const params: ActionStrategyParameters = {
+    key: addConceptsToAddQueThenBlockKey,
     initialNode: stepOne
   };
   return createStrategy(params);
 }
 // Step Two
+export const addConceptsFromQueThenUnblockKey = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
   const primedAddConceptsFromQue = primeAction(conceptualSet, addConceptsFromQue);
   const primedSetDefaultMode = primeAction(conceptualSet, setDefaultMode);
@@ -49,6 +52,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
   };
 
   const params: ActionStrategyParameters = {
+    key: addConceptsFromQueThenUnblockKey,
     initialNode: stepOne,
   };
 

@@ -11,13 +11,15 @@ export type Server = {
     handleRequestAction?: Action
 }
 
+export const serverKey = 'server';
+
 const initialServerState: Server = {
   port: 8080,
   routes: [] as unknown[],
 };
 
 export const serverConcept = createConcept(
-  'server',
+  serverKey,
   initialServerState,
   [handleRequestQuality],
   [serverPrinciple]

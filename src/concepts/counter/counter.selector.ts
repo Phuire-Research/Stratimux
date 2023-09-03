@@ -1,10 +1,10 @@
 import { Counter } from './counter.concept';
 import { Selector, KeyedSelector } from '../../model/selector';
-import {counterConcept} from './counter.concept';
+import {counterKey} from './counter.concept';
 
 export const selectCount: Selector<Counter, number> = (state: Counter) => state.count;
 export const keyedSelectCount: KeyedSelector<Counter, 'count'> = {
-  conceptKey: counterConcept.key,
+  conceptKey: counterKey,
   key: 'count',
   selector: selectCount
 };

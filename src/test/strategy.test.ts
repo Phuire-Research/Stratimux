@@ -2,7 +2,9 @@ import { createAxium } from '../model/axium';
 import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, countingStrategy, primedCountingStrategy } from '../concepts/counter/counter.concept';
+import { Counter, counterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
+import { AxiumState } from '../concepts/axium/axium.concept';
+import { countingKey } from '../concepts/counter/strategies/counting.strategy';
 
 test('Axium Counting Strategy Test', (done) => {
   let count = 0;
@@ -12,11 +14,15 @@ test('Axium Counting Strategy Test', (done) => {
     if (count ===  1) {
       axium.dispatch(strategyBegin(countingStrategy()));
     }
-    const counter = selectState<Counter>(concepts, counterConcept.key);
+    const counter = selectState<Counter>(concepts, counterKey);
     console.log(`Fires: ${count} Count: ${counter.count}`);
     if (count === 6) {
       console.log(`FINAL: Fires: ${count} Count: ${counter.count}`);
       expect(counter.count).toBe(1);
+    }
+    const axiumState = concepts[0].state as AxiumState;
+    if (axiumState.lastStrategy === countingKey) {
+      console.log(axiumState.dialog);
       sub.unsubscribe();
       done();
     }

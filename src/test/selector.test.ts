@@ -1,7 +1,7 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept  } from '../concepts/counter/counter.concept';
+import { Counter, counterConcept, counterKey  } from '../concepts/counter/counter.concept';
 
 test('Axium Selector Test', (done) => {
   const counter = counterConcept;
@@ -9,7 +9,7 @@ test('Axium Selector Test', (done) => {
   counterState.count = 10;
   const axium = createAxium([counter]);
   const sub = axium.subscribe((concepts: Concept[]) => {
-    const state = selectState<Counter>(concepts, counter.key);
+    const state = selectState<Counter>(concepts, counterKey);
     expect(state.count).toBe(10);
     done();
   });

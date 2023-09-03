@@ -9,13 +9,15 @@ export type Server = {
     routes: unknown[];
 };
 
+export const webSocketKey = 'Web Socket';
+
 const initialWebSocketState: Server = {
   port: 7070,
   routes: [] as unknown[],
 };
 
 export const webSocketConcept = createConcept(
-  'webSocket',
+  webSocketKey,
   initialWebSocketState,
   [handleRequestQuality],
   [webSocketPrinciple],

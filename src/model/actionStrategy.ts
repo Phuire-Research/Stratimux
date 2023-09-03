@@ -1,7 +1,7 @@
 import { Action, createAction } from './action';
 
 export const endOfActionStrategy: Action = createAction(
-  '[ActionStrategy] EndOfActionStrategy',
+  'End of Action Strategy',
 );
 
 /**
@@ -23,7 +23,7 @@ export interface ActionNode {
   successNode: ActionNode | null;
   failureNode?: ActionNode;
   payload?: unknown;
-  decisionNodes?: ActionNode[];
+  decisionNodes?: Record<string, ActionNode>;
 }
 
 /**
@@ -35,10 +35,13 @@ export interface ActionNode {
  */
 
 export interface ActionStrategyParameters {
+  key: string;
   payload?: unknown;
   initialNode: ActionNode;
+  prepend?: string
 }
 export interface ActionStrategy {
+  key: string;
   payload: unknown;
   currentNode: ActionNode;
   actionList: Array<string>;
@@ -52,12 +55,13 @@ export function createStrategy(
   const payload: unknown = params.payload;
   const currentNode: ActionNode = params.initialNode;
   const actionList: Array<string> =
-        params.initialNode !== null
-          ? ['[INITIAL ACTION]: ' + params.initialNode.action.type]
-          : ([] as Array<string>);
+        params.prepend === undefined
+          ? [`${params.initialNode.action.type}.`]
+          : ([`${params.prepend} ${params.initialNode.action.type}.`] as Array<string>);
   const lastAction: Action = params.initialNode.action;
 
   return {
+    key: params.key,
     payload,
     currentNode,
     actionList,
@@ -67,6 +71,7 @@ export function createStrategy(
 
 export const strategyBegin = (strategy: ActionStrategy): Action => {
   strategy.currentNode.action.strategy = {
+    key: strategy.key,
     payload: strategy.payload,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
@@ -97,7 +102,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
     strategy.currentNode = strategy.currentNode.successNode;
   } else {
     strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+    strategy.actionList.push('\n');
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
@@ -106,17 +111,20 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
                 strategy.puntedStrategy.shift() as ActionStrategy;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
+        `Then ${nextStrategy.currentNode.action.type}.`,
       ];
       return strategyBegin(nextStrategy);
     }
-    return endOfActionStrategy;
+    const end = {...endOfActionStrategy};
+    end.strategy = strategy;
+    return end;
   }
   strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push('Success: ' + nextAction.type);
+  strategy.actionList.push(`Success with ${nextAction.type}.`);
   strategy.lastAction = nextAction;
   nextAction = { ...nextAction };
   nextAction.strategy = {
+    key: strategy.key,
     payload: strategy.payload,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
@@ -148,21 +156,19 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
   ) {
     nextAction = strategy.currentNode.failureNode.action;
     if (strategy.currentNode) {
-      // Question, why does NGRX set these Properties to readonly?
-      // This is a ridiculous workaround to get around that.
       strategy = { ...strategy };
       strategy.currentNode = { ...strategy.currentNode };
     }
     strategy.currentNode = strategy.currentNode.failureNode as ActionNode;
-    if (
-      strategy.currentNode.payload !== null &&
-            strategy.currentNode.payload !== undefined
-    ) {
-      strategy.payload = strategy.currentNode.payload;
-    }
+    // if (
+    //   strategy.currentNode.payload !== null &&
+    //         strategy.currentNode.payload !== undefined
+    // ) {
+    //   nextAction.payload = strategy.currentNode.payload;
+    // }
   } else {
     strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+    strategy.actionList.push('\n');
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
@@ -171,17 +177,20 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
                 strategy.puntedStrategy.shift() as ActionStrategy;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
+        `Then ${nextStrategy.currentNode.action.type}.`,
       ];
       return strategyBegin(nextStrategy);
     }
-    return endOfActionStrategy;
+    const end = {...endOfActionStrategy};
+    end.strategy = strategy;
+    return end;
   }
   strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push('Failed: ' + strategy.lastAction.type);
+  strategy.actionList.push(`Failed with ${strategy.lastAction.type}.`);
   strategy.lastAction = { ...nextAction };
   nextAction = { ...nextAction };
   nextAction.strategy = {
+    key: strategy.key,
     payload: strategy.payload,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
@@ -207,20 +216,19 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
  */
 export const strategyDecide = (
   strategy: ActionStrategy,
-  index: number,
+  key: string,
   data?: any,
 ) => {
   let nextAction: Action;
   if (
     strategy.currentNode.decisionNodes !== null &&
-        strategy.currentNode.decisionNodes !== undefined &&
-        strategy.currentNode.decisionNodes?.length !== 0
+        strategy.currentNode.decisionNodes !== undefined
   ) {
-    nextAction = strategy.currentNode.decisionNodes[index].action;
-    strategy.currentNode = strategy.currentNode.decisionNodes[index];
+    nextAction = strategy.currentNode.decisionNodes[key].action;
+    strategy.currentNode = strategy.currentNode.decisionNodes[key];
   } else {
     strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+    strategy.actionList.push('\n');
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
@@ -229,17 +237,20 @@ export const strategyDecide = (
                 strategy.puntedStrategy.shift() as ActionStrategy;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
+        `Then ${nextStrategy.currentNode.action.type}.`,
       ];
       return strategyBegin(nextStrategy);
     }
-    return endOfActionStrategy;
+    const end = {...endOfActionStrategy};
+    end.strategy = strategy;
+    return end;
   }
   strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push(`Decided: ${nextAction.type}, index: ${index}`);
+  strategy.actionList.push(`${key} ${nextAction.type}.`);
   strategy.lastAction = nextAction;
   nextAction = { ...nextAction };
   nextAction.strategy = {
+    key: strategy.key,
     payload: strategy.payload,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,

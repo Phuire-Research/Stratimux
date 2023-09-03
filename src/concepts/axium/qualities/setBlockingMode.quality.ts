@@ -6,6 +6,7 @@ import { AxiumState } from '../axium.concept';
 import { createAction } from '../../../model/action';
 import { badAction } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
+import { appendActionListToDialog, AppendActionListToDialogPayload } from './appendActionListToDialog.quality';
 
 export const setBlockingMode: Action = createAction('Axium Set Blocking Mode');
 
@@ -27,10 +28,20 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
         const sub = quality.method.subscribe(action => {
           if (
             action.strategy &&
+            action.type === endOfActionStrategy.type
+          ) {
+            // Allows for reducer next in sequence
+            const appendToDialog = {...appendActionListToDialog};
+            appendToDialog.payload = {
+              actionList: action.strategy.actionList,
+              strategyKey: action.strategy.key
+            } as AppendActionListToDialogPayload;
+            state.action$?.next(appendToDialog);
+          } else if (
+            action.strategy &&
             action.type !== endOfActionStrategy.type &&
             action.type !== badAction.type
           ) {
-            console.log('Check Blocking');
             state.action$?.next(action);
           }
         });

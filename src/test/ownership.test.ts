@@ -1,13 +1,16 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
 import { selectState } from '../model/selector';
-import { OwnershipState, ownershipConcept } from '../concepts/ownership/ownership.concept';
+import { OwnershipState, ownershipConcept, ownershipKey } from '../concepts/ownership/ownership.concept';
+import { AxiumState } from '../concepts/axium/axium.concept';
+import { setOwnerShipModeKey, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 
 test('Ownership Test', (done) => {
   const axium = createAxium([ownershipConcept]);
   const sub = axium.subscribe((concepts: Concept[]) => {
-    const state = selectState<OwnershipState>(concepts, ownershipConcept.key);
-    if (state.initialized) {
+    const state = selectState<OwnershipState>(concepts, ownershipKey);
+    const axiumState = concepts[0].state as AxiumState;
+    if (state.initialized && axiumState.lastStrategy === setOwnerShipModeKey) {
       expect(state.initialized).toBe(true);
       done();
     }

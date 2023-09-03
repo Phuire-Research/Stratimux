@@ -20,6 +20,7 @@ import { addConceptsFromQueQuality } from './qualities/addConceptsFromQue.qualit
 import { appendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
 import { appendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRemoveQue.quality';
 import { removeConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
+import { appendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
 import { createConcept } from '../../model/concept';
 export { setDefaultMode } from './qualities/setDefaultMode.quality';
 import { setModeQuality } from './qualities/setMode.quality';
@@ -32,6 +33,8 @@ export type KeyedSub = {
 export type AxiumState = {
   open: boolean;
   logging: boolean;
+  dialog: string;
+  lastStrategy: string;
   generation: number;
   modeIndex: number;
   modeKeys: string[]
@@ -44,12 +47,16 @@ export type AxiumState = {
   subConcepts$: Subject<Concept[]>;
 }
 
+export const axiumKey = 'Axium';
+
 const initialAxiumState: AxiumState = {
   open: false,
   logging: true,
+  dialog: '',
+  lastStrategy: '',
   generation: 0,
   modeIndex: 0,
-  modeKeys: ['axium'],
+  modeKeys: [axiumKey, axiumKey],
   methodSubscribers: [] as KeyedSub[],
   generalSubscribers: [] as KeyedSub[],
   addConceptQue: [] as Concept[],
@@ -58,12 +65,13 @@ const initialAxiumState: AxiumState = {
 };
 
 export const _axium = createConcept(
-  'axium',
+  axiumKey,
   initialAxiumState,
   [
     openQuality,
     badActionQuality,
     closeQuality,
+    appendActionListToDialogQuality,
     logQuality,
     registerStreamsQuality,
     registerSubscriberQuality,

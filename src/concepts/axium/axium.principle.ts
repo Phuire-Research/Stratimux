@@ -2,7 +2,7 @@ import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action } from '../../model/action';
-import { AxiumState, _axium } from './axium.concept';
+import { AxiumState, axiumKey } from './axium.concept';
 import { selectState } from '../../model/selector';
 import { RegisterSubscriberPayload, registerSubscriber } from './qualities/registerSubscriber.quality';
 import { primeAction } from '../../model/action';
@@ -18,7 +18,7 @@ export const axiumPrinciple: PrincipleFunction = (
   let allowAdd = true;
   let allowRemove = true;
   const subscriber = concepts$.subscribe(_concepts => {
-    const axiumState = selectState<AxiumState>(_concepts, _axium.key);
+    const axiumState = selectState<AxiumState>(_concepts, axiumKey);
     // console.log('Check', axiumState.addConceptQue);
     if (axiumState.addConceptQue.length === 0) {
       allowAdd = true;
@@ -92,6 +92,6 @@ export const axiumPrinciple: PrincipleFunction = (
     }
   });
   const primedRegisterSubscriber = primeAction(concepts, registerSubscriber);
-  primedRegisterSubscriber.payload = { subscriber, key: _axium.key } as RegisterSubscriberPayload;
+  primedRegisterSubscriber.payload = { subscriber, key: axiumKey } as RegisterSubscriberPayload;
   observer.next(primedRegisterSubscriber);
 };

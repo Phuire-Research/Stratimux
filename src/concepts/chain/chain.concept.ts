@@ -7,12 +7,14 @@ export type Chain = {
     actionQue: Action[];
 };
 
+export const chainKey = 'Chain';
+
 const initialChainState: Chain = {
   actionQue: [],
 };
 
 export const chainConcept = createConcept(
-  'chain',
+  chainKey,
   initialChainState,
   [prepareChainQuality],
   [chainPrinciple],

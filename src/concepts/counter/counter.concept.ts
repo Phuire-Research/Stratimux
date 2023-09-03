@@ -12,12 +12,14 @@ export type Counter = {
     count: number
 }
 
+export const counterKey = 'counter';
+
 const initialCounterState: Counter = {
   count: 0
 };
 
 export const counterConcept = createConcept(
-  'counter',
+  counterKey,
   initialCounterState,
   [
     addQuality,

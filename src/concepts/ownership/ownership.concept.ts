@@ -12,6 +12,8 @@ export type OwnershipState = {
   ticketStalls: [number, number][]
 }
 
+export const ownershipKey = 'ownership';
+
 const initialOwnershipState: OwnershipState = {
   initialized: false,
   ownershipLedger: createOwnershipLedger(),
@@ -20,7 +22,7 @@ const initialOwnershipState: OwnershipState = {
 };
 
 export const ownershipConcept = createConcept(
-  'ownership',
+  ownershipKey,
   initialOwnershipState,
   [
     initializeOwnershipQuality

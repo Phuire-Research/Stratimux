@@ -9,6 +9,8 @@ export type ClientServer = {
     // requestQue: Deno.RequestEvent[]
 };
 
+export const clientServerKey = 'Client Server';
+
 export type routeHTML = {
     route: string;
     html: string;
@@ -29,7 +31,7 @@ const initialClientServerState: ClientServer = {
 };
 
 export const clientServerConcept = createConcept(
-  'clientServer',
+  clientServerKey,
   initialClientServerState,
   [handleClientServerRequestQuality, appendRequestToQueQuality],
   [clientServerPrinciple]

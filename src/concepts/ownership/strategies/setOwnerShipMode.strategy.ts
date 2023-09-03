@@ -4,6 +4,7 @@ import { primeAction } from '../../../model/action';
 import { initializeOwnership } from '../qualities/initializeOwnership.quality';
 import { setMode, SetModePayload } from '../../axium/qualities/setMode.quality';
 
+export const setOwnerShipModeKey = 'Set Axium Mode to Ownership';
 export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
   const primedInitializeOwnership = primeAction(concepts, initializeOwnership);
   const primedSetMode = primeAction(concepts, setMode);
@@ -18,6 +19,7 @@ export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
     payload: { modeIndex: 2 } as SetModePayload
   };
   const params: ActionStrategyParameters = {
+    key: setOwnerShipModeKey,
     initialNode: stepOne,
   };
 

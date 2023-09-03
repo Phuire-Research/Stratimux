@@ -10,6 +10,7 @@ import { SetBlockingModePayload } from '../qualities/setBlockingMode.quality';
 import { open } from '../qualities/open.quality';
 import { SetDefaultModePayload } from '../qualities/setDefaultMode.quality';
 
+export const addConceptsToRemovalQueThenBlockKey = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
   const primedSetBlockingMode = primeAction(concepts, setBlockingMode);
   const primedAppendConceptsToRemoveQue = primeAction(concepts, appendConceptsToRemoveQue);
@@ -28,11 +29,13 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
     payload: {concepts} as SetBlockingModePayload
   };
   const params: ActionStrategyParameters = {
+    key: addConceptsToRemovalQueThenBlockKey,
     initialNode: stepOne
   };
   return createStrategy(params);
 }
 // Step Two
+export const removeConceptsViaQueThenUnblockKey = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
   const primedRemoveConceptsViaQue = primeAction(concepts, removeConceptsViaQue);
   const primedSetDefaultMode = primeAction(concepts, setDefaultMode);
@@ -48,6 +51,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
   };
 
   const params: ActionStrategyParameters = {
+    key: removeConceptsViaQueThenUnblockKey,
     initialNode: stepOne,
   };
 

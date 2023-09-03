@@ -19,6 +19,7 @@ import {
 import { badAction } from '../concepts/axium/qualities/badAction.quality';
 import { blockingMode } from '../concepts/axium/axium.mode';
 import { close } from '../concepts/axium/qualities/close.quality';
+import { AppendActionListToDialogPayload, appendActionListToDialog } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 
 // type Axium<T> = {
 //     subscribe: (observer: Observable<T>) => void;
@@ -104,6 +105,17 @@ export function createAxium(initialConcepts: Concept[]) {
         quality.subject = subject;
         const methodSub = quality.method.subscribe((action: Action) => {
           if (
+            action.strategy &&
+            action.type === endOfActionStrategy.type
+          ) {
+            // Allows for reducer next in sequence
+            const appendToDialog = {...appendActionListToDialog};
+            appendToDialog.payload = {
+              actionList: action.strategy.actionList,
+              strategyKey: action.strategy.key
+            } as AppendActionListToDialogPayload;
+            action$.next(appendToDialog);
+          } else if (
             action.strategy &&
             action.type !== endOfActionStrategy.type &&
             action.type !== badAction.type
