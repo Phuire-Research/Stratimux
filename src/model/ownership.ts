@@ -22,7 +22,6 @@ export type OwnershipTicket = {
 export type OwnershipTicketStub = {
   key: string,
   ticket: number,
-  expiration: number
 }
 
 export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, OwnershipTicket[]>());
@@ -99,7 +98,7 @@ export const checkIn =
   action.keyedSelectors?.forEach(keyed => {
     const key = `${keyed.conceptKey} ${keyed.stateKeys}`;
     const entry = ownershipLedger.get(key);
-    const expiration = Date.now();
+    const expiration = action.expiration;
     const newTicketStub = {
       key,
       ticket: ownershipState.ticker,
@@ -162,7 +161,7 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
   let frontOfAllLines = true;
   let expired = false;
   for (const stub of stubs) {
-    if (stub.expiration < Date.now()) {
+    if (action.expiration < Date.now()) {
       expired = true;
       break;
     }

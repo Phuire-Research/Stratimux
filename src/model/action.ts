@@ -13,7 +13,7 @@ export type Action = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keyedSelectors?: KeyedSelector[];
     stubs?: OwnershipTicketStub[];
-    expiration?: number;
+    expiration: number;
 };
 
 export function primeAction(concepts: Concept[], action: Action): Action {
@@ -30,6 +30,8 @@ export function primeAction(concepts: Concept[], action: Action): Action {
   return {
     type: axiumBadActionType,
     semaphore: [0, 0, -1],
+    // Temporary until we have proper SLA
+    expiration: Date.now() + 5000
   };
 }
 
@@ -37,6 +39,8 @@ export function createAction(type: ActionType, payload?: unknown): Action {
   return {
     type,
     semaphore: [0, 0, -1],
-    payload
+    payload,
+    // Temporary until we have proper SLA
+    expiration: Date.now() + 5000
   };
 }
