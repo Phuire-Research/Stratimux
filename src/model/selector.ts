@@ -49,8 +49,8 @@ export function selectSlice<T>(
   let finalKey = '';
   for (const [i, key] of keys.entries()) {
     let aspectExists = false;
-    const loopExistsKeys = Object.keys(target);
-    loopExistsKeys.forEach(_key => {_key === key ? aspectExists = true : null;});
+    const aspectExistsKeys = Object.keys(target);
+    aspectExistsKeys.forEach(_key => {_key === key ? aspectExists = true : null;});
     if (!aspectExists) {
       return new Error('Invalid Inner State Key');
     }
