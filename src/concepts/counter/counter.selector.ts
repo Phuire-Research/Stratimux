@@ -3,6 +3,6 @@ import { KeyedSelector } from '../../model/selector';
 import {counterKey} from './counter.concept';
 
 export const counterSelectCount: KeyedSelector = {
-  conceptKey: counterKey,
+  conceptKey: 'counter',
   stateKeys: 'count',
 };

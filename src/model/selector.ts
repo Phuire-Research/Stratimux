@@ -6,7 +6,6 @@ export type KeyedSelector = {
   stateKeys: string
 };
 
-// Placeholder Select Functions will be Replaced with Key Selection Once that Workflow is Defined
 export function selectState<T>(concepts: Concept[], key: string): T {
   let concept;
   for (let i = 0; i < concepts.length; i++) {
@@ -18,6 +17,7 @@ export function selectState<T>(concepts: Concept[], key: string): T {
   return concept?.state as T;
 }
 
+// Note: The Concept Key within the selector has to be set Explicitly for now
 export function selectSlice<T>(
   concepts: Concept[],
   selector: KeyedSelector): T | Error {
@@ -28,6 +28,7 @@ export function selectSlice<T>(
       concept = concepts[i];
       break;
     } else if (i === concepts.length - 1) {
+      console.log('Check Slice', i, concepts, selector);
       return Error('Invalid Concept Key');
     }
   }
@@ -35,10 +36,10 @@ export function selectSlice<T>(
   const keys = selector.stateKeys.split(' ');
   if (concept === undefined) {return Error('Invalid Concept Key');}
   const cast = concept.state as Record<string, any>;
-  let guardKey = Object.keys(cast);
-  let guard = false;
-  guardKey.forEach(key => {key !== keys[0] ? guard = true : null;});
-  if (guard) {
+  const existsKeys = Object.keys(cast);
+  let exists = false;
+  existsKeys.forEach(key => {key === keys[0] ? exists = true : null;});
+  if (!exists) {
     return new Error('Invalid State Key');
   }
   if (keys.length === 1) {
@@ -47,10 +48,10 @@ export function selectSlice<T>(
   let target: Record<string, any> = cast[keys.shift() as string];
   let finalKey = '';
   for (const [i, key] of keys.entries()) {
-    let loopGuard = false;
-    guardKey = Object.keys(target);
-    guardKey.forEach(_key => {_key !== key ? loopGuard = true : null;});
-    if (loopGuard) {
+    let aspectExists = false;
+    const loopExistsKeys = Object.keys(target);
+    loopExistsKeys.forEach(_key => {_key === key ? aspectExists = true : null;});
+    if (!aspectExists) {
       return new Error('Invalid Inner State Key');
     }
     if (i !== keys.length - 1) {

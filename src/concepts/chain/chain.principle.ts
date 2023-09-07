@@ -2,7 +2,7 @@ import { Subscriber, Subject } from 'rxjs';
 import { Concept } from '../../model/concept';
 import { Action, createAction, primeAction } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
-import { Chain, chainConcept } from './chain.concept';
+import { Chain, chainKey } from './chain.concept';
 import { selectState } from '../../model/selector';
 import { AxiumState } from '../axium/axium.concept';
 import {
@@ -19,7 +19,7 @@ export const chainPrinciple: PrincipleFunction = (
   //     pass = true;
   // }, 50);
   const subscriber = concepts$.subscribe((concepts: Concept[]) => {
-    const chainState = selectState<Chain>(concepts, chainConcept.key);
+    const chainState = selectState<Chain>(concepts, chainKey);
     if (chainState.actionQue.length > 0) {
       // pass = false;
       const newActionQue = [...chainState.actionQue];
@@ -33,7 +33,7 @@ export const chainPrinciple: PrincipleFunction = (
   const primedRegisterSubscriber = primeAction(_concepts, createAction(axiumRegisterSubscriberType));
   primedRegisterSubscriber.payload = {
     subscriber,
-    key: chainConcept.key,
+    key: chainKey,
   } as RegisterSubscriberPayload;
   observer.next(primedRegisterSubscriber);
 };

@@ -1,9 +1,9 @@
 import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber, map} from 'rxjs';
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
-import { OwnershipState, ownershipConcept } from '../ownership/ownership.concept';
+import { OwnershipState, ownershipKey} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { AxiumState, _axium } from '../axium/axium.concept';
+import { AxiumState, axiumKey } from '../axium/axium.concept';
 import { Action } from '../../model/action';
 import { selectState } from '../../model/selector';
 import { primeAction } from '../../model/action';
@@ -17,11 +17,11 @@ export const ownershipPrinciple: PrincipleFunction = (
 ) => {
   let initDispatch = false;
   const sub = concepts$.subscribe(_cpts => {
-    const axiumState = selectState<AxiumState>(_cpts, _axium.key);
+    const axiumState = selectState<AxiumState>(_cpts, axiumKey);
     // console.log('Check', axiumState.open);
     if (axiumState.open) {
       const subscription = concepts$.subscribe(concepts => {
-        const ownershipState = selectState<OwnershipState>(concepts, ownershipConcept.key);
+        const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
         // console.log('Check', ownershipState);
         if (ownershipState.initialized) {
           console.log('Do Stuff');

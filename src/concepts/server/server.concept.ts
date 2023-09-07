@@ -1,5 +1,5 @@
 import { Subscriber } from 'rxjs';
-import { Concept, Principle } from '../../model/concept';
+import { Concept, ConceptCreator, Principle } from '../../model/concept';
 import { Action  } from '../../model/action';
 import { serverPrinciple } from './server.principle';
 import { handleRequestQuality } from './qualities/handleRequest.quality';
@@ -18,9 +18,11 @@ const initialServerState: Server = {
   routes: [] as unknown[],
 };
 
-export const serverConcept = createConcept(
-  serverKey,
-  initialServerState,
-  [handleRequestQuality],
-  [serverPrinciple]
-);
+export const createServerConcept: ConceptCreator = () => {
+  return createConcept(
+    serverKey,
+    initialServerState,
+    [handleRequestQuality],
+    [serverPrinciple]
+  );
+};

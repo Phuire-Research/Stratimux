@@ -11,7 +11,7 @@ import { Action, createAction } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
-  _axium,
+  createAxiumConcept,
   AxiumState,
   initializationStrategy,
 } from '../concepts/axium/axium.concept';
@@ -95,7 +95,7 @@ import {
 
 export function createAxium(initialConcepts: Concept[]) {
   const action$: Subject<Action> = new Subject();
-  const concepts: Concept[] = [_axium, ...initialConcepts];
+  const concepts: Concept[] = [createAxiumConcept(), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   concepts.forEach((concept, _index) => {
     concept.semaphore = _index;

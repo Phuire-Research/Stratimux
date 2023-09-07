@@ -2,13 +2,13 @@ import { createAxium } from '../model/axium';
 import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
+import { Counter, createCounterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingKey } from '../concepts/counter/strategies/counting.strategy';
 
 test('Axium Counting Strategy Test', (done) => {
   let count = 0;
-  const axium = createAxium([counterConcept]);
+  const axium = createAxium([createCounterConcept()]);
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
     if (count ===  1) {

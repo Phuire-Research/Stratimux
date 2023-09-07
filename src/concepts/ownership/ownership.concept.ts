@@ -1,4 +1,4 @@
-import { createConcept } from '../../model/concept';
+import { ConceptCreator, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
@@ -21,14 +21,16 @@ const initialOwnershipState: OwnershipState = {
   ticketStalls: []
 };
 
-export const ownershipConcept = createConcept(
-  ownershipKey,
-  initialOwnershipState,
-  [
-    initializeOwnershipQuality
-  ],
-  [
-    ownershipPrinciple
-  ],
-  [ownershipMode]
-);
+export const createOwnershipConcept: ConceptCreator = () => {
+  return createConcept(
+    ownershipKey,
+    initialOwnershipState,
+    [
+      initializeOwnershipQuality
+    ],
+    [
+      ownershipPrinciple
+    ],
+    [ownershipMode]
+  );
+};

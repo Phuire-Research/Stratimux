@@ -1,5 +1,5 @@
 import { Action } from '../model/action';
-import { OwnershipState, ownershipConcept } from '../concepts/ownership/ownership.concept';
+import { OwnershipState, createOwnershipConcept, ownershipKey } from '../concepts/ownership/ownership.concept';
 import { Concept } from './concept';
 import { KeyedSelector, selectState } from './selector';
 // Define Ownership Here
@@ -86,7 +86,7 @@ export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, Ow
 export const checkIn =
 (concepts: Concept[], action: Action): [Concept[], Action] => {
   const newConcepts = concepts;
-  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipConcept.key);
+  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipKey);
   const ownershipLedger = ownershipState.ownershipLedger;
   const ticketStalls = ownershipState.ticketStalls;
   action.stubs = [];

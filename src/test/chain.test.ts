@@ -2,14 +2,14 @@ import { createAxium } from '../model/axium';
 import { Concept  } from '../model/concept';
 import { createAction, primeAction } from '../model/action';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, counterKey } from '../concepts/counter/counter.concept';
-import { chainConcept } from '../concepts/chain/chain.concept';
+import { Counter, createCounterConcept, counterKey } from '../concepts/counter/counter.concept';
+import { createChainConcept } from '../concepts/chain/chain.concept';
 import { PrepareChainPayload, chainPrepareChainType } from '../concepts/chain/qualities/prepareChain.quality';
 import { counterAddType } from '../concepts/counter/qualities/add.quality';
 import { counterSubtractType } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
-  const axium = createAxium([counterConcept, chainConcept]);
+  const axium = createAxium([createCounterConcept(), createChainConcept()]);
   // ax.subscribe(val=> console.log(val));
   // ax.subscribe(val => console.log('this value', val));
   let count = 0;

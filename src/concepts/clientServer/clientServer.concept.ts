@@ -1,4 +1,4 @@
-import { createConcept } from '../../model/concept';
+import { ConceptCreator, createConcept } from '../../model/concept';
 import { clientServerPrinciple } from './clientServer.principle';
 import { appendRequestToQueQuality } from './qualities/appendRequestEventToQue.quality';
 import { handleClientServerRequestQuality } from './qualities/handleClientServerRequest.quality';
@@ -30,9 +30,11 @@ const initialClientServerState: ClientServer = {
   // requestQue: [],
 };
 
-export const clientServerConcept = createConcept(
-  clientServerKey,
-  initialClientServerState,
-  [handleClientServerRequestQuality, appendRequestToQueQuality],
-  [clientServerPrinciple]
-);
+export const createClientServerConcept: ConceptCreator = () => {
+  return createConcept(
+    clientServerKey,
+    initialClientServerState,
+    [handleClientServerRequestQuality, appendRequestToQueQuality],
+    [clientServerPrinciple]
+  );
+};

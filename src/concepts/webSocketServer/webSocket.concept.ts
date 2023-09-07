@@ -1,5 +1,5 @@
 import { Subscriber } from 'rxjs';
-import { Concept, Principle } from '../../model/concept';
+import { Concept, ConceptCreator, Principle } from '../../model/concept';
 import { webSocketPrinciple } from './webSocket.principle';
 import { handleRequestQuality } from './qualities/handleRequest.quality';
 import { createConcept } from '../../model/concept';
@@ -16,9 +16,11 @@ const initialWebSocketState: Server = {
   routes: [] as unknown[],
 };
 
-export const webSocketConcept = createConcept(
-  webSocketKey,
-  initialWebSocketState,
-  [handleRequestQuality],
-  [webSocketPrinciple],
-);
+export const createWebSocketConcept: ConceptCreator = () => {
+  return createConcept(
+    webSocketKey,
+    initialWebSocketState,
+    [handleRequestQuality],
+    [webSocketPrinciple],
+  );
+};

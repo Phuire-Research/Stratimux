@@ -42,6 +42,14 @@ export type Concept = {
 
 // deno-lint-ignore no-explicit-any
 
+export type ConceptCreator = (
+  key?: string,
+  state?: unknown,
+  qualities?: Quality[],
+  principles?: PrincipleFunction[],
+  mode?: Mode[],
+) => Concept;
+
 export function createConcept(
   key: string,
   state: unknown,

@@ -1,32 +1,32 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
 import { selectSlice, selectState } from '../model/selector';
-import { Counter, counterConcept, counterKey  } from '../concepts/counter/counter.concept';
+import { Counter, createCounterConcept, counterKey  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 
 test('Axium Selector Test', (done) => {
-  const counter = counterConcept;
-  const counterState = counterConcept.state as Counter;
+  const counter = createCounterConcept();
+  const counterState = counter.state as Counter;
   counterState.count = 10;
   const axium = createAxium([counter]);
   const sub = axium.subscribe((concepts: Concept[]) => {
     const state = selectState<Counter>(concepts, counterKey);
+    // const count = selectSlice<number>(concepts, counterSelectCount);
     expect(state.count).toBe(10);
+    // expect(count).toBe(10);
     done();
   });
 });
 
 test('Axium Selector State Slice Test', (done) => {
-  const counter = counterConcept;
-  const counterState = counterConcept.state as Counter;
+  const counter = createCounterConcept();
+  const counterState = counter.state as Counter;
   counterState.count = 10;
   const axium = createAxium([counter]);
-
-  console.log('Check State Slice', counter);
   const sub = axium.subscribe((concepts: Concept[]) => {
-    // const count = selectSlice<number>(concepts, counterSelectCount);
-    console.log('Check State Slice', 12);
-    expect(10).toBe(10);
+    const count = selectSlice<number>(concepts, counterSelectCount);
+    expect(count).toBe(10);
+    // console.log('Check State Slice', 12);
     done();
   });
 });

@@ -4,7 +4,7 @@ import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { defaultMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
-import { ownershipConcept } from './ownership.concept';
+import { ownershipKey } from './ownership.concept';
 import { selectState } from '../../model/selector';
 
 export const ownershipMode: Mode = (
@@ -18,7 +18,7 @@ export const ownershipMode: Mode = (
   // Check In Logic
   if (action.keyedSelectors) {
     // concepts$.next(concepts);
-    const ownershipState = selectState(concepts, ownershipConcept.key);
+    // const ownershipState = selectState(concepts, ownershipKey);
     finalMode([action, concepts, action$, concepts$]);
   } else {
     finalMode([action, concepts, action$, concepts$]);

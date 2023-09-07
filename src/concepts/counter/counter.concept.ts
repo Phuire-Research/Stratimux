@@ -15,12 +15,14 @@ const initialCounterState: Counter = {
   count: 0
 };
 
-export const counterConcept = createConcept(
-  counterKey,
-  initialCounterState,
-  [
-    addQuality,
-    subtractQuality,
-    chainCountQuality
-  ]
-);
+export const createCounterConcept = () => {
+  return createConcept(
+    counterKey,
+    initialCounterState,
+    [
+      addQuality,
+      subtractQuality,
+      chainCountQuality
+    ]
+  );
+};

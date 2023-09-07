@@ -2,7 +2,7 @@ import { Concept } from '../../model/concept';
 import { Action,  } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
 import { Subject, Subscriber } from 'rxjs';
-import { ClientServer, clientServerConcept } from './clientServer.concept';
+import { ClientServer, createClientServerConcept } from './clientServer.concept';
 import { selectState } from '../../model/selector';
 
 // export const clientPrinciple: PrincipleFunction = (

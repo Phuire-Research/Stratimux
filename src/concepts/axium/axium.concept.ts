@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
-import { Concept } from '../../model/concept';
+import { Concept, ConceptCreator } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { defaultMode, blockingMode } from './axium.mode';
@@ -60,26 +60,28 @@ const initialAxiumState: AxiumState = {
   subConcepts$: new Subject<Concept[]>(),
 };
 
-export const _axium = createConcept(
-  axiumKey,
-  initialAxiumState,
-  [
-    openQuality,
-    badActionQuality,
-    closeQuality,
-    appendActionListToDialogQuality,
-    logQuality,
-    registerStreamsQuality,
-    registerSubscriberQuality,
-    initializePrinciplesQuality,
-    setBlockingModeQuality,
-    setDefaultModeQuality,
-    addConceptsFromQueQuality,
-    appendConceptsToAddQueQuality,
-    appendConceptsToRemoveQueQuality,
-    removeConceptsViaQueQuality,
-    setModeQuality
-  ],
-  [axiumPrinciple],
-  [blockingMode, defaultMode]
-);
+export const createAxiumConcept: ConceptCreator = (): Concept =>  {
+  return createConcept(
+    axiumKey,
+    initialAxiumState,
+    [
+      openQuality,
+      badActionQuality,
+      closeQuality,
+      appendActionListToDialogQuality,
+      logQuality,
+      registerStreamsQuality,
+      registerSubscriberQuality,
+      initializePrinciplesQuality,
+      setBlockingModeQuality,
+      setDefaultModeQuality,
+      addConceptsFromQueQuality,
+      appendConceptsToAddQueQuality,
+      appendConceptsToRemoveQueQuality,
+      removeConceptsViaQueQuality,
+      setModeQuality
+    ],
+    [axiumPrinciple],
+    [blockingMode, defaultMode]
+  );
+};
