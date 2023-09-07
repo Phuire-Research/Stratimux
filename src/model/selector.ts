@@ -33,7 +33,8 @@ export function selectSlice<T>(
   }
 
   const keys = selector.stateKeys.split(' ');
-  const cast = concept?.state as Record<string, any>;
+  if (concept === undefined) {return Error('Invalid Concept Key');}
+  const cast = concept.state as Record<string, any>;
   let guardKey = Object.keys(cast);
   let guard = false;
   guardKey.forEach(key => {key !== keys[0] ? guard = true : null;});
@@ -43,7 +44,7 @@ export function selectSlice<T>(
   if (keys.length === 1) {
     return cast[keys[0]] as T;
   }
-  let target = cast[keys.shift() as string];
+  let target: Record<string, any> = cast[keys.shift() as string];
   let finalKey = '';
   for (const [i, key] of keys.entries()) {
     let loopGuard = false;

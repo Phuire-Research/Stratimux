@@ -12,7 +12,6 @@ import { KeyedSelector, selectState } from './selector';
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
-
 export type OwnershipTicket = {
   ticket: number;
   // new Date().now() + Agreement

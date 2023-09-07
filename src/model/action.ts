@@ -2,9 +2,11 @@ import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { OwnershipTicket } from './ownership';
+import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 
+export type ActionType = string;
 export type Action = {
-    type: string;
+    type: ActionType;
     semaphore: [number, number, number];
     payload?: unknown;
     strategy?: ActionStrategy;
@@ -16,23 +18,24 @@ export type Action = {
 export function primeAction(concepts: Concept[], action: Action): Action {
   for (const concept of concepts) {
     for (const quality of concept.qualities) {
-      if (action.type === quality.action.type) {
+      if (action.type === quality.actionType) {
         return {
           ...action,
-          semaphore: quality.action.semaphore,
+          semaphore: quality.semaphore,
         };
       }
     }
   }
   return {
-    type: 'Bad Action',
+    type: axiumBadActionType,
     semaphore: [0, 0, -1],
   };
 }
 
-export function createAction(type: string): Action {
+export function createAction(type: ActionType, payload?: unknown): Action {
   return {
     type,
     semaphore: [0, 0, -1],
+    payload
   };
 }

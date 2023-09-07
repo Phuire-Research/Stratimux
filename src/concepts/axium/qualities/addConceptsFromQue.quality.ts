@@ -1,14 +1,13 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
 import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
+import { endOfActionStrategyType, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
 import { createPrinciple$ } from '../../../model/principle';
-import { Action, createAction } from '../../../model/action';
-import { badAction } from './badAction.quality';
+import { Action, ActionType, createAction } from '../../../model/action';
+import { axiumBadActionType } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
 
-export const addConceptsFromQue: Action =
-    createAction('Axium Append Concepts to Add Concept Que');
+export const axiumAddConceptFromQueType: ActionType = 'Axium Append Concepts to Add Concept Que';
 
 export type AddConceptsFromQuePayload = {
     action$: Subject<Action>;
@@ -25,8 +24,8 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
           console.log('Hitting');
           if (
             action.strategy &&
-            action.type !== endOfActionStrategy.type &&
-            action.type !== badAction.type
+            action.type !== endOfActionStrategyType &&
+            action.type !== axiumBadActionType
           ) {
             // Allows for reducer next in sequence
             if (state.action$) {
@@ -48,7 +47,7 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
 }
 
 export const addConceptsFromQueQuality = createQuality(
-  addConceptsFromQue,
+  axiumAddConceptFromQueType,
   addConceptsFromQueReducer,
   createDefaultMethodCreator
 );

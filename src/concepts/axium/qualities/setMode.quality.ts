@@ -2,7 +2,7 @@ import { AxiumState } from '../axium.concept';
 import { Action, createAction} from '../../../model/action';
 import { createQuality, createDefaultMethodCreator } from '../../../model/concept';
 
-export const setMode: Action = createAction('Axium Set Mode');
+export const axiumSetModeType = 'Axium Set Mode';
 
 export type SetModePayload = {
   modeIndex: number;
@@ -17,7 +17,7 @@ export function setModeReducer(state: AxiumState, _action: Action) {
 }
 
 export const setModeQuality = createQuality(
-  setMode,
+  axiumSetModeType,
   setModeReducer,
   createDefaultMethodCreator
 );

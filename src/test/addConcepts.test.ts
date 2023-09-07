@@ -4,7 +4,6 @@ import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { Counter, counterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
-import { log } from '../concepts/axium/qualities/log.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingKey } from '../concepts/counter/strategies/counting.strategy';
 

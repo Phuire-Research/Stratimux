@@ -1,10 +1,13 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept} from '../../../model/concept';
-import { primeAction } from '../../../model/action';
-import { add, subtract } from '../counter.concept';
+import { createAction, primeAction } from '../../../model/action';
+import { counterAddType } from '../qualities/add.quality';
+import { counterSubtractType } from '../qualities/subtract.quality';
 
 export const countingKey = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
+  const add = createAction(counterAddType);
+  const subtract = createAction(counterSubtractType);
   const stepFive: ActionNode = {
     action: subtract,
     successNode: null
@@ -36,8 +39,8 @@ export function countingStrategy(): ActionStrategy {
 
 export const primedCountingKey = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
-  const primedAdd = primeAction(concepts, add);
-  const primedSubtract = primeAction(concepts, add);
+  const primedAdd = primeAction(concepts, createAction(counterAddType));
+  const primedSubtract = primeAction(concepts, createAction(counterSubtractType));
   const stepFour: ActionNode = {
     action: primedAdd,
     successNode: null,

@@ -8,13 +8,10 @@ import { badActionQuality } from './qualities/badAction.quality';
 import { closeQuality } from './qualities/close.quality';
 import { logQuality } from './qualities/log.quality';
 import { registerStreamsQuality } from './qualities/registerStreams.quality';
-export { registerStreams } from './qualities/registerStreams.quality';
 import { registerSubscriberQuality } from './qualities/registerSubscriber.quality';
 import { initializePrinciplesQuality } from './qualities/initializePrinciples.quality';
-export { initializePrinciples } from './qualities/initializePrinciples.quality';
 export { initializationStrategy } from './strategies/initialization.strategy';
 import { setBlockingModeQuality } from './qualities/setBlockingMode.quality';
-export { setBlockingMode } from './qualities/setBlockingMode.quality';
 import { setDefaultModeQuality } from './qualities/setDefaultMode.quality';
 import { addConceptsFromQueQuality } from './qualities/addConceptsFromQue.quality';
 import { appendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
@@ -22,7 +19,6 @@ import { appendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRe
 import { removeConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
 import { appendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
 import { createConcept } from '../../model/concept';
-export { setDefaultMode } from './qualities/setDefaultMode.quality';
 import { setModeQuality } from './qualities/setMode.quality';
 
 export type KeyedSub = {

@@ -1,17 +1,17 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { primeAction } from '../../../model/action';
-import { registerStreams, initializePrinciples, setDefaultMode } from '../axium.concept';
-import { log } from '../qualities/log.quality';
-import { open } from '../qualities/open.quality';
-import type { RegisterStreamsPayload } from '../qualities/registerStreams.quality';
+import { createAction, primeAction } from '../../../model/action';
+import { axiumOpenType } from '../qualities/open.quality';
+import { axiumRegisterStreamsType, type RegisterStreamsPayload } from '../qualities/registerStreams.quality';
+import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
+import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 
 export const initializeKey = 'Axium Initialize';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
-  const primedInit = primeAction(concepts, initializePrinciples);
-  const primedRegister = primeAction(concepts, registerStreams);
-  const primedSetDefaultMode = primeAction(concepts, setDefaultMode);
-  const primedOpen = primeAction(concepts, open);
+  const primedInit = primeAction(concepts, createAction(axiumInitializePrinciplesType));
+  const primedRegister = primeAction(concepts, createAction(axiumRegisterStreamsType));
+  const primedSetDefaultMode = primeAction(concepts, createAction(axiumSetDefaultModeType));
+  const primedOpen = primeAction(concepts, createAction(axiumOpenType));
 
   const stepFour: ActionNode = {
     action: primedOpen,

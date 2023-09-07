@@ -3,7 +3,7 @@ import { Action } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { defaultMode, blockingMode } from '../axium/axium.mode';
-import { setBlockingMode } from '../axium/qualities/setBlockingMode.quality';
+import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { ownershipConcept } from './ownership.concept';
 import { selectState } from '../../model/selector';
 
@@ -12,7 +12,7 @@ export const ownershipMode: Mode = (
 ) => {
   console.log('hit', action);
   let finalMode: Mode = defaultMode;
-  if (action.type === setBlockingMode.type) {
+  if (action.type === axiumSetBlockingModeType) {
     finalMode = blockingMode;
   }
   // Check In Logic

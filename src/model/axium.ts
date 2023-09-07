@@ -6,20 +6,22 @@ import {
   Subscriber,
   catchError,
 } from 'rxjs';
-import { endOfActionStrategy } from './actionStrategy';
-import { Action } from './action';
+import { endOfActionStrategyType } from './actionStrategy';
+import { Action, createAction } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
   _axium,
   AxiumState,
   initializationStrategy,
-  setBlockingMode,
 } from '../concepts/axium/axium.concept';
-import { badAction } from '../concepts/axium/qualities/badAction.quality';
+import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 import { blockingMode } from '../concepts/axium/axium.mode';
-import { close } from '../concepts/axium/qualities/close.quality';
-import { AppendActionListToDialogPayload, appendActionListToDialog } from '../concepts/axium/qualities/appendActionListToDialog.quality';
+import { axiumCloseType } from '../concepts/axium/qualities/close.quality';
+import {
+  AppendActionListToDialogPayload,
+  axiumAppendActionListToDialogType
+} from '../concepts/axium/qualities/appendActionListToDialog.quality';
 
 // type Axium<T> = {
 //     subscribe: (observer: Observable<T>) => void;
@@ -98,7 +100,7 @@ export function createAxium(initialConcepts: Concept[]) {
   concepts.forEach((concept, _index) => {
     concept.semaphore = _index;
     concept.qualities.forEach((quality, index) => {
-      quality.action.semaphore = [_index, index, axiumState.generation];
+      quality.semaphore = [_index, index, axiumState.generation];
       if (quality.methodCreator) {
         const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
         quality.method = method;
@@ -106,19 +108,18 @@ export function createAxium(initialConcepts: Concept[]) {
         const methodSub = quality.method.subscribe((action: Action) => {
           if (
             action.strategy &&
-            action.type === endOfActionStrategy.type
+            action.type === endOfActionStrategyType
           ) {
             // Allows for reducer next in sequence
-            const appendToDialog = {...appendActionListToDialog};
-            appendToDialog.payload = {
+            const appendToDialog = createAction(axiumAppendActionListToDialogType, {
               actionList: action.strategy.actionList,
               strategyKey: action.strategy.key
-            } as AppendActionListToDialogPayload;
+            } as AppendActionListToDialogPayload);
             action$.next(appendToDialog);
           } else if (
             action.strategy &&
-            action.type !== endOfActionStrategy.type &&
-            action.type !== badAction.type
+            action.type !== endOfActionStrategyType &&
+            action.type !== axiumBadActionType
           ) {
             // Allows for reducer next in sequence
             action$.next(action);
@@ -187,7 +188,7 @@ export function createAxium(initialConcepts: Concept[]) {
     unsubscribe: subConcepts$.unsubscribe.bind(subConcepts$),
     // Rough In, Refine Later as Needed
     close: () => {
-      action$.next(close);
+      action$.next(createAction(axiumCloseType));
       action$.complete();
       concepts$.complete();
       subConcepts$.complete();

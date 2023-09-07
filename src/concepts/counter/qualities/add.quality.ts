@@ -1,13 +1,13 @@
 import { map, Subject } from 'rxjs';
-import { Action } from '../../../model/action';
+import { Action, ActionType } from '../../../model/action';
 import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept';
-import { strategySuccess, endOfActionStrategy } from '../../../model/actionStrategy';
+import { endOfActionStrategyType, strategySuccess } from '../../../model/actionStrategy';
 import { Counter } from '../counter.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { keyedSelectCount } from '../counter.selector';
+import { counterSelectCount } from '../counter.selector';
 
-export const add: Action = createAction('Counter Add');
+export const counterAddType: ActionType = 'Counter Add';
 
 export function addReducer(state: Counter, _: Action) {
   return {
@@ -24,7 +24,7 @@ const addMethodCreator: MethodCreator = () => {
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return endOfActionStrategy;
+      return createAction(endOfActionStrategyType);
     })
   );
   return [
@@ -34,8 +34,8 @@ const addMethodCreator: MethodCreator = () => {
 };
 
 export const addQuality = createQuality(
-  add,
+  counterAddType,
   addReducer,
   addMethodCreator,
-  [keyedSelectCount]
+  [counterSelectCount]
 );

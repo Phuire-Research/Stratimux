@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Action } from './action';
+import { Action, ActionType, createAction } from './action';
 import { PrincipleFunction } from '../model/principle';
-import { endOfActionStrategy, strategySuccess } from './actionStrategy';
+import { endOfActionStrategyType, strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
 
@@ -21,7 +21,8 @@ export type Mode = ([action, concept, action$, concepts$]: [
 export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];
 
 export type Quality = {
-    action: Action;
+    actionType: ActionType;
+    semaphore: [number, number, number];
     reducer: Reducer;
     methodCreator?: MethodCreator;
     method?: Method;
@@ -95,15 +96,16 @@ export function createConcept(
 // }
 
 export function createQuality(
-  action: Action,
+  actionType: ActionType,
   reducer: Reducer,
   methodCreator?: MethodCreator,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[]
 ): Quality {
   return {
-    action,
+    actionType,
     reducer,
+    semaphore: [0, 0, -1],
     methodCreator,
     keyedSelectors
   };
@@ -120,7 +122,7 @@ export const createDefaultMethodCreator: MethodCreator = () : [Method, Subject<A
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return endOfActionStrategy;
+      return createAction(endOfActionStrategyType);
     }),
   );
   return [defaultMethod, defaultSubject];

@@ -1,10 +1,12 @@
 import { createAxium } from '../model/axium';
 import { Concept  } from '../model/concept';
-import { primeAction } from '../model/action';
+import { createAction, primeAction } from '../model/action';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, chainCount, add, subtract, counterKey } from '../concepts/counter/counter.concept';
+import { Counter, counterConcept, counterKey } from '../concepts/counter/counter.concept';
 import { chainConcept } from '../concepts/chain/chain.concept';
-import { PrepareChainPayload, prepareChain } from '../concepts/chain/qualities/prepareChain.quality';
+import { PrepareChainPayload, chainPrepareChainType } from '../concepts/chain/qualities/prepareChain.quality';
+import { counterAddType } from '../concepts/counter/qualities/add.quality';
+import { counterSubtractType } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
   const axium = createAxium([counterConcept, chainConcept]);
@@ -14,9 +16,9 @@ test('Axium Test', (done) => {
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
     if (count === 1) {
-      const primedPrepareChain = primeAction(concepts, prepareChain);
-      const primedAdd = primeAction(concepts, add);
-      const primedSubtract = primeAction(concepts, subtract);
+      const primedPrepareChain = primeAction(concepts, createAction(chainPrepareChainType));
+      const primedAdd = primeAction(concepts, createAction(counterAddType));
+      const primedSubtract = primeAction(concepts, createAction(counterSubtractType));
       primedPrepareChain.payload = {
         actions: [
           primedAdd,

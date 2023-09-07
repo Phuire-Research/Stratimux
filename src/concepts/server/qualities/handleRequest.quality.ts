@@ -1,12 +1,12 @@
 import { map, Subject } from 'rxjs';
 import { Quality, Reducer, Method, defaultReducer} from '../../../model/concept';
-import { Action } from '../../../model/action';
-import { strategySuccess, endOfActionStrategy } from '../../../model/actionStrategy';
+import { Action, ActionType } from '../../../model/action';
+import { strategySuccess } from '../../../model/actionStrategy';
 import { Server } from '../server.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const handleRequest: Action = createAction('Server Handle Request');
+export const serverHandleRequestType: ActionType = 'Server Handle Request';
 
 // const handleRequestSubject = new Subject<Action>();
 // const handleRequestMethod: Method = handleRequestSubject.pipe<Action>(
@@ -30,7 +30,7 @@ export const handleRequest: Action = createAction('Server Handle Request');
 // );
 
 export const handleRequestQuality = createQuality(
-  handleRequest,
+  serverHandleRequestType,
   defaultReducer,
   // handleRequestMethod,
   // handleRequestSubject

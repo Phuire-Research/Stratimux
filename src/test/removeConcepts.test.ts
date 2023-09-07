@@ -3,8 +3,10 @@ import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { Counter, counterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
-import { addConceptsToRemovalQueThenBlockStrategy, removeConceptsViaQueThenUnblockKey } from '../concepts/axium/strategies/removeConcept.strategy';
-import { log } from '../concepts/axium/qualities/log.quality';
+import {
+  addConceptsToRemovalQueThenBlockStrategy,
+  removeConceptsViaQueThenUnblockKey
+} from '../concepts/axium/strategies/removeConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {

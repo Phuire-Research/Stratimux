@@ -1,13 +1,13 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { primeAction } from '../../../model/action';
-import { initializeOwnership } from '../qualities/initializeOwnership.quality';
-import { setMode, SetModePayload } from '../../axium/qualities/setMode.quality';
+import { createAction, primeAction } from '../../../model/action';
+import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
+import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 
 export const setOwnerShipModeKey = 'Set Axium Mode to Ownership';
 export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
-  const primedInitializeOwnership = primeAction(concepts, initializeOwnership);
-  const primedSetMode = primeAction(concepts, setMode);
+  const primedInitializeOwnership = primeAction(concepts, createAction(ownershipInitializeOwnershipType));
+  const primedSetMode = primeAction(concepts, createAction(axiumSetModeType));
 
   const stepTwo: ActionNode = {
     action: primedInitializeOwnership,

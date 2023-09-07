@@ -1,8 +1,6 @@
-import { Action, createAction } from './action';
+import { Action, ActionType, createAction } from './action';
 
-export const endOfActionStrategy: Action = createAction(
-  'End of Action Strategy',
-);
+export const endOfActionStrategyType: ActionType = 'End of Action Strategy';
 
 /**
  * ActionNode
@@ -83,7 +81,7 @@ export const strategyBegin = (strategy: ActionStrategy): Action => {
     }
     return strategy.currentNode.action;
   } else {
-    return endOfActionStrategy;
+    return createAction(endOfActionStrategyType);
   }
 };
 
@@ -93,6 +91,7 @@ export const strategyBegin = (strategy: ActionStrategy): Action => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
   const strategy = { ..._strategy };
   // console.log('SUCCESS', strategy.payload);
@@ -115,7 +114,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
       ];
       return strategyBegin(nextStrategy);
     }
-    const end = {...endOfActionStrategy};
+    const end = createAction(endOfActionStrategyType);
     end.strategy = strategy;
     return end;
   }
@@ -147,6 +146,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function strategyFailed(_strategy: ActionStrategy, data?: any) {
   let strategy = _strategy;
   let nextAction: Action;
@@ -181,7 +181,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
       ];
       return strategyBegin(nextStrategy);
     }
-    const end = {...endOfActionStrategy};
+    const end = createAction(endOfActionStrategyType);
     end.strategy = strategy;
     return end;
   }
@@ -217,6 +217,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
 export const strategyDecide = (
   strategy: ActionStrategy,
   key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
 ) => {
   let nextAction: Action;
@@ -241,7 +242,7 @@ export const strategyDecide = (
       ];
       return strategyBegin(nextStrategy);
     }
-    const end = {...endOfActionStrategy};
+    const end = createAction(endOfActionStrategyType);
     end.strategy = strategy;
     return end;
   }

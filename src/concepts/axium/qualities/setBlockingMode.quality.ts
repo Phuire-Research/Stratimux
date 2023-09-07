@@ -1,14 +1,14 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
 import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { Action } from '../../../model/action';
-import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
+import { Action, ActionType } from '../../../model/action';
+import { endOfActionStrategyType, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
 import { createAction } from '../../../model/action';
-import { badAction } from './badAction.quality';
+import { axiumBadActionType, } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
-import { appendActionListToDialog, AppendActionListToDialogPayload } from './appendActionListToDialog.quality';
+import { axiumAppendActionListToDialogType, AppendActionListToDialogPayload } from './appendActionListToDialog.quality';
 
-export const setBlockingMode: Action = createAction('Axium Set Blocking Mode');
+export const axiumSetBlockingModeType: ActionType = 'Axium Set Blocking Mode';
 
 export type SetBlockingModePayload = {
     concepts: Concept[]
@@ -28,10 +28,10 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
         const sub = quality.method.subscribe(action => {
           if (
             action.strategy &&
-            action.type === endOfActionStrategy.type
+            action.type === endOfActionStrategyType
           ) {
             // Allows for reducer next in sequence
-            const appendToDialog = {...appendActionListToDialog};
+            const appendToDialog = createAction(axiumAppendActionListToDialogType);
             appendToDialog.payload = {
               actionList: action.strategy.actionList,
               strategyKey: action.strategy.key
@@ -39,8 +39,8 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
             state.action$?.next(appendToDialog);
           } else if (
             action.strategy &&
-            action.type !== endOfActionStrategy.type &&
-            action.type !== badAction.type
+            action.type !== endOfActionStrategyType &&
+            action.type !== axiumBadActionType
           ) {
             state.action$?.next(action);
           }
@@ -61,7 +61,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
 }
 
 export const setBlockingModeQuality = createQuality(
-  setBlockingMode,
+  axiumSetBlockingModeType,
   setBlockingModeReducer,
   createDefaultMethodCreator
 );
