@@ -1,7 +1,7 @@
 import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
-import { OwnershipTicket } from './ownership';
+import { OwnershipTicket, OwnershipTicketStub } from './ownership';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 
 export type ActionType = string;
@@ -12,7 +12,8 @@ export type Action = {
     strategy?: ActionStrategy;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keyedSelectors?: KeyedSelector[];
-    stubs?: OwnershipTicket[];
+    stubs?: OwnershipTicketStub[];
+    expiration?: number;
 };
 
 export function primeAction(concepts: Concept[], action: Action): Action {

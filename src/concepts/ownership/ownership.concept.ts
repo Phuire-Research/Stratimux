@@ -10,6 +10,7 @@ export type OwnershipState = {
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
   ticketStalls: [number, number][]
+  ticker: number;
 }
 
 export const ownershipKey = 'ownership';
@@ -18,7 +19,8 @@ const initialOwnershipState: OwnershipState = {
   initialized: false,
   ownershipLedger: createOwnershipLedger(),
   pendingActions: [],
-  ticketStalls: []
+  ticketStalls: [],
+  ticker: 0,
 };
 
 export const createOwnershipConcept: ConceptCreator = () => {
