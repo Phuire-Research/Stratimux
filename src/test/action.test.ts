@@ -8,7 +8,6 @@ import { createAction } from '../model/action';
 // };
 // export type ActionCreator = (payload?: unknown) => Action;
 
-
 // export const createAction = (type: ActionType): ActionCreator => ((payload?: unknown): Action => {
 //   return {
 //     type,

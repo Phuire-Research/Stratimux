@@ -6,7 +6,7 @@ export type {
 } from './model/actionStrategy';
 export {
   createStrategy,
-  endOfActionStrategy,
+  endOfActionStrategyType,
   strategyBegin,
   strategySuccess,
   strategyFailed,
@@ -22,6 +22,7 @@ export type {
   Method,
   Principle,
   Mode,
+  ConceptCreator
 } from './model/concept';
 export { selectState, selectConcept } from './model/selector';
 export { PrincipleFunction } from './model/principle';

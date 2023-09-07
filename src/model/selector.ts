@@ -20,7 +20,7 @@ export function selectState<T>(concepts: Concept[], key: string): T {
 // Note: The Concept Key within the selector has to be set Explicitly for now
 export function selectSlice<T>(
   concepts: Concept[],
-  selector: KeyedSelector): T | Error {
+  selector: KeyedSelector): T | undefined {
   let concept: Concept | undefined;
   const conceptKey = selector.conceptKey;
   for (let i = 0; i < concepts.length; i++) {
@@ -29,18 +29,18 @@ export function selectSlice<T>(
       break;
     } else if (i === concepts.length - 1) {
       console.log('Check Slice', i, concepts, selector);
-      return Error('Invalid Concept Key');
+      return undefined;
     }
   }
 
   const keys = selector.stateKeys.split(' ');
-  if (concept === undefined) {return Error('Invalid Concept Key');}
+  if (concept === undefined) {return undefined;}
   const cast = concept.state as Record<string, any>;
   const existsKeys = Object.keys(cast);
   let exists = false;
   existsKeys.forEach(key => {key === keys[0] ? exists = true : null;});
   if (!exists) {
-    return new Error('Invalid State Key');
+    return undefined;
   }
   if (keys.length === 1) {
     return cast[keys[0]] as T;
@@ -52,7 +52,7 @@ export function selectSlice<T>(
     const aspectExistsKeys = Object.keys(target);
     aspectExistsKeys.forEach(_key => {_key === key ? aspectExists = true : null;});
     if (!aspectExists) {
-      return new Error('Invalid Inner State Key');
+      return undefined;
     }
     if (i !== keys.length - 1) {
       target = target[key];

@@ -24,6 +24,7 @@ export const ownershipPrinciple: PrincipleFunction = (
         const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
         // console.log('Check', ownershipState);
         if (ownershipState.initialized) {
+          // This will be the point of dispatch of Qued Actions
           console.log('Do Stuff');
         } else if (!initDispatch && !ownershipState.initialized) {
           console.log('DISPATCH');
@@ -36,8 +37,8 @@ export const ownershipPrinciple: PrincipleFunction = (
         }
       });
       // Problem Step
-      // registerPrincipleSubscription(observer, _cpts, subscription);
       sub.unsubscribe();
+      registerPrincipleSubscription(observer, _cpts, subscription);
     }
   });
 };

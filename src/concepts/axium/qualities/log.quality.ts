@@ -1,5 +1,5 @@
 import { map, Subject } from 'rxjs';
-import { Method, MethodCreator, Quality, Reducer, defaultReducer } from '../../../model/concept';
+import { Method, MethodCreator, defaultReducer } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { endOfActionStrategyType } from '../../../model/actionStrategy';
 import { createAction } from '../../../model/action';
