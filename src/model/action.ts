@@ -9,7 +9,7 @@ export type Action = {
     payload?: unknown;
     strategy?: ActionStrategy;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    keyedSelectors?: KeyedSelector<any, any>[];
+    keyedSelectors?: KeyedSelector[];
     stubs?: OwnershipTicket[];
 };
 

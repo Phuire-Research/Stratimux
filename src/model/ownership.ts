@@ -94,7 +94,7 @@ export const checkIn =
   for (const stallSemaphore of ticketStalls) {
     if (stallSemaphore[0] === action.semaphore[0] && stallSemaphore[1] === action.semaphore[1]) {
       action.keyedSelectors?.forEach(keyed => {
-        const key = `${keyed.conceptKey} ${keyed.key}`;
+        const key = `${keyed.conceptKey} ${keyed.stateKeys}`;
         const entry = ownershipLedger.get(key);
         if (entry) {
           const newTicket = {
