@@ -16,13 +16,14 @@ export type Action = {
     expiration: number;
 };
 
-export function primeAction(concepts: Concept[], action: Action): Action {
+export function primeAction(concepts: Concept[], action: Action, agreement?: number): Action {
   for (const concept of concepts) {
     for (const quality of concept.qualities) {
       if (action.type === quality.actionType) {
         return {
           ...action,
           semaphore: quality.semaphore,
+          expiration: Date.now() + (agreement !== undefined ? agreement : 5000)
         };
       }
     }
@@ -35,12 +36,12 @@ export function primeAction(concepts: Concept[], action: Action): Action {
   };
 }
 
-export function createAction(type: ActionType, payload?: unknown): Action {
+export function createAction(type: ActionType, payload?: unknown, agreement?: number): Action {
   return {
     type,
     semaphore: [0, 0, -1],
     payload,
     // Temporary until we have proper SLA
-    expiration: Date.now() + 5000
+    expiration: Date.now() + (agreement !== undefined ? agreement : 5000)
   };
 }
