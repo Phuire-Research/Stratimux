@@ -5,6 +5,8 @@ import { OwnershipState, createOwnershipConcept, ownershipKey } from '../concept
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeKey, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 
+// REFACTOR to have two Axiums interact with One Another
+// Play a Game of Tictac Toe
 test('Ownership Test', (done) => {
   const axium = createAxium([createOwnershipConcept()]);
   const sub = axium.subscribe((concepts: Concept[]) => {
