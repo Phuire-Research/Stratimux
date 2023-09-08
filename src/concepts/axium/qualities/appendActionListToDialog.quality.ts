@@ -1,10 +1,10 @@
 import { BehaviorSubject, map, Subject, switchMap, withLatestFrom } from 'rxjs';
 import { Concept, Method, MethodCreator, Quality, Reducer, defaultReducer } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
-import { endOfActionStrategyType } from '../../../model/actionStrategy';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
+import { axiumConcludeType } from './conclude.quality';
 
 export const axiumAppendActionListToDialogType: ActionType = 'Axium Append Action List to Dialog';
 
@@ -25,7 +25,7 @@ const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$
         payload.actionList.forEach(str => {newDialog += str + ' ';});
         console.log(newDialog);
       }
-      return createAction(endOfActionStrategyType);
+      return createAction(axiumConcludeType);
     })
   );
   return [

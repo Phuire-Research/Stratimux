@@ -1,9 +1,10 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Action, ActionType, createAction } from './action';
 import { PrincipleFunction } from '../model/principle';
-import { endOfActionStrategyType, strategySuccess } from './actionStrategy';
+import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
+import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -130,7 +131,7 @@ export const createDefaultMethodCreator: MethodCreator = () : [Method, Subject<A
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return createAction(endOfActionStrategyType);
+      return createAction(axiumConcludeType);
     }),
   );
   return [defaultMethod, defaultSubject];

@@ -30,6 +30,7 @@ export type AxiumState = {
   open: boolean;
   logging: boolean;
   dialog: string;
+  storeDialog: boolean;
   lastStrategy: string;
   generation: number;
   modeIndex: number;
@@ -49,6 +50,7 @@ const initialAxiumState: AxiumState = {
   open: false,
   logging: true,
   dialog: '',
+  storeDialog: true,
   lastStrategy: '',
   generation: 0,
   modeIndex: 0,

@@ -109,12 +109,11 @@ export const checkIn =
       expiration
     };
     ownershipState.ticker += 1;
+    action.stubs?.push(newTicketStub);
     if (entry) {
-      ownershipLedger.get(key)?.push(newTicket);
-      action.stubs?.push(newTicketStub);
+      entry.push(newTicket);
     } else {
       ownershipLedger.set(key, [newTicket]);
-      action.stubs?.push(newTicketStub);
     }
   });
   return  [
@@ -231,11 +230,45 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
   return [concepts, undefined];
 };
 
-export const checkOut = () => {
-  // This runs if the Action already has Ticket Stubs
-  // As stubs attached and beyond the Initial Guard it is Assumed it is a Good Action
-  // Check Out Removes the Tickets from the Ownership Ledger based on the Stubs
-};
+// ~> Saturday
+// Main issue is resolving Stubs once the actions are Done
+// Refactored ActionStrategy so that lastActionNode may be used to Clear such if Strategy Exists
+//  This should be done via Check In
+// Otherwise the Second Angle is a Clear via the new Conclude Action
+//  Which conclude would carry the ActionNode, but likewise be blocked from running due to no Reducer or Method
+//
+// export const checkOut = (concepts: Concept[], action: Action): [Concept[], Action] => {
+//   const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+//   const ownershipLedger = ownershipState.ownershipLedger;
+//   const selectors = action.keyedSelectors;
+//   if (selectors) {
+//     selectors.forEach(selector => {
+//       const key = `${selector.conceptKey} ${selector.stateKeys}`;
+//       const entry = ownershipLedger.get(key);
+//       const expiration = action.expiration;
+//       const newTicketStub = {
+//         key,
+//         ticket: ownershipState.ticker,
+//         expiration
+//       };
+//       const newTicket = {
+//         ticket: ownershipState.ticker,
+//         expiration
+//       };
+//       ownershipState.ticker += 1;
+//       action.stubs?.push(newTicketStub);
+//       if (entry) {
+//         ownershipLedger.set(key, [newTicket, ...entry]);
+//       } else {
+//         ownershipLedger.set(key, [newTicket]);
+//       }
+//     });
+//   }
+//   return [
+//     concepts,
+//     action
+//   ];
+// };
 
 // export const removeTickets = (ledger: OwnershipLedger, action: Action): [OwnershipLedger, boolean[]] => {
 //   const newLedger = {...ledger};

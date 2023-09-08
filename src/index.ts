@@ -6,7 +6,6 @@ export type {
 } from './model/actionStrategy';
 export {
   createStrategy,
-  endOfActionStrategyType,
   strategyBegin,
   strategySuccess,
   strategyFailed,

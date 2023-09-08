@@ -1,12 +1,9 @@
-import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { Subject, Subscriber } from 'rxjs';
+import { Concept, createDefaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
-import { endOfActionStrategyType, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
-import { createAction } from '../../../model/action';
-import { axiumBadActionType } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
-import { axiumAppendActionListToDialogType, AppendActionListToDialogPayload } from './appendActionListToDialog.quality';
+import { defaultMethodSubscription } from '../../../model/axium';
 
 export const axiumSetDefaultModeType: ActionType = 'Axium Set Default Mode';
 
@@ -24,28 +21,8 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
     concept.qualities.forEach(quality => {
       if (quality.method) {
         const sub = quality.method.subscribe(action => {
-          if (
-            action.strategy &&
-            action.type === endOfActionStrategyType
-          ) {
-            // Allows for reducer next in sequence
-            const appendToDialog = createAction(axiumAppendActionListToDialogType);
-            appendToDialog.payload = {
-              actionList: action.strategy.actionList,
-              strategyKey: action.strategy.key
-            } as AppendActionListToDialogPayload;
-            setTimeout(() => {
-              state.action$?.next(appendToDialog);
-            }, 0);
-          } else if (
-            action.strategy &&
-            action.type !== endOfActionStrategyType &&
-            action.type !== axiumBadActionType
-          ) {
-            setTimeout(() => {
-              state.action$?.next(action);
-            }, 0);
-          }
+          const action$ = state.action$ as Subject<Action>;
+          defaultMethodSubscription(action$, action);
         });
         methodSubscribers.push({
           key: concept.key,

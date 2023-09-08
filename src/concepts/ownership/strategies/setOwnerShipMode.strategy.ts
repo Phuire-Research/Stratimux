@@ -1,22 +1,23 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { createAction, primeAction } from '../../../model/action';
+import { createAction, getSemaphore, primeAction } from '../../../model/action';
 import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { axiumSetBlockingModeType } from '../../axium/qualities/setBlockingMode.quality';
 
 export const setOwnerShipModeKey = 'Set Axium Mode to Ownership';
 export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
-  const primedInitializeOwnership = primeAction(concepts, createAction(ownershipInitializeOwnershipType));
-  const primedSetMode = primeAction(concepts, createAction(axiumSetModeType));
-  const primedSetBlockingMode = primeAction(concepts, createAction(axiumSetBlockingModeType));
+  const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipInitializeOwnershipType);
+  const setModeSemaphore = getSemaphore(concepts, axiumSetModeType);
 
   const stepTwo: ActionNode = {
-    action: primedInitializeOwnership,
+    actionType: ownershipInitializeOwnershipType,
+    semaphore: initializeOwnershipSemaphore,
     successNode: null,
   };
   const stepOne: ActionNode = {
-    action: primedSetMode,
+    actionType: axiumSetModeType,
+    semaphore: setModeSemaphore,
     successNode: stepTwo,
     payload: { modeIndex: 2 } as SetModePayload
   };

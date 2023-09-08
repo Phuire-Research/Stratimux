@@ -36,10 +36,22 @@ export function primeAction(concepts: Concept[], action: Action, agreement?: num
   };
 }
 
-export function createAction(type: ActionType, payload?: unknown, agreement?: number): Action {
+export function getSemaphore(concepts: Concept[], actionType: ActionType): [number, number, number] {
+  for (const concept of concepts) {
+    for (const quality of concept.qualities) {
+      if (actionType === quality.actionType) {
+        return quality.semaphore;
+      }
+    }
+  }
+  return [0, 0, -1];
+}
+
+export function createAction(type: ActionType, payload?: unknown, agreement?: number, _semaphore?: [number, number, number]): Action {
+  const semaphore = _semaphore ? _semaphore : [0, 0, -1] as [number, number, number];
   return {
     type,
-    semaphore: [0, 0, -1],
+    semaphore,
     payload,
     // Temporary until we have proper SLA
     expiration: Date.now() + (agreement !== undefined ? agreement : 5000)

@@ -5,7 +5,6 @@ import { OwnershipState } from '../ownership.concept';
 export const ownershipInitializeOwnershipType: ActionType = 'Ownership Initialize';
 
 export function initializeOwnershipReducer(state: OwnershipState, action: Action) {
-  console.log('HIT');
   return {
     ...state,
     initialized: true

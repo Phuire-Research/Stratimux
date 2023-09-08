@@ -1,6 +1,6 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { createAction, primeAction } from '../../../model/action';
+import { createAction, getSemaphore, primeAction } from '../../../model/action';
 import { axiumOpenType } from '../qualities/open.quality';
 import { axiumRegisterStreamsType, type RegisterStreamsPayload } from '../qualities/registerStreams.quality';
 import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
@@ -8,13 +8,14 @@ import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 
 export const initializeKey = 'Axium Initialize';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
-  const primedInit = primeAction(concepts, createAction(axiumInitializePrinciplesType));
-  const primedRegister = primeAction(concepts, createAction(axiumRegisterStreamsType));
-  const primedSetDefaultMode = primeAction(concepts, createAction(axiumSetDefaultModeType));
-  const primedOpen = primeAction(concepts, createAction(axiumOpenType));
+  const initSemaphore = getSemaphore(concepts, axiumInitializePrinciplesType);
+  const registerSemaphore = getSemaphore(concepts, axiumRegisterStreamsType);
+  const setDefaultModeSemaphore = getSemaphore(concepts, axiumSetDefaultModeType);
+  const openSemaphore = getSemaphore(concepts, axiumOpenType);
 
   const stepFour: ActionNode = {
-    action: primedOpen,
+    actionType: axiumOpenType,
+    semaphore: openSemaphore,
     successNode: null,
     payload: {concepts}
   };
@@ -24,17 +25,20 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
   //     payload: {concepts}
   // }
   const stepThree: ActionNode = {
-    action: primedSetDefaultMode,
+    actionType: axiumSetDefaultModeType,
+    semaphore: setDefaultModeSemaphore,
     successNode: stepFour,
     payload: {concepts}
   };
   const stepTwo: ActionNode = {
-    action: primedInit,
+    actionType: axiumInitializePrinciplesType,
+    semaphore: initSemaphore,
     successNode: stepThree,
     payload: {concepts}
   };
   const stepOne: ActionNode = {
-    action: primedRegister,
+    actionType: axiumRegisterStreamsType,
+    semaphore: registerSemaphore,
     successNode: stepTwo,
     payload: streams
   };

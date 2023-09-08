@@ -1,8 +1,6 @@
-import { Subject } from 'rxjs';
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { primeAction, Action, createAction } from '../../../model/action';
-import type { RegisterStreamsPayload } from '../qualities/registerStreams.quality';
+import { getSemaphore } from '../../../model/action';
 import { axiumRemoveConceptsViaQueType } from '../qualities/removeConceptsViaQue.quality';
 import { AppendConceptsToRemoveQuePayload, axiumAppendConceptsToRemoveQueType } from '../qualities/appendConceptsToRemoveQue.quality';
 import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
@@ -11,20 +9,23 @@ import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/set
 
 export const addConceptsToRemovalQueThenBlockKey = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
-  const primedSetBlockingMode = primeAction(concepts, createAction(axiumSetBlockingModeType));
-  const primedAppendConceptsToRemoveQue = primeAction(concepts, createAction(axiumAppendConceptsToRemoveQueType));
-  const primedOpen = primeAction(concepts, createAction(axiumOpenType));
+  const setBlockingModeSemaphore = getSemaphore(concepts, axiumSetBlockingModeType);
+  const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumAppendConceptsToRemoveQueType);
+  const openSemaphore = getSemaphore(concepts, axiumOpenType);
   const stepThree: ActionNode = {
-    action: primedOpen,
+    actionType: axiumOpenType,
+    semaphore: openSemaphore,
     successNode: null,
   };
   const stepTwo: ActionNode = {
-    action: primedAppendConceptsToRemoveQue,
+    actionType: axiumAppendConceptsToRemoveQueType,
+    semaphore: appendConceptsToRemoveQueSemaphore,
     successNode: stepThree,
     payload: {concepts: targetConcepts} as AppendConceptsToRemoveQuePayload
   };
   const stepOne: ActionNode = {
-    action: primedSetBlockingMode,
+    actionType: axiumSetBlockingModeType,
+    semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
     payload: {concepts} as SetBlockingModePayload
   };
@@ -37,16 +38,18 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
 // Step Two
 export const removeConceptsViaQueThenUnblockKey = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
-  const primedRemoveConceptsViaQue = primeAction(concepts, createAction(axiumRemoveConceptsViaQueType));
-  const primedSetDefaultMode = primeAction(concepts, createAction(axiumSetDefaultModeType));
+  const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumRemoveConceptsViaQueType);
+  const setDefaultModeSemaphore = getSemaphore(concepts, axiumSetDefaultModeType);
 
   const stepTwo: ActionNode = {
-    action: primedSetDefaultMode,
+    actionType: axiumSetDefaultModeType,
+    semaphore: setDefaultModeSemaphore,
     successNode: null,
     payload: {concepts} as SetDefaultModePayload
   };
   const stepOne: ActionNode = {
-    action: primedRemoveConceptsViaQue,
+    actionType: axiumRemoveConceptsViaQueType,
+    semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
   };
 

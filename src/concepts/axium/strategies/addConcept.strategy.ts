@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { primeAction, Action, createAction} from '../../../model/action';
+import { primeAction, Action, createAction, getSemaphore} from '../../../model/action';
 import type { RegisterStreamsPayload } from '../qualities/registerStreams.quality';
 import { AddConceptsFromQuePayload, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
 import { AppendConceptsToAddQuePayload, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
@@ -15,16 +15,16 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   // const primedSetBlockingMode = primeAction(conceptualSet, setBlockingMode);
   // const primedAppendConceptsToAddQue = primeAction(conceptualSet, appendConceptsToAddQue);
   const stepThree: ActionNode = {
-    action: createAction(axiumOpenType),
+    actionType: axiumOpenType,
     successNode: null,
   };
   const stepTwo: ActionNode = {
-    action: createAction(axiumAppendConceptsToAddQueType),
+    actionType: axiumAppendConceptsToAddQueType,
     successNode: stepThree,
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload
   };
   const stepOne: ActionNode = {
-    action: createAction(axiumSetBlockingModeType),
+    actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
     payload: {concepts} as AppendConceptsToAddQuePayload
   };
@@ -38,16 +38,18 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
 // Step Two
 export const addConceptsFromQueThenUnblockKey = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
-  const primedAddConceptsFromQue = primeAction(conceptualSet, createAction(axiumAddConceptFromQueType));
-  const primedSetDefaultMode = primeAction(conceptualSet, createAction(axiumSetDefaultModeType));
+  const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumAddConceptFromQueType);
+  const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumSetDefaultModeType);
 
   const stepTwo: ActionNode = {
-    action: primedSetDefaultMode,
+    actionType: axiumSetDefaultModeType,
+    semaphore: setDefaultModeSemaphore,
     successNode: null,
     payload: {concepts: conceptualSet}
   };
   const stepOne: ActionNode = {
-    action: primedAddConceptsFromQue,
+    actionType: axiumAddConceptFromQueType,
+    semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
     payload: {action$} as AddConceptsFromQuePayload
   };
