@@ -15,7 +15,15 @@ const nullActionType: ActionType = 'null';
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
  * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
  * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
- * @param payload - `optional` Will carry this payload just for this node.
+ * @param payload - `optional` Will set the payload of the action.
+ * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
+ * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
+ * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
+ * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
+ * @param denoter - `optional` String that denotes the end of the ActionList sentence.
+ *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
+ * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
+ *  @Output Via Axium set Mode to Ownership Mode.
  */
 
 export interface ActionNode {
@@ -27,7 +35,8 @@ export interface ActionNode {
   decisionNodes?: Record<string, ActionNode>;
   successNode: ActionNode | null;
   failureNode?: ActionNode;
-  prepend?: string;
+  preposition?: string;
+  denoter?: string;
 }
 
 /**
@@ -54,13 +63,39 @@ export interface ActionStrategy {
   puntedStrategy?: ActionStrategy[];
 }
 
+function isNotPunctuated(str: string): boolean {
+  const punctuatedList = ['.', ',', '?', '!', ';'];
+  let notPunctuated = true;
+  for (const punctuated of punctuatedList) {
+    if (str.charAt(0) === punctuated) {
+      notPunctuated = false;
+      break;
+    }
+  }
+  return notPunctuated;
+}
+
+function createSentence(actionNode: ActionNode, decisionKey?: string): string {
+  const preposition = actionNode.preposition ? `${actionNode.preposition} ` : '';
+  const decision = decisionKey ? `${decisionKey} ` : '';
+  const body = `${actionNode.actionType}`;
+  let denoter = '.';
+  if (actionNode.denoter) {
+    if (isNotPunctuated(actionNode.denoter)) {
+      denoter = ` ${actionNode.denoter}`;
+    } else {
+      denoter = actionNode.denoter;
+    }
+  }
+  return preposition + decision + body + denoter;
+}
+
 export function createStrategy(
   params: ActionStrategyParameters,
 ): ActionStrategy {
   const data: unknown = params.data;
   const currentNode: ActionNode = params.initialNode;
-  const actionList: Array<string> =
-          [`${params.key}.`,`${params.initialNode.actionType}.`];
+  const actionList: Array<string> = [params.key + '.'];
 
   return {
     key: params.key,
@@ -106,6 +141,10 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
   const strategy = { ..._strategy };
   // console.log('SUCCESS', strategy.payload);
   let nextAction: Action;
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    strategy.currentNode.preposition ? undefined : 'Success with'
+  );
   if (strategy.currentNode.successNode !== null) {
     const nextNode = strategy.currentNode.successNode;
     nextAction = createAction(
@@ -114,30 +153,24 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
       nextNode.agreement,
       nextNode.semaphore,
     );
-    const nextEntry = nextNode.prepend ?
-      `${nextNode.prepend} ${nextAction.type}.` :
-      `Success ${nextAction.type}.`;
     nextAction.strategy = {
       ...strategy,
       key: strategy.key,
       data: data ? data : strategy.data,
       currentNode: nextNode,
-      actionList: [...strategy.actionList, nextEntry],
+      actionList: [...strategy.actionList, actionListEntry],
       lastActionNode: strategy.currentNode,
     };
     return nextAction;
   } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('\n');
+    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = nextStrategy.currentNode.prepend ?
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.prepend} ${nextStrategy.currentNode.actionType}.`] :
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.actionType}.`];
+      const nextEntry = `${nextStrategy.key}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
         ...nextEntry,
@@ -167,6 +200,10 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
 export function strategyFailed(_strategy: ActionStrategy, data?: any) {
   const strategy = {..._strategy};
   let nextAction: Action;
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    strategy.currentNode.preposition ? undefined : 'Failed with'
+  );
   if (
     strategy.currentNode.failureNode !== null &&
         strategy.currentNode.failureNode !== undefined
@@ -177,10 +214,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
       strategy.currentNode.agreement,
       strategy.currentNode.semaphore
     );
-    const nextEntry = strategy.currentNode.failureNode?.prepend ?
-      `${strategy.currentNode.failureNode.prepend} ${nextAction.type}.` :
-      `Failed with ${nextAction.type}.`;
-    strategy.actionList = [...strategy.actionList, nextEntry];
+    strategy.actionList = [...strategy.actionList, actionListEntry];
     nextAction = { ...nextAction };
     nextAction.strategy = {
       ...strategy,
@@ -192,17 +226,14 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
     };
     return nextAction;
   } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('\n');
+    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = nextStrategy.currentNode.prepend ?
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.prepend} ${nextStrategy.currentNode.actionType}.`] :
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.actionType}.`];
+      const nextEntry = `${nextStrategy.key}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
         ...nextEntry,
@@ -236,18 +267,22 @@ export const strategyDecide = (
   data?: any,
 ) => {
   let nextAction: Action;
+  const decisionNodes = strategy.currentNode.decisionNodes as Record<string, ActionNode>;
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    decideKey
+  );
   if (
-    strategy.currentNode.decisionNodes !== null &&
-        strategy.currentNode.decisionNodes !== undefined
+    decisionNodes[decideKey] !== null
   ) {
     nextAction = createAction(
-      strategy.currentNode.decisionNodes[decideKey].actionType,
-      strategy.currentNode.decisionNodes[decideKey].payload,
-      strategy.currentNode.decisionNodes[decideKey].agreement,
-      strategy.currentNode.decisionNodes[decideKey].semaphore
+      decisionNodes[decideKey].actionType,
+      decisionNodes[decideKey].payload,
+      decisionNodes[decideKey].agreement,
+      decisionNodes[decideKey].semaphore
     );
-    const nextNode = strategy.currentNode.decisionNodes[decideKey];
-    strategy.actionList = [...strategy.actionList, `${decideKey} ${nextAction.type}.`];
+    const nextNode = decisionNodes[decideKey];
+    strategy.actionList = [...strategy.actionList, actionListEntry];
     nextAction.strategy = {
       ...strategy,
       key: strategy.key,
@@ -258,17 +293,14 @@ export const strategyDecide = (
     };
     return nextAction;
   } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('\n');
+    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = nextStrategy.currentNode.prepend ?
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.prepend} ${nextStrategy.currentNode.actionType}.`] :
-        [`${nextStrategy.key}`, `${nextStrategy.currentNode.actionType}.`];
+      const nextEntry = `${nextStrategy.key}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
         ...nextEntry,

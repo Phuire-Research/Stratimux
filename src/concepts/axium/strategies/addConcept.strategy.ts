@@ -21,7 +21,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
     successNode: stepThree,
-    payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload
+    payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,

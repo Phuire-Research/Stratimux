@@ -21,7 +21,6 @@ const addMethodCreator: MethodCreator = () => {
   const addSubject = new Subject<Action>();
   const addMethod: Method = addSubject.pipe<Action>(
     map((action: Action) => {
-      console.log('ADDITION');
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }

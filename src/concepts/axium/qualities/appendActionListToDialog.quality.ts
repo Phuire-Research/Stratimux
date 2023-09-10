@@ -13,18 +13,20 @@ export type AppendActionListToDialogPayload = {
   strategyKey: string;
 }
 
-const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$: Subject<Concept[]>) => {
+// const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$: Subject<Concept[]>) => {
+const createAppendActionListToDialogMethodCreator: MethodCreator = () => {
   const logSubject = new Subject<Action>();
   const logMethod: Method = logSubject.pipe(
-    withLatestFrom(subConcepts$),
-    map(([action, concepts]) => {
-      const axiumState = concepts[0].state as AxiumState;
-      if (axiumState.logging) {
-        const payload = action.payload as AppendActionListToDialogPayload;
-        let newDialog = payload.strategyKey + '. ';
-        payload.actionList.forEach(str => {newDialog += str + ' ';});
-        console.log(newDialog);
-      }
+    // withLatestFrom(subConcepts$),
+    // map(([action, concepts]) => {
+    map(() => {
+      // const axiumState = concepts[0].state as AxiumState;
+      // if (axiumState.logging) {
+      //   const payload = action.payload as AppendActionListToDialogPayload;
+      //   let newDialog = payload.strategyKey + '. ';
+      //   payload.actionList.forEach(str => {newDialog += str + ' ';});
+      //   console.log(newDialog);
+      // }
       return createAction(axiumConcludeType);
     })
   );
@@ -37,15 +39,20 @@ const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$
 export function appendActionListToDialogReducer(state: AxiumState, action: Action) {
   const payload = action.payload as AppendActionListToDialogPayload;
   let newDialog = '';
-  if (state.dialog !== '') {
-    newDialog = state.dialog + '\n';
+  if (state.storeDialog) {
+    payload.actionList.forEach(str => {newDialog += str + ' ';});
+    if (state.logging) {
+      console.log(newDialog);
+    }
+    return {
+      ...state,
+      dialog: state.dialog + newDialog,
+      lastStrategy: payload.strategyKey,
+    };
   }
-  newDialog += payload.strategyKey + '. ';
-  payload.actionList.forEach(str => {newDialog += str + ' ';});
   return {
     ...state,
-    dialog: newDialog,
-    lastStrategy: payload.strategyKey,
+    lastStrategy: payload.strategyKey
   };
 }
 
