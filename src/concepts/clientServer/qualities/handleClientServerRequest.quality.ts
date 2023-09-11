@@ -1,12 +1,12 @@
 import { map, Subject } from 'rxjs';
-import { Action } from '../../../model/action';
+import { Action, ActionType } from '../../../model/action';
 import { Quality, Reducer, Method, defaultReducer } from '../../../model/concept';
-import { strategySuccess, endOfActionStrategy } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/actionStrategy';
 import { ClientServer } from '../clientServer.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const handleClientServerRequest: Action = createAction('Client Server Handle Request');
+export const handleClientServerRequestType: ActionType = 'Client Server Handle Request';
 
 export type HandleClientServerRequestPayload = {
     // request: Deno.RequestEvent,
@@ -46,7 +46,7 @@ function handleClientServerRequestReducer(state: ClientServer, action: Action) {
 // );
 
 export const handleClientServerRequestQuality = createQuality(
-  handleClientServerRequest,
+  handleClientServerRequestType,
   handleClientServerRequestReducer,
   // handleClientServerRequestMethod,
   // handleClientServerRequestSubject

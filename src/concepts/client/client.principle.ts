@@ -2,9 +2,8 @@ import { Action } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { Subject, Subscriber } from 'rxjs';
-import { Client, clientConcept } from './client.concept';
+import { Client, createClientConcept } from './client.concept';
 import { selectState } from '../../model/selector';
-import { log } from '../axium/qualities/log.quality';
 
 // export const clientPrinciple: PrincipleFunction = (
 //         observer: Subscriber<Action>,

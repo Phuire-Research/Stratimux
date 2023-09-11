@@ -1,12 +1,11 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
 import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
-import { Action, createAction } from '../../../model/action';
+import { Action, ActionType, createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const appendConceptsToRemoveQue: Action =
-    createAction('Axium append Concepts to Remove Concept Que');
+export const axiumAppendConceptsToRemoveQueType: ActionType = 'Axium append Concepts to Remove Concept Que';
 
 export type AppendConceptsToRemoveQuePayload = {
     concepts: Concept[]
@@ -26,7 +25,7 @@ export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Acti
 }
 
 export const appendConceptsToRemoveQueQuality = createQuality(
-  appendConceptsToRemoveQue,
+  axiumAppendConceptsToRemoveQueType,
   appendConceptsToRemoveQueReducer,
   createDefaultMethodCreator
 );

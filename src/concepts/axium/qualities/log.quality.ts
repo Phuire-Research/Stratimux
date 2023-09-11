@@ -1,18 +1,18 @@
 import { map, Subject } from 'rxjs';
-import { Method, MethodCreator, Quality, Reducer, defaultReducer } from '../../../model/concept';
-import { Action } from '../../../model/action';
-import { endOfActionStrategy } from '../../../model/actionStrategy';
+import { Method, MethodCreator, defaultReducer } from '../../../model/concept';
+import { Action, ActionType } from '../../../model/action';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { axiumConcludeType } from './conclude.quality';
 
-export const log: Action = createAction('Axium Log');
+export const axiumLogType: ActionType = 'Axium Log';
 
 const createLogMethodCreator: MethodCreator = () => {
   const logSubject = new Subject<Action>();
-  const logMethod: Method = logSubject.pipe<Action>(
+  const logMethod: Method = logSubject.pipe(
     map((action: Action) => {
       console.log('Logging: ', action);
-      return endOfActionStrategy;
+      return createAction(axiumConcludeType);
     })
   );
   return [
@@ -21,9 +21,8 @@ const createLogMethodCreator: MethodCreator = () => {
   ];
 };
 
-
 export const logQuality = createQuality(
-  log,
+  axiumLogType,
   defaultReducer,
   createLogMethodCreator,
 );

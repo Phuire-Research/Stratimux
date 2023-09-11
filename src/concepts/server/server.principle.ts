@@ -2,8 +2,7 @@ import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber
 import { Concept } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action } from '../../model/action';
-import { Server, serverConcept } from './server.concept';
-import { handleRequest } from './qualities/handleRequest.quality';
+import { Server } from './server.concept';
 import { selectConcept, selectState } from '../../model/selector';
 
 export const serverPrinciple: PrincipleFunction = async (observer: Subscriber<Action>, concepts: Concept[]) => {

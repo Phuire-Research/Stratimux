@@ -1,14 +1,13 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
 import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
 import { createPrinciple$ } from '../../../model/principle';
-import { Action, createAction } from '../../../model/action';
-import { badAction } from './badAction.quality';
+import { Action, ActionType, createAction } from '../../../model/action';
+import { axiumBadActionType } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
+import { blockingMethodSubscription } from '../../../model/axium';
 
-export const addConceptsFromQue: Action =
-    createAction('Axium Append Concepts to Add Concept Que');
+export const axiumAddConceptFromQueType: ActionType = 'Axium Append Concepts to Add Concept Que';
 
 export type AddConceptsFromQuePayload = {
     action$: Subject<Action>;
@@ -22,17 +21,8 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator(state.subConcepts$);
         const methodSub = quality.method.subscribe((action: Action) => {
-          console.log('Hitting');
-          if (
-            action.strategy &&
-            action.type !== endOfActionStrategy.type &&
-            action.type !== badAction.type
-          ) {
-            // Allows for reducer next in sequence
-            if (state.action$) {
-              state?.action$.next(action);
-            }
-          }
+          const action$ = state.action$ as Subject<Action>;
+          blockingMethodSubscription(action$, action);
         }) as Subscriber<Action>;
         methodSubscribers.push({key: concept.key, subscriber: methodSub});
       }
@@ -41,14 +31,13 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
 
   return {
     ...state,
-    // generation: state.generation + 1,
     methodSubscribers,
     addConceptQue: []
   };
 }
 
 export const addConceptsFromQueQuality = createQuality(
-  addConceptsFromQue,
+  axiumAddConceptFromQueType,
   addConceptsFromQueReducer,
   createDefaultMethodCreator
 );

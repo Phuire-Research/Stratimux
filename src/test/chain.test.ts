@@ -1,22 +1,24 @@
 import { createAxium } from '../model/axium';
 import { Concept  } from '../model/concept';
-import { primeAction } from '../model/action';
+import { createAction, primeAction } from '../model/action';
 import { selectState } from '../model/selector';
-import { Counter, counterConcept, chainCount, add, subtract } from '../concepts/counter/counter.concept';
-import { chainConcept } from '../concepts/chain/chain.concept';
-import { PrepareChainPayload, prepareChain } from '../concepts/chain/qualities/prepareChain.quality';
+import { Counter, createCounterConcept, counterKey } from '../concepts/counter/counter.concept';
+import { createChainConcept } from '../concepts/chain/chain.concept';
+import { PrepareChainPayload, chainPrepareChainType } from '../concepts/chain/qualities/prepareChain.quality';
+import { counterAddType } from '../concepts/counter/qualities/add.quality';
+import { counterSubtractType } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
-  const axium = createAxium([counterConcept, chainConcept]);
+  const axium = createAxium([createCounterConcept(), createChainConcept()]);
   // ax.subscribe(val=> console.log(val));
   // ax.subscribe(val => console.log('this value', val));
   let count = 0;
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
     if (count === 1) {
-      const primedPrepareChain = primeAction(concepts, prepareChain);
-      const primedAdd = primeAction(concepts, add);
-      const primedSubtract = primeAction(concepts, subtract);
+      const primedPrepareChain = primeAction(concepts, createAction(chainPrepareChainType));
+      const primedAdd = primeAction(concepts, createAction(counterAddType));
+      const primedSubtract = primeAction(concepts, createAction(counterSubtractType));
       primedPrepareChain.payload = {
         actions: [
           primedAdd,
@@ -29,7 +31,7 @@ test('Axium Test', (done) => {
       axium.dispatch(primedPrepareChain);
     }
     else if (count === 7) {
-      const counter = selectState<Counter>(concepts, counterConcept.key);
+      const counter = selectState<Counter>(concepts, counterKey);
       expect(counter.count).toBe(2);
       sub.unsubscribe();
       done();

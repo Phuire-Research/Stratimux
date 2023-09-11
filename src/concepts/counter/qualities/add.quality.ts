@@ -1,12 +1,14 @@
 import { map, Subject } from 'rxjs';
-import { Action } from '../../../model/action';
+import { Action, ActionType } from '../../../model/action';
 import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept';
-import { strategySuccess, endOfActionStrategy } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/actionStrategy';
 import { Counter } from '../counter.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { counterSelectCount } from '../counter.selector';
+import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
 
-export const add: Action = createAction('Counter Add');
+export const counterAddType: ActionType = 'Counter Add';
 
 export function addReducer(state: Counter, _: Action) {
   return {
@@ -19,11 +21,10 @@ const addMethodCreator: MethodCreator = () => {
   const addSubject = new Subject<Action>();
   const addMethod: Method = addSubject.pipe<Action>(
     map((action: Action) => {
-      console.log('ADDITION');
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return endOfActionStrategy;
+      return createAction(axiumConcludeType);
     })
   );
   return [
@@ -33,7 +34,8 @@ const addMethodCreator: MethodCreator = () => {
 };
 
 export const addQuality = createQuality(
-  add,
+  counterAddType,
   addReducer,
   addMethodCreator,
+  [counterSelectCount]
 );

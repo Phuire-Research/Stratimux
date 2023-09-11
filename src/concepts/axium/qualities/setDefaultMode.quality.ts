@@ -1,13 +1,11 @@
-import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { Action } from '../../../model/action';
-import { endOfActionStrategy, strategySuccess } from '../../../model/actionStrategy';
+import { Subject, Subscriber } from 'rxjs';
+import { Concept, createDefaultMethodCreator } from '../../../model/concept';
+import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
-import { createAction } from '../../../model/action';
-import { badAction } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
+import { defaultMethodSubscription } from '../../../model/axium';
 
-export const setDefaultMode: Action = createAction('Axium Set Default Mode');
+export const axiumSetDefaultModeType: ActionType = 'Axium Set Default Mode';
 
 export type SetDefaultModePayload = {
     concepts: Concept[]
@@ -23,15 +21,8 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
     concept.qualities.forEach(quality => {
       if (quality.method) {
         const sub = quality.method.subscribe(action => {
-          if (
-            action.strategy &&
-            action.type !== endOfActionStrategy.type &&
-            action.type !== badAction.type
-          ) {
-            setTimeout(() => {
-              state.action$?.next(action);
-            }, 0);
-          }
+          const action$ = state.action$ as Subject<Action>;
+          defaultMethodSubscription(action$, action);
         });
         methodSubscribers.push({
           key: concept.key,
@@ -49,7 +40,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
 }
 
 export const setDefaultModeQuality = createQuality(
-  setDefaultMode,
+  axiumSetDefaultModeType,
   setDefaultModeReducer,
   createDefaultMethodCreator
 );

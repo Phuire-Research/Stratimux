@@ -1,9 +1,9 @@
-import { Action, createAction } from '../../../model/action';
+import { Action, ActionType, createAction } from '../../../model/action';
 import { Quality, Reducer } from '../../../model/concept';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 
-export const badAction: Action = createAction('Axium Bad Action');
+export const axiumBadActionType: ActionType = 'Axium Bad Action';
 
 export function badActionReducer(state: AxiumState, action: Action) {
   if (state.logging) {
@@ -15,6 +15,6 @@ export function badActionReducer(state: AxiumState, action: Action) {
 }
 
 export const badActionQuality = createQuality(
-  badAction,
+  axiumBadActionType,
   badActionReducer
 );

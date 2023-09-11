@@ -1,10 +1,10 @@
 import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber, map} from 'rxjs';
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
-import { Action } from '../../model/action';
-import { AxiumState, _axium } from './axium.concept';
+import { Action, createAction } from '../../model/action';
+import { AxiumState, axiumKey } from './axium.concept';
 import { selectState } from '../../model/selector';
-import { RegisterSubscriberPayload, registerSubscriber } from './qualities/registerSubscriber.quality';
+import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from './qualities/registerSubscriber.quality';
 import { primeAction } from '../../model/action';
 import { strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
@@ -18,7 +18,7 @@ export const axiumPrinciple: PrincipleFunction = (
   let allowAdd = true;
   let allowRemove = true;
   const subscriber = concepts$.subscribe(_concepts => {
-    const axiumState = selectState<AxiumState>(_concepts, _axium.key);
+    const axiumState = selectState<AxiumState>(_concepts, axiumKey);
     // console.log('Check', axiumState.addConceptQue);
     if (axiumState.addConceptQue.length === 0) {
       allowAdd = true;
@@ -46,7 +46,7 @@ export const axiumPrinciple: PrincipleFunction = (
       newConcepts.forEach((concept, _index) => {
         concept.semaphore = _index;
         concept.qualities.forEach((quality, index) => {
-          quality.action.semaphore = [_index, index, axiumState.generation];
+          quality.semaphore = [_index, index, axiumState.generation];
         });
       });
       axiumState.concepts$?.next(newConcepts);
@@ -79,7 +79,7 @@ export const axiumPrinciple: PrincipleFunction = (
       newConcepts.forEach((concept, _index) => {
         concept.semaphore = _index;
         concept.qualities.forEach((quality, index) => {
-          quality.action.semaphore = [_index, index, axiumState.generation];
+          quality.semaphore = [_index, index, axiumState.generation];
         });
       });
 
@@ -91,7 +91,7 @@ export const axiumPrinciple: PrincipleFunction = (
       // Do More Things
     }
   });
-  const primedRegisterSubscriber = primeAction(concepts, registerSubscriber);
-  primedRegisterSubscriber.payload = { subscriber, key: _axium.key } as RegisterSubscriberPayload;
+  const primedRegisterSubscriber = primeAction(concepts, createAction(axiumRegisterSubscriberType));
+  primedRegisterSubscriber.payload = { subscriber, key: axiumKey } as RegisterSubscriberPayload;
   observer.next(primedRegisterSubscriber);
 };

@@ -1,58 +1,94 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept} from '../../../model/concept';
-import { primeAction } from '../../../model/action';
-import { add, subtract } from '../counter.concept';
+import { createAction, getSemaphore, primeAction } from '../../../model/action';
+import { counterAddType } from '../qualities/add.quality';
+import { counterSubtractType } from '../qualities/subtract.quality';
 
+export const countingKey = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
-    action: subtract,
-    successNode: null
+    actionType: counterSubtractType,
+    successNode: null,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepFour: ActionNode = {
-    action: add,
+    actionType: counterAddType,
     successNode: stepFive,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepThree: ActionNode = {
-    action: add,
+    actionType: counterAddType,
     successNode: stepFour,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepTwo: ActionNode = {
-    action: subtract,
+    actionType: counterSubtractType,
     successNode: stepThree,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepOne: ActionNode = {
-    action: add,
+    actionType: counterAddType,
     successNode: stepTwo,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
 
   const params: ActionStrategyParameters = {
+    key: countingKey,
     initialNode: stepOne,
   };
 
   return createStrategy(params);
 }
 
+export const primedCountingKey = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
-  const primedAdd = primeAction(concepts, add);
-  const primedSubtract = primeAction(concepts, add);
+  const addSemaphore = getSemaphore(concepts, counterAddType);
+  const subtractSemaphore = getSemaphore(concepts, counterSubtractType);
   const stepFour: ActionNode = {
-    action: primedAdd,
+    actionType: counterAddType,
+    semaphore: addSemaphore,
     successNode: null,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepThree: ActionNode = {
-    action: primedAdd,
+    actionType: counterAddType,
+    semaphore: addSemaphore,
     successNode: stepFour,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepTwo: ActionNode = {
-    action: primedSubtract,
+    actionType: counterSubtractType,
+    semaphore: subtractSemaphore,
     successNode: stepThree,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepOne: ActionNode = {
-    action: primedAdd,
+    actionType: counterAddType,
+    semaphore: subtractSemaphore,
     successNode: stepTwo,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
 
   const params: ActionStrategyParameters = {
+    key: primedCountingKey,
     initialNode: stepOne,
   };
 

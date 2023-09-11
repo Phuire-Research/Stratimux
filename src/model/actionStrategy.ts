@@ -1,9 +1,9 @@
-import { Action, createAction } from './action';
+import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { Action, ActionType, createAction } from './action';
+import { OwnershipTicketStub } from './ownership';
+import { KeyedSelector } from './selector';
 
-export const endOfActionStrategy: Action = createAction(
-  '[ActionStrategy] EndOfActionStrategy',
-);
-
+const nullActionType: ActionType = 'null';
 /**
  * ActionNode
  * Control Structure used by ActionStrategy
@@ -13,17 +13,30 @@ export const endOfActionStrategy: Action = createAction(
  *
  * @param action - Action to be dispatched.
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
- * * If set to null, will default to EndOfActionStrategy on ActionStrategy.success().
- * @param failureNode - `optional` ActionStrategy.failed() will fire EndOfActionStrategy if left blank or set to null.
- * @param payload - `optional` Will carry this payload just for this node.
+ * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * @param payload - `optional` Will set the payload of the action.
+ * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
+ * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
+ * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
+ * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
+ * @param denoter - `optional` String that denotes the end of the ActionList sentence.
+ *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
+ * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
+ *  @Output Via Axium set Mode to Ownership Mode.
  */
 
 export interface ActionNode {
-  action: Action;
-  successNode: ActionNode | null;
-  failureNode?: ActionNode;
+  action?: Action;
+  actionType: ActionType;
   payload?: unknown;
-  decisionNodes?: ActionNode[];
+  semaphore?: [number, number, number];
+  agreement?: number;
+  decisionNodes?: Record<string, ActionNode>;
+  successNode: ActionNode | null;
+  failureNode: ActionNode | null;
+  preposition?: string;
+  denoter?: string;
 }
 
 /**
@@ -35,50 +48,96 @@ export interface ActionNode {
  */
 
 export interface ActionStrategyParameters {
-  payload?: unknown;
+  key: string;
+  data?: unknown;
   initialNode: ActionNode;
 }
 export interface ActionStrategy {
-  payload: unknown;
+  key: string;
+  data: unknown;
   currentNode: ActionNode;
   actionList: Array<string>;
-  lastAction: Action;
+  lastActionNode: ActionNode;
+  keyedSelector?: KeyedSelector[];
+  ticketStubs?: OwnershipTicketStub[];
   puntedStrategy?: ActionStrategy[];
+}
+
+function isNotPunctuated(str: string): boolean {
+  const punctuatedList = ['.', ',', '?', '!', ';'];
+  let notPunctuated = true;
+  for (const punctuated of punctuatedList) {
+    if (str.charAt(0) === punctuated) {
+      notPunctuated = false;
+      break;
+    }
+  }
+  return notPunctuated;
+}
+
+function createSentence(actionNode: ActionNode, decisionKey?: string): string {
+  const preposition = actionNode.preposition ? `${actionNode.preposition} ` : '';
+  const decision = decisionKey ? `${decisionKey} ` : '';
+  const body = `${actionNode.actionType}`;
+  let denoter = '.';
+  if (actionNode.denoter) {
+    if (isNotPunctuated(actionNode.denoter)) {
+      denoter = ` ${actionNode.denoter}`;
+    } else {
+      denoter = actionNode.denoter;
+    }
+  }
+  return preposition + decision + body + denoter;
+}
+
+export function setPreposition(strategy: ActionStrategy, preposition: string) {
+  const target = strategy.currentNode;
+  target.preposition = preposition;
+}
+
+export function setDenoter(strategy: ActionStrategy, denoter: string) {
+  const target = strategy.currentNode;
+  target.denoter = denoter;
 }
 
 export function createStrategy(
   params: ActionStrategyParameters,
 ): ActionStrategy {
-  const payload: unknown = params.payload;
+  const data: unknown = params.data;
   const currentNode: ActionNode = params.initialNode;
-  const actionList: Array<string> =
-        params.initialNode !== null
-          ? ['[INITIAL ACTION]: ' + params.initialNode.action.type]
-          : ([] as Array<string>);
-  const lastAction: Action = params.initialNode.action;
+  const actionList: Array<string> = [params.key + '.'];
 
   return {
-    payload,
+    key: params.key,
+    data,
     currentNode,
     actionList,
-    lastAction,
+    lastActionNode: {
+      actionType: nullActionType,
+      successNode: null,
+      failureNode: null
+    },
   };
 }
 
-export const strategyBegin = (strategy: ActionStrategy): Action => {
+export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action => {
+  strategy.currentNode.action = createAction(
+    strategy.currentNode.actionType,
+    strategy.currentNode.payload,
+    strategy.currentNode.agreement
+  );
   strategy.currentNode.action.strategy = {
-    payload: strategy.payload,
+    ...strategy,
+    key: strategy.key,
+    data: data ? data : strategy.data,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
-    lastAction: strategy.lastAction,
+    lastActionNode: strategy.lastActionNode,
   };
   if (strategy.currentNode.action !== null) {
-    if (strategy.currentNode.payload) {
-      strategy.currentNode.action.payload = strategy.currentNode.payload;
-    }
     return strategy.currentNode.action;
   } else {
-    return endOfActionStrategy;
+    return createAction(axiumConcludeType);
   }
 };
 
@@ -88,50 +147,61 @@ export const strategyBegin = (strategy: ActionStrategy): Action => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
   const strategy = { ..._strategy };
   // console.log('SUCCESS', strategy.payload);
   let nextAction: Action;
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    strategy.currentNode.preposition !== undefined ? '' : 'Success with'
+  );
   if (strategy.currentNode.successNode !== null) {
-    nextAction = strategy.currentNode.successNode.action;
-    strategy.currentNode = strategy.currentNode.successNode;
+    const nextNode = strategy.currentNode.successNode;
+    nextAction = createAction(
+      nextNode.actionType,
+      nextNode.payload,
+      nextNode.agreement,
+      nextNode.semaphore,
+    );
+    nextNode.action = nextAction;
+    nextAction.strategy = {
+      ...strategy,
+      key: strategy.key,
+      data: data ? data : strategy.data,
+      currentNode: nextNode,
+      actionList: [...strategy.actionList, actionListEntry],
+      lastActionNode: strategy.currentNode,
+    };
+    return nextAction;
   } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
+      const nextEntry = `${nextStrategy.key}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
+        ...nextEntry,
       ];
       return strategyBegin(nextStrategy);
     }
-    return endOfActionStrategy;
+    const conclude: ActionNode = {
+      actionType: axiumConcludeType,
+      successNode: null,
+      failureNode: null,
+    };
+    conclude.action = createAction(conclude.actionType);
+    conclude.action.strategy = {
+      ...strategy,
+      currentNode: conclude,
+      lastActionNode: strategy.currentNode,
+    };
+    return conclude.action;
   }
-  strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push('Success: ' + nextAction.type);
-  strategy.lastAction = nextAction;
-  nextAction = { ...nextAction };
-  nextAction.strategy = {
-    payload: strategy.payload,
-    currentNode: strategy.currentNode,
-    actionList: strategy.actionList,
-    lastAction: strategy.lastAction,
-  };
-  if (data !== undefined) {
-    nextAction.strategy.payload = data;
-  }
-  if (
-    strategy.currentNode.payload !== null &&
-        strategy.currentNode.payload !== undefined
-  ) {
-    nextAction.payload = strategy.currentNode.payload;
-  }
-  return nextAction;
 };
 /**
  * strategyFailed(strategy: ActionStrategy, data?: any)
@@ -139,64 +209,64 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function strategyFailed(_strategy: ActionStrategy, data?: any) {
-  let strategy = _strategy;
+  const strategy = {..._strategy};
   let nextAction: Action;
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    strategy.currentNode.preposition !== undefined ? '' : 'Failed with'
+  );
   if (
-    strategy.currentNode.failureNode !== null &&
-        strategy.currentNode.failureNode !== undefined
+    strategy.currentNode.failureNode !== null
   ) {
-    nextAction = strategy.currentNode.failureNode.action;
-    if (strategy.currentNode) {
-      // Question, why does NGRX set these Properties to readonly?
-      // This is a ridiculous workaround to get around that.
-      strategy = { ...strategy };
-      strategy.currentNode = { ...strategy.currentNode };
-    }
-    strategy.currentNode = strategy.currentNode.failureNode as ActionNode;
-    if (
-      strategy.currentNode.payload !== null &&
-            strategy.currentNode.payload !== undefined
-    ) {
-      strategy.payload = strategy.currentNode.payload;
-    }
+    const nextNode = strategy.currentNode.failureNode;
+    nextAction = createAction(
+      strategy.currentNode.failureNode.actionType,
+      strategy.currentNode.failureNode.payload,
+      strategy.currentNode.agreement,
+      strategy.currentNode.semaphore
+    );
+    nextNode.action = nextAction;
+    strategy.actionList = [...strategy.actionList, actionListEntry];
+    nextAction = { ...nextAction };
+    nextAction.strategy = {
+      ...strategy,
+      key: strategy.key,
+      data: strategy.data,
+      currentNode: strategy.currentNode,
+      actionList: strategy.actionList,
+      lastActionNode: strategy.currentNode,
+    };
+    return nextAction;
   } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
     if (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
+      const nextEntry = `${nextStrategy.key}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
+        ...nextEntry,
       ];
       return strategyBegin(nextStrategy);
     }
-    return endOfActionStrategy;
+    const conclude: ActionNode = {
+      actionType: axiumConcludeType,
+      successNode: null,
+      failureNode: null
+    };
+    conclude.action = createAction(conclude.actionType);
+    conclude.action.strategy = {
+      ...strategy,
+      currentNode: conclude,
+      lastActionNode: strategy.currentNode,
+    };
+    return conclude.action;
   }
-  strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push('Failed: ' + strategy.lastAction.type);
-  strategy.lastAction = { ...nextAction };
-  nextAction = { ...nextAction };
-  nextAction.strategy = {
-    payload: strategy.payload,
-    currentNode: strategy.currentNode,
-    actionList: strategy.actionList,
-    lastAction: strategy.lastAction,
-  };
-  if (data !== undefined) {
-    nextAction.strategy.payload = data;
-  }
-  if (
-    strategy.currentNode.payload !== null &&
-        strategy.currentNode.payload !== undefined
-  ) {
-    nextAction.payload = strategy.currentNode.payload;
-  }
-  return nextAction;
 }
 
 /**
@@ -207,54 +277,67 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
  */
 export const strategyDecide = (
   strategy: ActionStrategy,
-  index: number,
+  decideKey: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
 ) => {
   let nextAction: Action;
-  if (
-    strategy.currentNode.decisionNodes !== null &&
-        strategy.currentNode.decisionNodes !== undefined &&
-        strategy.currentNode.decisionNodes?.length !== 0
-  ) {
-    nextAction = strategy.currentNode.decisionNodes[index].action;
-    strategy.currentNode = strategy.currentNode.decisionNodes[index];
-  } else {
-    strategy.actionList = [...strategy.actionList];
-    strategy.actionList.push('END: ' + endOfActionStrategy);
+  const actionListEntry = createSentence(
+    strategy.currentNode,
+    decideKey
+  );
+
+  if (strategy.currentNode.decisionNodes) {
+    const decisionNodes = strategy.currentNode.decisionNodes as Record<string, ActionNode>;
     if (
-      strategy.puntedStrategy !== undefined &&
-            strategy.puntedStrategy?.length !== 0
+      decisionNodes[decideKey] !== null
     ) {
-      const nextStrategy =
-                strategy.puntedStrategy.shift() as ActionStrategy;
-      nextStrategy.actionList = [
-        ...strategy.actionList,
-        `Begin: ${nextStrategy.currentNode.action.type}`,
-      ];
-      return strategyBegin(nextStrategy);
+      const nextNode = decisionNodes[decideKey];
+      nextAction = createAction(
+        decisionNodes[decideKey].actionType,
+        decisionNodes[decideKey].payload,
+        decisionNodes[decideKey].agreement,
+        decisionNodes[decideKey].semaphore
+      );
+      nextNode.action = nextAction;
+      strategy.actionList = [...strategy.actionList, actionListEntry];
+      nextAction.strategy = {
+        ...strategy,
+        key: strategy.key,
+        data: data ? data : strategy.data,
+        currentNode: nextNode,
+        actionList: strategy.actionList,
+        lastActionNode: strategy.currentNode,
+      };
+      return nextAction;
     }
-    return endOfActionStrategy;
   }
-  strategy.actionList = [...strategy.actionList];
-  strategy.actionList.push(`Decided: ${nextAction.type}, index: ${index}`);
-  strategy.lastAction = nextAction;
-  nextAction = { ...nextAction };
-  nextAction.strategy = {
-    payload: strategy.payload,
-    currentNode: strategy.currentNode,
-    actionList: strategy.actionList,
-    lastAction: strategy.lastAction,
-  };
-  if (data !== undefined) {
-    nextAction.strategy.payload = data;
-  }
+  strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
   if (
-    strategy.currentNode.payload !== null &&
-        strategy.currentNode.payload !== undefined
+    strategy.puntedStrategy !== undefined &&
+          strategy.puntedStrategy?.length !== 0
   ) {
-    nextAction.payload = strategy.currentNode.payload;
+    const nextStrategy =
+              strategy.puntedStrategy.shift() as ActionStrategy;
+    const nextEntry = `${nextStrategy.key}.`;
+    nextStrategy.actionList = [
+      ...strategy.actionList,
+      ...nextEntry,
+    ];
+    return strategyBegin(nextStrategy);
   }
-  return nextAction;
+  const conclude: ActionNode = {
+    actionType: axiumConcludeType,
+    successNode: null,
+    failureNode: null
+  };
+  conclude.action = createAction(conclude.actionType);
+  conclude.action.strategy = {
+    ...strategy,
+    currentNode: conclude,
+    lastActionNode: strategy.currentNode,
+  };
+  return conclude.action;
 };
 // Remember Water Boy
 export const puntStrategy = (

@@ -1,9 +1,9 @@
-import { Action } from '../../../model/action';
+import { Action, ActionType } from '../../../model/action';
 import { ClientServer } from '../clientServer.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const appendRequestToQue: Action = createAction('Append Request to Que');
+export const clientServerAppendRequestToQueType: ActionType = 'Append Request to Que';
 
 export type AppendRequestToQuePayload = {
     // request: Deno.RequestEvent,
@@ -19,6 +19,6 @@ function appendRequestToQueReducer(state: ClientServer, action: Action) {
 }
 
 export const appendRequestToQueQuality = createQuality(
-  appendRequestToQue,
+  clientServerAppendRequestToQueType,
   appendRequestToQueReducer
 );
