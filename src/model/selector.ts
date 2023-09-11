@@ -1,6 +1,9 @@
 import { Concept } from './concept';
 
 // Dumb association, as we would be setting this value via a generated value
+// Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
+//  Will not worry about such until we are working in a Massively Parallel Environment
+//  But this is where we would effect such and likewise the Consumer Function would have to be Updated
 export type KeyedSelector = {
   conceptKey: string,
   stateKeys: string
