@@ -5,8 +5,8 @@ import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnersh
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { axiumSetBlockingModeType } from '../../axium/qualities/setBlockingMode.quality';
 
-export const setOwnerShipModeKey = 'Set Axium Mode to Ownership';
-export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
+export const setOwnerShipModeKey = 'Axium set Mode to Ownership then Initialize Ownership Principle';
+export function setOwnershipModeStrategy(concepts: Concept[], modeName: string): ActionStrategy {
   const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipInitializeOwnershipType);
   const setModeSemaphore = getSemaphore(concepts, axiumSetModeType);
 
@@ -14,12 +14,17 @@ export function setOwnershipModeStrategy(concepts: Concept[]): ActionStrategy {
     actionType: ownershipInitializeOwnershipType,
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
+    failureNode: null,
+    preposition: 'Set',
+    denoter: 'to True to enable Ownership Principle.'
   };
   const stepOne: ActionNode = {
     actionType: axiumSetModeType,
     semaphore: setModeSemaphore,
     successNode: stepTwo,
-    payload: { modeIndex: 2 } as SetModePayload
+    failureNode: null,
+    payload: { modeIndex: 2, modeName } as SetModePayload,
+    preposition: 'Successfully'
   };
   const params: ActionStrategyParameters = {
     key: setOwnerShipModeKey,

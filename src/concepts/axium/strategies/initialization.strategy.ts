@@ -17,6 +17,7 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     actionType: axiumOpenType,
     semaphore: openSemaphore,
     successNode: null,
+    failureNode: null,
     payload: {concepts}
   };
   // const stepThree: ActionNode = {
@@ -28,18 +29,21 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: stepFour,
+    failureNode: null,
     payload: {concepts}
   };
   const stepTwo: ActionNode = {
     actionType: axiumInitializePrinciplesType,
     semaphore: initSemaphore,
     successNode: stepThree,
+    failureNode: null,
     payload: {concepts}
   };
   const stepOne: ActionNode = {
     actionType: axiumRegisterStreamsType,
     semaphore: registerSemaphore,
     successNode: stepTwo,
+    failureNode: null,
     payload: streams
   };
 

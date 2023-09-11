@@ -16,17 +16,20 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
     actionType: axiumOpenType,
     semaphore: openSemaphore,
     successNode: null,
+    failureNode: null,
   };
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToRemoveQueType,
     semaphore: appendConceptsToRemoveQueSemaphore,
     successNode: stepThree,
+    failureNode: null,
     payload: {concepts: targetConcepts} as AppendConceptsToRemoveQuePayload
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
+    failureNode: null,
     payload: {concepts} as SetBlockingModePayload
   };
   const params: ActionStrategyParameters = {
@@ -45,12 +48,14 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: null,
+    failureNode: null,
     payload: {concepts} as SetDefaultModePayload
   };
   const stepOne: ActionNode = {
     actionType: axiumRemoveConceptsViaQueType,
     semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
+    failureNode: null,
   };
 
   const params: ActionStrategyParameters = {

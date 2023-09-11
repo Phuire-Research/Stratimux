@@ -89,6 +89,31 @@ export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, Ow
 //   return false;
 // };
 
+export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
+  const newConcepts = concepts;
+  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipKey);
+  const ownershipLedger = ownershipState.ownershipLedger;
+  if (action.stubs) {
+    action.stubs.forEach(ticketStub => {
+      const line = ownershipLedger.get(ticketStub.key);
+      if (line) {
+        const newLine = [] as OwnershipTicket[];
+        for (const stub of line) {
+          if (stub.ticket !== ticketStub.ticket) {
+            newLine.push(stub);
+          }
+        }
+        if (newLine.length === 0) {
+          ownershipLedger.delete(ticketStub.key);
+        } else {
+          ownershipLedger.set(ticketStub.key, newLine);
+        }
+      }
+    });
+  }
+  return newConcepts;
+};
+
 export const checkIn =
 (concepts: Concept[], action: Action): [Concept[], Action] => {
   const newConcepts = concepts;

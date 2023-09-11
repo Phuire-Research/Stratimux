@@ -8,23 +8,38 @@ export const countingKey = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
-    successNode: null
+    successNode: null,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
     successNode: stepFive,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
     successNode: stepFour,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     successNode: stepThree,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
     successNode: stepTwo,
+    preposition: '',
+    denoter: 'One;',
+    failureNode: null,
   };
 
   const params: ActionStrategyParameters = {
@@ -43,21 +58,33 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: null,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: stepFour,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     semaphore: subtractSemaphore,
     successNode: stepThree,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
     semaphore: subtractSemaphore,
     successNode: stepTwo,
+    failureNode: null,
+    preposition: '',
+    denoter: 'One;',
   };
 
   const params: ActionStrategyParameters = {

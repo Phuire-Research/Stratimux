@@ -126,7 +126,7 @@ export function defaultReducer(state: unknown, _: Action) {
 
 export const createDefaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();
-  const defaultMethod: Method = defaultSubject.pipe<Action>(
+  const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {
       if (action.strategy) {
         return strategySuccess(action.strategy);

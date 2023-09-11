@@ -17,15 +17,18 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   const stepThree: ActionNode = {
     actionType: axiumOpenType,
     successNode: null,
+    failureNode: null,
   };
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
     successNode: stepThree,
+    failureNode: null,
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
+    failureNode: null,
     payload: {concepts} as AppendConceptsToAddQuePayload
   };
 
@@ -45,12 +48,14 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: null,
+    failureNode: null,
     payload: {concepts: conceptualSet}
   };
   const stepOne: ActionNode = {
     actionType: axiumAddConceptFromQueType,
     semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
+    failureNode: null,
     payload: {action$} as AddConceptsFromQuePayload
   };
 

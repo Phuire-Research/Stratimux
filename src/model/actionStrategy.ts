@@ -34,7 +34,7 @@ export interface ActionNode {
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
   successNode: ActionNode | null;
-  failureNode?: ActionNode;
+  failureNode: ActionNode | null;
   preposition?: string;
   denoter?: string;
 }
@@ -114,7 +114,8 @@ export function createStrategy(
     actionList,
     lastActionNode: {
       actionType: nullActionType,
-      successNode: null
+      successNode: null,
+      failureNode: null
     },
   };
 }
@@ -153,7 +154,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
-    strategy.currentNode.preposition ? undefined : 'Success with'
+    strategy.currentNode.preposition !== undefined ? '' : 'Success with'
   );
   if (strategy.currentNode.successNode !== null) {
     const nextNode = strategy.currentNode.successNode;
@@ -163,6 +164,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
       nextNode.agreement,
       nextNode.semaphore,
     );
+    nextNode.action = nextAction;
     nextAction.strategy = {
       ...strategy,
       key: strategy.key,
@@ -190,6 +192,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
       successNode: null,
+      failureNode: null,
     };
     conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
@@ -212,18 +215,19 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
-    strategy.currentNode.preposition ? undefined : 'Failed with'
+    strategy.currentNode.preposition !== undefined ? '' : 'Failed with'
   );
   if (
-    strategy.currentNode.failureNode !== null &&
-        strategy.currentNode.failureNode !== undefined
+    strategy.currentNode.failureNode !== null
   ) {
+    const nextNode = strategy.currentNode.failureNode;
     nextAction = createAction(
       strategy.currentNode.failureNode.actionType,
       strategy.currentNode.failureNode.payload,
       strategy.currentNode.agreement,
       strategy.currentNode.semaphore
     );
+    nextNode.action = nextAction;
     strategy.actionList = [...strategy.actionList, actionListEntry];
     nextAction = { ...nextAction };
     nextAction.strategy = {
@@ -253,6 +257,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
       successNode: null,
+      failureNode: null
     };
     conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
@@ -277,58 +282,62 @@ export const strategyDecide = (
   data?: any,
 ) => {
   let nextAction: Action;
-  const decisionNodes = strategy.currentNode.decisionNodes as Record<string, ActionNode>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     decideKey
   );
-  if (
-    decisionNodes[decideKey] !== null
-  ) {
-    nextAction = createAction(
-      decisionNodes[decideKey].actionType,
-      decisionNodes[decideKey].payload,
-      decisionNodes[decideKey].agreement,
-      decisionNodes[decideKey].semaphore
-    );
-    const nextNode = decisionNodes[decideKey];
-    strategy.actionList = [...strategy.actionList, actionListEntry];
-    nextAction.strategy = {
-      ...strategy,
-      key: strategy.key,
-      data: data ? data : strategy.data,
-      currentNode: nextNode,
-      actionList: strategy.actionList,
-      lastActionNode: strategy.currentNode,
-    };
-    return nextAction;
-  } else {
-    strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
+
+  if (strategy.currentNode.decisionNodes) {
+    const decisionNodes = strategy.currentNode.decisionNodes as Record<string, ActionNode>;
     if (
-      strategy.puntedStrategy !== undefined &&
-            strategy.puntedStrategy?.length !== 0
+      decisionNodes[decideKey] !== null
     ) {
-      const nextStrategy =
-                strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = `${nextStrategy.key}.`;
-      nextStrategy.actionList = [
-        ...strategy.actionList,
-        ...nextEntry,
-      ];
-      return strategyBegin(nextStrategy);
+      const nextNode = decisionNodes[decideKey];
+      nextAction = createAction(
+        decisionNodes[decideKey].actionType,
+        decisionNodes[decideKey].payload,
+        decisionNodes[decideKey].agreement,
+        decisionNodes[decideKey].semaphore
+      );
+      nextNode.action = nextAction;
+      strategy.actionList = [...strategy.actionList, actionListEntry];
+      nextAction.strategy = {
+        ...strategy,
+        key: strategy.key,
+        data: data ? data : strategy.data,
+        currentNode: nextNode,
+        actionList: strategy.actionList,
+        lastActionNode: strategy.currentNode,
+      };
+      return nextAction;
     }
-    const conclude: ActionNode = {
-      actionType: axiumConcludeType,
-      successNode: null,
-    };
-    conclude.action = createAction(conclude.actionType);
-    conclude.action.strategy = {
-      ...strategy,
-      currentNode: conclude,
-      lastActionNode: strategy.currentNode,
-    };
-    return conclude.action;
   }
+  strategy.actionList = [...strategy.actionList, actionListEntry, '\n'];
+  if (
+    strategy.puntedStrategy !== undefined &&
+          strategy.puntedStrategy?.length !== 0
+  ) {
+    const nextStrategy =
+              strategy.puntedStrategy.shift() as ActionStrategy;
+    const nextEntry = `${nextStrategy.key}.`;
+    nextStrategy.actionList = [
+      ...strategy.actionList,
+      ...nextEntry,
+    ];
+    return strategyBegin(nextStrategy);
+  }
+  const conclude: ActionNode = {
+    actionType: axiumConcludeType,
+    successNode: null,
+    failureNode: null
+  };
+  conclude.action = createAction(conclude.actionType);
+  conclude.action.strategy = {
+    ...strategy,
+    currentNode: conclude,
+    lastActionNode: strategy.currentNode,
+  };
+  return conclude.action;
 };
 // Remember Water Boy
 export const puntStrategy = (

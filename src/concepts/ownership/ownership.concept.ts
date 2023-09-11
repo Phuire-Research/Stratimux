@@ -9,7 +9,6 @@ export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
-  ticketStalls: [number, number][]
   ticker: number;
 }
 
@@ -19,7 +18,6 @@ const initialOwnershipState: OwnershipState = {
   initialized: false,
   ownershipLedger: createOwnershipLedger(),
   pendingActions: [],
-  ticketStalls: [],
   ticker: 0,
 };
 
