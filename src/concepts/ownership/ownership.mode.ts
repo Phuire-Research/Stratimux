@@ -6,17 +6,17 @@ import { defaultMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { OwnershipState, ownershipKey } from './ownership.concept';
 import { selectSlice, selectState } from '../../model/selector';
-import { OwnershipLedger, checkIn, clearStubs } from '../../model/ownership';
+import { OwnershipLedger, checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { selectOwnershipLedger } from './ownership.selector';
 import { ownershipCheckoutType } from './qualities/checkout.quality';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
+import { strategyFailed } from '../../model/actionStrategy';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, BehaviorSubject<Concept[]>]
 ) => {
   let action = _action;
   let concepts = _concepts;
-  console.log('hit', action);
   let finalMode: Mode = defaultMode;
   if (action.type === axiumSetBlockingModeType) {
     finalMode = blockingMode;
@@ -30,31 +30,29 @@ export const ownershipMode: Mode = (
     }
   }
   // Check In Logic
-  const keys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
-  if (keys !== undefined) {
-    const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
-    const ownershipLedger = ownershipState.ownershipLedger;
-    let shouldBlock = false;
-    for (let i = 0; i < keys.length; i++) {
-      if (ownershipLedger.has(`${keys[i].conceptKey} ${keys[i].stateKeys}`)) {
-        shouldBlock = true;
-        break;
+  const shouldBlock = ownershipShouldBlock(concepts, action);
+  // Quality Opted in Action
+  if (shouldBlock && !action.keyedSelectors) {
+    // Principle is then responsible to dispatch these actions;
+    concepts = updateAddToPendingActions(concepts, action);
+    concepts$.next(concepts);
+    // Action that would take Ownership and is Blocked
+  } else if (shouldBlock && action.keyedSelectors) {
+    if (action.strategy) {
+      if (action.strategy.currentNode.failureNode !== null) {
+        finalMode([strategyFailed(action.strategy), concepts, action$, concepts$]);
       }
-    }
-    if (shouldBlock && !action.keyedSelectors) {
-      // Principle is then responsible to dispatch these actions;
-      ownershipState.pendingActions.push(action);
-      concepts$.next(concepts);
-    } else if (action.keyedSelectors) {
-      [concepts, action] = checkIn(concepts, action);
-      finalMode([action, concepts, action$, concepts$]);
     } else {
-      finalMode([action, concepts, action$, concepts$]);
+      // Principle is then responsible to dispatch these actions;
+      concepts = updateAddToPendingActions(concepts, action);
+      concepts$.next(concepts);
     }
+    // Action that would take Ownership but is Free
   } else if (action.keyedSelectors) {
     [concepts, action] = checkIn(concepts, action);
     finalMode([action, concepts, action$, concepts$]);
   } else {
+    // Free to Run
     finalMode([action, concepts, action$, concepts$]);
   }
 };

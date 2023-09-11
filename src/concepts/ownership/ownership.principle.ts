@@ -29,6 +29,7 @@ export const ownershipPrinciple: PrincipleFunction = (
           // This will be the point of dispatch of Qued Actions
           if (ownershipState.pendingActions) {
             let newAction;
+            // One Action at a Time
             for (const [i, action] of ownershipState.pendingActions.entries()) {
               [concepts, newAction] = isActionReady(concepts, action);
               if (newAction) {

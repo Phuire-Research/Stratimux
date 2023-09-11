@@ -89,6 +89,30 @@ export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, Ow
 //   return false;
 // };
 
+export const ownershipShouldBlock = (concepts: Concept[], action: Action): boolean => {
+  const qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
+  const actionSelectors = action.keyedSelectors;
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipLedger = ownershipState.ownershipLedger;
+  let shouldBlock = false;
+  if (qualityKeys) {
+    for (let i = 0; i < qualityKeys.length; i++) {
+      if (ownershipLedger.has(`${qualityKeys[i].conceptKey} ${qualityKeys[i].stateKeys}`)) {
+        shouldBlock = true;
+        break;
+      }
+    }
+  } else if (actionSelectors) {
+    for (let i = 0; i < actionSelectors.length; i++) {
+      if (ownershipLedger.has(`${actionSelectors[i].conceptKey} ${actionSelectors[i].stateKeys}`)) {
+        shouldBlock = true;
+        break;
+      }
+    }
+  }
+  return shouldBlock;
+};
+
 export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
   const newConcepts = concepts;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipKey);
@@ -112,6 +136,30 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
     });
   }
   return newConcepts;
+};
+
+export const editStubs = (_concepts: Concept[], oldAction: Action, newAction: Action): [Concept[], Action] => {
+  const concepts = _concepts;
+  newAction.stubs = [];
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipLedger = ownershipState.ownershipLedger;
+  if (oldAction.stubs) {
+    oldAction.stubs.forEach((ticketStub) => {
+      const line = ownershipLedger.get(ticketStub.key);
+      if (line) {
+        for (const stub of line) {
+          if (stub.ticket === ticketStub.ticket) {
+            stub.expiration = newAction.expiration;
+            newAction.stubs?.push({
+              key: ticketStub.key,
+              ticket: stub.ticket
+            });
+          }
+        }
+      }
+    });
+  }
+  return [concepts, newAction];
 };
 
 export const checkIn =
@@ -253,6 +301,46 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
     }
   }
   return [concepts, undefined];
+};
+
+export const areEqual = (first: unknown, second: unknown ) => {
+  // Really dumb compare, if and when this becomes a bottleneck, have Fun!
+  return JSON.stringify(first) === JSON.stringify(second);
+};
+
+export const updateAddToPendingActions = (_concepts: Concept[], _action: Action) => {
+  let concepts = _concepts;
+  let action = _action;
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const pendingActions = ownershipState.pendingActions;
+  const newPendingActions: Action[] = [];
+  const strippedAction = {
+    ...action,
+    expiration: 0,
+  } as Action;
+
+  for (const pending of pendingActions) {
+    let found = false;
+    const strippedPending = {
+      ...pending,
+      expiration: 0,
+    };
+    const equal = areEqual(strippedAction, strippedPending);
+    if (equal && pending.keyedSelectors) {
+      [concepts, action] = editStubs(concepts, pending, action);
+      newPendingActions.push(action);
+      found = true;
+    } else if (equal) {
+      newPendingActions.push(action);
+    } else {
+      newPendingActions.push(pending);
+    }
+    if (!found) {
+      pendingActions.push(action);
+    }
+  }
+  ownershipState.pendingActions = [...newPendingActions, action];
+  return concepts;
 };
 
 // ~> Saturday

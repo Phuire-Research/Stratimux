@@ -6,7 +6,11 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeKey, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 
 // REFACTOR to have two Axiums interact with One Another
-// Play a Game of Tictac Toe
+// Going to Punt for now. Moving back towards creating the UI
+// As this system is Reserved for a Complex Set Up and the Interaction
+//  And the Interaction with the File System by default is that Set Up
+// When this becomes important again. The requirement for a FailureNode to be that of Null
+// Kicks in. As a Block of a Key is a Failure by Default
 test('Ownership Test', (done) => {
   const axium = createAxium([createOwnershipConcept()]);
   const sub = axium.subscribe((concepts: Concept[]) => {
