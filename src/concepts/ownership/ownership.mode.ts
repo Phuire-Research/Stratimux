@@ -40,7 +40,12 @@ export const ownershipMode: Mode = (
   } else if (shouldBlock && action.keyedSelectors) {
     if (action.strategy) {
       if (action.strategy.currentNode.failureNode !== null) {
+        // This assumes that the Strategy does not account for the Block
         finalMode([strategyFailed(action.strategy), concepts, action$, concepts$]);
+      } else {
+        // This assumes that the Strategy is accounting for the Block
+        concepts = updateAddToPendingActions(concepts, strategyFailed(action.strategy));
+        concepts$.next(concepts);
       }
     } else {
       // Principle is then responsible to dispatch these actions;
