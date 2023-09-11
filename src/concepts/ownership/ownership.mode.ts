@@ -11,6 +11,7 @@ import { selectOwnershipLedger } from './ownership.selector';
 import { ownershipCheckoutType } from './qualities/checkout.quality';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { strategyFailed } from '../../model/actionStrategy';
+import { axiumBadActionType } from '../axium/qualities/badAction.quality';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, BehaviorSubject<Concept[]>]
@@ -29,35 +30,39 @@ export const ownershipMode: Mode = (
       concepts = clearStubs(concepts, lastAction);
     }
   }
+  if (action.type !== axiumConcludeType) {
   // Check In Logic
-  const shouldBlock = ownershipShouldBlock(concepts, action);
-  // Quality Opted in Action
-  if (shouldBlock && !action.keyedSelectors) {
+    const shouldBlock = ownershipShouldBlock(concepts, action);
+    // Quality Opted in Action
+    if (shouldBlock && !action.keyedSelectors) {
     // Principle is then responsible to dispatch these actions;
-    concepts = updateAddToPendingActions(concepts, action);
-    concepts$.next(concepts);
-    // Action that would take Ownership and is Blocked
-  } else if (shouldBlock && action.keyedSelectors) {
-    if (action.strategy) {
-      if (action.strategy.currentNode.failureNode !== null) {
-        // This assumes that the Strategy does not account for the Block
-        finalMode([strategyFailed(action.strategy), concepts, action$, concepts$]);
-      } else {
-        // This assumes that the Strategy is accounting for the Block
-        concepts = updateAddToPendingActions(concepts, strategyFailed(action.strategy));
-        concepts$.next(concepts);
-      }
-    } else {
-      // Principle is then responsible to dispatch these actions;
       concepts = updateAddToPendingActions(concepts, action);
       concepts$.next(concepts);
-    }
+    // Action that would take Ownership and is Blocked
+    } else if (shouldBlock && action.keyedSelectors) {
+      if (action.strategy) {
+        if (action.strategy.currentNode.failureNode !== null) {
+        // This assumes that the Strategy does not account for the Block
+          finalMode([strategyFailed(action.strategy), concepts, action$, concepts$]);
+        } else {
+        // This assumes that the Strategy is accounting for the Block
+          concepts = updateAddToPendingActions(concepts, strategyFailed(action.strategy));
+          concepts$.next(concepts);
+        }
+      } else {
+      // Principle is then responsible to dispatch these actions;
+        concepts = updateAddToPendingActions(concepts, action);
+        concepts$.next(concepts);
+      }
     // Action that would take Ownership but is Free
-  } else if (action.keyedSelectors) {
-    [concepts, action] = checkIn(concepts, action);
-    finalMode([action, concepts, action$, concepts$]);
-  } else {
+    } else if (action.keyedSelectors) {
+      [concepts, action] = checkIn(concepts, action);
+      finalMode([action, concepts, action$, concepts$]);
+    } else {
     // Free to Run
+      finalMode([action, concepts, action$, concepts$]);
+    }
+  } else {
     finalMode([action, concepts, action$, concepts$]);
   }
 };

@@ -36,7 +36,6 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     action$.next(appendToDialog);
   } else if (
     action.strategy &&
-    action.type !== axiumConcludeType &&
     action.type !== axiumBadActionType
   ) {
     action$.next(action);
@@ -59,7 +58,6 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     }, 0);
   } else if (
     action.strategy &&
-    action.type !== axiumConcludeType &&
     action.type !== axiumBadActionType
   ) {
     setTimeout(() => {
