@@ -1,5 +1,6 @@
 # Action Strategy
-An alternative name for this Pattern that would be more Literal would be Action Tree Strategy. But even within that Scope the Composition of this Data Structure Includes the ability to Trace Back to Previous Nodes and Likewise via the DecisionNode parameter, the Ability to Describe an N-Tree.
+### Abstract
+An alternative name for this Pattern that would be more Literal would be: Action Tree Strategy. But even within that Scope the Composition of this Data Structure Includes the ability to Trace Back to Previous Nodes and Likewise via an additional **decisionNode** parameter, the Ability to further expand the Data Pattern to describe an N-Tree.
 
 The staked effect of this Data Structure is a Structure that is Capable of Mapping the Internal Structure of some Neural Network. But the Origination of this Design was for the Utilization of Programmers to Describe their Own Decision Making Process. As the Scope of this Pattern in Combination with a Stored ActionList is a Array that can be Flattened into a Sequential Series of Steps or a Paragraph. But was originally intended as a Method of Troubleshooting this Pattern in a Complex Computation Environment. That it happens to Match the Composition of a Paragraph was an Accidental Discovery at the Time of its Creation some Five Years Ago.
 
@@ -13,7 +14,7 @@ This Represents the Intelligence of Doing. Versus the Classical attempt at Hand 
 
 Intelligence is a Complex Beast. And while there may be some Additional Helper Functions or Abstractions. This initial release is the Bare Bones System with no Hand Holding. As it is a Genuine new Form of Programming and an Entire Field of Study on its Own. The ActionStrategy Pattern Merely Relays to Some Pattern of Dynamic Decision Making that a Computer may Perform without the Probabilistic Limitation of Classical Non-Deterministic Turing Machines. And would be Viewed a Logically Deterministic by Categorization.
 
-## The Anatomy of an ActionStrategy
+## The Anatomy of an ActionNode
 ActionNode Represents some Node that is Capable of being turned into some Action when Initialized by the ActionStrategy Consumer Functions. The Reason why these Functions are not part of the ActionStrategy itself. Is to allow for that Off Premise Interaction. As we could Write such a Program by way of a Series of Functions to be Called on Some Tree or Graph. But these Functions would have to be Serialized. As we take Advantage of the Semaphore Pattern throughout. To Reduce the Total Size of Each Payload. To that of the Most Important Qualities to enable this Functionality.
 ```typescript
 export interface ActionNode {
