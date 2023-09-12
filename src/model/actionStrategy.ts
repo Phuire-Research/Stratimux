@@ -30,6 +30,7 @@ export interface ActionNode {
   action?: Action;
   actionType: ActionType;
   payload?: unknown;
+  keyedSelectors?: KeyedSelector[];
   semaphore?: [number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
@@ -48,18 +49,16 @@ export interface ActionNode {
  */
 
 export interface ActionStrategyParameters {
-  key: string;
+  topic: string;
   data?: unknown;
   initialNode: ActionNode;
 }
 export interface ActionStrategy {
-  key: string;
-  data: unknown;
+  topic: string;
+  data?: unknown;
   currentNode: ActionNode;
   actionList: Array<string>;
   lastActionNode: ActionNode;
-  keyedSelector?: KeyedSelector[];
-  ticketStubs?: OwnershipTicketStub[];
   puntedStrategy?: ActionStrategy[];
 }
 
@@ -105,10 +104,10 @@ export function createStrategy(
 ): ActionStrategy {
   const data: unknown = params.data;
   const currentNode: ActionNode = params.initialNode;
-  const actionList: Array<string> = [params.key + '.'];
+  const actionList: Array<string> = [params.topic + '.'];
 
   return {
-    key: params.key,
+    topic: params.topic,
     data,
     currentNode,
     actionList,
@@ -124,11 +123,12 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
   strategy.currentNode.action = createAction(
     strategy.currentNode.actionType,
     strategy.currentNode.payload,
+    strategy.currentNode.keyedSelectors,
     strategy.currentNode.agreement
   );
   strategy.currentNode.action.strategy = {
     ...strategy,
-    key: strategy.key,
+    topic: strategy.topic,
     data: data ? data : strategy.data,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
@@ -147,8 +147,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
+export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
   const strategy = { ..._strategy };
   // console.log('SUCCESS', strategy.payload);
   let nextAction: Action;
@@ -161,13 +160,14 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
     nextAction = createAction(
       nextNode.actionType,
       nextNode.payload,
+      nextNode.keyedSelectors,
       nextNode.agreement,
       nextNode.semaphore,
     );
     nextNode.action = nextAction;
     nextAction.strategy = {
       ...strategy,
-      key: strategy.key,
+      topic: strategy.topic,
       data: data ? data : strategy.data,
       currentNode: nextNode,
       actionList: [...strategy.actionList, actionListEntry],
@@ -182,7 +182,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = `${nextStrategy.key}.`;
+      const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
         ...nextEntry,
@@ -209,8 +209,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function strategyFailed(_strategy: ActionStrategy, data?: any) {
+export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
   const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
@@ -224,6 +223,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
     nextAction = createAction(
       strategy.currentNode.failureNode.actionType,
       strategy.currentNode.failureNode.payload,
+      strategy.currentNode.failureNode.keyedSelectors,
       strategy.currentNode.agreement,
       strategy.currentNode.semaphore
     );
@@ -232,7 +232,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
     nextAction = { ...nextAction };
     nextAction.strategy = {
       ...strategy,
-      key: strategy.key,
+      topic: strategy.topic,
       data: strategy.data,
       currentNode: strategy.currentNode,
       actionList: strategy.actionList,
@@ -247,7 +247,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: any) {
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
-      const nextEntry = `${nextStrategy.key}.`;
+      const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
         ...nextEntry,
@@ -279,7 +279,7 @@ export const strategyDecide = (
   strategy: ActionStrategy,
   decideKey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any,
+  data?: unknown,
 ) => {
   let nextAction: Action;
   const actionListEntry = createSentence(
@@ -296,6 +296,7 @@ export const strategyDecide = (
       nextAction = createAction(
         decisionNodes[decideKey].actionType,
         decisionNodes[decideKey].payload,
+        decisionNodes[decideKey].keyedSelectors,
         decisionNodes[decideKey].agreement,
         decisionNodes[decideKey].semaphore
       );
@@ -303,7 +304,7 @@ export const strategyDecide = (
       strategy.actionList = [...strategy.actionList, actionListEntry];
       nextAction.strategy = {
         ...strategy,
-        key: strategy.key,
+        topic: strategy.topic,
         data: data ? data : strategy.data,
         currentNode: nextNode,
         actionList: strategy.actionList,
@@ -319,7 +320,7 @@ export const strategyDecide = (
   ) {
     const nextStrategy =
               strategy.puntedStrategy.shift() as ActionStrategy;
-    const nextEntry = `${nextStrategy.key}.`;
+    const nextEntry = `${nextStrategy.topic}.`;
     nextStrategy.actionList = [
       ...strategy.actionList,
       ...nextEntry,

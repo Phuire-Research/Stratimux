@@ -9,6 +9,7 @@ import { primeAction } from '../../model/action';
 import { strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
+import { blockingMode, defaultMode } from './axium.mode';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -18,7 +19,7 @@ export const axiumPrinciple: PrincipleFunction = (
   let allowAdd = true;
   let allowRemove = true;
   const subscriber = concepts$.subscribe(_concepts => {
-    const axiumState = selectState<AxiumState>(_concepts, axiumKey);
+    const axiumState = _concepts[0].state as AxiumState;
     // console.log('Check', axiumState.addConceptQue);
     if (axiumState.addConceptQue.length === 0) {
       allowAdd = true;
@@ -64,18 +65,23 @@ export const axiumPrinciple: PrincipleFunction = (
       allowRemove = false;
       const newConcepts = [] as Concept[];
       axiumState.generation += 1;
+      const newModes: Mode[] = [blockingMode, defaultMode];
+      const newModeKeys: string[] = [axiumKey, axiumKey];
       concepts.forEach(concept => {
-        let valid = true;
         axiumState.removeConceptQue.forEach(target => {
-          if (concept.key === target.key) {
-            valid = false;
+          if (concept.key !== target.key) {
+            newConcepts.push(concept);
           }
+          axiumState.modeKeys.forEach((key, i) => {
+            if (key !== target.key && key !== axiumKey) {
+              newModeKeys.push(key);
+              newModes.push((concepts[0].mode as Mode[])[i]);
+            }
+          });
         });
-        if (valid) {
-          newConcepts.push(concept);
-        }
       });
-
+      newConcepts[0].mode = newModes;
+      axiumState.modeKeys = newModeKeys;
       newConcepts.forEach((concept, _index) => {
         concept.semaphore = _index;
         concept.qualities.forEach((quality, index) => {

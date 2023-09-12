@@ -9,7 +9,7 @@ import { counterAddType } from '../concepts/counter/qualities/add.quality';
 import { counterSubtractType } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
-  const axium = createAxium([createCounterConcept(), createChainConcept()]);
+  const axium = createAxium([createCounterConcept(), createChainConcept()], true, true);
   // ax.subscribe(val=> console.log(val));
   // ax.subscribe(val => console.log('this value', val));
   let count = 0;

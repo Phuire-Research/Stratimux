@@ -18,28 +18,31 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
     actionType: axiumOpenType,
     successNode: null,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumOpenType),
   };
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
     successNode: stepThree,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumAppendConceptsToAddQueType),
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumSetBlockingModeType),
     payload: {concepts} as AppendConceptsToAddQuePayload
   };
 
   const params: ActionStrategyParameters = {
-    key: addConceptsToAddQueThenBlockKey,
+    topic: addConceptsToAddQueThenBlockKey,
     initialNode: stepOne
   };
   return createStrategy(params);
 }
 // Step Two
-export const addConceptsFromQueThenUnblockKey = 'Add Concepts from Que then set Axium Mode to Default';
+export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
   const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumAddConceptFromQueType);
   const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumSetDefaultModeType);
@@ -60,7 +63,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
   };
 
   const params: ActionStrategyParameters = {
-    key: addConceptsFromQueThenUnblockKey,
+    topic: addConceptsFromQueThenUnblockTopic,
     initialNode: stepOne,
   };
 

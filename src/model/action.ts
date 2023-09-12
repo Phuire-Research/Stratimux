@@ -10,7 +10,6 @@ export type Action = {
     semaphore: [number, number, number];
     payload?: unknown;
     strategy?: ActionStrategy;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     keyedSelectors?: KeyedSelector[];
     stubs?: OwnershipTicketStub[];
     expiration: number;
@@ -31,7 +30,6 @@ export function primeAction(concepts: Concept[], action: Action, agreement?: num
   return {
     type: axiumBadActionType,
     semaphore: [0, 0, -1],
-    // Temporary until we have proper SLA
     expiration: Date.now() + 5000
   };
 }
@@ -47,13 +45,20 @@ export function getSemaphore(concepts: Concept[], actionType: ActionType): [numb
   return [0, 0, -1];
 }
 
-export function createAction(type: ActionType, payload?: unknown, agreement?: number, _semaphore?: [number, number, number]): Action {
+export function createAction(
+  type: ActionType,
+  payload?: unknown,
+  keyedSelectors?: KeyedSelector[],
+  agreement?: number,
+  _semaphore?: [number, number, number]
+): Action {
   const semaphore = _semaphore ? _semaphore : [0, 0, -1] as [number, number, number];
   return {
     type,
     semaphore,
     payload,
+    keyedSelectors,
     // Temporary until we have proper SLA
-    expiration: Date.now() + (agreement !== undefined ? agreement : 5000)
+    expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
   };
 }

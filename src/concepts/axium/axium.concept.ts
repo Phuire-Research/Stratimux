@@ -46,26 +46,28 @@ export type AxiumState = {
 
 export const axiumKey = 'Axium';
 
-const initialAxiumState: AxiumState = {
-  open: false,
-  logging: true,
-  dialog: '',
-  storeDialog: true,
-  lastStrategy: '',
-  generation: 0,
-  modeIndex: 0,
-  modeKeys: [axiumKey, axiumKey],
-  methodSubscribers: [] as KeyedSub[],
-  generalSubscribers: [] as KeyedSub[],
-  addConceptQue: [] as Concept[],
-  removeConceptQue: [] as Concept[],
-  subConcepts$: new Subject<Concept[]>(),
+const createAxiumState = (logging?: boolean, storeDialog?: boolean): AxiumState => {
+  return {
+    open: false,
+    logging: logging ? logging : false,
+    dialog: '',
+    storeDialog: storeDialog ? storeDialog : false,
+    lastStrategy: '',
+    generation: 0,
+    modeIndex: 0,
+    modeKeys: [axiumKey, axiumKey],
+    methodSubscribers: [] as KeyedSub[],
+    generalSubscribers: [] as KeyedSub[],
+    addConceptQue: [] as Concept[],
+    removeConceptQue: [] as Concept[],
+    subConcepts$: new Subject<Concept[]>(),
+  };
 };
 
-export const createAxiumConcept: ConceptCreator = (): Concept =>  {
+export const createAxiumConcept = (logging?: boolean, storeDialog?: boolean): Concept =>  {
   return createConcept(
     axiumKey,
-    initialAxiumState,
+    createAxiumState(logging, storeDialog),
     [
       openQuality,
       badActionQuality,

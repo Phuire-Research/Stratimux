@@ -5,13 +5,13 @@ import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
 import {
   addConceptsToRemovalQueThenBlockStrategy,
-  removeConceptsViaQueThenUnblockKey
+  removeConceptsViaQueThenUnblockTopic
 } from '../concepts/axium/strategies/removeConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   let dispatched = false;
-  const axium = createAxium([createCounterConcept()]);
+  const axium = createAxium([createCounterConcept()], true, true);
   console.log('Remove Concepts Begin');
   const sub = axium.subscribe((concepts: Concept[]) => {
     // const counter = selectState<Counter>(concepts, counterConcept.key);
@@ -24,7 +24,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
       );
     }
     const axiumState = concepts[0].state as AxiumState;
-    if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockKey) {
+    if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
       let exists = false;
       concepts.forEach(concept => {
         if (concept.key === counterKey) {

@@ -4,14 +4,14 @@ import { createAction, getSemaphore, primeAction } from '../../../model/action';
 import { counterAddType } from '../qualities/add.quality';
 import { counterSubtractType } from '../qualities/subtract.quality';
 
-export const countingKey = 'Counting Strategy';
+export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
     successNode: null,
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
+    preposition: 'and finally',
+    denoter: 'One.',
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
@@ -43,14 +43,14 @@ export function countingStrategy(): ActionStrategy {
   };
 
   const params: ActionStrategyParameters = {
-    key: countingKey,
+    topic: countingTopic,
     initialNode: stepOne,
   };
 
   return createStrategy(params);
 }
 
-export const primedCountingKey = 'Counting Strategy with Primed Actions';
+export const primedCountingTopic = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterSubtractType);
@@ -59,8 +59,8 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     semaphore: addSemaphore,
     successNode: null,
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
+    preposition: 'and finally',
+    denoter: 'One.',
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
@@ -88,7 +88,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
   };
 
   const params: ActionStrategyParameters = {
-    key: primedCountingKey,
+    topic: primedCountingTopic,
     initialNode: stepOne,
   };
 

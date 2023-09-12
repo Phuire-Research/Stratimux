@@ -31,7 +31,7 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     const appendToDialog = createAction(axiumAppendActionListToDialogType);
     appendToDialog.payload = {
       actionList: action.strategy.actionList,
-      strategyKey: action.strategy.key
+      strategyKey: action.strategy.topic
     } as AppendActionListToDialogPayload;
     action$.next(appendToDialog);
   } else if (
@@ -51,7 +51,7 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     const appendToDialog = createAction(axiumAppendActionListToDialogType);
     appendToDialog.payload = {
       actionList: action.strategy.actionList,
-      strategyKey: action.strategy.key
+      strategyKey: action.strategy.topic
     } as AppendActionListToDialogPayload;
     setTimeout(() => {
       action$?.next(appendToDialog);
@@ -66,9 +66,9 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
   }
 };
 
-export function createAxium(initialConcepts: Concept[]) {
+export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
   const action$: Subject<Action> = new Subject();
-  const concepts: Concept[] = [createAxiumConcept(), ...initialConcepts];
+  const concepts: Concept[] = [createAxiumConcept(logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   concepts.forEach((concept, _index) => {
     concept.semaphore = _index;
@@ -145,9 +145,6 @@ export function createAxium(initialConcepts: Concept[]) {
     unsubscribe: subConcepts$.unsubscribe.bind(subConcepts$),
     close: () => {
       action$.next(createAction(axiumCloseType));
-      action$.complete();
-      concepts$.complete();
-      subConcepts$.complete();
     },
     dispatch: (action: Action) => {
       action$.next(action);

@@ -7,7 +7,7 @@ import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/s
 import { axiumOpenType } from '../qualities/open.quality';
 import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 
-export const addConceptsToRemovalQueThenBlockKey = 'Add Concepts to removal Que then set Axium Mode to Blocking';
+export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumAppendConceptsToRemoveQueType);
@@ -33,13 +33,13 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
     payload: {concepts} as SetBlockingModePayload
   };
   const params: ActionStrategyParameters = {
-    key: addConceptsToRemovalQueThenBlockKey,
+    topic: addConceptsToRemovalQueThenBlockTopic,
     initialNode: stepOne
   };
   return createStrategy(params);
 }
 // Step Two
-export const removeConceptsViaQueThenUnblockKey = 'Remove Concepts via Que then set Axium Mode to Default';
+export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
   const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumRemoveConceptsViaQueType);
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumSetDefaultModeType);
@@ -59,7 +59,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
   };
 
   const params: ActionStrategyParameters = {
-    key: removeConceptsViaQueThenUnblockKey,
+    topic: removeConceptsViaQueThenUnblockTopic,
     initialNode: stepOne,
   };
 

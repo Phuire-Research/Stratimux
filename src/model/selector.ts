@@ -1,6 +1,9 @@
 import { Concept } from './concept';
 
 // Dumb association, as we would be setting this value via a generated value
+// Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
+//  Will not worry about such until we are working in a Massively Parallel Environment
+//  But this is where we would effect such and likewise the Consumer Function would have to be Updated
 export type KeyedSelector = {
   conceptKey: string,
   stateKeys: string
@@ -28,13 +31,13 @@ export function selectSlice<T>(
       concept = concepts[i];
       break;
     } else if (i === concepts.length - 1) {
-      console.log('Check Slice', i, concepts, selector);
       return undefined;
     }
   }
 
   const keys = selector.stateKeys.split(' ');
   if (concept === undefined) {return undefined;}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
   const existsKeys = Object.keys(cast);
   let exists = false;
@@ -45,6 +48,7 @@ export function selectSlice<T>(
   if (keys.length === 1) {
     return cast[keys[0]] as T;
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let target: Record<string, any> = cast[keys.shift() as string];
   let finalKey = '';
   for (const [i, key] of keys.entries()) {
