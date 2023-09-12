@@ -147,8 +147,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
+export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
   const strategy = { ..._strategy };
   // console.log('SUCCESS', strategy.payload);
   let nextAction: Action;
@@ -210,8 +209,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: any) => {
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function strategyFailed(_strategy: ActionStrategy, data?: any) {
+export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
   const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
@@ -281,7 +279,7 @@ export const strategyDecide = (
   strategy: ActionStrategy,
   decideKey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any,
+  data?: unknown,
 ) => {
   let nextAction: Action;
   const actionListEntry = createSentence(

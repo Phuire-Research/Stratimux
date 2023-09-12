@@ -31,7 +31,7 @@ export interface ActionNode {
   denoter?: string;
 }
 ```
-* Action - Is a Union Data Pattern to bind the Functionality of the ActionNode, ActionStrategy, and Action. This allows for Each Part to Be Responsible for Itself and to allow for Additional Functionality at Runtime.
+* Action - Is an Union Data Pattern to bind the Functionality of the ActionNode, ActionStrategy, and Action. This allows for Each Part to Be Responsible for Itself and to allow for Additional Functionality at Runtime.
 * actionType - Is merely the Type of Action to be Created at Runtime, these should be Verbose as to their Intended Effect as it Informs the STRX Sentence Structure Body.
 * payload - Is set to Unknown to allow for the Explicit Typecasting during consuming, Reducer, Method, or Principle.
 * keyedSelectors - An Array of KeyedSelector that Locks some Property during the Run Lifetime of the Created Action.

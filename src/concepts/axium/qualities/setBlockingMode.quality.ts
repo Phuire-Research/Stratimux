@@ -37,6 +37,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
     ...state,
     modeIndex: [0],
     methodSubscribers,
+    open: false,
   };
 }
 

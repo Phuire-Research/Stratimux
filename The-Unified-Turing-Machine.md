@@ -44,11 +44,9 @@ Aspect - Is a Part of a Concept, but may not be a Useful Trait
 Quality - An Aspect of a Concept of Importance
 Principle - Is an Active Assertion of Actions into the System.
 Reducer - The Function that Restricts Memory Manipulation based on Symbol Selection
-Chronograph - Time Table
 Construct - A Generalized Construction that cannot be Decomposed to its Parts
 Semaphore - A Symbol Flagging System for Branchless Decisions
-Strategic Loader - Modifies the Load of the Axium based on the Strategies Loaded into the Machine
-Ownership Ledger - Blocks transformation of Values via a Ticketing System and Assembles Actions to be Dispatched into the System via their Most Recent Values from the Machines State
+Spatial Ownership aka Ownership - Blocks transformation of Values via a Ticketing System and Assembles Actions to be Dispatched into the System via their Most Recent Values from the Machines State
 
 ## Clarifying Terminology
 Noting that Chain while it does meet the definition requirements for a Unified Turing Machine, is not a Complete System of Reasoning, but merely a Reduced set of Instructions allowing for Said Machine to Behave Automatically without Error Correction.

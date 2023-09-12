@@ -8,7 +8,7 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 
 test('Axium Counting Strategy Test', (done) => {
   let count = 0;
-  const axium = createAxium([createCounterConcept()]);
+  const axium = createAxium([createCounterConcept()], true, true);
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
     if (count ===  1) {

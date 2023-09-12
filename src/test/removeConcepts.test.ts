@@ -11,7 +11,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   let dispatched = false;
-  const axium = createAxium([createCounterConcept()]);
+  const axium = createAxium([createCounterConcept()], true, true);
   console.log('Remove Concepts Begin');
   const sub = axium.subscribe((concepts: Concept[]) => {
     // const counter = selectState<Counter>(concepts, counterConcept.key);

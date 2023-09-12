@@ -18,17 +18,20 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
     actionType: axiumOpenType,
     successNode: null,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumOpenType),
   };
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
     successNode: stepThree,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumAppendConceptsToAddQueType),
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
     failureNode: null,
+    semaphore: getSemaphore(concepts, axiumSetBlockingModeType),
     payload: {concepts} as AppendConceptsToAddQuePayload
   };
 

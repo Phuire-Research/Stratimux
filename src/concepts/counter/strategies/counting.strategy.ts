@@ -10,8 +10,8 @@ export function countingStrategy(): ActionStrategy {
     actionType: counterSubtractType,
     successNode: null,
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
+    preposition: 'and finally',
+    denoter: 'One.',
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
@@ -59,8 +59,8 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     semaphore: addSemaphore,
     successNode: null,
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
+    preposition: 'and finally',
+    denoter: 'One.',
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,

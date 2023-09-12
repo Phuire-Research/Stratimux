@@ -9,7 +9,7 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 
 test('Axium add Concepts Strategy Test', (done) => {
   let count = 0;
-  const axium = createAxium([]);
+  const axium = createAxium([], true, true);
   console.log('Add Concepts Begin');
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;

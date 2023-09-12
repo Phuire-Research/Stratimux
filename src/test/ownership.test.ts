@@ -12,7 +12,7 @@ import { setOwnerShipModeTopic, setOwnershipModeStrategy } from '../concepts/own
 // When this becomes important again. The requirement for a FailureNode to be that of Null
 // Kicks in. As a Block of a Key is a Failure by Default
 test('Ownership Test', (done) => {
-  const axium = createAxium([createOwnershipConcept()]);
+  const axium = createAxium([createOwnershipConcept()], true, true);
   const sub = axium.subscribe((concepts: Concept[]) => {
     const state = selectState<OwnershipState>(concepts, ownershipKey);
     const axiumState = concepts[0].state as AxiumState;
