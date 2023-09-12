@@ -1,28 +1,43 @@
 # STRX
-*The Unified Turing Machine - aka Hand Written Intelligent*
+*The Unified Turing Machine - aka Hand Written Intelligence*
 
-The Anatomy of a STRX Sentence
-Preposition/Decision + Body + Denoter
+STRX is the Graph Computation Framework Release of a new Unified Turing Machine. The Internal Structure of this Machine directly relays to a form of Written Intelligence of Doing, over that of Information Retrieval. But may be Written to Facilitate that same Expert System Paradigms of Classic. The Important of this Machine to the Now of 2023, is the Functionality of the ActionStrategy Pattern as it Relays to Human and Machine Intelligence. As the Pattern itself is a Unified Set of Logical Explanation of Doing, Unified to the Mechanism of Doing that is the Code Implementation of that Logical Explanation. And when Composed represents a STRX Sentence.
 
-This allows for a STRX Dialog to be constructed in the same formalization of that of a paragraph. Where the Strategy Topic is the literal Topic Sentence of a Paragraph. And is followed by all steps and possible decision that create an Unified Paragraph.
+### The Anatomy of a STRX Sentence
+---
+Preposition(/+)Decision + Body + Denoter
 
+This allows for a STRX Dialog to be constructed in the same formalization of that of a paragraph. Where the Strategy Topic is the literal Topic Sentence of a Paragraph. And is followed by all steps and possible decision that create a Unified Paragraph.
+```
 TOPIC + SENTENCE + SENTENCE + SENTENCE
+Example: Axium set Mode to Ownership, then Initialize Ownership Principle. Next set Axium Mode to Ownership. Set Ownership Initialize to True to enable Ownership Principle.
+```
 
-Where the Main Difference between that of a Traditional Paragraph and the compositional structure of a STRX ActionStrategy. These STRX Paragraphs are capable of representing different decisions that inform the final output of that Paragraph. This can be likened to some High Orders of Decision making within that Context.
+Where the Main Difference between that of a Traditional Paragraph and the compositional structure of the STRX ActionStrategy. These STRX Paragraphs are capable of representing different decisions that inform the final output of that Paragraph. This can be likened to some High Orders of Logic by Decisions made within the Context of the ActionStrategy.
 
-The Flow of STRX is as Follows
+### STRX - Axium Flow Diagram 
+```
+Action -> Mode -> Method --> Action + Strategy --------> Recurse
+               |                                      |
+               -> Reducer -> Concept[] ---------------|
+                                       |              |
+                             Construct -> Principle ->|
+                       *Mode Can Block |*> External ->|
+                                     Axium/Client/Server
+```
+Where the Axium is the Entire Recursive Functionality that contains a Set of Concepts. That can Transform its functionality via its Mode that actualizes the loaded Concept Qualities via the Supplied Action. That the Action may have an ActionStrategy that the Method Emits. While the Reducer informs any new State changes to be Supplied back into the Main Stream or Subscribers to that Change.
 
-Action -> Mode -> Method --> Action --> Recurse 
-               -> Reducer |
+In addition the Principle is the Containing Observer that allows for Constructs, which are Applications that cannot be Decomposed to the Sum of their Parts. To Maintain some Functionality within the Axium. As the Principles are Subscribed to the Inner Concept[] Stream. And can supply or emit values to and from that Construct.
 
-Where the Axium is the Entire Recursive Functionality that contains a Set of Concepts that Transform its functionality via its Mode that initializes their loaded Qualities.
+Finally the Axium also allows for the ability for External Processes to likewise Subscribe to and Dispatch Actions into the Axium. But this Subscription may be Blocked via a Specific Mode.
 
-A Quality contains all Functional Data that Pertain to a Single Action.
 
-ActionType - Is the Type of Action and Logical Explanation of Functionality
-Reducer - Alters the State of a Concept
-MethodCreator - Creates a Subject and Method that utilizes the Observer for Additional Control of Flow. Including that of Moving Actions off Premise, to be later remitted back into the Stream.
-KeyedSelector - Ops the Quality or Actions into the Ownership Paradigm and likewise can be used to Select some Aspect of State from the Set of Concepts.
+## STRX Quality contains all Functional Data that Pertain to an Action.
+
+* ActionType - Is the Type of Action and Logical Explanation of Functionality
+* Reducer - Alters the State of a Concept
+* MethodCreator - Creates a Subject and Method that utilizes the Observer for Additional Control of Flow. Including that of Moving Actions off Premise, to be later remitted back into the Stream.
+* KeyedSelector - Ops the Quality or Actions into the Ownership Paradigm and likewise can be used to Select some Aspect of State from the Set of Concepts.
 
 The Ownership Concept must be explicitly loaded and introduces an Additional Mode that further Transform the functionality of the Axium. Which allows for the Locking of Values that Other Actions or Strategies may be Dependent Upon. And if that Strategy, or Action with a KeyedSelector has Taken a TicketStub of Ownership of that Value. Any Quality or Action that would Transform such are Added to a ActionQue until that Block is Cleared.
 
