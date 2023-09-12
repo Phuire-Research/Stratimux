@@ -6,7 +6,7 @@ import { axiumRegisterStreamsType, type RegisterStreamsPayload } from '../qualit
 import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
 import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 
-export const initializeKey = 'Axium Initialize';
+export const initializeTopic = 'Axium Initialize';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
   const initSemaphore = getSemaphore(concepts, axiumInitializePrinciplesType);
   const registerSemaphore = getSemaphore(concepts, axiumRegisterStreamsType);
@@ -48,7 +48,7 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
   };
 
   const params: ActionStrategyParameters = {
-    key: initializeKey,
+    topic: initializeTopic,
     initialNode: stepOne,
   };
 

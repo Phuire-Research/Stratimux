@@ -31,7 +31,7 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     const appendToDialog = createAction(axiumAppendActionListToDialogType);
     appendToDialog.payload = {
       actionList: action.strategy.actionList,
-      strategyKey: action.strategy.key
+      strategyKey: action.strategy.topic
     } as AppendActionListToDialogPayload;
     action$.next(appendToDialog);
   } else if (
@@ -51,7 +51,7 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     const appendToDialog = createAction(axiumAppendActionListToDialogType);
     appendToDialog.payload = {
       actionList: action.strategy.actionList,
-      strategyKey: action.strategy.key
+      strategyKey: action.strategy.topic
     } as AppendActionListToDialogPayload;
     setTimeout(() => {
       action$?.next(appendToDialog);

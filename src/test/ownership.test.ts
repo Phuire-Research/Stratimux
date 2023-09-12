@@ -3,7 +3,7 @@ import { Concept } from '../model/concept';
 import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipKey } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { setOwnerShipModeKey, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
+import { setOwnerShipModeTopic, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 
 // REFACTOR to have two Axiums interact with One Another
 // Going to Punt for now. Moving back towards creating the UI
@@ -16,7 +16,7 @@ test('Ownership Test', (done) => {
   const sub = axium.subscribe((concepts: Concept[]) => {
     const state = selectState<OwnershipState>(concepts, ownershipKey);
     const axiumState = concepts[0].state as AxiumState;
-    if (state.initialized && axiumState.lastStrategy === setOwnerShipModeKey) {
+    if (state.initialized && axiumState.lastStrategy === setOwnerShipModeTopic) {
       expect(state.initialized).toBe(true);
       done();
     }

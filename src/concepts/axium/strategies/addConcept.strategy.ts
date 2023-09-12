@@ -33,13 +33,13 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   };
 
   const params: ActionStrategyParameters = {
-    key: addConceptsToAddQueThenBlockKey,
+    topic: addConceptsToAddQueThenBlockKey,
     initialNode: stepOne
   };
   return createStrategy(params);
 }
 // Step Two
-export const addConceptsFromQueThenUnblockKey = 'Add Concepts from Que then set Axium Mode to Default';
+export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
   const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumAddConceptFromQueType);
   const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumSetDefaultModeType);
@@ -60,7 +60,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
   };
 
   const params: ActionStrategyParameters = {
-    key: addConceptsFromQueThenUnblockKey,
+    topic: addConceptsFromQueThenUnblockTopic,
     initialNode: stepOne,
   };
 
