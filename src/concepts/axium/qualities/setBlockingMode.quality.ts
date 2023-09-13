@@ -5,7 +5,7 @@ import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 
-export const axiumSetBlockingModeType: ActionType = 'Axium Set Blocking Mode';
+export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
 
 export type SetBlockingModePayload = {
     concepts: Concept[]

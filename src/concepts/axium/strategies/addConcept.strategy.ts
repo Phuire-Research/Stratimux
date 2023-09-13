@@ -8,31 +8,26 @@ import { AppendConceptsToAddQuePayload, axiumAppendConceptsToAddQueType } from '
 import { axiumOpenType } from '../qualities/open.quality';
 import { axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
 import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { axiumKey } from '../axium.concept';
 
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockKey = 'Add Concepts to add que then set Axium Mode to Blocking';
 export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]) {
-  // const primedSetBlockingMode = primeAction(conceptualSet, setBlockingMode);
-  // const primedAppendConceptsToAddQue = primeAction(conceptualSet, appendConceptsToAddQue);
-  const stepThree: ActionNode = {
-    actionType: axiumOpenType,
-    successNode: null,
-    failureNode: null,
-    semaphore: getSemaphore(concepts, axiumOpenType),
-  };
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
-    successNode: stepThree,
+    successNode: null,
     failureNode: null,
-    semaphore: getSemaphore(concepts, axiumAppendConceptsToAddQueType),
+    semaphore: getSemaphore(concepts, axiumKey, axiumAppendConceptsToAddQueType),
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
+    preposition: 'Then Safely'
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
     failureNode: null,
-    semaphore: getSemaphore(concepts, axiumSetBlockingModeType),
-    payload: {concepts} as AppendConceptsToAddQuePayload
+    semaphore: getSemaphore(concepts, axiumKey, axiumSetBlockingModeType),
+    payload: {concepts} as AppendConceptsToAddQuePayload,
+    preposition: 'Immediately'
   };
 
   const params: ActionStrategyParameters = {
@@ -44,22 +39,33 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
 // Step Two
 export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
-  const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumAddConceptFromQueType);
-  const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumSetDefaultModeType);
+  const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumKey, axiumAddConceptFromQueType);
+  const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumKey, axiumSetDefaultModeType);
+  const openSemaphore = getSemaphore(conceptualSet, axiumKey, axiumOpenType);
 
+  const stepThree: ActionNode = {
+    actionType: axiumOpenType,
+    successNode: null,
+    failureNode: null,
+    semaphore: openSemaphore,
+    preposition: 'Reinstate',
+    denoter: 'State.'
+  };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
-    successNode: null,
+    successNode: stepThree,
     failureNode: null,
-    payload: {concepts: conceptualSet}
+    payload: {concepts: conceptualSet},
+    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumAddConceptFromQueType,
     semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
     failureNode: null,
-    payload: {action$} as AddConceptsFromQuePayload
+    payload: {action$} as AddConceptsFromQuePayload,
+    preposition: 'First'
   };
 
   const params: ActionStrategyParameters = {

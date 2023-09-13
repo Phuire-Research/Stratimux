@@ -14,17 +14,12 @@ test('Axium Counting Strategy Test', (done) => {
     if (count ===  1) {
       axium.dispatch(strategyBegin(countingStrategy()));
     }
-    const counter = selectState<Counter>(concepts, counterKey);
-    console.log(`Fires: ${count} Count: ${counter.count}`);
-    if (count === 6) {
-      console.log(`FINAL: Fires: ${count} Count: ${counter.count}`);
-      expect(counter.count).toBe(1);
-    }
     const axiumState = concepts[0].state as AxiumState;
     if (axiumState.lastStrategy === countingTopic) {
-      console.log(axiumState.dialog);
+      const counter = selectState<Counter>(concepts, counterKey);
+      expect(counter.count).toBe(1);
+      setTimeout(() => {done();}, 500);
       sub.unsubscribe();
-      done();
     }
   });
 });

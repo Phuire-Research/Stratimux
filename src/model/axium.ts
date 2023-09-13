@@ -6,7 +6,7 @@ import {
   Subscriber,
   catchError,
 } from 'rxjs';
-import { Action, createAction } from './action';
+import { Action, createAction, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
@@ -70,6 +70,7 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
   const action$: Subject<Action> = new Subject();
   const concepts: Concept[] = [createAxiumConcept(logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
+  axiumState.cachedSemaphores = createCacheSemaphores(concepts);
   concepts.forEach((concept, _index) => {
     concept.semaphore = _index;
     concept.qualities.forEach((quality, index) => {

@@ -2,7 +2,7 @@ import { Quality, Reducer, createQuality } from '../../../model/concept';
 import { Action, ActionType, createAction } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 
-export const axiumCloseType: ActionType = 'Axium Close';
+export const axiumCloseType: ActionType = 'Close Axium';
 
 export function closeReducer(state: AxiumState, _action: Action) {
   state.generalSubscribers.forEach(keyed => keyed.subscriber.unsubscribe());

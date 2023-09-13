@@ -6,7 +6,7 @@ import { AxiumState } from '../axium.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const axiumRegisterStreamsType: ActionType = 'Axium Register Streams';
+export const axiumRegisterStreamsType: ActionType = 'register Axium Action and Concept Streams';
 
 export type RegisterStreamsPayload = {
     action$: Subject<Action>;

@@ -6,7 +6,7 @@ import { AxiumState } from '../axium.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const axiumInitializePrinciplesType: ActionType = 'Axium Register Concept Stream';
+export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set Subscribers to General Subscribers list';
 
 export type InitializePrinciplesPayload = {
     concepts: Concept[];

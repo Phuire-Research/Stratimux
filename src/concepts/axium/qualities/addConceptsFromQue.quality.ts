@@ -7,7 +7,7 @@ import { axiumBadActionType } from './badAction.quality';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 
-export const axiumAddConceptFromQueType: ActionType = 'Axium Append Concepts to Add Concept Que';
+export const axiumAddConceptFromQueType: ActionType = 'Add Concepts from Axium Concept Que';
 
 export type AddConceptsFromQuePayload = {
     action$: Subject<Action>;

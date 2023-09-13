@@ -6,7 +6,7 @@ import { AxiumState } from '../axium.concept';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const axiumRegisterSubscriberType: ActionType = 'Axium Register Subscriber';
+export const axiumRegisterSubscriberType: ActionType = 'register Subscriber to Axium\'s General Subscriber list';
 
 export type RegisterSubscriberPayload = {
     subscriber: Subscriber<Action>;

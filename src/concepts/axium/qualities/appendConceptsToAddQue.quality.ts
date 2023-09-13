@@ -4,7 +4,7 @@ import { AxiumState } from '../axium.concept';
 import { Action, ActionType, createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const axiumAppendConceptsToAddQueType: ActionType = 'Axium append Concepts to Add Concept Que';
+export const axiumAppendConceptsToAddQueType: ActionType = 'append Concepts to Axium\'s Add Concept Que';
 
 export type AppendConceptsToAddQuePayload = {
     concepts: Concept[]

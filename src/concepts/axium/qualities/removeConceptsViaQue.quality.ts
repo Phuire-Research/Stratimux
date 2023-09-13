@@ -8,7 +8,7 @@ import { createPrinciple$ } from '../../../model/principle';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
-export const axiumRemoveConceptsViaQueType: ActionType = 'Axium Remove Concepts via Removal Concept Que';
+export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Axium\'s Removal Concept Que';
 
 export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
   const methodSubscribers = state.methodSubscribers;

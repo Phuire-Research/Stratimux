@@ -3,7 +3,7 @@ import { Quality, Reducer } from '../../../model/concept';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 
-export const axiumBadActionType: ActionType = 'Axium Bad Action';
+export const axiumBadActionType: ActionType = 'Axium received a Bad Action';
 
 export function badActionReducer(state: AxiumState, action: Action) {
   if (state.logging) {
