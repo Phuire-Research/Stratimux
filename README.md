@@ -14,7 +14,12 @@ Example:  Finally + Open Axium + to Notify Subscribers of State changes.
 This allows for a STRX Dialog to be constructed in the same formalization of that of a paragraph. Where the Strategy Topic is the literal Topic Sentence of a Paragraph. And is followed by all steps and possible decision that create a Unified Paragraph.
 ```
 TOPIC + SENTENCE + SENTENCE + SENTENCE
-Example: Axium Initialization Strategy. + Begin with register Axium Action and Concept Streams. + Then initialize Principles and set Subscribers to General Subscribers list. + Next set Axium to it's current Default Mode Index. + Finally Open Axium to Notify Subscribers of State changes.
+Example: 
+Axium Initialization Strategy. +
+Begin with register Axium Action and Concept Streams. +
+Then initialize Principles and set Subscribers to General Subscribers list. +
+Next set Axium to it's current Default Mode Index. +
+Finally Open Axium to Notify Subscribers of State changes.
 ```
 
 Where the Main Difference between that of a Traditional Paragraph and the compositional structure of the STRX ActionStrategy. These STRX Paragraphs are capable of representing different decisions that inform the final output of that Paragraph and its Sentences. This can be likened to some High Orders of Logic of Decisions made within the Context of an ActionStrategy. Except in Contrast to Current Understanding of such, is a Direct Mapping of these Higher Order Conventions versus some Nesting Obtuse Nightmare. But likewise Exponentially Grows more Complex, the Longer the Strategy. This is the Consequence and Relationship of Binary/N Trees and the Exponential Quality of their Branches Quantified. The difference traditionally ignored here, is that we can Logical Trim Branches. And majority of Strategies will be of some Sequential Flow and short Running in their Life Times.
@@ -41,11 +46,11 @@ In addition, Principles here act as a Containing Observer that allows for utiliz
 * KeyedSelector - Ops the Quality or Actions into the Ownership Paradigm and likewise can be used to Select some Aspect of State from the Set of Concepts.
 
 ## STRX was Designed Specifically to Mirror the Functionality of Neural Networks to Decompose their Black Box Universal Functions.
-[Fourier Universal Function, Credit to Emergent Garden @Youtube](https://imgur.com/a/WJhzyVz)
+![Fourier Universal Function, Credit to Emergent Garden @Youtube](https://i.imgur.com/urTy2on.png)
 
 The above would be some Neural Network's Universal Function made to fit some Unknown Function via a Fourier Transform. If we know the Function ahead of the Time we may Set the Weights Specifically to Represent that Function. The Question that is Obfuscated in current understanding is by what mechanism is this Neural Network choosing the next Node on the Graph to Determine its Output?
 
-[Neural Network Diagram, Credit to Emergent Garden @Youtube](https://imgur.com/a/Wo2gUqh)
+![Neural Network Diagram, Credit to Emergent Garden @Youtube](https://i.imgur.com/d8G8ebo.png)
 
 The reason for STRX's Recursive Functionality, is that the Life Time of One Action within the Mode is the Exact point of Comparison between that of a Universal Function and the Possible Node Selection in the Graph Above. As the Method allows for the Next Node to via some Logical Deterministic Instruction via its Method. But the Entire Function is the Net Run Time of that Action through the Axium's Mode. As the Mode is just a Function that Relays to embedded Functions of that of a Reducer and Method. And a Function is allowed to be Composed of Functions. Therefore what is Obfuscated within Networks, is not only the Function Themselves, but the Decisions made between the Neural Networks nodes that Control its Output, based on some Input.
 
