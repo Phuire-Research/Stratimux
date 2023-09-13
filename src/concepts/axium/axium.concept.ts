@@ -2,7 +2,7 @@ import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
 import { Concept, ConceptCreator } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
-import { defaultMode, blockingMode } from './axium.mode';
+import { blockingMode, permissiveMode } from './axium.mode';
 import { openQuality } from './qualities/open.quality';
 import { badActionQuality } from './qualities/badAction.quality';
 import { closeQuality } from './qualities/close.quality';
@@ -20,6 +20,7 @@ import { removeConceptsViaQueQuality } from './qualities/removeConceptsViaQue.qu
 import { appendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
 import { createConcept } from '../../model/concept';
 import { setModeQuality } from './qualities/setMode.quality';
+import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 
 export type KeyedSub = {
   key: string;
@@ -35,6 +36,7 @@ export type AxiumState = {
   generation: number;
   cachedSemaphores: Map<string,Map<string,[number,number,number]>>
   modeIndex: number;
+  defaultModeIndex: number;
   modeKeys: string[]
   methodSubscribers: KeyedSub[];
   generalSubscribers: KeyedSub[];
@@ -57,6 +59,7 @@ const createAxiumState = (logging?: boolean, storeDialog?: boolean): AxiumState 
     generation: 0,
     cachedSemaphores: new Map<string, Map<string, [number, number, number]>>(),
     modeIndex: 0,
+    defaultModeIndex: 1,
     modeKeys: [axiumKey, axiumKey],
     methodSubscribers: [] as KeyedSub[],
     generalSubscribers: [] as KeyedSub[],
@@ -81,6 +84,7 @@ export const createAxiumConcept = (logging?: boolean, storeDialog?: boolean): Co
       initializePrinciplesQuality,
       setBlockingModeQuality,
       setDefaultModeQuality,
+      setDefaultModeIndexQuality,
       addConceptsFromQueQuality,
       appendConceptsToAddQueQuality,
       appendConceptsToRemoveQueQuality,
@@ -88,6 +92,6 @@ export const createAxiumConcept = (logging?: boolean, storeDialog?: boolean): Co
       setModeQuality
     ],
     [axiumPrinciple],
-    [blockingMode, defaultMode]
+    [blockingMode, permissiveMode]
   );
 };

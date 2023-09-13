@@ -5,13 +5,22 @@ import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnersh
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { axiumSetBlockingModeType } from '../../axium/qualities/setBlockingMode.quality';
 import { ownershipKey } from '../ownership.concept';
+import { SetDefaultModeIndex, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
+import { AxiumState } from '../../axium/axium.concept';
 
 export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
 export function setOwnershipModeStrategy(concepts: Concept[], modeName: string): ActionStrategy {
   const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipKey, ownershipInitializeOwnershipType);
   const setModeSemaphore = getSemaphore(concepts, ownershipKey, axiumSetModeType);
+  const setDefaultModeIndexSemaphore = getSemaphore(concepts, ownershipKey, axiumSetDefaultModeIndexType);
+  let ownershipModeIndex = 2;
+  (concepts[0].state as AxiumState).modeKeys.forEach((key, i) => {
+    if (key === ownershipKey) {
+      ownershipModeIndex = i;
+    }
+  });
 
-  const stepTwo: ActionNode = {
+  const stepThree: ActionNode = {
     actionType: ownershipInitializeOwnershipType,
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
@@ -19,12 +28,20 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     preposition: 'Set',
     denoter: 'to True to enable Ownership Principle.'
   };
-  const stepOne: ActionNode = {
+  const stepTwo: ActionNode = {
     actionType: axiumSetModeType,
     semaphore: setModeSemaphore,
-    successNode: stepTwo,
+    successNode: stepThree,
     failureNode: null,
     payload: { modeIndex: 2, modeName } as SetModePayload,
+    preposition: 'Successfully'
+  };
+  const stepOne: ActionNode = {
+    actionType: axiumSetDefaultModeIndexType,
+    semaphore: setDefaultModeIndexSemaphore,
+    successNode: stepTwo,
+    failureNode: null,
+    payload: { index: ownershipModeIndex } as SetDefaultModeIndex,
     preposition: 'Successfully'
   };
   const params: ActionStrategyParameters = {

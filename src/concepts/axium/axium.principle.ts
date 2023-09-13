@@ -9,7 +9,7 @@ import { primeAction } from '../../model/action';
 import { strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
-import { blockingMode, defaultMode } from './axium.mode';
+import { blockingMode, permissiveMode } from './axium.mode';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -67,7 +67,7 @@ export const axiumPrinciple: PrincipleFunction = (
       allowRemove = false;
       const newConcepts = [] as Concept[];
       axiumState.generation += 1;
-      const newModes: Mode[] = [blockingMode, defaultMode];
+      const newModes: Mode[] = [blockingMode, permissiveMode];
       const newModeKeys: string[] = [axiumKey, axiumKey];
       concepts.forEach(concept => {
         axiumState.removeConceptQue.forEach(target => {

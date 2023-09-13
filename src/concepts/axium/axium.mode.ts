@@ -22,7 +22,7 @@ export const isActionable = (axiumState: AxiumState, action: Action): boolean =>
   return actionable;
 };
 
-export const defaultMode: Mode = (
+export const permissiveMode: Mode = (
   [action, concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, BehaviorSubject<Concept[]>]
 ) => {
   const axiumState = concepts[0].state as AxiumState;

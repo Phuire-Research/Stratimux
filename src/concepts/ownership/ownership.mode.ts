@@ -2,23 +2,18 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { Action } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';
-import { defaultMode, blockingMode } from '../axium/axium.mode';
+import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
-import { OwnershipState, ownershipKey } from './ownership.concept';
-import { selectSlice, selectState } from '../../model/selector';
-import { OwnershipLedger, checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
-import { selectOwnershipLedger } from './ownership.selector';
-import { ownershipCheckoutType } from './qualities/checkout.quality';
+import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { strategyFailed } from '../../model/actionStrategy';
-import { axiumBadActionType } from '../axium/qualities/badAction.quality';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, BehaviorSubject<Concept[]>]
 ) => {
   let action = _action;
   let concepts = _concepts;
-  let finalMode: Mode = defaultMode;
+  let finalMode: Mode = permissiveMode;
   if (action.type === axiumSetBlockingModeType) {
     finalMode = blockingMode;
   }

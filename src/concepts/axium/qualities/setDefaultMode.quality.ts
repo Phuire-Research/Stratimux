@@ -34,7 +34,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
 
   return {
     ...state,
-    modeIndex: [1],
+    modeIndex: [state.defaultModeIndex],
     methodSubscribers,
   };
 }
