@@ -5,13 +5,14 @@ import { axiumOpenType } from '../qualities/open.quality';
 import { axiumRegisterStreamsType, type RegisterStreamsPayload } from '../qualities/registerStreams.quality';
 import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
 import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { axiumKey } from '../axium.concept';
 
 export const initializeTopic = 'Axium Initialize';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
-  const initSemaphore = getSemaphore(concepts, axiumInitializePrinciplesType);
-  const registerSemaphore = getSemaphore(concepts, axiumRegisterStreamsType);
-  const setDefaultModeSemaphore = getSemaphore(concepts, axiumSetDefaultModeType);
-  const openSemaphore = getSemaphore(concepts, axiumOpenType);
+  const initSemaphore = getSemaphore(concepts, axiumKey, axiumInitializePrinciplesType);
+  const registerSemaphore = getSemaphore(concepts, axiumKey, axiumRegisterStreamsType);
+  const setDefaultModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetDefaultModeType);
+  const openSemaphore = getSemaphore(concepts, axiumKey, axiumOpenType);
 
   const stepFour: ActionNode = {
     actionType: axiumOpenType,

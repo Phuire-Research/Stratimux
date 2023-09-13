@@ -6,12 +6,13 @@ import { AppendConceptsToRemoveQuePayload, axiumAppendConceptsToRemoveQueType } 
 import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
 import { axiumOpenType } from '../qualities/open.quality';
 import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { axiumKey } from '../axium.concept';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
-  const setBlockingModeSemaphore = getSemaphore(concepts, axiumSetBlockingModeType);
-  const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumAppendConceptsToRemoveQueType);
-  const openSemaphore = getSemaphore(concepts, axiumOpenType);
+  const setBlockingModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetBlockingModeType);
+  const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumKey, axiumAppendConceptsToRemoveQueType);
+  const openSemaphore = getSemaphore(concepts, axiumKey, axiumOpenType);
   const stepThree: ActionNode = {
     actionType: axiumOpenType,
     semaphore: openSemaphore,
@@ -41,8 +42,8 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
 // Step Two
 export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
-  const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumRemoveConceptsViaQueType);
-  const setDefaultModeSemaphore = getSemaphore(concepts, axiumSetDefaultModeType);
+  const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumKey, axiumRemoveConceptsViaQueType);
+  const setDefaultModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetDefaultModeType);
 
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,

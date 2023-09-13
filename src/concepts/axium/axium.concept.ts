@@ -33,6 +33,7 @@ export type AxiumState = {
   storeDialog: boolean;
   lastStrategy: string;
   generation: number;
+  cachedSemaphores: Map<string,Map<string,[number,number,number]>>
   modeIndex: number;
   modeKeys: string[]
   methodSubscribers: KeyedSub[];
@@ -54,6 +55,7 @@ const createAxiumState = (logging?: boolean, storeDialog?: boolean): AxiumState 
     storeDialog: storeDialog ? storeDialog : false,
     lastStrategy: '',
     generation: 0,
+    cachedSemaphores: new Map<string, Map<string, [number, number, number]>>(),
     modeIndex: 0,
     modeKeys: [axiumKey, axiumKey],
     methodSubscribers: [] as KeyedSub[],

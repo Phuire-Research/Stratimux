@@ -1,7 +1,7 @@
 import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber, map} from 'rxjs';
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
-import { Action, createAction } from '../../model/action';
+import { Action, createAction, createCacheSemaphores } from '../../model/action';
 import { AxiumState, axiumKey } from './axium.concept';
 import { selectState } from '../../model/selector';
 import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from './qualities/registerSubscriber.quality';
@@ -43,6 +43,8 @@ export const axiumPrinciple: PrincipleFunction = (
         ...concepts,
         ...axiumState.addConceptQue
       ] as Concept[];
+      const newAxiumState = newConcepts[0].state as AxiumState;
+      newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
       newConcepts.forEach((concept, _index) => {
         concept.semaphore = _index;
@@ -72,22 +74,30 @@ export const axiumPrinciple: PrincipleFunction = (
           if (concept.key !== target.key) {
             newConcepts.push(concept);
           }
-          axiumState.modeKeys.forEach((key, i) => {
-            if (key !== target.key && key !== axiumKey) {
-              newModeKeys.push(key);
-              newModes.push((concepts[0].mode as Mode[])[i]);
-            }
-          });
         });
       });
+      const newAxiumState = newConcepts[0].state as AxiumState;
+      newAxiumState.modeKeys.forEach((key, i) => {
+        let shouldAdd = false;
+        newConcepts.forEach(target => {
+          if (key === target.key && key !== axiumKey) {
+            shouldAdd = true;
+          }
+        });
+        if (shouldAdd) {
+          newModeKeys.push(key);
+          newModes.push((concepts[0].mode as Mode[])[i]);
+        }
+      });
       newConcepts[0].mode = newModes;
-      axiumState.modeKeys = newModeKeys;
+      newAxiumState.modeKeys = newModeKeys;
       newConcepts.forEach((concept, _index) => {
         concept.semaphore = _index;
         concept.qualities.forEach((quality, index) => {
           quality.semaphore = [_index, index, axiumState.generation];
         });
       });
+      newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
       axiumState.concepts$?.next(newConcepts);
 

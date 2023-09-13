@@ -4,11 +4,12 @@ import { createAction, getSemaphore, primeAction } from '../../../model/action';
 import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { axiumSetBlockingModeType } from '../../axium/qualities/setBlockingMode.quality';
+import { ownershipKey } from '../ownership.concept';
 
 export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
 export function setOwnershipModeStrategy(concepts: Concept[], modeName: string): ActionStrategy {
-  const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipInitializeOwnershipType);
-  const setModeSemaphore = getSemaphore(concepts, axiumSetModeType);
+  const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipKey, ownershipInitializeOwnershipType);
+  const setModeSemaphore = getSemaphore(concepts, ownershipKey, axiumSetModeType);
 
   const stepTwo: ActionNode = {
     actionType: ownershipInitializeOwnershipType,
