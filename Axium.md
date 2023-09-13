@@ -25,6 +25,7 @@ export type AxiumState {
   lastStrategy: string;
   generation: number;
   modeIndex: number;
+  defaultModeIndex: number;
   modeKeys: string[]
   methodSubscribers: KeyedSub[];
   generalSubscribers: KeyedSub[];
@@ -42,6 +43,7 @@ export type AxiumState {
 * lastStrategy - Informs specifically the of the Last ActionStrategy Topic to have ran through the System. This is used via Testing or the Deployment of addition Strategies Upon Completion.
 * generation - This iterates each time the Set of Concepts is Transformed. And if an Action is Received of the Wrong Generation. Will be Primed at Run Time, if not found this will emit a BadAction that if Logging is set to True. Will be Emitted to the Console alongside the invalidated Action as Payload.
 * modeIndex - This determines which Mode is currently being ran from the lists of Modes stored on the Axium Concept.
+* defaultModeIndex - This determines what Mode will be set by setDefaultMode. Of importance for Adding and Removing Strategies.
 * modeKeys - Is the Pair of Keys that Correspond to Mode and their Respective Index that allow for the Mode to Altered at Run Time without String Comparison.
 * methodSubscribers - Accumulates all Method Subscriptions for their Manipulation at Run Time.
 * generalSubscribers - Same as Method Subscribers, but a Catch All including that of Principles and their Internal Subscriptions that would Ordinarily leave Principles as Hot and active in Memory if not Concluded upon Removal or Close.

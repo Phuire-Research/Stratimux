@@ -77,17 +77,22 @@ export const axiumPrinciple: PrincipleFunction = (
         });
       });
       const newAxiumState = newConcepts[0].state as AxiumState;
-      newAxiumState.modeKeys.forEach((key, i) => {
+      newAxiumState.modeKeys.forEach((modeKey, modeIndex) => {
         let shouldAdd = false;
-        newConcepts.forEach(target => {
-          if (key === target.key && key !== axiumKey) {
-            shouldAdd = true;
+        axiumState.removeConceptQue.forEach(removeTarget => {
+          if (modeKey !== axiumKey) {
+            if (modeKey !== removeTarget.key) {
+              shouldAdd = true;
+            } else if (modeKey === removeTarget.key && modeIndex === newAxiumState.defaultModeIndex) {
+              newAxiumState.defaultModeIndex = 1;
+            }
           }
         });
         if (shouldAdd) {
-          newModeKeys.push(key);
-          newModes.push((concepts[0].mode as Mode[])[i]);
+          newModeKeys.push(modeKey);
+          newModes.push((concepts[0].mode as Mode[])[modeIndex]);
         }
+        shouldAdd = false;
       });
       newConcepts[0].mode = newModes;
       newAxiumState.modeKeys = newModeKeys;
