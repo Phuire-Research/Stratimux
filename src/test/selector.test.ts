@@ -27,7 +27,7 @@ test('Axium Selector State Slice Test', (done) => {
     const count = selectSlice<number>(concepts, counterSelectCount);
     expect(count).toBe(10);
     // console.log('Check State Slice', 12);
-    done();
+    setTimeout(() => {done();}, 500);
   });
 });
 

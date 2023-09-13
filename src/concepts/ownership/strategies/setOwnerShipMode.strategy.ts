@@ -26,7 +26,6 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     successNode: null,
     failureNode: null,
     preposition: 'Set',
-    denoter: 'to True to enable Ownership Principle.'
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetModeType,

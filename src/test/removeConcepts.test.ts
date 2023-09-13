@@ -32,7 +32,8 @@ test('Axium remove Concepts Strategy Test', (done) => {
         }
       });
       expect(exists).toBe(false);
-      done();
+      setTimeout(() => {done();}, 500);
+      sub.unsubscribe();
     }
     // sub.unsubscribe();
   });

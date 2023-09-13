@@ -7,7 +7,7 @@ import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples
 import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumKey } from '../axium.concept';
 
-export const initializeTopic = 'Axium Initialize';
+export const initializeTopic = 'Axium Initialization Strategy';
 export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
   const initSemaphore = getSemaphore(concepts, axiumKey, axiumInitializePrinciplesType);
   const registerSemaphore = getSemaphore(concepts, axiumKey, axiumRegisterStreamsType);
@@ -19,7 +19,9 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     semaphore: openSemaphore,
     successNode: null,
     failureNode: null,
-    payload: {concepts}
+    payload: {concepts},
+    preposition: 'Finally',
+    denoter: 'to Notify Subscribers of State changes.'
   };
   // const stepThree: ActionNode = {
   //     action: primedSetDefaultMode,
@@ -31,21 +33,24 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     semaphore: setDefaultModeSemaphore,
     successNode: stepFour,
     failureNode: null,
-    payload: {concepts}
+    payload: {concepts},
+    preposition: 'Next'
   };
   const stepTwo: ActionNode = {
     actionType: axiumInitializePrinciplesType,
     semaphore: initSemaphore,
     successNode: stepThree,
     failureNode: null,
-    payload: {concepts}
+    payload: {concepts},
+    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumRegisterStreamsType,
     semaphore: registerSemaphore,
     successNode: stepTwo,
     failureNode: null,
-    payload: streams
+    payload: streams,
+    preposition: 'Begin with'
   };
 
   const params: ActionStrategyParameters = {

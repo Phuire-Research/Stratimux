@@ -18,7 +18,6 @@ import { createAction } from '../model/action';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const something = createAction('something');
-  console.log(something);
   expect(something.type).toBe('something');
   done();
 });

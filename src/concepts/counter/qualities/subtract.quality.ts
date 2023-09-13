@@ -20,7 +20,6 @@ const subtractMethodCreator: MethodCreator = () => {
   const subtractSubject = new Subject<Action>();
   const subtractMethod: Method = subtractSubject.pipe<Action>(
     map((action: Action) => {
-      console.log('SUBTRACT');
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }

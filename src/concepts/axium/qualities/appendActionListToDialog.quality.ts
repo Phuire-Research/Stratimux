@@ -6,7 +6,7 @@ import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { axiumConcludeType } from './conclude.quality';
 
-export const axiumAppendActionListToDialogType: ActionType = 'Axium Append Action List to Dialog';
+export const axiumAppendActionListToDialogType: ActionType = 'append Action List to Axium\'s Dialog';
 
 export type AppendActionListToDialogPayload = {
   actionList: Array<string>;

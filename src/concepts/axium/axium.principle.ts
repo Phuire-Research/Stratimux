@@ -26,7 +26,6 @@ export const axiumPrinciple: PrincipleFunction = (
     }
     if (axiumState.addConceptQue.length !== 0 && allowAdd) {
       allowAdd = false;
-      console.log('Once');
       axiumState.generation += 1;
       axiumState.addConceptQue.forEach((concept, _index) => {
         if (concept.mode !== undefined) {

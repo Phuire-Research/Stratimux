@@ -18,7 +18,8 @@ test('Ownership Test', (done) => {
     const axiumState = concepts[0].state as AxiumState;
     if (state.initialized && axiumState.lastStrategy === setOwnerShipModeTopic) {
       expect(state.initialized).toBe(true);
-      done();
+      setTimeout(() => {done();}, 500);
+      sub.unsubscribe();
     }
   });
 });

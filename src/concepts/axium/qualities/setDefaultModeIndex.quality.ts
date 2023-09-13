@@ -2,7 +2,7 @@ import { Quality, Reducer, createDefaultMethodCreator, createQuality, defaultRed
 import { Action, ActionType, createAction } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 
-export const axiumSetDefaultModeIndexType: ActionType = 'Axium set default Mode Index';
+export const axiumSetDefaultModeIndexType: ActionType = 'set Axium\'s Default Mode Index';
 
 export type SetDefaultModeIndex = {
   index: number;

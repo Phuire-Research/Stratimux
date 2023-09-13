@@ -33,8 +33,8 @@ test('Axium Test', (done) => {
     else if (count === 7) {
       const counter = selectState<Counter>(concepts, counterKey);
       expect(counter.count).toBe(2);
+      setTimeout(() => {done();}, 500);
       sub.unsubscribe();
-      done();
     }
   });
 });

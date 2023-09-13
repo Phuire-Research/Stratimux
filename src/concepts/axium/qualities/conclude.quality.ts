@@ -9,4 +9,4 @@ import { Action, ActionType } from '../../../model/action';
  * And used to clear Ownership of its Previous ActionNode and is handled by ActionStrategy
  * This should not be used Directly
  */
-export const axiumConcludeType: ActionType = 'Axium conclude';
+export const axiumConcludeType: ActionType = 'Conclude';

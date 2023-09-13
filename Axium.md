@@ -1,7 +1,7 @@
 ## Axium
-The inspiration for STRX was that of Redux or the FLUX Pattern of Design. With several changes and for the sake of Developers have maintained some Similarities to that Design. But offers enough of a Departure where what would be Called the Store is now referred to as the **Axium**. Where an Axium is a Set of Concepts that are Unified to form a Greater Conceptualization. Namely that of your Application, but in contrast to its Inspiration and accomplished by the its Patterns of ActionStrategy and Spatial Ownership. Is actively encouraging the Crossing the Streams or to be Specific that of the Unifying of Concepts and their Qualities.
+The main point of Interaction and Named holder of a Set of Concepts. This was inspired by Axiom. But slightly changed towards the Concept of Unifying Concepts as a Counter to the Traditional Axiom which is based on Statements assumed to be True. Therefore an Axium is the Set of Concepts and their Qualities that allow for the Emergence of New Concepts. The advantage of this approach, that the outside of createAxium Function. The Entirety of an Axium may be Decomposed to the Sum of its Parts. That way versus creating some new Arbitrary Construct of a FileSystem. We are in Competition as to whose FileSystem Concept is Best. As if someone improves upon a Concept you are working on in this System. Versus creating some new Library, you may take the Parts of that Concept into your own Version of it.
 
-![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://i.makeagif.com/media/1-27-2017/0V9QEn.gif)
+There is much to be Expanded upon this as a potential platform of doing. Where the goal would be the refinement towards the Stability of these Concepts so that may create some Standard Library of Concepts. Versus the current Generalized  Construct Paradigm that this has been designed as a Direct Counter to. That cannot readily be Decomposed and Reconfigured. As what is interesting is the Discovery within this type of system of Universal Concepts and Qualities. By way of Matching Functionality where we would least expect it.
 
 ```typescript
 export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) : {
@@ -36,7 +36,7 @@ export type AxiumState {
   subConcepts$: Subject<Concept[]>;
 }
 ```
-* open - This is utilized by Principles to denote when they should initialize their Functionality.
+* open - This is utilized by Principles and External Subscribers to denote when they should initialize their Functionality. 
 * logging - Controls whether the STRX Dialog Paragraphs are emitted upon Strategy Completion. In addition to other Debugging Procedures.
 * dialog - Is the Internal Representation of the Strategies that the Axium has Ran.
 * storeDialog - This is set to false By Default to save on Memory, but if stored, allows such to be Subscribed To.
@@ -75,9 +75,11 @@ Please avoid using these Qualities, but are made Available to Understand the Inn
 * setBlockingMode - Sets the Mode to Blocking and Open to False. This would Notify any Principles to Cease detecting for Changes. This is Part of the Add and Remove Concept Strategies. And while Internal should only be used via Such.
 
 ## Useful Axium Qualities
+* open - Sets Axium open Property by default to True if no Payload is Supplied. Must be used after setBlockingMode in a Strategy to Reenable Functionality of Principles and External Subscribers.
 * log - Merely Logs the Action, is useful for Debugging ActionStrategies as it Logs Attached Strategy and any addition Action Qualities.
 * close - This will will Cancel all Internal Subscriptions that the Axium has Access To. As well as All Steams will be Completed. The External close() Function that the createAxium supplies, dispatches this Action. Or can be Ran Specially via an Internal Principle towards its Governing Axium or that of another Axium that it is Subscribed to.
 * setMode - If your Concept requires a Specific Modification to the Functionality of the Stream. This will Set the Mode Index to that Stream. Specifically this shouldn't have to be Used. But is Left to the User if they Run into such a Case.
+* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept key and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeKey is just your Concept Key and the creation of new Modes should be the Last Go To for your Apps Functionality. 
 
 ## Axium Strategies Concept Set Transformation
 ```typescript

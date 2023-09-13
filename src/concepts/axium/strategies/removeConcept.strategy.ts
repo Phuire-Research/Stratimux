@@ -12,17 +12,11 @@ export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Qu
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumKey, axiumAppendConceptsToRemoveQueType);
-  const openSemaphore = getSemaphore(concepts, axiumKey, axiumOpenType);
-  const stepThree: ActionNode = {
-    actionType: axiumOpenType,
-    semaphore: openSemaphore,
-    successNode: null,
-    failureNode: null,
-  };
+
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToRemoveQueType,
     semaphore: appendConceptsToRemoveQueSemaphore,
-    successNode: stepThree,
+    successNode: null,
     failureNode: null,
     payload: {concepts: targetConcepts} as AppendConceptsToRemoveQuePayload
   };
@@ -44,19 +38,30 @@ export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que the
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
   const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumKey, axiumRemoveConceptsViaQueType);
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetDefaultModeType);
+  const openSemaphore = getSemaphore(concepts, axiumKey, axiumOpenType);
 
+  const stepThree: ActionNode = {
+    actionType: axiumOpenType,
+    semaphore: openSemaphore,
+    successNode: null,
+    failureNode: null,
+    preposition: 'Reinstate',
+    denoter: 'State.'
+  };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
-    successNode: null,
+    successNode: stepThree,
     failureNode: null,
-    payload: {concepts} as SetDefaultModePayload
+    payload: {concepts} as SetDefaultModePayload,
+    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumRemoveConceptsViaQueType,
     semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
     failureNode: null,
+    preposition: 'To Begin'
   };
 
   const params: ActionStrategyParameters = {
