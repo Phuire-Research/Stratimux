@@ -11,7 +11,7 @@ import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
 
 // Step One to Add Concepts to Axium
-export const addConceptsToAddQueThenBlockKey = 'Add Concepts to add que then set Axium Mode to Blocking';
+export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
 export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]) {
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
@@ -31,7 +31,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   };
 
   const params: ActionStrategyParameters = {
-    topic: addConceptsToAddQueThenBlockKey,
+    topic: addConceptsToAddQueThenBlockTopic,
     initialNode: stepOne
   };
   return createStrategy(params);

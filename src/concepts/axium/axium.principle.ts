@@ -29,11 +29,11 @@ export const axiumPrinciple: PrincipleFunction = (
       axiumState.generation += 1;
       axiumState.addConceptQue.forEach((concept, _index) => {
         if (concept.mode !== undefined) {
-          const keys = axiumState.modeNames;
+          const names = axiumState.modeNames;
           const modes = concepts[0].mode as Mode[];
           concept.mode.forEach((mode: Mode) => {
             modes.push(mode);
-            keys.push(concept.name);
+            names.push(concept.name);
           });
         }
       });

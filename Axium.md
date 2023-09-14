@@ -26,9 +26,9 @@ export type AxiumState {
   generation: number;
   modeIndex: number;
   defaultModeIndex: number;
-  modeKeys: string[]
-  methodSubscribers: KeyedSub[];
-  generalSubscribers: KeyedSub[];
+  modeNames: string[]
+  methodSubscribers: NamedSubscribers[];
+  generalSubscribers: NamedSubscribers[];
   action$?: Subject<Action>;
   concepts$?: BehaviorSubject<Concept[]>;
   addConceptQue: Concept[],
@@ -44,7 +44,7 @@ export type AxiumState {
 * generation - This iterates each time the Set of Concepts is Transformed. And if an Action is Received of the Wrong Generation. Will be Primed at Run Time, if not found this will emit a BadAction that if Logging is set to True. Will be Emitted to the Console alongside the invalidated Action as Payload.
 * modeIndex - This determines which Mode is currently being ran from the lists of Modes stored on the Axium Concept.
 * defaultModeIndex - This determines what Mode will be set by setDefaultMode. Of importance for Adding and Removing Strategies.
-* modeKeys - Is the Pair of Keys that Correspond to Mode and their Respective Index that allow for the Mode to Altered at Run Time without String Comparison.
+* modeNames - Is the paring of a Name that Correspond to Mode and their Respective Index that allow for the Mode to Altered at Run Time without String Comparison.
 * methodSubscribers - Accumulates all Method Subscriptions for their Manipulation at Run Time.
 * generalSubscribers - Same as Method Subscribers, but a Catch All including that of Principles and their Internal Subscriptions that would Ordinarily leave Principles as Hot and active in Memory if not Concluded upon Removal or Close.
 * action$ - Is the internal Action Stream.
@@ -79,7 +79,7 @@ Please avoid using these Qualities, but are providing explanations to Understand
 * log - Merely Logs the Action, is useful for Debugging ActionStrategies as it Logs Attached Strategy and any addition Action Qualities.
 * close - This will will Cancel all Internal Subscriptions that the Axium has Access To. As well as All Steams will be Completed. The External close() Function that the createAxium supplies, dispatches this Action. Or can be Ran Specially via an Internal Principle towards its Governing Axium or that of another Axium that it is Subscribed to.
 * setMode - If your Concept requires a Specific Modification to the Functionality of the Stream. This will Set the Mode Index to that Stream. Specifically this shouldn't have to be Used. But is Left to the User if they Run into such a Case.
-* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept key and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeKey is just your Concept Key and the creation of new Modes should be the Last Go To for your Apps Functionality.
+* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept Name and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the Last Go To for your Apps Functionality.
 * clearDialog - Clears the currently Stored STRX Dialog, may be used within a Strategy.
 
 ## Axium Strategies Concept Set Transformation
