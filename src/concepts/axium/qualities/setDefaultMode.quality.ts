@@ -5,7 +5,7 @@ import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { defaultMethodSubscription } from '../../../model/axium';
 
-export const axiumSetDefaultModeType: ActionType = 'set Axium to it\'s current Default Mode Index';
+export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
 
 export type SetDefaultModePayload = {
     concepts: Concept[]

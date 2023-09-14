@@ -87,7 +87,7 @@ Please avoid using these Qualities, but are providing explanations to Understand
 function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]);
 function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]);
 ```
-Note these Strategies are Broken into Two Parts, One to Be Ran and the Other is Ran from the Principle.
+Note these Strategies can be Broken into Two Parts Responsibly, One to Be Ran via Method and the Other is Run from Subscribing Principle to Some Que.
 * addConceptsToAddQueThenBlockStrategy - This will add newConcepts to the addConceptQue to be run the Stage of the Overall Strategy.
 * addConceptsToRemovalQueThenBlockStrategy - This will add the targetConcepts to the Removal Que. To be later picked up within the Axium Principle.
 
