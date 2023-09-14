@@ -25,7 +25,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
           defaultMethodSubscription(action$, action);
         });
         methodSubscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: sub as Subscriber<Action>
         });
       }

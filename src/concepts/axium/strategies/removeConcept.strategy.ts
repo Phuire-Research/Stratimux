@@ -6,12 +6,12 @@ import { AppendConceptsToRemoveQuePayload, axiumAppendConceptsToRemoveQueType } 
 import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
 import { axiumOpenType } from '../qualities/open.quality';
 import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
-import { axiumKey } from '../axium.concept';
+import { axiumName } from '../axium.concept';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
-  const setBlockingModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetBlockingModeType);
-  const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumKey, axiumAppendConceptsToRemoveQueType);
+  const setBlockingModeSemaphore = getSemaphore(concepts, axiumName, axiumSetBlockingModeType);
+  const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumName, axiumAppendConceptsToRemoveQueType);
 
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToRemoveQueType,
@@ -36,9 +36,9 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
 // Step Two
 export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
-  const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumKey, axiumRemoveConceptsViaQueType);
-  const setDefaultModeSemaphore = getSemaphore(concepts, axiumKey, axiumSetDefaultModeType);
-  const openSemaphore = getSemaphore(concepts, axiumKey, axiumOpenType);
+  const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumName, axiumRemoveConceptsViaQueType);
+  const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
+  const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
 
   const stepThree: ActionNode = {
     actionType: axiumOpenType,

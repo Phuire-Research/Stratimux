@@ -1,5 +1,5 @@
 import { Action, createAction, primeAction } from '../model/action';
-import { OwnershipState, createOwnershipConcept, ownershipKey } from '../concepts/ownership/ownership.concept';
+import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concept } from './concept';
 import { KeyedSelector, selectState } from './selector';
 import { axiumBadActionType, badActionReducer } from '../concepts/axium/qualities/badAction.quality';
@@ -92,19 +92,19 @@ export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, Ow
 export const ownershipShouldBlock = (concepts: Concept[], action: Action): boolean => {
   const qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   const actionSelectors = action.keyedSelectors;
-  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   let shouldBlock = false;
   if (qualityKeys) {
     for (let i = 0; i < qualityKeys.length; i++) {
-      if (ownershipLedger.has(`${qualityKeys[i].conceptKey} ${qualityKeys[i].stateKeys}`)) {
+      if (ownershipLedger.has(`${qualityKeys[i].conceptName} ${qualityKeys[i].stateKeys}`)) {
         shouldBlock = true;
         break;
       }
     }
   } else if (actionSelectors) {
     for (let i = 0; i < actionSelectors.length; i++) {
-      if (ownershipLedger.has(`${actionSelectors[i].conceptKey} ${actionSelectors[i].stateKeys}`)) {
+      if (ownershipLedger.has(`${actionSelectors[i].conceptName} ${actionSelectors[i].stateKeys}`)) {
         shouldBlock = true;
         break;
       }
@@ -115,7 +115,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
 
 export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
   const newConcepts = concepts;
-  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   if (action.stubs) {
     action.stubs.forEach(ticketStub => {
@@ -141,7 +141,7 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
 export const editStubs = (_concepts: Concept[], oldAction: Action, newAction: Action): [Concept[], Action] => {
   const concepts = _concepts;
   newAction.stubs = [];
-  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   if (oldAction.stubs) {
     oldAction.stubs.forEach((ticketStub) => {
@@ -165,11 +165,11 @@ export const editStubs = (_concepts: Concept[], oldAction: Action, newAction: Ac
 export const checkIn =
 (concepts: Concept[], action: Action): [Concept[], Action] => {
   const newConcepts = concepts;
-  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   action.stubs = [] as OwnershipTicketStub[];
   action.keyedSelectors?.forEach(keyed => {
-    const key = `${keyed.conceptKey} ${keyed.stateKeys}`;
+    const key = `${keyed.conceptName} ${keyed.stateKeys}`;
     const entry = ownershipLedger.get(key);
     const expiration = action.expiration;
     const newTicketStub = {
@@ -208,7 +208,7 @@ export const isActionReady = (concepts: Concept[], _action: Action): [Concept[],
     const action = primeAction(concepts, _action);
     return isActionReady(concepts, action);
   } else {
-    const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+    const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
     const cleanUp = [] as Action[];
     ownershipState.pendingActions = ownershipState.pendingActions.filter(
       (atn) => {
@@ -227,7 +227,7 @@ export const isActionReady = (concepts: Concept[], _action: Action): [Concept[],
 
 const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | undefined] => {
   const action = _action;
-  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   const stubs = action.stubs as OwnershipTicketStub[];
   let frontOfAllLines = true;
@@ -283,14 +283,14 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
 };
 
 const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action | undefined] => {
-  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   const action = _action;
   const qualitySelectors = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   let readyToGo = true;
   if (qualitySelectors) {
     for (const selector of qualitySelectors) {
-      const key = `${selector.conceptKey} ${selector.stateKeys}`;
+      const key = `${selector.conceptName} ${selector.stateKeys}`;
       if (ownershipLedger.get(key)) {
         readyToGo = false;
         break;
@@ -311,7 +311,7 @@ export const areEqual = (first: unknown, second: unknown ) => {
 export const updateAddToPendingActions = (_concepts: Concept[], _action: Action) => {
   let concepts = _concepts;
   let action = _action;
-  const ownershipState = selectState<OwnershipState>(concepts, ownershipKey);
+  const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const pendingActions = ownershipState.pendingActions;
   const newPendingActions: Action[] = [];
   const strippedAction = {

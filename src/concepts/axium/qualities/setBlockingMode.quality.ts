@@ -26,7 +26,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
           blockingMethodSubscription(action$, action);
         });
         methodSubscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: sub as Subscriber<Action>
         });
       }

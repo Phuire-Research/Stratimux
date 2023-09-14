@@ -24,7 +24,7 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
           const action$ = state.action$ as Subject<Action>;
           blockingMethodSubscription(action$, action);
         }) as Subscriber<Action>;
-        methodSubscribers.push({key: concept.key, subscriber: methodSub});
+        methodSubscribers.push({name: concept.name, subscriber: methodSub});
       }
     });
   });

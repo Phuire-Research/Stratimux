@@ -72,9 +72,7 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
   concepts.forEach((concept, _index) => {
-    concept.semaphore = _index;
     concept.qualities.forEach((quality, index) => {
-      quality.semaphore = [_index, index, axiumState.generation];
       if (quality.methodCreator) {
         const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
         quality.method = method;
@@ -84,18 +82,18 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
         }) as Subscriber<Action>;
         axiumState = concepts[0].state as AxiumState;
         axiumState.methodSubscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: methodSub,
         });
       }
     });
     if (_index !== 0 && concept.mode !== undefined) {
       axiumState = concepts[0].state as AxiumState;
-      const keys = axiumState.modeKeys;
+      const names = axiumState.modeNames;
       const modes = concepts[0].mode as Mode[];
       concept.mode.forEach((mode) => {
         modes.push(mode);
-        keys.push(concept.key);
+        names.push(concept.name);
       });
     }
     // if (concept.principles) {

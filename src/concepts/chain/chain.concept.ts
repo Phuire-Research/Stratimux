@@ -7,7 +7,7 @@ export type Chain = {
     actionQue: Action[];
 };
 
-export const chainKey = 'Chain';
+export const chainName = 'Chain';
 
 const initialChainState: Chain = {
   actionQue: [],
@@ -15,7 +15,7 @@ const initialChainState: Chain = {
 
 export const createChainConcept: ConceptCreator = () => {
   return createConcept(
-    chainKey,
+    chainName,
     initialChainState,
     [prepareChainQuality],
     [chainPrinciple],

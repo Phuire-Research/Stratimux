@@ -2,7 +2,7 @@ import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, createAction, createCacheSemaphores } from '../../model/action';
-import { AxiumState, axiumKey } from './axium.concept';
+import { AxiumState, axiumName } from './axium.concept';
 import { selectState } from '../../model/selector';
 import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from './qualities/registerSubscriber.quality';
 import { primeAction } from '../../model/action';
@@ -29,11 +29,11 @@ export const axiumPrinciple: PrincipleFunction = (
       axiumState.generation += 1;
       axiumState.addConceptQue.forEach((concept, _index) => {
         if (concept.mode !== undefined) {
-          const keys = axiumState.modeKeys;
+          const keys = axiumState.modeNames;
           const modes = concepts[0].mode as Mode[];
           concept.mode.forEach((mode: Mode) => {
             modes.push(mode);
-            keys.push(concept.key);
+            keys.push(concept.name);
           });
         }
       });
@@ -45,12 +45,6 @@ export const axiumPrinciple: PrincipleFunction = (
       const newAxiumState = newConcepts[0].state as AxiumState;
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
-      newConcepts.forEach((concept, _index) => {
-        concept.semaphore = _index;
-        concept.qualities.forEach((quality, index) => {
-          quality.semaphore = [_index, index, axiumState.generation];
-        });
-      });
       axiumState.concepts$?.next(newConcepts);
 
       const action$ = axiumState.action$ as Subject<Action>;
@@ -67,40 +61,35 @@ export const axiumPrinciple: PrincipleFunction = (
       const newConcepts = [] as Concept[];
       axiumState.generation += 1;
       const newModes: Mode[] = [blockingMode, permissiveMode];
-      const newModeKeys: string[] = [axiumKey, axiumKey];
+      const newModeNames: string[] = [axiumName, axiumName];
       concepts.forEach(concept => {
         axiumState.removeConceptQue.forEach(target => {
-          if (concept.key !== target.key) {
+          if (concept.name !== target.name) {
             newConcepts.push(concept);
           }
         });
       });
       const newAxiumState = newConcepts[0].state as AxiumState;
-      newAxiumState.modeKeys.forEach((modeKey, modeIndex) => {
+      newAxiumState.modeNames.forEach((modeName, modeIndex) => {
         let shouldAdd = false;
         axiumState.removeConceptQue.forEach(removeTarget => {
-          if (modeKey !== axiumKey) {
-            if (modeKey !== removeTarget.key) {
+          if (modeName !== axiumName) {
+            if (modeName !== removeTarget.name) {
               shouldAdd = true;
-            } else if (modeKey === removeTarget.key && modeIndex === newAxiumState.defaultModeIndex) {
+            } else if (modeName === removeTarget.name && modeIndex === newAxiumState.defaultModeIndex) {
               newAxiumState.defaultModeIndex = 1;
             }
           }
         });
         if (shouldAdd) {
-          newModeKeys.push(modeKey);
+          newModeNames.push(modeName);
           newModes.push((concepts[0].mode as Mode[])[modeIndex]);
         }
         shouldAdd = false;
       });
       newConcepts[0].mode = newModes;
-      newAxiumState.modeKeys = newModeKeys;
-      newConcepts.forEach((concept, _index) => {
-        concept.semaphore = _index;
-        concept.qualities.forEach((quality, index) => {
-          quality.semaphore = [_index, index, axiumState.generation];
-        });
-      });
+      newAxiumState.modeNames = newModeNames;
+
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
       axiumState.concepts$?.next(newConcepts);
@@ -112,6 +101,6 @@ export const axiumPrinciple: PrincipleFunction = (
     }
   });
   const primedRegisterSubscriber = primeAction(concepts, createAction(axiumRegisterSubscriberType));
-  primedRegisterSubscriber.payload = { subscriber, key: axiumKey } as RegisterSubscriberPayload;
+  primedRegisterSubscriber.payload = { subscriber, name: axiumName } as RegisterSubscriberPayload;
   observer.next(primedRegisterSubscriber);
 };

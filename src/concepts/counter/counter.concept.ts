@@ -9,7 +9,7 @@ export type Counter = {
     count: number
 }
 
-export const counterKey = 'counter';
+export const counterName = 'counter';
 
 const initialCounterState: Counter = {
   count: 0
@@ -17,7 +17,7 @@ const initialCounterState: Counter = {
 
 export const createCounterConcept = () => {
   return createConcept(
-    counterKey,
+    counterName,
     initialCounterState,
     [
       addQuality,

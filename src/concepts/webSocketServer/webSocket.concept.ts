@@ -9,7 +9,7 @@ export type Server = {
     routes: unknown[];
 };
 
-export const webSocketKey = 'Web Socket';
+export const webSocketName = 'Web Socket';
 
 const initialWebSocketState: Server = {
   port: 7070,
@@ -18,7 +18,7 @@ const initialWebSocketState: Server = {
 
 export const createWebSocketConcept: ConceptCreator = () => {
   return createConcept(
-    webSocketKey,
+    webSocketName,
     initialWebSocketState,
     [handleRequestQuality],
     [webSocketPrinciple],

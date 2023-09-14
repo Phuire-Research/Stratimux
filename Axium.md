@@ -91,7 +91,7 @@ Note these Strategies can be Broken into Two Parts Responsibly, One to Be Ran vi
 * addConceptsToAddQueThenBlockStrategy - This will add newConcepts to the addConceptQue to be run the Stage of the Overall Strategy.
 * addConceptsToRemovalQueThenBlockStrategy - This will add the targetConcepts to the Removal Que. To be later picked up within the Axium Principle.
 
-*Note* That the Addition of the Axium Concept itself is an Addition Departure from the FLUX architecture. This will be Refined over Time as Specifics Needs Grow and should be Seen as a Work in Progress. But, this should also be limited in its Functionality to Allow for the Addition of Concepts to Expand the total Functionality of the Axium Paradigm.
+*Note* That the Addition of the Axium Concept itself is an Addition Departure from the FLUX Architecture. This will be Refined over Time as Specifics Needs Grow and should be Seen as a Work in Progress. But, this should also be limited in its Functionality to Allow for the Addition of Concepts to Expand the total Functionality of the Axium Paradigm.
 
 ## Axium Modes
 * Default Mode - This Mode uses the Simple Trick of setTimeout(() => {}, 0) to allow for the Axium to have some Non Blocking Behavior. As this Functionality Directly Engages with the Event Loop. In addition this Mode will Emit the internal Concepts to the Outer subConcept$ stream.

@@ -5,7 +5,7 @@ export type Client = {
   webSocketTarget: string;
 };
 
-export const clientKey = 'Client';
+export const clientName = 'Client';
 
 const initialClientState: Client = {
   webSocketTarget: 'testing'
@@ -13,7 +13,7 @@ const initialClientState: Client = {
 
 export const createClientConcept: ConceptCreator = () => {
   return createConcept(
-    clientKey,
+    clientName,
     initialClientState,
     [],
     [clientWebSocketPrinciple]
