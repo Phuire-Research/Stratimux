@@ -63,7 +63,7 @@ export type AxiumState {
 * Principle - This is a Specific Observable that may be Subscribe to some Outside Source of Information. Otherwise is also supplied the Inner Concept[] Stream. And can make Decisions as to what Actions to Emit back into the Action Stream. These Subscriptions are Allocated within the GeneralSubscribers.
 
 ## Axium Qualities for Internal Use
-Please avoid using these Qualities, but are made Available to Understand the Inner Workings of the Axium.
+Please avoid using these Qualities, but are providing explanations to Understand the Inner Workings of the Axium.
 * addConceptsFromQue - This will be Ran from the Internal Axium Principle and take all Concepts added to said Que to Include within the Axium and Increment the Current Generation.
 * appendActionListToDialog - Takes the Final Output of a Strategy and appends such into a STRX Dialog if storeDialog is set to True.
 * badAction - If logging is set to true, this will Log any BadAction via its Payload of the Invalidated Action from the Created from the primeAction() Helper Function.
@@ -79,7 +79,8 @@ Please avoid using these Qualities, but are made Available to Understand the Inn
 * log - Merely Logs the Action, is useful for Debugging ActionStrategies as it Logs Attached Strategy and any addition Action Qualities.
 * close - This will will Cancel all Internal Subscriptions that the Axium has Access To. As well as All Steams will be Completed. The External close() Function that the createAxium supplies, dispatches this Action. Or can be Ran Specially via an Internal Principle towards its Governing Axium or that of another Axium that it is Subscribed to.
 * setMode - If your Concept requires a Specific Modification to the Functionality of the Stream. This will Set the Mode Index to that Stream. Specifically this shouldn't have to be Used. But is Left to the User if they Run into such a Case.
-* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept key and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeKey is just your Concept Key and the creation of new Modes should be the Last Go To for your Apps Functionality. 
+* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept key and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeKey is just your Concept Key and the creation of new Modes should be the Last Go To for your Apps Functionality.
+* clearDialog - Clears the currently Stored STRX Dialog, may be used within a Strategy.
 
 ## Axium Strategies Concept Set Transformation
 ```typescript

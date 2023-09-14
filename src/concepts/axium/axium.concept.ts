@@ -21,6 +21,7 @@ import { appendActionListToDialogQuality } from './qualities/appendActionListToD
 import { createConcept } from '../../model/concept';
 import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
+import { clearDialogQuality } from './qualities/clearDialog.quality';
 
 export type KeyedSub = {
   key: string;
@@ -49,7 +50,7 @@ export type AxiumState = {
 
 export const axiumKey = 'Axium';
 
-const createAxiumState = (logging?: boolean, storeDialog?: boolean): AxiumState => {
+const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState => {
   return {
     open: false,
     logging: logging ? logging : false,
@@ -69,15 +70,16 @@ const createAxiumState = (logging?: boolean, storeDialog?: boolean): AxiumState 
   };
 };
 
-export const createAxiumConcept = (logging?: boolean, storeDialog?: boolean): Concept =>  {
+export const createAxiumConcept = (storeDialog?: boolean, logging?: boolean): Concept =>  {
   return createConcept(
     axiumKey,
-    createAxiumState(logging, storeDialog),
+    createAxiumState(storeDialog, logging),
     [
       openQuality,
       badActionQuality,
       closeQuality,
       appendActionListToDialogQuality,
+      clearDialogQuality,
       logQuality,
       registerStreamsQuality,
       registerSubscriberQuality,

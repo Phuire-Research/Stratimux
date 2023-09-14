@@ -1,5 +1,5 @@
 import { map, Subject } from 'rxjs';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { Counter } from '../counter.concept';
@@ -9,6 +9,8 @@ import { counterSelectCount } from '../counter.selector';
 import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
 
 export const counterAddType: ActionType = 'Counter Add';
+
+export const counterAdd = prepareActionCreator(counterAddType);
 
 export function addReducer(state: Counter, _: Action) {
   return {

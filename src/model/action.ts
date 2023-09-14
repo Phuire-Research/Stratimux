@@ -77,3 +77,14 @@ export function createAction(
     expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
   };
 }
+
+export function prepareActionCreator(actionType: ActionType) {
+  return (
+    payload?: unknown,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    _semaphore?: [number, number, number]
+  ) => {
+    return createAction(actionType, payload, keyedSelectors, agreement, _semaphore);
+  };
+}
