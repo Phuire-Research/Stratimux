@@ -59,5 +59,4 @@ export function appendActionListToDialogReducer(state: AxiumState, action: Actio
 export const appendActionListToDialogQuality = createQuality(
   axiumAppendActionListToDialogType,
   appendActionListToDialogReducer,
-  createAppendActionListToDialogMethodCreator,
 );

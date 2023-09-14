@@ -4,22 +4,23 @@ import { createAction, primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, counterKey } from '../concepts/counter/counter.concept';
 import { createChainConcept } from '../concepts/chain/chain.concept';
-import { PrepareChainPayload, chainPrepareChainType } from '../concepts/chain/qualities/prepareChain.quality';
-import { counterAddType } from '../concepts/counter/qualities/add.quality';
-import { counterSubtractType } from '../concepts/counter/qualities/subtract.quality';
+import { ChainDispatchActionsPayload, chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
+import { counterAdd } from '../concepts/counter/qualities/add.quality';
+import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
   const axium = createAxium([createCounterConcept(), createChainConcept()], true, true);
   // ax.subscribe(val=> console.log(val));
   // ax.subscribe(val => console.log('this value', val));
   let count = 0;
+  let willDispatch = true;
   const sub = axium.subscribe((concepts: Concept[]) => {
     count++;
-    if (count === 1) {
-      const primedPrepareChain = primeAction(concepts, createAction(chainPrepareChainType));
-      const primedAdd = primeAction(concepts, createAction(counterAddType));
-      const primedSubtract = primeAction(concepts, createAction(counterSubtractType));
-      primedPrepareChain.payload = {
+    if (willDispatch) {
+      willDispatch = false;
+      const primedAdd = primeAction(concepts, counterAdd());
+      const primedSubtract = primeAction(concepts, counterSubtract());
+      const primedPrepareChain = primeAction(concepts, chainDispatchActions({
         actions: [
           primedAdd,
           primedAdd,
@@ -27,7 +28,7 @@ test('Axium Test', (done) => {
           primedAdd,
           primedSubtract,
           primedAdd,
-        ]} as PrepareChainPayload;
+        ]} as ChainDispatchActionsPayload));
       axium.dispatch(primedPrepareChain);
     }
     else if (count === 7) {

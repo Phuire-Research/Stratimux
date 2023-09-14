@@ -2,12 +2,14 @@ import { map, Subject } from 'rxjs';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept';
 import { Counter } from '../counter.concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
 import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
 
 export const counterSubtractType: ActionType = 'Counter Subtract';
+
+export const counterSubtract = prepareActionCreator(counterSubtractType);
 
 export function subtractReducer(state: Counter) {
   return {

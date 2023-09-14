@@ -46,11 +46,11 @@ In addition, Principles here act as a Containing Observer that allows for utiliz
 * KeyedSelector - Ops the Quality or Actions into the Ownership Paradigm and likewise can be used to Select some Aspect of State from the Set of Concepts.
 
 ## STRX was Designed Specifically to Mirror the Functionality of Neural Networks to Decompose their Black Box Universal Functions.
-![Fourier Universal Function, Credit to Emergent Garden @Youtube](https://i.imgur.com/urTy2on.png)
+![Fourier Universal Function, Credit to Emergent Garden @Youtube](https://github.com/Phuire-Research/STRX/blob/main/fourierUniversalFunction-CC-Emergent-Garden.png?raw=true)
 
 The above would be some Neural Network's Universal Function made to fit some Unknown Function via a Fourier Transform. If we know the Function ahead of the Time we may Set the Weights Specifically to Represent that Function. The Question that is Obfuscated in current understanding is by what mechanism is this Neural Network choosing the next Node on the Graph to Determine its Output?
 
-![Neural Network Diagram, Credit to Emergent Garden @Youtube](https://i.imgur.com/d8G8ebo.png)
+![Neural Network Diagram, Credit to Emergent Garden @Youtube](https://github.com/Phuire-Research/STRX/blob/main/NeuralNetwork.png?raw=true)
 
 The reason for STRX's Recursive Functionality, is that the Life Time of One Action within the Mode is the Exact point of Comparison between that of a Universal Function and the Possible Node Selection in the Graph Above. As the Method allows for the Next Node to via some Logical Deterministic Instruction via its Method. But the Entire Function is the Net Run Time of that Action through the Axium's Mode. As the Mode is just a Function that Relays to embedded Functions of that of a Reducer and Method. And a Function is allowed to be Composed of Functions. Therefore what is Obfuscated within Networks, is not only the Function Themselves, but the Decisions made between the Neural Networks nodes that Control its Output, based on some Input.
 
