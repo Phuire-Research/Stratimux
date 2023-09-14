@@ -1,6 +1,16 @@
 # Concept
 Break down of the Anatomy of a Concept and the benefits of its Composability.
 
+## What is the Difference between a Name of a Word and a Concept
+A Concept represents a Bundling of Functionality within Some Graph Relationship. This can be Such as their Literal Associations, but likewise the Functionality of their Qualities to Perform Some Task, or Satisfy some State.
+```
+For Example:
+Fire is created via some Flint, Stone, and Dry Brush.
+Fire is Warm and Keeps Us from the Cold.
+But Fire can Light your Hair on Fire.
+As Your Hair is like the Dry Brush.
+```
+
 ## STRX Quality contains all Functional Data that Pertain to an Action.
 * ActionType - Is the Type of Action and Logical Explanation of Functionality
 * Reducer - Alters the State of a Concept
