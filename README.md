@@ -13,7 +13,7 @@ The inspiration for STRX was that of Redux or the FLUX Pattern of Design. With s
 * [Spatial Ownership](https://github.com/Phuire-Research/STRX/blob/main/SpatialOwnership.md) - Streamlines the Complex Nature of the ActionStrategy as it relates to itself and Other Axiums.
 * [Unified Turing Machine](https://github.com/Phuire-Research/STRX/blob/main/The-Unified-Turing-Machine.md) - The Governing Concept for this Entire Framework.
 
-### STRX - Reactive STrategy Framework
+### STRX - **R*eactive(X) *ST**rategy Framework
 STRX is the Graph Computational Framework Release of a new Unified Turing Machine. The Internal Structure of this Machine directly relays to a form of Written Intelligence of Doing, over that of Information Retrieval. But may be Written to Facilitate that same Expert System Paradigms of Classic. The Important of this Machine to the Now of 2023, is the Functionality of the ActionStrategy Pattern as it Relays to Human and Machine Intelligence. As the Pattern itself is a Unified Set of Logical Explanations of Doing, Unified to the Mechanism of the Doing that is the Code Implementation of that Logical Explanation. And is the comparable comparison to the Machine Learning Universal Function, and the Generated Neural Network that is a Graph. Similarly to that of LLM, during runtime these actions are outputted to an ActionList that is later composed as a STRX Sentence.
 
 #### The Anatomy of a STRX Sentence
