@@ -10,6 +10,7 @@ Fire is Warm and Keeps Us from the Cold.
 But Fire can Light your Hair on Fire.
 As Your Hair is like the Dry Brush.
 And Fires Burns and Hurts, but Keeps Us Warm.
+So Create Fire with Responsibility.
 ```
 
 ## STRX Quality contains all Functional Data that Pertain to an Action.
