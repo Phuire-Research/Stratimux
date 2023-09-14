@@ -18,7 +18,7 @@ export type Action = {
 
 export function primeAction(concepts: Concept[], action: Action, agreement?: number): Action {
   for (const concept of concepts) {
-    const semaphore = getSemaphore(concepts, concept.key, action.type);
+    const semaphore = getSemaphore(concepts, concept.name, action.type);
     if (semaphore[2] !== -1) {
       return {
         ...action,
@@ -34,10 +34,10 @@ export function primeAction(concepts: Concept[], action: Action, agreement?: num
   };
 }
 
-export function getSemaphore(concepts: Concept[], conceptKey: string, actionType: ActionType): [number, number, number] {
+export function getSemaphore(concepts: Concept[], conceptName: string, actionType: ActionType): [number, number, number] {
   const axiumState = concepts[0].state as AxiumState;
   const cachedSemaphores = axiumState.cachedSemaphores;
-  const conceptMap = cachedSemaphores.get(conceptKey);
+  const conceptMap = cachedSemaphores.get(conceptName);
   if (conceptMap) {
     const qualitySemaphore = conceptMap.get(actionType);
     if (qualitySemaphore) {
@@ -55,7 +55,7 @@ export function createCacheSemaphores(concepts: Concept[]): Map<string, Map<stri
     concept.qualities.forEach((quality, qi) => {
       qualityMap.set(quality.actionType, [ci, qi, generation]);
     });
-    newCachedSemaphores.set(concept.key, qualityMap);
+    newCachedSemaphores.set(concept.name, qualityMap);
   });
   return newCachedSemaphores;
 }

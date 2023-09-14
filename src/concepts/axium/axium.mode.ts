@@ -2,7 +2,6 @@ import { Subject } from 'rxjs';
 import { Mode } from '../../model/concept';
 import { Action, primeAction } from '../../model/action';
 import { AxiumState, createAxiumConcept } from './axium.concept';
-import { selectState } from '../../model/selector';
 import { axiumBadActionType, badActionQuality } from './qualities/badAction.quality';
 import { Concept } from '../../model/concept.js';
 import { BehaviorSubject } from 'rxjs';

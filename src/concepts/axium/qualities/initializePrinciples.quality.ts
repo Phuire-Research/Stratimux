@@ -23,7 +23,7 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action) 
       concept.principles.forEach(principle => {
         const observable = createPrinciple$(principle, concepts, subConcepts$);
         subscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
         });
       });

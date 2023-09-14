@@ -23,8 +23,8 @@ import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 import { clearDialogQuality } from './qualities/clearDialog.quality';
 
-export type KeyedSub = {
-  key: string;
+export type NamedSubscriber = {
+  name: string;
   subscriber: Subscriber<Action>;
 }
 
@@ -38,9 +38,9 @@ export type AxiumState = {
   cachedSemaphores: Map<string,Map<string,[number,number,number]>>
   modeIndex: number;
   defaultModeIndex: number;
-  modeKeys: string[]
-  methodSubscribers: KeyedSub[];
-  generalSubscribers: KeyedSub[];
+  modeNames: string[]
+  methodSubscribers: NamedSubscriber[];
+  generalSubscribers: NamedSubscriber[];
   action$?: Subject<Action>;
   concepts$?: BehaviorSubject<Concept[]>;
   addConceptQue: Concept[],
@@ -48,7 +48,7 @@ export type AxiumState = {
   subConcepts$: Subject<Concept[]>;
 }
 
-export const axiumKey = 'Axium';
+export const axiumName = 'Axium';
 
 const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState => {
   return {
@@ -61,9 +61,9 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
     cachedSemaphores: new Map<string, Map<string, [number, number, number]>>(),
     modeIndex: 0,
     defaultModeIndex: 1,
-    modeKeys: [axiumKey, axiumKey],
-    methodSubscribers: [] as KeyedSub[],
-    generalSubscribers: [] as KeyedSub[],
+    modeNames: [axiumName, axiumName],
+    methodSubscribers: [] as NamedSubscriber[],
+    generalSubscribers: [] as NamedSubscriber[],
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     subConcepts$: new Subject<Concept[]>(),
@@ -72,7 +72,7 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
 
 export const createAxiumConcept = (storeDialog?: boolean, logging?: boolean): Concept =>  {
   return createConcept(
-    axiumKey,
+    axiumName,
     createAxiumState(storeDialog, logging),
     [
       openQuality,

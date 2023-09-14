@@ -10,15 +10,15 @@ export const axiumRegisterSubscriberType: ActionType = 'register Subscriber to A
 
 export type RegisterSubscriberPayload = {
     subscriber: Subscriber<Action>;
-    key: string;
+    name: string;
 }
 
 export function registerSubscriberReducer(state: AxiumState, action: Action) {
   const payload = action.payload as RegisterSubscriberPayload;
   const generalSubscribers = state.generalSubscribers;
   const subscriber = payload.subscriber;
-  const key = payload.key;
-  generalSubscribers.push({key, subscriber});
+  const name = payload.name;
+  generalSubscribers.push({name, subscriber});
   return {
     ...state,
     generalSubscribers,

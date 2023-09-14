@@ -10,21 +10,25 @@ export type OwnershipState = {
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
   ticker: number;
+  isResponsibleForMode: boolean;
 }
 
-export const ownershipKey = 'ownership';
+export const ownershipName = 'ownership';
 
-const initialOwnershipState: OwnershipState = {
-  initialized: false,
-  ownershipLedger: createOwnershipLedger(),
-  pendingActions: [],
-  ticker: 0,
+const createOwnershipState = (isResponsibleForMode: boolean): OwnershipState => {
+  return {
+    initialized: false,
+    ownershipLedger: createOwnershipLedger(),
+    pendingActions: [],
+    ticker: 0,
+    isResponsibleForMode
+  };
 };
 
-export const createOwnershipConcept: ConceptCreator = () => {
+export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
   return createConcept(
-    ownershipKey,
-    initialOwnershipState,
+    ownershipName,
+    createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
     [
       initializeOwnershipQuality
     ],

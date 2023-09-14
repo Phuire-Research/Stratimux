@@ -13,7 +13,7 @@ export type SetBlockingModePayload = {
 
 export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
-  methodSubscribers.forEach(keyed => keyed.subscriber.unsubscribe());
+  methodSubscribers.forEach(named => named.subscriber.unsubscribe());
   methodSubscribers = [];
 
   const payload = _action.payload as SetBlockingModePayload;
@@ -26,7 +26,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
           blockingMethodSubscription(action$, action);
         });
         methodSubscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: sub as Subscriber<Action>
         });
       }

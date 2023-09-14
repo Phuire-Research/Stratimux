@@ -13,28 +13,25 @@ export type Method = Observable<Action>;
 export type Principle = Observable<Action>;
 
 export type Mode = ([action, concept, action$, concepts$]: [
-    Action,
-    Concept[],
-    Subject<Action>,
-    BehaviorSubject<Concept[]>,
+  Action,
+  Concept[],
+  Subject<Action>,
+  BehaviorSubject<Concept[]>,
 ]) => void;
 
 export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];
 
 export type Quality = {
-    actionType: ActionType;
-    semaphore: [number, number, number];
-    reducer: Reducer;
-    methodCreator?: MethodCreator;
-    method?: Method;
-    subject?: Subject<Action>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    keyedSelectors?: KeyedSelector[]
+  actionType: ActionType;
+  reducer: Reducer;
+  methodCreator?: MethodCreator;
+  method?: Method;
+  subject?: Subject<Action>;
+  keyedSelectors?: KeyedSelector[]
 };
 
 export type Concept = {
-  key: string;
-  semaphore?: number;
+  name: string;
   state: unknown;
   qualities: Quality[];
   principles?: PrincipleFunction[];
@@ -44,7 +41,7 @@ export type Concept = {
 // deno-lint-ignore no-explicit-any
 
 export type ConceptCreator = (
-  key?: string,
+  name?: string,
   state?: unknown,
   qualities?: Quality[],
   principles?: PrincipleFunction[],
@@ -52,14 +49,14 @@ export type ConceptCreator = (
 ) => Concept;
 
 export function createConcept(
-  key: string,
+  name: string,
   state: unknown,
   qualities: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
 ): Concept {
   return {
-    key,
+    name,
     state,
     qualities,
     principles,
@@ -114,7 +111,6 @@ export function createQuality(
   return {
     actionType,
     reducer,
-    semaphore: [0, 0, -1],
     methodCreator,
     keyedSelectors
   };

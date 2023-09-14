@@ -1,6 +1,6 @@
 import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
 import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { KeyedSub } from '../axium.concept';
+import { NamedSubscriber } from '../axium.concept';
 import { Action, ActionType, } from '../../../model/action';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
@@ -12,37 +12,37 @@ export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Ax
 
 export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
   const methodSubscribers = state.methodSubscribers;
-  const newMethodSubscribers = [] as KeyedSub[];
+  const newMethodSubscribers = [] as NamedSubscriber[];
   const generalSubscribers = state.methodSubscribers;
-  const newGeneralSubscribers = [] as KeyedSub[];
+  const newGeneralSubscribers = [] as NamedSubscriber[];
 
   const removeConceptQue = state.removeConceptQue;
 
-  methodSubscribers.forEach(keyed => {
+  methodSubscribers.forEach(named => {
     let exists = false;
     removeConceptQue.forEach(concept => {
-      if (concept.key === keyed.key) {
+      if (concept.name === named.name) {
         exists = true;
       }
     });
     if (!exists) {
-      newMethodSubscribers.push(keyed);
+      newMethodSubscribers.push(named);
     } else {
-      keyed.subscriber.unsubscribe();
+      named.subscriber.unsubscribe();
     }
   });
 
-  generalSubscribers.forEach(keyed => {
+  generalSubscribers.forEach(named => {
     let exists = false;
     removeConceptQue.forEach(concept => {
-      if (concept.key === keyed.key) {
+      if (concept.name === named.name) {
         exists = true;
       }
     });
     if (!exists) {
-      newGeneralSubscribers.push(keyed);
+      newGeneralSubscribers.push(named);
     } else {
-      keyed.subscriber.unsubscribe();
+      named.subscriber.unsubscribe();
     }
   });
 

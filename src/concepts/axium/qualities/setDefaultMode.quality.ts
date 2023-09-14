@@ -13,7 +13,7 @@ export type SetDefaultModePayload = {
 
 export function setDefaultModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
-  methodSubscribers.forEach(keyed => keyed.subscriber.unsubscribe());
+  methodSubscribers.forEach(named => named.subscriber.unsubscribe());
   methodSubscribers = [];
   const payload = _action.payload as SetDefaultModePayload;
   const concepts = payload.concepts;
@@ -25,7 +25,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
           defaultMethodSubscription(action$, action);
         });
         methodSubscribers.push({
-          key: concept.key,
+          name: concept.name,
           subscriber: sub as Subscriber<Action>
         });
       }

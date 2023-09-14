@@ -1,7 +1,7 @@
 ## Axium
-The main point of Interaction and Named holder of a Set of Concepts. This was inspired by Axiom. But slightly changed towards the Concept of Unifying Concepts as a Counter to the Traditional Axiom which is based on Statements assumed to be True. Therefore an Axium is the Set of Concepts and their Qualities that allow for the Emergence of New Concepts. The advantage of this approach, that the outside of createAxium Function. The Entirety of an Axium may be Decomposed to the Sum of its Parts. That way versus creating some new Arbitrary Construct of a FileSystem. We are in Competition as to whose FileSystem Concept is Best. As if someone improves upon a Concept you are working on in this System. Versus creating some new Library, you may take the Parts of that Concept into your own Version of it.
+The main point of Interaction and Named holder of a Set of Concepts. This was inspired by Axiom. But slightly changed towards the Concept by Act of Unifying Concepts. As a Counter to the Traditional Axiom which is based on Statements assumed to be True and Assumed to be Nonreducible. But can be Reduced to their Concepts. Therefore an Axium is the Set of Concepts and their Qualities that allow for the Emergence of New Concepts. The Advantage of this Approach excluding the createAxium Function. The Entirety of an Axium may be Decomposed to the Sum of its Parts. That way versus creating some new Arbitrary Construct of a FileSystem. We are in Competition as to whose FileSystem Concept is Best. As if someone improves upon a Concept you are working on in this System. Versus creating some new Library, you may take the Parts of that Concept into your own Version of it.
 
-There is much to be Expanded upon this as a potential platform of doing. Where the goal would be the refinement towards the Stability of these Concepts so that may create some Standard Library of Concepts. Versus the current Generalized  Construct Paradigm that this has been designed as a Direct Counter to. That cannot readily be Decomposed and Reconfigured. As what is interesting is the Discovery within this type of system of Universal Concepts and Qualities. By way of Matching Functionality where we would least expect it.
+There is much to be Expanded upon this as a potential Platform of Doing. Where the goal would be the refinement towards Discovery and Stability of the most Utilized Concepts. So that may create some Standard Library of Concepts to be Shared. Versus the current Generalized Construct Paradigm that this has been designed as a Direct Counter to. Of that mass Repeated Reimplementation of Concepts as Constructs that cannot readily be Decomposed and Reconfigured. As what is interesting is the Discovery within this type of system of Universal Concepts and Qualities. By way of Matching Functionality where we would least expect it.
 
 ```typescript
 export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) : {
@@ -12,9 +12,9 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
 }
 ```
 
-Note here an additional departure of what would be supplied to the Store is an Array of Concepts over that of a Constructed Dictionary of Features. As the typical check of what Action to choose at Run Time had been that of comparing the Type of Actions via a Reducer anor Effect via a string comparison. Here we are allowing for the additional buffer of knowing the concepts and their qualities ahead of time. This populates the Action's Semaphore Tuple that corresponds the its Concept and Placement in the Array of Qualities that it Contains. However you may still dispatch Actions without the Semaphore supplied and this comparison is made Once to find that Semaphore at Run Time.
+Note here an additional departure of what would be supplied to the Store is an Array of Concepts over that of a Constructed Dictionary of Features. As the typical check of what Action to choose at Run Time had been that of comparing the Type of Actions via a Reducer anor Effect via a string comparison. Here we are allowing for the additional buffer of knowing the Concepts and their Qualities ahead of Time. This populates the Action's Semaphore Tuple that corresponds the its Concept and Placement in the Array of Qualities that it Contains. However you may still dispatch Actions without the Semaphore supplied and this comparison is made Once to find that Semaphore at Run Time.
 
-The Design decision here allows us to forgo the need for Dependency Injection. And later we will discuss Axium Qualities that would allow the change of Concepts Loading into the Axium at Run Time. Which if one Chooses to alter the composition of the Axium, the generation is iterated upon. This Accomplishes one of the Primary Qualities that Satisfies the Specification Laid out by the Unified Turing Machine. Where by the Finite Symbol Reference Table if of a Dynamic Selection and permitting some Testable Ability to Halt. Is the Logical Deterministic Means of Solving the Halting Problem of Classical Turing Machines. But this is only if we Accept that Concepts and their Qualities have an Amount of Completeness towards their Ability to Halt. That the inability to Halt, is a Specific Design Choice or Consequence of the Machine at some Point of Scale not Yet Accounted For. As the Axium in Reality is just a Recursive Self Transforming Function.
+The Design decision here allows us to forgo the need for Dependency Injection. And later we will discuss Axium Qualities that would allow the change of Concepts Loaded or Generated into the Axium at Run Time. Which if one Chooses to alter the composition of the Axium, the generation is iterated upon. This Accomplishes one of the Primary Qualities that Satisfies the Specification Laid out by the Unified Turing Machine. Where by the Finite Symbol Reference Table is of a Logical Selection and permitting some Testable Ability to Halt. Is the Logical Deterministic Means of Solving the Halting Problem of the Classical Turing Machine. But this is only if we Accept that Concepts and their Qualities have an Amount of Completeness towards their Ability to Halt. That the inability to Halt, is a Specific Design Choice or Consequence of the Machine at some Point of Scale, not Yet Accounted For, or Done so on Purpose. As the Axium in Reality is just a Recursive Self Transforming Function.
 
 ```typescript
 export type AxiumState {
@@ -26,9 +26,9 @@ export type AxiumState {
   generation: number;
   modeIndex: number;
   defaultModeIndex: number;
-  modeKeys: string[]
-  methodSubscribers: KeyedSub[];
-  generalSubscribers: KeyedSub[];
+  modeNames: string[]
+  methodSubscribers: NamedSubscribers[];
+  generalSubscribers: NamedSubscribers[];
   action$?: Subject<Action>;
   concepts$?: BehaviorSubject<Concept[]>;
   addConceptQue: Concept[],
@@ -44,7 +44,7 @@ export type AxiumState {
 * generation - This iterates each time the Set of Concepts is Transformed. And if an Action is Received of the Wrong Generation. Will be Primed at Run Time, if not found this will emit a BadAction that if Logging is set to True. Will be Emitted to the Console alongside the invalidated Action as Payload.
 * modeIndex - This determines which Mode is currently being ran from the lists of Modes stored on the Axium Concept.
 * defaultModeIndex - This determines what Mode will be set by setDefaultMode. Of importance for Adding and Removing Strategies.
-* modeKeys - Is the Pair of Keys that Correspond to Mode and their Respective Index that allow for the Mode to Altered at Run Time without String Comparison.
+* modeNames - Is the paring of a Name that Correspond to Mode and their Respective Index that allow for the Mode to Altered at Run Time without String Comparison.
 * methodSubscribers - Accumulates all Method Subscriptions for their Manipulation at Run Time.
 * generalSubscribers - Same as Method Subscribers, but a Catch All including that of Principles and their Internal Subscriptions that would Ordinarily leave Principles as Hot and active in Memory if not Concluded upon Removal or Close.
 * action$ - Is the internal Action Stream.
@@ -79,7 +79,7 @@ Please avoid using these Qualities, but are providing explanations to Understand
 * log - Merely Logs the Action, is useful for Debugging ActionStrategies as it Logs Attached Strategy and any addition Action Qualities.
 * close - This will will Cancel all Internal Subscriptions that the Axium has Access To. As well as All Steams will be Completed. The External close() Function that the createAxium supplies, dispatches this Action. Or can be Ran Specially via an Internal Principle towards its Governing Axium or that of another Axium that it is Subscribed to.
 * setMode - If your Concept requires a Specific Modification to the Functionality of the Stream. This will Set the Mode Index to that Stream. Specifically this shouldn't have to be Used. But is Left to the User if they Run into such a Case.
-* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept key and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeKey is just your Concept Key and the creation of new Modes should be the Last Go To for your Apps Functionality.
+* setDefaultModeIndex - Should be used if your Mode is to be Considered the Default Mode of your Application. For utilization within a Strategy after setMode. Be sure to a Run Time Search for your Concept Name and Mode, after your Concept is added via the addConcept Strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the Last Go To for your Apps Functionality.
 * clearDialog - Clears the currently Stored STRX Dialog, may be used within a Strategy.
 
 ## Axium Strategies Concept Set Transformation
@@ -91,7 +91,7 @@ Note these Strategies can be Broken into Two Parts Responsibly, One to Be Ran vi
 * addConceptsToAddQueThenBlockStrategy - This will add newConcepts to the addConceptQue to be run the Stage of the Overall Strategy.
 * addConceptsToRemovalQueThenBlockStrategy - This will add the targetConcepts to the Removal Que. To be later picked up within the Axium Principle.
 
-*Note* That the Addition of the Axium Concept itself is an Addition Departure from the FLUX architecture. This will be Refined over Time as Specifics Needs Grow and should be Seen as a Work in Progress. But, this should also be limited in its Functionality to Allow for the Addition of Concepts to Expand the total Functionality of the Axium Paradigm.
+*Note* That the Addition of the Axium Concept itself is an Addition Departure from the FLUX Architecture. This will be Refined over Time as Specifics Needs Grow and should be Seen as a Work in Progress. But, this should also be limited in its Functionality to Allow for the Addition of Concepts to Expand the total Functionality of the Axium Paradigm.
 
 ## Axium Modes
 * Default Mode - This Mode uses the Simple Trick of setTimeout(() => {}, 0) to allow for the Axium to have some Non Blocking Behavior. As this Functionality Directly Engages with the Event Loop. In addition this Mode will Emit the internal Concepts to the Outer subConcept$ stream.

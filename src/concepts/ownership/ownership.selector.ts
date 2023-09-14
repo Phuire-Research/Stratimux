@@ -1,6 +1,6 @@
 import { KeyedSelector } from '../../model/selector';
 
 export const selectOwnershipLedger: KeyedSelector = {
-  conceptKey: 'ownership',
+  conceptName: 'ownership',
   stateKeys: 'ownershipLedger'
 };

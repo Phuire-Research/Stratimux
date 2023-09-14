@@ -5,14 +5,14 @@ import { Concept } from './concept';
 //  Will not worry about such until we are working in a Massively Parallel Environment
 //  But this is where we would effect such and likewise the Consumer Function would have to be Updated
 export type KeyedSelector = {
-  conceptKey: string,
+  conceptName: string,
   stateKeys: string
 };
 
-export function selectState<T>(concepts: Concept[], key: string): T {
+export function selectState<T>(concepts: Concept[], name: string): T {
   let concept;
   for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].key === key) {
+    if (concepts[i].name === name) {
       concept = concepts[i];
       break;
     }
@@ -25,9 +25,9 @@ export function selectSlice<T>(
   concepts: Concept[],
   selector: KeyedSelector): T | undefined {
   let concept: Concept | undefined;
-  const conceptKey = selector.conceptKey;
+  const conceptKey = selector.conceptName;
   for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].key === conceptKey) {
+    if (concepts[i].name === conceptKey) {
       concept = concepts[i];
       break;
     } else if (i === concepts.length - 1) {
@@ -67,10 +67,10 @@ export function selectSlice<T>(
   return target[finalKey] as T;
 }
 
-export function selectConcept(concepts: Concept[], key: string): Concept {
+export function selectConcept(concepts: Concept[], name: string): Concept {
   let concept;
   for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].key === key) {
+    if (concepts[i].name === name) {
       concept = concepts[i];
       break;
     }

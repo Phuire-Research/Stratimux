@@ -2,7 +2,7 @@ import { createAxium } from '../model/axium';
 import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { Counter, createCounterConcept, countingStrategy, primedCountingStrategy, counterKey } from '../concepts/counter/counter.concept';
+import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import {
   addConceptsToRemovalQueThenBlockStrategy,
   removeConceptsViaQueThenUnblockTopic
@@ -27,7 +27,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
     if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
       let exists = false;
       concepts.forEach(concept => {
-        if (concept.key === counterKey) {
+        if (concept.name === counterName) {
           exists = true;
         }
       });

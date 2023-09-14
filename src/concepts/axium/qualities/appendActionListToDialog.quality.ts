@@ -10,7 +10,7 @@ export const axiumAppendActionListToDialogType: ActionType = 'append Action List
 
 export type AppendActionListToDialogPayload = {
   actionList: Array<string>;
-  strategyKey: string;
+  strategyTopic: string;
 }
 
 // const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$: Subject<Concept[]>) => {
@@ -47,12 +47,12 @@ export function appendActionListToDialogReducer(state: AxiumState, action: Actio
     return {
       ...state,
       dialog: state.dialog + newDialog,
-      lastStrategy: payload.strategyKey,
+      lastStrategy: payload.strategyTopic,
     };
   }
   return {
     ...state,
-    lastStrategy: payload.strategyKey
+    lastStrategy: payload.strategyTopic
   };
 }
 

@@ -10,7 +10,7 @@ import {
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
-import { Server, webSocketConcept } from './webSocket.concept';
+import { Server, webSocketName } from './webSocket.concept';
 import { handleRequest } from './qualities/handleRequest.quality';
 import { selectState } from '../../model/selector';
 
