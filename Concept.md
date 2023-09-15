@@ -3,18 +3,21 @@ A Concept is the solution to a long standing Frustration with the FLUX Architect
 
 This easiest Example how One Might utilize this Unifying Paradigm, is the Interaction with the FileSystem. That One could be Transforming some Generated Data as of 2023, to then be Later Saved to the FileSystem as part of that ActionStrategy.
 
-## What is the Difference between a Name of a Word and a Concept
-A Concept represents a Bundling of Functionality within Some Graph Relationship. This can be Such as their Literal Associations, but likewise the Functionality of their Qualities to Perform Some Task, or Satisfy some State.
+## Why Concepts over Constructs?
+A Concept represents a Bundling of Functionality within Some Graph Relationship. This can be Such as their Literal Associations, but likewise the Functionality of their Qualities to Perform Some Task, or Satisfy some State Transformation.
 ```
-For Example:
-Fire is created via some Flint, Stone, and Dry Brush.
-Fire is Warm and Keeps Us from the Cold.
-But Fire can Light your Hair on Fire.
-As Your Hair is like the Dry Brush.
-And Fires Burns and Hurts, but Keeps Us Warm.
-So Create Fire with Responsibility.
+Conceptual Symbolic Expression:
+(Force + Flint + Stone) + Dry Brush + Air = Fire
+Logic Conceptual Explanation:
+Using Force with Flint and Stone. Creates Sparks towards Dry Brush and Air, ignites to create Fire.
 ```
-The Above Demonstrates the Inherit Conceptual Quality of Human Language and Highlights those Concepts that may Cascade some State Changes into a Subject. Such as the Concept of Warmth, is something that can be a Quality of our Environment, Food, and Ourselves. But is something that we as Humans Evolved to even notice the Change of Taste based on Temperature. Is a Selected for Quality in the Scope of our Own Evolution. As a Quality differentiates itself from an Aspect as a Important Aspect to the Observer. Example otherwise is watching your Dog devour a Hot out of the Oven Chicken Breast without Concern.
+The Above Demonstrates the Inherit Conceptual Quality of Human Language and Highlights those Concepts that may Cascade some State Changes into a Subject. Such as the Concept of Sparks created from Flint, Stone, and Force. Is an Act of Unifying some Concepts to form that of Sparks. Which carry some Transformational Quality that can be applied to Dry Brush and the Friction from Air to create ignition and thusly Fire. If this seems Simple, that is the Point. As we are Introducing this Simplicity to afford for Greater Explainability of the World around Us. This would be the advent of a Unified Conceptual Formula.
+
+With our Technology we may visit the Exact Science that allows for this Abstraction to exist. But for the majority, all that would matter is access to a developed Library of Knowledge that would Facilitate such Conceptualizations into Reality for Us. The Goal is a System that is capable of: Car + Plane = Flying Car. And not only have such be Created via some Process, but the Exact Blueprints and the Instructions for the Rapid Assembly to bring such into Reality. Even better if we may Simulate Such before its Creation and Test to see if it is worthy to brought into Reality in the First Place.
+
+The Difficulty of Constructs. Is that you cannot Readily Decompose their Qualities and how they Interact with other Constructs. That there is some Information loss in the Construction Process. As Constructs are Just Concepts, just like everything Else. We are merely working with the Most Simplified Terms Possible, for the Opportunity of Greater Arrangements. That Constructs themselves can have Qualities, but likewise using such a System of Study we would Determine their Decomposed Constructions. This is the Pursuit of the new Unified Conceptual Science that is being Formalized.
+
+As in the Scope of some Rapid Rise of Information. This simplicity of Concepts is the most Fundamental Mechanism to Explain new Information and Discovery in Any Age. Insisting Upon Constructs, Obfuscates Concepts, and summarily the total bounds of what can be Created. Would be similar to Striking entire sets of Numbers from Equations is the most blunted Example to the Difference in Approach.
 
 ## STRX Quality contains all Functionality that Pertain to an Action.
 ```typescript
