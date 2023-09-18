@@ -4,7 +4,7 @@
 ### Abstract
 The inspiration for STRX was that of Redux or the FLUX Pattern of Design. With several changes and for the sake of maintaining some Similarities to that Design for Developers. While offering enough of a Departure where Traditional Store is now referred to as the **Axium**. Where an Axium is a Set of Concepts that are Unified to form a Greater Conceptualization. Namely that of your Application, but in contrast to its Inspiration and accomplished by the ActionStrategy Design Pattern and Spatial Ownership Paradigm. Is actively encouraging the Crossing the Streams of State, or to be Specific that of the Unifying of Concepts and their Qualities. To Create an Application that is Greater than the Sum of its Parts due to its Composability.
 
-![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://i.makeagif.com/media/1-27-2017/0V9QEn.gif)
+![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://lh3.googleusercontent.com/drive-viewer/AITFw-yCutnOpQnrww__B88WZemlrv85lYr8TzXUyzO7wDsbYPGdL-FKtbVh40L1b2oNDXmbVHNYM6AqoikdP2iItNLzlat-=s2560)
 
 ### Concept Index
 * [ActionStrategy](https://github.com/Phuire-Research/STRX/blob/main/ActionStrategy.md) - The Governing Concept that allows for the Unified Turing Machine to have a Strong Halting Quality. Likewise the Direct analog of Higher Order Logic.
