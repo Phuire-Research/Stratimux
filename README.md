@@ -1,5 +1,7 @@
 ![STRX](https://github.com/Phuire-Research/STRX/blob/main/STRX.png?raw=true)
-*The Unified Turing Machine - aka Hand Written Intelligence*
+---
+*The Unified Turing Machine - aka Hand Written Intelligence of Doing*
+---
 *Note* These documents are written via a new Unified Logical Conceptual Format. Each unusual Capitalization within a Sentence represents a Concept, and in Sequence Represents a Set of Concepts. As this is the Formalization of a new Unified Conceptual Science via Programming with Conceptual Logic as its Explanation and Implementation through Code. See Footer Note for Additional Details.
 ### Abstract
 The inspiration for STRX was that of Redux or the FLUX Pattern of Design. With several changes and for the sake of maintaining some Similarities to that Design for Developers. While offering enough of a Departure where Traditional Store is now referred to as the **Axium**. Where an Axium is a Set of Concepts that are Unified to form a Greater Conceptualization. Namely that of your Application, but in contrast to its Inspiration and accomplished by the ActionStrategy Design Pattern and Spatial Ownership Paradigm. Is actively encouraging the Crossing the Streams of State, or to be Specific that of the Unifying of Concepts and their Qualities. To Create an Application that is Greater than the Sum of its Parts due to its Composability.
