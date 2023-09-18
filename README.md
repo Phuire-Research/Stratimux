@@ -1,4 +1,4 @@
-[STRX](https://github.com/Phuire-Research/STRX/blob/main/STRX.png?raw=true)
+![STRX](https://github.com/Phuire-Research/STRX/blob/main/STRX.png?raw=true)
 *The Unified Turing Machine - aka Hand Written Intelligence*
 *Note* These documents are written via a new Unified Logical Conceptual Format. Each unusual Capitalization within a Sentence represents a Concept, and in Sequence Represents a Set of Concepts. As this is the Formalization of a new Unified Conceptual Science via Programming with Conceptual Logic as its Explanation and Implementation through Code. See Footer Note for Additional Details.
 ### Abstract
