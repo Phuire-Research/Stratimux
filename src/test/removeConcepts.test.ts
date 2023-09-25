@@ -10,31 +10,31 @@ import {
 import { AxiumState } from '../concepts/axium/axium.concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {
-  let dispatched = false;
   const axium = createAxium([createCounterConcept()], true, true);
-  console.log('Remove Concepts Begin');
-  const sub = axium.subscribe((concepts: Concept[]) => {
-    // const counter = selectState<Counter>(concepts, counterConcept.key);
-    if (!dispatched) {
-      dispatched = true;
-      axium.dispatch(
+  const staged = axium.stage([
+    (concepts, dispatch) => {
+      dispatch(
         strategyBegin(
           addConceptsToRemovalQueThenBlockStrategy(concepts,[createCounterConcept()])
-        )
-      );
-    }
-    const axiumState = concepts[0].state as AxiumState;
-    if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
-      let exists = false;
-      concepts.forEach(concept => {
-        if (concept.name === counterName) {
-          exists = true;
+        ), {
+          iterateStep: true
         }
-      });
-      expect(exists).toBe(false);
-      setTimeout(() => {done();}, 500);
-      sub.unsubscribe();
+      );
+    },
+    (concepts) => {
+      const axiumState = concepts[0].state as AxiumState;
+      // console.log(concepts);
+      if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
+        let exists = false;
+        concepts.forEach(concept => {
+          if (concept.name === counterName) {
+            exists = true;
+          }
+        });
+        expect(exists).toBe(false);
+        setTimeout(() => {done();}, 500);
+        staged.end();
+      }
     }
-    // sub.unsubscribe();
-  });
+  ]);
 });

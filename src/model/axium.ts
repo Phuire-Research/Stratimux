@@ -133,6 +133,7 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     });
 
   axiumState = concepts[0].state as AxiumState;
+  const action$ = axiumState.action$;
   const subConcepts$ = axiumState.subConcepts$;
   axiumState.concepts$.next(concepts);
   axiumState.action$.next(
@@ -143,10 +144,11 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     subscribe: subConcepts$.subscribe.bind(subConcepts$),
     unsubscribe: subConcepts$.unsubscribe.bind(subConcepts$),
     close: () => {
-      axiumState.action$.next(createAction(axiumCloseType));
+      action$.next(createAction(axiumCloseType));
     },
     dispatch: (action: Action) => {
-      axiumState.action$.next(action);
+      action$.next(action);
     },
+    stage: subConcepts$.stage.bind(subConcepts$),
   };
 }

@@ -46,7 +46,7 @@ export type AxiumState = {
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
-  subConcepts$: Subject<Concept[]>;
+  subConcepts$: UnifiedSubject;
   badStages: Staged[];
 }
 
@@ -70,7 +70,7 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
     concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
-    subConcepts$: new Subject<Concept[]>(),
+    subConcepts$: new UnifiedSubject(),
     badStages: []
   };
 };

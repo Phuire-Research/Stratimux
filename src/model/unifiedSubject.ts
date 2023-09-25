@@ -32,7 +32,7 @@ export type dispatchOptions = {
 export type Dispatcher = (action: Action, options?: dispatchOptions) => void;
 export type Staging = (
   concepts: Concept[],
-  dispatch: (action: Action, options: dispatchOptions) => void
+  dispatch: (action: Action, options?: dispatchOptions) => void
 ) => void;
 export type Stage = (id: number) => () => void;
 
@@ -43,11 +43,11 @@ export class UnifiedSubject extends Subject<Concept[]> {
   constructor() {
     super();
   }
-  protected stage(stages: Staging[]) {
+  stage(stages: Staging[]) {
     this.currentStages.set(this.stageId, {stages, step: 0});
     this.stageId++;
     return {
-      unstage: () => {
+      end: () => {
         this.currentStages.delete(this.stageId);
       }
     };
