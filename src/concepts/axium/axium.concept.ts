@@ -22,7 +22,7 @@ import { createConcept } from '../../model/concept';
 import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 import { clearDialogQuality } from './qualities/clearDialog.quality';
-import { Staged } from '../../model/unifiedSubject';
+import { Staged, UnifiedSubject } from '../../model/unifiedSubject';
 
 export type NamedSubscriber = {
   name: string;
@@ -43,7 +43,7 @@ export type AxiumState = {
   methodSubscribers: NamedSubscriber[];
   generalSubscribers: NamedSubscriber[];
   action$: Subject<Action>;
-  concepts$: Subject<Concept[]>;
+  concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   subConcepts$: Subject<Concept[]>;
@@ -67,7 +67,7 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
     methodSubscribers: [] as NamedSubscriber[],
     generalSubscribers: [] as NamedSubscriber[],
     action$: new Subject<Action>(),
-    concepts$: new Subject<Concept[]>(),
+    concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     subConcepts$: new Subject<Concept[]>(),

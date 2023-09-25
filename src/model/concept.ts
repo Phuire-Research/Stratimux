@@ -5,6 +5,7 @@ import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { UnifiedSubject } from './unifiedSubject';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -16,7 +17,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   Action,
   Concept[],
   Subject<Action>,
-  Subject<Concept[]>,
+  UnifiedSubject,
 ]) => void;
 
 export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];

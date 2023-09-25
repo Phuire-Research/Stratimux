@@ -7,9 +7,10 @@ import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.qua
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { strategyFailed } from '../../model/actionStrategy';
+import { UnifiedSubject } from '../../model/unifiedSubject';
 
 export const ownershipMode: Mode = (
-  [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, Subject<Concept[]>]
+  [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
 ) => {
   let action = _action;
   let concepts = _concepts;
