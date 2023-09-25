@@ -8,35 +8,36 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 
 test('Axium add Concepts Strategy Test', (done) => {
-  let count = 0;
-  let notFired = true;
   const axium = createAxium([], true, true);
-  const sub = axium.subscribe((concepts: Concept[]) => {
-    // const counter = selectState<Counter>(concepts, counterConcept.key);
-    if (count === 0) {
-      axium.dispatch(
+  const staged = axium.stage([
+    (concepts, dispatch) => {
+      dispatch(
         strategyBegin(
           addConceptsToAddQueThenBlockStrategy(concepts,[createCounterConcept()])
-        )
+        ),
+        {
+          iterateStep: true
+        }
       );
-    }
-    if ((concepts[0].state as AxiumState).open && count > 2 && notFired) {
+    },
+    (concepts, dispatch) => {
       let exists = false;
       if (concepts[1].name === counterName) {
-        notFired = false;
         exists = true;
-        axium.dispatch(strategyBegin(countingStrategy()));
+        dispatch(strategyBegin(countingStrategy()), {
+          iterateStep: true
+        });
       }
       expect(exists).toBe(true);
-      // sub.unsubscribe();
+    },
+    (concepts) => {
+      const axiumState = concepts[0].state as AxiumState;
+      if (axiumState.lastStrategy === countingTopic) {
+        const counter = selectState<Counter>(concepts, counterName);
+        expect(counter.count).toBe(1);
+        setTimeout(() => {done();}, 500);
+        staged.end();
+      }
     }
-    const axiumState = concepts[0].state as AxiumState;
-    if (axiumState.lastStrategy === countingTopic) {
-      const counter = selectState<Counter>(concepts, counterName);
-      expect(counter.count).toBe(1);
-      setTimeout(() => {done();}, 500);
-      sub.unsubscribe();
-    }
-    count++;
-  });
+  ]);
 });

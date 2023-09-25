@@ -67,7 +67,7 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
 };
 
 export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
-  const action$: Subject<Action> = new Subject();
+  // const action$: Subject<Action> = new Subject();
   const concepts: Concept[] = [createAxiumConcept(logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
@@ -78,7 +78,7 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
         quality.method = method;
         quality.subject = subject;
         const methodSub = quality.method.subscribe((action: Action) => {
-          blockingMethodSubscription(action$, action);
+          blockingMethodSubscription(axiumState.action$, action);
         }) as Subscriber<Action>;
         axiumState = concepts[0].state as AxiumState;
         axiumState.methodSubscribers.push({
@@ -107,10 +107,10 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     //     })
     // }
   });
-  const concepts$: BehaviorSubject<Concept[]> = new BehaviorSubject(concepts);
-  action$
+  // const concepts$: BehaviorSubject<Concept[]> = new BehaviorSubject(concepts);
+  axiumState.action$
     .pipe(
-      withLatestFrom(concepts$),
+      withLatestFrom(axiumState.concepts$),
       // This will be where the Ownership Principle will be Loaded
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
@@ -129,14 +129,15 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
       const modeIndex = _axiumState.modeIndex;
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
-      mode([action, _concepts, action$, concepts$]);
+      mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
     });
 
   axiumState = concepts[0].state as AxiumState;
+  const action$ = axiumState.action$;
   const subConcepts$ = axiumState.subConcepts$;
-
-  action$.next(
-    strategyBegin(initializationStrategy({ action$, concepts$ }, concepts)),
+  axiumState.concepts$.next(concepts);
+  axiumState.action$.next(
+    strategyBegin(initializationStrategy(concepts)),
   );
 
   return {
@@ -148,5 +149,6 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     dispatch: (action: Action) => {
       action$.next(action);
     },
+    stage: subConcepts$.stage.bind(subConcepts$),
   };
 }

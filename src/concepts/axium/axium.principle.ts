@@ -91,8 +91,8 @@ export const axiumPrinciple: PrincipleFunction = (
       newAxiumState.modeNames = newModeNames;
 
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
-
-      axiumState.concepts$?.next(newConcepts);
+      // console.log('Principle', newConcepts.length);
+      axiumState.concepts$.next(newConcepts);
 
       observer.next(strategyBegin(
         removeConceptsViaQueThenUnblockStrategy(newConcepts)
