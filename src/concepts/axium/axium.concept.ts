@@ -42,8 +42,8 @@ export type AxiumState = {
   modeNames: string[]
   methodSubscribers: NamedSubscriber[];
   generalSubscribers: NamedSubscriber[];
-  action$?: Subject<Action>;
-  concepts$?: BehaviorSubject<Concept[]>;
+  action$: Subject<Action>;
+  concepts$: Subject<Concept[]>;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   subConcepts$: Subject<Concept[]>;
@@ -66,6 +66,8 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
     modeNames: [axiumName, axiumName],
     methodSubscribers: [] as NamedSubscriber[],
     generalSubscribers: [] as NamedSubscriber[],
+    action$: new Subject<Action>(),
+    concepts$: new Subject<Concept[]>(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     subConcepts$: new Subject<Concept[]>(),

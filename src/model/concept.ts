@@ -16,7 +16,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   Action,
   Concept[],
   Subject<Action>,
-  BehaviorSubject<Concept[]>,
+  Subject<Concept[]>,
 ]) => void;
 
 export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];

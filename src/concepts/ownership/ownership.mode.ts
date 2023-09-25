@@ -9,7 +9,7 @@ import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { strategyFailed } from '../../model/actionStrategy';
 
 export const ownershipMode: Mode = (
-  [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, BehaviorSubject<Concept[]>]
+  [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, Subject<Concept[]>]
 ) => {
   let action = _action;
   let concepts = _concepts;

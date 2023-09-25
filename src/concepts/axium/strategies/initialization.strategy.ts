@@ -8,7 +8,7 @@ import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
 
 export const initializeTopic = 'Axium Initialization Strategy';
-export function initializationStrategy(streams: RegisterStreamsPayload, concepts: Concept[]): ActionStrategy {
+export function initializationStrategy(concepts: Concept[]): ActionStrategy {
   const initSemaphore = getSemaphore(concepts, axiumName, axiumInitializePrinciplesType);
   const registerSemaphore = getSemaphore(concepts, axiumName, axiumRegisterStreamsType);
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
@@ -34,7 +34,7 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     successNode: stepFour,
     failureNode: null,
     payload: {concepts},
-    preposition: 'Next'
+    preposition: 'Then'
   };
   const stepTwo: ActionNode = {
     actionType: axiumInitializePrinciplesType,
@@ -42,20 +42,20 @@ export function initializationStrategy(streams: RegisterStreamsPayload, concepts
     successNode: stepThree,
     failureNode: null,
     payload: {concepts},
-    preposition: 'Then'
-  };
-  const stepOne: ActionNode = {
-    actionType: axiumRegisterStreamsType,
-    semaphore: registerSemaphore,
-    successNode: stepTwo,
-    failureNode: null,
-    payload: streams,
     preposition: 'Begin with'
   };
+  // const stepOne: ActionNode = {
+  //   actionType: axiumRegisterStreamsType,
+  //   semaphore: registerSemaphore,
+  //   successNode: stepTwo,
+  //   failureNode: null,
+  //   payload: streams,
+  //   preposition: 'Begin with'
+  // };
 
   const params: ActionStrategyParameters = {
     topic: initializeTopic,
-    initialNode: stepOne,
+    initialNode: stepTwo,
   };
 
   return createStrategy(params);
