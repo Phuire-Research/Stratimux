@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { BehaviorSubject, Observable, Subscriber, Observer, Subscription, TeardownLogic, Subject } from 'rxjs';
 import { Concept } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -14,6 +15,7 @@ export type _UnifiedSubject = {
 }
 
 export type Staged = {
+  title: string;
   stages: Staging[],
   step: number;
 }
@@ -29,25 +31,91 @@ export type dispatchOptions = {
   debounce?: number;
 }
 
-export type Dispatcher = (action: Action, options?: dispatchOptions) => void;
+export type Dispatcher = (action: Action, options: dispatchOptions) => void;
 export type Staging = (
   concepts: Concept[],
-  dispatch: (action: Action, options?: dispatchOptions) => void
+  dispatch: (action: Action, options: dispatchOptions) => void
 ) => void;
 export type Stage = (id: number) => () => void;
+export type StageDelimiter = {
+  step: number,
+  prevActions: ActionType[],
+  unionExpiration: number[];
+  stageRunner: Map<string, boolean>
+}
+
+const handleRunOnce =
+  (stageDelimiter: StageDelimiter, staged: Staged, action: Action, options?: dispatchOptions): [StageDelimiter, boolean] => {
+    if (options?.runOnce) {
+      const stageRunner = stageDelimiter.stageRunner.get(action.type + staged.step);
+      if (stageRunner === undefined) {
+        stageDelimiter.stageRunner.set(action.type + staged.step, true);
+        return [
+          stageDelimiter, true
+        ];
+      } else {
+        stageDelimiter.stageRunner.set(action.type + staged.step, false);
+        return [
+          stageDelimiter, false
+        ];
+      }
+    }
+    return [
+      stageDelimiter,
+      true
+    ];
+  };
+
+const handleStageDelimiter =
+  (staged: Staged, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
+    let stageDelimiter = delimiter;
+    let goodAction = true;
+    if (stageDelimiter &&
+        stageDelimiter.prevActions.includes(action.type) &&
+        options?.debounce === undefined) {
+      if (staged.step !== stageDelimiter?.step) {
+        stageDelimiter = {
+          step: staged.step,
+          prevActions: [action.type],
+          unionExpiration: [action.expiration],
+          stageRunner: new Map()
+        };
+      } else {
+        goodAction = false;
+      }
+    } else if (stageDelimiter) {
+      stageDelimiter = {
+        step: staged.step,
+        prevActions: [...stageDelimiter.prevActions ,action.type],
+        unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
+        stageRunner: new Map()
+      };
+    } else {
+      stageDelimiter = {
+        step: staged.step,
+        prevActions: [action.type],
+        unionExpiration: [action.expiration],
+        stageRunner: new Map()
+      };
+    }
+    return [
+      stageDelimiter,
+      goodAction
+    ];
+  };
 
 export class UnifiedSubject extends Subject<Concept[]> {
   private stageId = 0;
   private currentStages: Map<number, Staged> = new Map();
-  private stageDelimiter: Map<number, {prevActionType: ActionType, count: number, firstExpiration: number}> = new Map();
+  private stageDelimiters: Map<number, StageDelimiter> = new Map();
   constructor() {
     super();
   }
-  stage(stages: Staging[]) {
-    this.currentStages.set(this.stageId, {stages, step: 0});
+  stage(title: string, stages: Staging[]) {
+    this.currentStages.set(this.stageId, {title, stages, step: 0});
     this.stageId++;
     return {
-      end: () => {
+      close: () => {
         this.currentStages.delete(this.stageId);
       }
     };
@@ -59,53 +127,54 @@ export class UnifiedSubject extends Subject<Concept[]> {
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
       const axiumState = value[0].state as AxiumState;
       this.currentStages.forEach((staged, key) => {
-        const dispatcher: Dispatcher = (action: Action, options?: dispatchOptions) => {
-          const stageDelimiter = this.stageDelimiter.get(key);
+        const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
+          let stageDelimiter = this.stageDelimiters.get(key);
           let debounce = false;
           let goodAction = true;
-          if (stageDelimiter && stageDelimiter.prevActionType === action.type) {
-            const count = stageDelimiter.count + 1;
-            if (count > 2 && action.expiration - stageDelimiter.firstExpiration > 50 ) {
-              goodAction = false;
+          let run = true;
+          [stageDelimiter, goodAction] = handleStageDelimiter(staged, action, stageDelimiter, options);
+          [stageDelimiter, run] = handleRunOnce(stageDelimiter, staged, action, options);
+          this.stageDelimiters.set(key, stageDelimiter);
+          if (goodAction && run) {
+            const action$ = axiumState.action$ as Subject<Action>;
+            if (options?.setStep) {
+              staged.step = options.setStep;
             }
-            this.stageDelimiter.set(key, {
-              prevActionType: stageDelimiter.prevActionType,
-              count: count,
-              firstExpiration: stageDelimiter.firstExpiration,
-            });
-          } else {
-            this.stageDelimiter.set(key, {
-              prevActionType: action.type,
-              count: 0,
-              firstExpiration: action.expiration
-            });
-          }
-          const action$ = axiumState.action$ as Subject<Action>;
-          if (options?.runOnce) {
-            staged.step = staged.stages.length;
-          }
-          if (options?.setStep) {
-            staged.step = options.setStep;
-          }
-          if (options?.iterateStep) {
-            staged.step += 1;
-          }
-          if (options?.debounce) {
-            if (stageDelimiter) {
-              if (stageDelimiter.firstExpiration > Date.now() + options?.debounce) {
+            if (options?.iterateStep) {
+              staged.step += 1;
+            }
+            if (options?.debounce !== undefined) {
+              let previousExpiration = 0;
+              for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
+                if (stageDelimiter.prevActions[i] === action.type) {
+                  previousExpiration = stageDelimiter.unionExpiration[i];
+                  break;
+                }
+              }
+              if (previousExpiration !== action.expiration && action.expiration - previousExpiration < options?.debounce) {
                 debounce = true;
+              } else {
+                for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
+                  if (stageDelimiter.prevActions[i] === action.type) {
+                    stageDelimiter.unionExpiration[i] = action.expiration;
+                    break;
+                  }
+                }
               }
             }
-          }
-          if (options?.on && goodAction && !debounce) {
-            if (selectSlice(value, options?.on.selector) === options?.on.expected) {
+            this.stageDelimiters.set(key, stageDelimiter);
+            if (options?.on && !debounce) {
+              if (selectSlice(value, options?.on.selector) === options?.on.expected && run) {
+                action$.next(action);
+              }
+            } else if (!debounce && run) {
               action$.next(action);
             }
-          } else if (!debounce && goodAction) {
-            action$.next(action);
-          } else {
-            axiumState.badStages.push(staged);
-            this.currentStages.delete(key);
+          } else if (options?.runOnce === undefined) {
+            const deleted = this.currentStages.delete(key);
+            if (deleted) {
+              axiumState.badStages.push(staged);
+            }
           }
         };
         const index = staged.step;
