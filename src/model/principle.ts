@@ -2,17 +2,18 @@ import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
 import { Concept } from './concept';
 import { Action, createAction, primeAction } from './action';
 import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from '../concepts/axium/qualities/registerSubscriber.quality';
+import { UnifiedSubject } from './unifiedSubject';
 
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concept[],
-  concept$: Subject<Concept[]>,
+  concept$: UnifiedSubject,
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concept[],
-  concepts$: Subject<Concept[]>,
+  concepts$: UnifiedSubject,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc(obs, concepts, concepts$);

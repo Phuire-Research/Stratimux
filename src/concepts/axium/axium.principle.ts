@@ -10,11 +10,12 @@ import { strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
+import { UnifiedSubject } from '../../model/unifiedSubject';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concept[],
-  concepts$: Subject<Concept[]>
+  concepts$: UnifiedSubject
 ) => {
   let allowAdd = true;
   let allowRemove = true;

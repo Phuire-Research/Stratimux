@@ -1,4 +1,3 @@
-import { Counter } from './counter.concept';
 import { KeyedSelector } from '../../model/selector';
 
 export const counterSelectCount: KeyedSelector = {

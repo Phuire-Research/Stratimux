@@ -10,11 +10,12 @@ import { primeAction } from '../../model/action';
 import { strategyBegin } from '../../model/actionStrategy';
 import { registerPrincipleSubscription } from '../../model/principle';
 import { isActionReady } from '../../model/ownership';
+import { UnifiedSubject } from '../../model/unifiedSubject';
 
 export const ownershipPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
   _concepts: Concept[],
-  concepts$: Subject<Concept[]>
+  concepts$: UnifiedSubject
 ) => {
   let initDispatch = false;
   const sub = concepts$.subscribe(_cpts => {
