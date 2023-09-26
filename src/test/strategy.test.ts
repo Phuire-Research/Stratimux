@@ -8,18 +8,20 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium([createCounterConcept()], true, true);
-  const staged = axium.stage([
-    (_, dispatch) => {
-      dispatch(strategyBegin(countingStrategy()), {
-        iterateStep: true
-      });
-    }, (concepts) => {
-      const axiumState = concepts[0].state as AxiumState;
-      if (axiumState.lastStrategy === countingTopic) {
-        const counter = selectState<Counter>(concepts, counterName);
-        expect(counter.count).toBe(1);
-        setTimeout(() => {done();}, 500);
-        staged.end();
+  const staged = axium.stage('Counting Strategy Stage',
+    [
+      (_, dispatch) => {
+        dispatch(strategyBegin(countingStrategy()), {
+          iterateStep: true
+        });
+      }, (concepts) => {
+        const axiumState = concepts[0].state as AxiumState;
+        if (axiumState.lastStrategy === countingTopic) {
+          const counter = selectState<Counter>(concepts, counterName);
+          expect(counter.count).toBe(1);
+          setTimeout(() => {done();}, 500);
+          staged.close();
+        }
       }
-    }]);
+    ]);
 });

@@ -1,23 +1,23 @@
 # Concept
-A Concept is the solution to a long standing Frustration with the FLUX Architecture. That effectively if One Bought into that System. The System of Design did not Readily create a Method of Sharing your Feature Libraries. Likewise what are Features and why are Features not allowed to Interact with One Another? Therefore the solution is the Simplification of Generalized Terms to that of its Origin, a Concept. And by way of utilization of Conceptual Logic, we have allow for these Concepts to exist as Sets. Therefore creating a New Concept, by way of Unifying their Qualities via the ActionStrategy Pattern.
+A Concept is the solution to a long standing frustration with the FLUX architecture. That effectively if one bought into that system. The system of design did not readily create a method of sharing your feature libraries. Likewise what are features and why are features not allowed to interact with one another? Therefore the solution is the simplification of generalized terms to that of its origin, a concept. And by way of utilization of conceptual logic, we allow for these concepts to exist as sets. Therefore creating a new concept, by way of unifying their qualities via the ActionStrategy pattern as emergent phenomena.
 
-This easiest Example how One Might utilize this Unifying Paradigm, is the Interaction with the FileSystem. That One could be Transforming some Generated Data as of 2023, to then be Later Saved to the FileSystem as part of that ActionStrategy.
+This easiest example how One might utilize this unifying paradigm, is the interaction with the FileSystem. That one could be transforming some generated data as of 2023, to then be later saved to the FileSystem as part of that ActionStrategy.
 
 ## Why Concepts over Constructs?
-A Concept represents a Bundling of Functionality within Some Graph Relationship. This can be Such as their Literal Associations, but likewise the Functionality of their Qualities to Perform Some Task, or Satisfy some State Transformation.
+A Concept represents a bundling of functionality within some graph relationship. This can be such as their literal associations, but likewise the functionality of their qualities to perform some task, or satisfy some state transformation.
 ```
 Conceptual Symbolic Expression:
 (Force + Flint + Stone) + Dry Brush + Air = Fire
 Logic Conceptual Explanation:
 Using Force with Flint and Stone. Creates Sparks towards Dry Brush and Air, ignites to create Fire.
 ```
-The Above Demonstrates the Inherit Conceptual Quality of Human Language and Highlights those Concepts that may Cascade some State Changes into a Subject. Such as the Concept of Sparks created from Flint, Stone, and Force. Is an Act of Unifying some Concepts to form that of Sparks. Which carry some Transformational Quality that can be applied to Dry Brush and the Friction from Air to create ignition and thusly Fire. If this seems Simple, that is the Point. As we are Introducing this Simplicity to afford for Greater Explainability of the World around Us. This would be the advent of a Unified Conceptual Formula.
+The above demonstrates the inherit conceptual quality of human language and highlights those concepts that may cascade some state changes into a subject. Such as the concept of sparks created from flint, stone, and force. Is an act of unifying some concepts spatially to form that of sparks. Which carry some transformational quality that can be applied to dry brush and the friction from air to create ignition and thusly fire. If this seems simple, that is the point. As we are introducing this simplicity to afford for greater explainability of the world around us. This would be the advent of a Unified Conceptual Formula.
 
-With our Technology we may visit the Exact Science that allows for this Abstraction to exist. But for the majority, all that would matter is access to a developed Library of Knowledge that would Facilitate such Conceptualizations into Reality for Us. The Goal is a System that is capable of: Car + Plane = Flying Car. And not only have such be Created via some Process, but the Exact Blueprints and the Instructions for the Rapid Assembly to bring such into Reality. Even better if we may Simulate Such before its Creation and Test to see if it is worthy to brought into Reality in the First Place.
+With our technology we may visit the exact Science that allows for this abstraction to exist. But for the majority, all that would matter is access to a developed library of knowledge that would facilitate such conceptualizations into reality for us. The goal is a system that is capable of: Car + Plane = Flying Car. And not only have such be created via some process, but the exact blueprints and the instructions for the rapid assembly to bring such into reality. Even better if we may simulate such before its creation and test to see if it is worthy to brought into reality in the first place.
 
-The Difficulty of Constructs. Is that you cannot Readily Decompose their Qualities and how they Interact with other Constructs. That there is some Information loss in the Construction Process. As Constructs are Just Concepts, just like everything Else. We are merely working with the Most Simplified Terms Possible, for the Opportunity of Greater Arrangements. That Constructs themselves can have Qualities, but likewise using such a System of Study we would Determine their Decomposed Constructions. This is the Pursuit of the new Unified Conceptual Science that is being Formalized.
+The difficulty of constructs. Is that you cannot readily decompose their qualities and how they interact with their parts to make that construct. That there is some information loss in the construction process. As constructs are just concepts, just like everything else. We are merely working with the most simplified terms possible, for the opportunity of greater arrangement of sets. That constructs themselves can have qualities, but likewise using such in this system of study we would determine their decomposed parts. This is the pursuit of the new Unified Conceptual Science that is being formalized.
 
-As in the Scope of some Rapid Rise of Information. This simplicity of Concepts is the most Fundamental Mechanism to Explain new Information and Discovery in Any Age. Insisting Upon Constructs, Obfuscates Concepts, and summarily the total bounds of what can be Created. Would be similar to Striking entire sets of Numbers from Equations is the most blunted Example to the Difference in Approach.
+As in the scope of some rapid rise of generative information. This simplicity of concepts is the most fundamental mechanism to explain new information and discovery in any age. Insisting upon constructs, obfuscates concepts, and summarily the total bounds of what can be created. Would be similar to striking entire sets of numbers from equations is the most blunted example to the difference in approach.
 
 ## STRX Quality contains all Functionality that Pertain to an Action.
 ```typescript
@@ -30,12 +30,12 @@ export type Quality = {
   keyedSelectors?: KeyedSelector[]
 };
 ```
-* actionType - Is the Type of Action and Logical Explanation of Functionality
-* reducer - Alters the State of a Concept
-* methodCreator - Creates a Subject and Method that utilizes the Observer for Additional Control of Flow. Including that of Moving Actions off Premise, to be later remitted back into the Stream.
-* method - Is the Implementation of the Strategy Pattern via the that of a Higher Order Function to enable additional Composability.
-* subject - Used within the Mode to Inform the Method of an Action to be Consumed.
-* keyedSelector - Ops the Quality or Actions into the Ownership Paradigm and likewise can be used to Select some Aspect of State from the Set of Concepts.
+* actionType - Is the type of action and logical explanation of functionality
+* reducer - Alters the state of a concept
+* methodCreator - Creates a subject and method that utilizes the observer for additional control of flow. Including that of moving actions off premise, to be later remitted back into the action stream.
+* method - Is the implementation of the strategy pattern via to facilitate higher order functionality to enable additional composability.
+* subject - Used within the mode to inform the method of an action to be consumed.
+* keyedSelector - Ops-in the quality or actions into the ownership paradigm and likewise can be used to select some aspect of state from the set of concepts.
 
 ## The Programmed Definition of a Concept
 ```typescript
@@ -47,11 +47,11 @@ export type Concept = {
   mode?: Mode[];
 };
 ```
-* name - The Identifier of the Concept to be used in Conjunction with Selection.
-* state - Is the State of the Concept of Properties Identified by the Programmer to achieve Functionality.
-* qualities - Is a List of Qualities that Relay to the Actions that Mechanize the Concept throughout your Applications.
-* principles - Are Observers of State of your Application or that of External Mechanisms. That Emit some Action into the Axium based upon that Observation.
-* mode - A Mode is a Function and point of Recursion of the Runtime that the Concept may utilize to Achieve a Specific Functionality necessary for that Concept. This should Rarely be Expanded Upon.
+* name - The identifier of the concept to be used in conjunction with selection.
+* state - Is the state of the concept of properties identified by the programmer to achieve functionality.
+* qualities - Is a list of qualities that relay to the actions that mechanize the concept throughout your applications.
+* principles - Are observers of state of your application or that of external mechanisms. That emit some action into the axium based upon that observation.
+* mode - A mode is a function and point of recursion of the runtime that the concept may utilize to achieve a specific functionality necessary for that concept. This should rarely be expanded upon.
 
 ## Principle
 ``` typescript
@@ -67,17 +67,17 @@ export function createPrinciple$(
   concepts$: Subject<Concept[]>,
 ): Observable<Action>;
 ```
-Concept's Principle, Governs a Specific Set of Instructions that would allow for the Functionality of Other Libraries not Designed Specifically for this System. Otherwise these act as Action Emitters of some Value being Watched off Premise or Subscribed to within the Axium.
+Concept's principle, governs a specific set of instructions that would allow for the functionality of other libraries not designed specifically for this system. Otherwise these act as action emitters of some value being watched off premise or subscribed to within the axium.
 
-Likewise this Contrasts other forms of Programming. As the Principle allows for the Entire Scope of the Axium to be Self Sustaining without the Interaction from External Resources. As the createAxium Function in Reality is the only Necessary Line that is Required to Enable this Functionality.
+Likewise this contrasts other forms of programming. As the principle allows for the entire scope of the axium to be self sustaining without the interaction from external resources. As the createAxium function in reality is the only necessary line that is required to enable this functionality.
 
-Therefore when one is Designing their Own Concepts. The Principle should be treated in the Same Capacity as the initialization of other Programming Approaches. The Main difference, is to dispatch Actions fro the Principle. You use the observer.next() Functionality to Pass that Action.
+Therefore when one is designing their own concepts. The principle should be treated in the same capacity as the initialization of other programming approaches. The main difference, is to dispatch actions from the principle either via the stage paradigm or the supplied observer. The use of observer.next() is to pass actions during initialization, but should instead stage when observing state to prevent action overflow.
 
-An additional Workflow to can be place to Complete Responsibility of the Principle on its Governing Concepts. Is a Simple Enabled Property that the Principle may be Subscribed to. This allows the Principle to Cancel any Internal Observations that would be Left Hot. During the Closing Functionality of the Axium.
+An additional workflow to can be place to complete responsibility of the principle on its governing concepts. Is a simple enabled property that the principle may be subscribed to. This allows the principle to cancel any internal observations that would be left hot. During the closing functionality of the axium, or the removal of that governing concept.
 
-As this Functionality lacks the addition of some Abstraction to Hand Hold the User. The Principle Function must be well Designed to Honor its Namesake.
+As this functionality lacks the addition of some abstraction to hand hold the user. The principle function must be well designed to honor its namesake. But comes with all batteries included to avoid dependency injection.
 
-Later we May Create Specific Types of Principles to handle the Nuances of Repeating the Same Functionality over and over again. But likewise that is not the Scope of this Release.
+Later we may create specific types of principles to handle the nuances of repeating the same functionality over and over again. But likewise that is not the scope of this release.
 
 ## Mode - The point of Recursion
 ```typescript
@@ -88,17 +88,19 @@ export type Mode = ([action, concept, action$, concepts$]: [
   BehaviorSubject<Concept[]>,
 ]) => void;
 ```
-This is Similar to the Principle Function that is Lacking some Hand Holding Capacity. And if One is Creating new Modes to Govern the Flow of Actions within the Axium. One should be Mindful of the Implementation of permissiveMode, blockingMode, and ownershipMode. And should be Avoided, for the sake of Simplicity, but is allowed for the One's own explorations with the Concept.
+This is similar to the principle function that is lacking some hand holding capacity. And if one is creating new modes to govern the flow of actions within the axium. One should be mindful of the implementation of permissiveMode, blockingMode, and ownershipMode. And should be avoided, for the sake of simplicity, but is allowed for the one's own explorations with the concept.
 
-Where ownershipMode Implements the prior as Some Final Mode. But if One were to use some Mode that would Otherwise Replace Ownership, but Require Such. One should Unify and Extend Ownership's Functionality and inform that it is no Longer Responsible for Itself. Including setting your Own Mode that extends ownershipMode and include such as Part of your Own Initialization Strategy for your Concept. As Ownership acts as a Guard Function Prior to Either of permissiveMode or blockingMode to be Ran and Reimplements those Functions Directly as finalMode.
+Where ownershipMode implements the prior as some final mode. But if one were to use some mode that would otherwise replace ownership, but require such. One should unify and extend ownership's functionality and inform that it is no longer responsible for itself. Including setting your own mode that extends ownershipMode and include such as part of your own initialization strategy for your concept. As ownership acts as a guard function prior to either of permissiveMode or blockingMode to be ran and reimplements those functions directly as finalMode.
 
-This could be Accomplished via some Middleware Approach within the ActionStream. But the current Mechanism that Supplies Type Checking to Operators used via the Pipe Functionality of a Stream. Loses such if attempting to set by way of some Dynamically Ordered Array.
+This could be accomplished via some middleware approach within the actionStream. But the current mechanism that supplies type checking to operators used via the pipe functionality of a stream. Loses such if attempting to set by way of some dynamically ordered array.
 
 ## Closing thoughts on this Approach of Concepts
-The Design of this Approach is to be Open and Transparent of its Implementations to encourage some Exploration by Others. As the Goal is Decomposability as a Method of Discovery towards some Universal Function. Which would be Signified via Stable Concepts and Qualities that are Repeatedly Reused. And constitutes a Form of Efficiency upon Discovery. As the Truth of Intelligence, is that the Goal of Communication by way of Simplicity. Complexity may need be Required for some Highly Entropic Organization, but Simplicity is the Goal by way of Explainability.
+The design of this approach is to be open and transparent of its implementations to encourage some exploration by others. As the goal is decomposability as a method of discovery towards some universal concepts. Which would be signified via stable concepts and qualities that are repeatedly reused between unlike concepts. And constitutes a form of efficiency upon discovery. As the truth of intelligence, is that the goal of communication by way of simplicity. Complexity may need be required for some highly entropic organization, but simplicity is the goal by way of explainability.
 
-As what point is some Intelligent Notion, without some Shared Reference? How can One Know if what they hold is True and Valid without Testing. As a Flawed Individual, I would always choose chance of Failure, over that of Perfection for the sake of Enhancing Understanding. As Intelligence is Complex, but likewise within that Complexity can One Find themselves without that Common point of Reference. And this is my Attempt to Establish Such.
+As what point is some intelligent notion, without some shared reference? How can one know if what they hold is true and valid without testing. As a flawed individual, I would always choose chance of failure, over that of perfection for the sake of enhancing understanding. As intelligence is complex, but likewise within that complexity can one find themselves without that common point of reference. And this is my attempt to establish such. Noting that there are very few references throughout this work. And concepts take the center stage.
 
-Beyond the Scope of this Application. Would be a Method of being able to Translate these Concepts into any other Language as they come into Being. The Power of Intelligence comes from seeing the World as Mundane, but Respecting the Decisions made. As even in the Scope of this Work. I never Planned on Creating a Framework, nor a Logical System to Explain Such. I attempted to Extend Flux to Serve my own Purpose with that ActionStrategy Pattern. But at every turn, someone Else's Decision reared its Head that Hampered my ability to Articulate the Unified Turing Machine.
+Beyond the scope of this application. Would be a method of being able to translate these concepts into any other language as they come into being. The power of intelligence comes from seeing the world as mundane, but respecting the decisions made. As even in the scope of this work. I never planned on creating a framework, nor a logical system to explain such. I attempted to extend FLUX to serve my own purpose with that ActionStrategy pattern. But at every turn, someone else's decision reared its head that hampered my ability to articulate the Unified Turing Machine.
 
-If my Own Work of Concepts gets in your Way. Have fun!
+If my Own Work of Concepts gets in your way. Have fun!
+
+*It is interesting to note that there is no common symbol for concepts, but there is a concept for symbols*

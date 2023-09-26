@@ -50,7 +50,7 @@ export type AxiumState = {
   badStages: Staged[];
 }
 
-export const axiumName = 'Axium';
+export const axiumName = 'axium';
 
 const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState => {
   return {
