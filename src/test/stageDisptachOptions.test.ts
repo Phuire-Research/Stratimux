@@ -1,12 +1,10 @@
 import { createAxium } from '../model/axium';
-import { Concept } from '../model/concept';
-import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
+import { counterSelectCount } from '../concepts/counter/counter.selector';
 
 test('Axium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
@@ -17,9 +15,10 @@ test('Axium Stage Dispatch Options Test', (done) => {
       const badStage = axiumState.badStages[0];
       const counter = selectState<Counter>(concepts, counterName);
       console.log('Stage Ran Away, badStages.length: ', axiumState.badStages.length, 'Count: ', counter.count);
-      expect(badStage.step).toBe(2);
+      expect(badStage.stepFailed).toBe(2);
       expect(counter.count).toBe(2);
       setTimeout(() => {done();}, 500);
+      staged.close();
     }
   });
   const staged = axium.stage('Stage DispatchOptions Test',
@@ -37,14 +36,19 @@ test('Axium Stage Dispatch Options Test', (done) => {
         dispatch(counterAdd(), {
           runOnce: true
         });
-        if (counter.count === 2) {
-          console.log('Counter should be 2', counter.count);
-          expect(counter.count).toBe(2);
-          dispatch(counterAdd(), {
-            setStep: 2,
-            debounce: 0
-          });
-        }
+        // if (counter.count === 2) {
+        // console.log('Counter should be 2', counter.count);
+        // expect(counter.count).toBe(2);
+        dispatch(counterAdd(), {
+          setStep: 2,
+          // runOnce: true,
+          debounce: 0,
+          on: {
+            selector: counterSelectCount,
+            expected: 2
+          }
+        });
+        // }
       }, (concepts, dispatch) => {
         runCount++;
         const counter = selectState<Counter>(concepts, counterName);

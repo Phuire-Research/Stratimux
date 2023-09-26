@@ -18,6 +18,7 @@ export type Staged = {
   title: string;
   stages: Staging[],
   step: number;
+  stepFailed: number;
 }
 
 export type dispatchOptions = {
@@ -44,9 +45,29 @@ export type StageDelimiter = {
   stageRunner: Map<string, boolean>
 }
 
-const handleRunOnce =
-  (stageDelimiter: StageDelimiter, staged: Staged, action: Action, options?: dispatchOptions): [StageDelimiter, boolean] => {
-    if (options?.runOnce) {
+const handleRun =
+  (value: Concept[], stageDelimiter: StageDelimiter, staged: Staged, action: Action, options?: dispatchOptions)
+    : [StageDelimiter, boolean] => {
+    if (options?.on) {
+      if (selectSlice(value, options?.on.selector) === options?.on.expected) {
+        const stageRunner = stageDelimiter.stageRunner.get(action.type + staged.step);
+        if (stageRunner === undefined) {
+          stageDelimiter.stageRunner.set(action.type + staged.step, true);
+          return [
+            stageDelimiter, true
+          ];
+        } else {
+          stageDelimiter.stageRunner.set(action.type + staged.step, false);
+          return [
+            stageDelimiter, false
+          ];
+        }
+      } else {
+        return [
+          stageDelimiter, false
+        ];
+      }
+    } else if (options?.runOnce) {
       const stageRunner = stageDelimiter.stageRunner.get(action.type + staged.step);
       if (stageRunner === undefined) {
         stageDelimiter.stageRunner.set(action.type + staged.step, true);
@@ -112,7 +133,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     super();
   }
   stage(title: string, stages: Staging[]) {
-    this.currentStages.set(this.stageId, {title, stages, step: 0});
+    this.currentStages.set(this.stageId, {title, stages, step: 0, stepFailed: -1});
     this.stageId++;
     return {
       close: () => {
@@ -133,16 +154,10 @@ export class UnifiedSubject extends Subject<Concept[]> {
           let goodAction = true;
           let run = true;
           [stageDelimiter, goodAction] = handleStageDelimiter(staged, action, stageDelimiter, options);
-          [stageDelimiter, run] = handleRunOnce(stageDelimiter, staged, action, options);
+          [stageDelimiter, run] = handleRun(value, stageDelimiter, staged, action, options);
           this.stageDelimiters.set(key, stageDelimiter);
           if (goodAction && run) {
             const action$ = axiumState.action$ as Subject<Action>;
-            if (options?.setStep) {
-              staged.step = options.setStep;
-            }
-            if (options?.iterateStep) {
-              staged.step += 1;
-            }
             if (options?.debounce !== undefined) {
               let previousExpiration = 0;
               for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
@@ -163,14 +178,21 @@ export class UnifiedSubject extends Subject<Concept[]> {
               }
             }
             this.stageDelimiters.set(key, stageDelimiter);
-            if (options?.on && !debounce) {
-              if (selectSlice(value, options?.on.selector) === options?.on.expected && run) {
+            if (!debounce && run) {
+              if (options?.setStep) {
+                staged.step = options.setStep;
+              }
+              if (options?.iterateStep) {
+                staged.step += 1;
+              }
+              // Horrifying
+              if (staged.stepFailed === -1) {
                 action$.next(action);
               }
-            } else if (!debounce && run) {
-              action$.next(action);
             }
           } else if (options?.runOnce === undefined) {
+            staged.stepFailed = staged.step;
+            staged.step = staged.stages.length;
             const deleted = this.currentStages.delete(key);
             if (deleted) {
               axiumState.badStages.push(staged);
