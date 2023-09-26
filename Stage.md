@@ -1,7 +1,7 @@
 ## Stage
-This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This Design Pattern watches each Stage for the potential of a runaway configuration which would normally prevent this machine from Halting. But since the Unified Turing Machine was created to be Halting Complete. The UnifiedSubject internally watches each Stage of your application independently and the Actions that it Dispatches via the supplied Dispatch function. If a similar Action is Dispatched in Rapid Succession denoted by the Expiration that is attached to each newly Created Action. That Stage will Close and be added to the Axium's badStages property.
+This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That Stage will close and be added to the axium's badStages property.
 
-Once attached to the badStage property, it would be possible to reinitialize said Stage via your Concept's Principle utilizing the Stage's Title. But places that burden of Responsibility on the Developer. As the Scope of a Unified Turing Machine is to be designed to Specification to Halt Appropriately. We accept Failure as likewise the ability to Halt.
+Once attached to the badStage property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
 
 ```typescript
 export type Staged = {
@@ -32,14 +32,14 @@ export class UnifiedSubject extends Subject<Concept[]> {
   stage(title: string, stages: Staging[]) {}
 }
 ```
-The added benefit of the Creation of Staging to control the flow of Actions, is also the ability to create an additional Abstraction to handle how the Dispatch would be Handled within a Subscription, but with the added benefit of iterating through each Step of a Stage your Applications. That these Steps would typically be an initialization, a main run time, and likewise the ability to close. 3 Acts if you will.
+The added benefit of the creation of staging to control the flow of actions, is also the ability to create an additional abstraction to handle how the dispatch would be handled within a subscription, but with the added benefit of iterating through each step of a stage your applications. That these steps would typically be an initialization, a main run time, and likewise the ability to close. 3 acts if you will.
 
 * dispatchOptions
-* runOnce - If enabled on the Dispatch Options, this will permit only one dispatch of that action within its Stage.
-* debounce - Required to prevent the Stage to be considered Bad if rerunning the Same Action within the same Step, specific Use Case is Tracking some Position over Time.
-* setStep - This will set the Stage to a specific Step, useful if some Strategy Failed and the Staging needs to be reset to prepare for that Strategy again.
-* incrementStep - Will increment the Current step of the Stage, this should be your default option for Dispatching Actions or Strategies to prevent Actions Overflow.
-* on - Simple handler that will prevent dispatch until the Selected Value is set to what is Expected. Keep in mind this should also be occupied by a debounce, as this dispatch will run on each successful State Update.
+* runOnce - If enabled on the dispatch options, this will permit only one dispatch of that action within its stage.
+* debounce - Required to prevent the stage to be considered bad if rerunning the same action within the same step, specific use case is tracking some position over time.
+* setStep - This will set the stage to a specific step, useful if some strategy failed and the staging needs to be reset to prepare for that strategy again.
+* incrementStep - Will increment the current step of the stage, this should be your default option for dispatching actions or strategies to prevent action overflow.
+* on - Simple handler that will prevent dispatch until the selected value is set to what is expected. Keep in mind this should also be occupied by a debounce, as this dispatch will run on each successful state update.
 
 ## Example
 
@@ -103,6 +103,6 @@ const sub = axium.subscribe((concepts) => {
 });
 ```
 
-Keep in mind behind the Scenes during a STRX runtime, there will be multiple Strategies running concurrently. Observe the runCount specified in this example. Please look to the STRX's Tests Folder.
+Keep in mind behind the scenes during a STRX runtime, there will be multiple strategies running concurrently. Observe the runCount specified in this example. Please look to the STRX's tests folder.
 
-As well that STRX is designed to be run primarily through the loaded Concepts and their Associated Principles. To prevent unexpected behaviors in your own Principles. Please utilize the supplied KeyedSelector for Axium's Open Property to begin the Stage of your Concepts.
+As well that STRX is designed to be run primarily through the loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
