@@ -1,6 +1,6 @@
 ![STRX](https://github.com/Phuire-Research/STRX/blob/main/STRX.png?raw=true)
 #### *The Unified Turing Machine - aka Hand Written Intelligence of Doing*
-*Note if you notice a strange set of capitalizations of concepts, this is a new format that is being formalized as conceptual logic.*
+*Note if you notice a strange set of capitalizations of concepts, this is a new format that is being formalized as conceptual logic. In addition, there was no generative intelligence used in the creation of this framework. This is 100% hand written.*
 ### Abstract
 The inspiration for STRX was that of Redux or the FLUX design pattern. With several changes and for the sake of maintaining some similarities to that design for developers. While offering enough of a departure where the traditional store is now referred to as the **Axium**. Where an axium is a set of concepts that are unified to form a greater conceptualization. Namely that of your application, but in contrast to its inspiration and accomplished by the ActionStrategy design pattern and spatial ownership paradigm. Is actively encouraging to cross the streams of state, or to be specific that of the unifying concepts and their qualities. To create an application that is greater than the sum of its parts due to its composability.
 
