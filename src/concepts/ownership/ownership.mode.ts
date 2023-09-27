@@ -1,4 +1,4 @@
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Action } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';

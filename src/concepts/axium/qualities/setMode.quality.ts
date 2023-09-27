@@ -1,6 +1,6 @@
 import { AxiumState } from '../axium.concept';
 import { Action, createAction} from '../../../model/action';
-import { createQuality, createDefaultMethodCreator, MethodCreator, Method } from '../../../model/concept';
+import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { Subject, map } from 'rxjs';
 import { axiumConcludeType } from './conclude.quality';
 import { setDenoter, strategySuccess } from '../../../model/actionStrategy';

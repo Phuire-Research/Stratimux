@@ -1,5 +1,4 @@
-import { Action, ActionType, createAction } from '../../../model/action';
-import { Quality, Reducer } from '../../../model/concept';
+import { Action, ActionType } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 

@@ -1,9 +1,8 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { createAction, getSemaphore, primeAction } from '../../../model/action';
+import { getSemaphore } from '../../../model/action';
 import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
-import { axiumSetBlockingModeType } from '../../axium/qualities/setBlockingMode.quality';
 import { ownershipName } from '../ownership.concept';
 import { SetDefaultModeIndex, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
 import { AxiumState } from '../../axium/axium.concept';

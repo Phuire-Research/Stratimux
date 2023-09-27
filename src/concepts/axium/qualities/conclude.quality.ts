@@ -1,5 +1,4 @@
-import { createQuality, defaultReducer } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { ActionType } from '../../../model/action';
 
 /**
  * axiumConcludeType

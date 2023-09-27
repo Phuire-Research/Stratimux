@@ -2,7 +2,6 @@ import {
   Observable,
   Subject,
   withLatestFrom,
-  BehaviorSubject,
   Subscriber,
   catchError,
 } from 'rxjs';

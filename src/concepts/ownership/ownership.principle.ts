@@ -1,6 +1,6 @@
-import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber, map} from 'rxjs';
-import { Concept, Mode } from '../../model/concept';
-import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
+import { Subscriber } from 'rxjs';
+import { Concept } from '../../model/concept';
+import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { AxiumState, axiumName } from '../axium/axium.concept';
@@ -20,12 +20,10 @@ export const ownershipPrinciple: PrincipleFunction = (
   let initDispatch = false;
   const sub = concepts$.subscribe(_cpts => {
     const axiumState = selectState<AxiumState>(_cpts, axiumName);
-    // console.log('Check', axiumState.open);
     if (axiumState.open) {
       const subscription = concepts$.subscribe(cpts => {
         let concepts = cpts;
         let ownershipState = selectState<OwnershipState>(concepts, ownershipName);
-        // console.log('Check', ownershipState);
         if (ownershipState.initialized) {
           // This will be the point of dispatch of Qued Actions
           if (ownershipState.pendingActions) {
@@ -55,7 +53,6 @@ export const ownershipPrinciple: PrincipleFunction = (
           );
         }
       });
-      // Problem Step
       sub.unsubscribe();
       registerPrincipleSubscription(observer, _cpts, ownershipName, subscription);
     }

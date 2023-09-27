@@ -1,8 +1,8 @@
 import { Action, createAction, primeAction } from '../model/action';
-import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
+import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concept } from './concept';
-import { KeyedSelector, selectState } from './selector';
-import { axiumBadActionType, badActionReducer } from '../concepts/axium/qualities/badAction.quality';
+import { selectState } from './selector';
+import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 // Define Ownership Here
 // As the Basis of anything Within Model Directory is that Such Enables the Concepts to Function as Intended
 // AKA Concept Model

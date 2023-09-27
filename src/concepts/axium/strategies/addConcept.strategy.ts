@@ -1,8 +1,7 @@
 import { Subject } from 'rxjs';
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
-import { primeAction, Action, createAction, getSemaphore} from '../../../model/action';
-import type { RegisterStreamsPayload } from '../qualities/registerStreams.quality';
+import { Action, getSemaphore} from '../../../model/action';
 import { AddConceptsFromQuePayload, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
 import { AppendConceptsToAddQuePayload, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
 import { axiumOpenType } from '../qualities/open.quality';

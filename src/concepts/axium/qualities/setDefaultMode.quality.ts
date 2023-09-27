@@ -1,5 +1,5 @@
 import { Subject, Subscriber } from 'rxjs';
-import { Concept, createDefaultMethodCreator } from '../../../model/concept';
+import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
@@ -42,5 +42,5 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
 export const setDefaultModeQuality = createQuality(
   axiumSetDefaultModeType,
   setDefaultModeReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );

@@ -1,4 +1,3 @@
-import { Concept } from '../../model/concept';
 import { addQuality } from './qualities/add.quality';
 import { subtractQuality } from './qualities/subtract.quality';
 import { chainCountQuality } from './qualities/chainCount.quality';

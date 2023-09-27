@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concept } from './concept';
 import { Action, createAction, primeAction } from './action';
 import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from '../concepts/axium/qualities/registerSubscriber.quality';

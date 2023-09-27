@@ -10,10 +10,13 @@ export {
   strategySuccess,
   strategyFailed,
   strategyDecide,
+  puntStrategy,
+  setPreposition,
+  setDenoter
 } from './model/actionStrategy';
-export type { Action } from './model/action';
-export { primeAction, createAction } from './model/action';
-export { createConcept, createQuality } from './model/concept';
+export type { Action, ActionType } from './model/action';
+export { primeAction, createAction, getSemaphore, prepareActionCreator } from './model/action';
+export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
 export type {
   Concept,
   Quality,
@@ -25,3 +28,4 @@ export type {
 } from './model/concept';
 export { selectState, selectConcept } from './model/selector';
 export { PrincipleFunction } from './model/principle';
+export type { dispatchOptions, Staging } from './model/unifiedSubject';

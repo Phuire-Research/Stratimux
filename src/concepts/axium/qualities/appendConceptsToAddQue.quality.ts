@@ -1,7 +1,6 @@
-import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { Action, ActionType } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
 export const axiumAppendConceptsToAddQueType: ActionType = 'append Concepts to Axium\'s Add Concept Que';
@@ -24,5 +23,5 @@ export function appendConceptsToAddQueReducer(state: AxiumState, action: Action)
 export const appendConceptsToAddQueQuality = createQuality(
   axiumAppendConceptsToAddQueType,
   appendConceptsToAddQueReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );
