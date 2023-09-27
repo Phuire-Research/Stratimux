@@ -1,9 +1,11 @@
-import { Action, createAction, primeAction } from '../model/action';
+/* eslint-disable max-depth */
+import { Action, createAction, getSemaphore, primeAction } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concept } from './concept';
 import { selectState } from './selector';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 import { nullActionType } from './actionStrategy';
+import { ownershipBackTrackType } from '../concepts/ownership/qualities/backTrack.quality';
 // Define Ownership Here
 // As the Basis of anything Within Model Directory is that Such Enables the Concepts to Function as Intended
 // AKA Concept Model
@@ -33,7 +35,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   let shouldBlock = false;
-  console.log('Action', action, qualityKeys, ownershipLedger);
+  // console.log('Action', action, qualityKeys, ownershipLedger);
   if (qualityKeys) {
     for (let i = 0; i < qualityKeys.length; i++) {
       if (ownershipLedger.has(`${qualityKeys[i].conceptName} ${qualityKeys[i].stateKeys}`)) {
@@ -49,7 +51,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
       }
     }
   }
-  console.log('Should Block', shouldBlock);
+  // console.log('Should Block', shouldBlock);
   return shouldBlock;
 };
 
@@ -57,8 +59,7 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
   const newConcepts = concepts;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
-  // console.log('CLEAR', action, ownershipLedger);
-  if (action.type !== nullActionType) {
+  if (action.type !== nullActionType && ownershipLedger) {
     if (action.stubs) {
       action.stubs.forEach(ticketStub => {
         const line = ownershipLedger.get(ticketStub.key);
@@ -80,7 +81,10 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
       });
     }
     if (action.strategy) {
-      return clearStubs(newConcepts, action.strategy.lastActionNode.action as Action);
+      const nextAction = action.strategy.lastActionNode.action;
+      if (nextAction && nextAction.type !== nullActionType) {
+        return clearStubs(newConcepts, nextAction);
+      }
     }
   }
   return newConcepts;
@@ -137,7 +141,6 @@ export const checkIn =
       ownershipLedger.set(key, [newTicket]);
     }
   });
-  console.log('Should have stubs', action, action.stubs);
   return  [
     newConcepts,
     action
@@ -149,6 +152,7 @@ export const isActionReady = (concepts: Concept[], _action: Action): [Concept[],
     const action = _action;
     const stubs = action.stubs;
     if (stubs) {
+      // console.log('HITHERE', action);
       return stubAction(concepts, action);
     } else {
       return qualityAction(concepts, action);
@@ -179,6 +183,7 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   const stubs = action.stubs as OwnershipTicketStub[];
+  let finalReturn: [Concept[], Action | undefined] = [concepts, action];
   let frontOfAllLines = true;
   let expired = false;
   for (const stub of stubs) {
@@ -210,9 +215,8 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
         }
       }
     }
-    return [concepts, createAction(axiumBadActionType, action)];
-  }
-  if (frontOfAllLines) {
+    finalReturn = [concepts, createAction(axiumBadActionType, action)];
+  } else if (frontOfAllLines) {
     for (const stub of stubs) {
       const line = ownershipLedger.get(stub.key);
       if (line) {
@@ -225,10 +229,11 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
         }
       }
     }
-    return [concepts, action];
+    finalReturn = [concepts, action];
   } else {
-    return [concepts, undefined];
+    finalReturn = [concepts, undefined];
   }
+  return finalReturn;
 };
 
 const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action | undefined] => {
@@ -237,6 +242,7 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
   const action = _action;
   const qualitySelectors = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   let readyToGo = true;
+
   if (qualitySelectors) {
     for (const selector of qualitySelectors) {
       const key = `${selector.conceptName} ${selector.stateKeys}`;
@@ -249,6 +255,51 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
       return [concepts, action];
     }
   }
+  // else if (action.strategy) {
+  //   if (action.strategy.lastActionNode.action) {
+  //     const prevAction = action.strategy.lastActionNode.action;
+  //     let frontOfAllLines = true;
+  //     let expired = false;
+  //     // console.log('HIT', prevAction);
+  //     if (prevAction.stubs) {
+  //       // console.log('Check quality action', prevAction)
+  //       for (const stub of prevAction.stubs) {
+  //         if (action.expiration < Date.now()) {
+  //           expired = true;
+  //           break;
+  //         }
+  //         const positions = ownershipLedger.get(stub.key);
+  //         if (positions) {
+  //           for (const [i, pos] of positions.entries()) {
+  //             if (i === 0 && pos.ticket === stub.ticket) {
+  //               break;
+  //             } else {
+  //               frontOfAllLines = false;
+  //               break;
+  //             }
+  //           }
+  //         }
+  //       }
+  //       if (expired) {
+  //         for (const stub of prevAction.stubs) {
+  //           const positions = ownershipLedger.get(stub.key);
+  //           if (positions) {
+  //             const newLine = positions.filter(pos => pos.ticket !== stub.ticket);
+  //             if (newLine.length > 0) {
+  //               ownershipLedger.set(stub.key, newLine);
+  //             } else {
+  //               ownershipLedger.delete(stub.key);
+  //             }
+  //           }
+  //         }
+  //         return [concepts, createAction(axiumBadActionType, action)];
+  //       }
+  //       if (frontOfAllLines) {
+  //         return [concepts, action];
+  //       }
+  //     }
+  //   }
+  // }
   return [concepts, undefined];
 };
 
@@ -260,6 +311,7 @@ export const areEqual = (first: unknown, second: unknown ) => {
 export const updateAddToPendingActions = (_concepts: Concept[], _action: Action) => {
   let concepts = _concepts;
   let action = _action;
+  // console.log('CHECK ADD TO PENDING ACTIONS', action);
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const pendingActions = ownershipState.pendingActions;
   const newPendingActions: Action[] = [];
@@ -267,7 +319,6 @@ export const updateAddToPendingActions = (_concepts: Concept[], _action: Action)
     ...action,
     expiration: 0,
   } as Action;
-
   for (const pending of pendingActions) {
     let found = false;
     const strippedPending = {

@@ -148,7 +148,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
 export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
-  const strategy = _strategy;
+  const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
@@ -221,11 +221,11 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
   ) {
     const nextNode = strategy.currentNode.failureNode;
     nextAction = createAction(
-      strategy.currentNode.failureNode.actionType,
-      strategy.currentNode.failureNode.payload,
-      strategy.currentNode.failureNode.keyedSelectors,
-      strategy.currentNode.agreement,
-      strategy.currentNode.semaphore
+      nextNode.actionType,
+      nextNode.payload,
+      nextNode.keyedSelectors,
+      nextNode.agreement,
+      nextNode.semaphore
     );
     nextNode.action = nextAction;
     strategy.actionList = [...strategy.actionList, actionListEntry];
@@ -277,11 +277,12 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
 export const strategyDecide = (
-  strategy: ActionStrategy,
+  _strategy: ActionStrategy,
   decideKey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: unknown,
 ) => {
+  const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
@@ -295,11 +296,11 @@ export const strategyDecide = (
     ) {
       const nextNode = decisionNodes[decideKey];
       nextAction = createAction(
-        decisionNodes[decideKey].actionType,
-        decisionNodes[decideKey].payload,
-        decisionNodes[decideKey].keyedSelectors,
-        decisionNodes[decideKey].agreement,
-        decisionNodes[decideKey].semaphore
+        nextNode.actionType,
+        nextNode.payload,
+        nextNode.keyedSelectors,
+        nextNode.agreement,
+        nextNode.semaphore
       );
       nextNode.action = nextAction;
       strategy.actionList = [...strategy.actionList, actionListEntry];
@@ -355,4 +356,23 @@ export const puntStrategy = (
   }
   newStrategy.puntedStrategy = puntList;
   return newStrategy;
+};
+
+export const backTrack = (_strategy: ActionStrategy): Action => {
+  const strategy = {..._strategy};
+  if (strategy.lastActionNode.actionType !== nullActionType) {
+    const currentActionType = strategy.currentNode.actionType;
+    strategy.actionList = [
+      ...strategy.actionList,
+      currentActionType
+    ];
+    const newNode: ActionNode = {
+      ...strategy.lastActionNode
+    };
+    strategy.lastActionNode = _strategy.currentNode;
+    strategy.currentNode = newNode;
+    return newNode.action as Action;
+  } else {
+    return createAction(axiumConcludeType);
+  }
 };

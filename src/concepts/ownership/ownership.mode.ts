@@ -6,7 +6,7 @@ import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
-import { strategyFailed } from '../../model/actionStrategy';
+import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 
@@ -26,7 +26,6 @@ export const ownershipMode: Mode = (
     concepts = clearStubs(concepts, lastAction);
   }
   if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
-    console.log('ENTERED', action);
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
     // Quality Opted in Action
@@ -40,8 +39,8 @@ export const ownershipMode: Mode = (
         if (action.strategy.currentNode.failureNode === null) {
         // This assumes that the Strategy does not account for the Block
           let nextAction = strategyFailed(action.strategy);
-          const lastAction = nextAction.strategy?.currentNode.action as Action;
-          concepts = clearStubs(concepts, lastAction);
+          // const lastAction = nextAction.strategy?.currentNode.action as Action;
+          // concepts = clearStubs(concepts, lastAction);
           if (nextAction.type === axiumConcludeType) {
             nextAction = createAction(axiumAppendActionListToDialogType);
             nextAction.payload = {
@@ -49,11 +48,14 @@ export const ownershipMode: Mode = (
               strategyTopic: action.strategy.topic
             } as AppendActionListToDialogPayload;
           }
-          console.log('Should not be conclude', nextAction);
           finalMode([nextAction, concepts, action$, concepts$]);
         } else {
         // This assumes that the Strategy is accounting for the Block
-          concepts = updateAddToPendingActions(concepts, strategyFailed(action.strategy));
+          [concepts, action] = checkIn(concepts, action);
+          // console.log('Check Action Failed1', action);
+          const nextAction = strategyFailed(action.strategy as ActionStrategy);
+          // console.log('Check Action Failed', nextAction.strategy?.lastActionNode.action);
+          concepts = updateAddToPendingActions(concepts, nextAction);
           concepts$.next(concepts);
         }
       } else {

@@ -30,7 +30,20 @@ export const ownershipPrinciple: PrincipleFunction = (
             let newAction;
             // One Action at a Time
             for (const [i, action] of ownershipState.pendingActions.entries()) {
-              [concepts, newAction] = isActionReady(concepts, action);
+              if (!action.stubs) {
+                // console.log('Check last Action', action.strategy?.lastActionNode.action);
+                if (action.strategy?.lastActionNode.action?.stubs) {
+                  [concepts, newAction] = isActionReady(concepts, action.strategy.lastActionNode.action);
+                  // console.log('HITHERE', newAction);
+
+                  // eslint-disable-next-line max-depth
+                  if (newAction) {
+                    newAction = action;
+                  }
+                }
+              } else {
+                [concepts, newAction] = isActionReady(concepts, action);
+              }
               if (newAction) {
                 ownershipState = selectState<OwnershipState>(concepts, ownershipName);
                 ownershipState.pendingActions = ownershipState.pendingActions.filter((_, indx) => {

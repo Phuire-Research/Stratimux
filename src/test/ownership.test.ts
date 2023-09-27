@@ -3,12 +3,13 @@ import { Concept } from '../model/concept';
 import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { setOwnerShipModeTopic, setOwnershipModeStrategy } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { createCounterConcept, primedCountingStrategy } from '../concepts/counter/counter.concept';
+import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
+import { createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
-import { countingTopic, primedCountingTopic } from '../concepts/counter/strategies/counting.strategy';
+// import { countingTopic, primedCountingTopic } from '../concepts/counter/strategies/counting.strategy';
+import { primedCountingStrategy, countingTopic, primedCountingTopic } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 
 // REFACTOR
@@ -40,7 +41,7 @@ test('Ownership Test', (done) => {
         const axiumState = cpts[0].state as AxiumState;
         console.log('Stage 3', axiumState.lastStrategy, orderOfTopics);
         if (orderOfTopics.length === 2) {
-          expect(orderOfTopics[0]).toBe(primedCountingTopic);
+          expect(orderOfTopics[0]).toBe(countingTopic);
           setTimeout(() => {done();}, 500);
           staged.close();
         } else if (
@@ -101,9 +102,9 @@ test('Ownership Test', (done) => {
       //   ]);
 
       expect(state.initialized).toBe(true);
-      const ownership = selectState<OwnershipState>(concepts, ownershipName);
-      console.log('Ready to Stage', staged, ownership.ownershipLedger, ownership.pendingActions);
-      // sub.unsubscribe();
+      // const ownership = selectState<OwnershipState>(concepts, ownershipName);
+      // console.log('Ready to Stage', staged, ownership.ownershipLedger, ownership.pendingActions);
+      sub.unsubscribe();
     }
   });
 });

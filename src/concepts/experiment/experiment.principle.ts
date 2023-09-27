@@ -19,14 +19,14 @@ export const experimentPrinciple: PrincipleFunction = (
       const subscription = concepts$.subscribe(cpts => {
         const concepts = cpts;
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        console.log('Check que', experimentState.actionQue);
+        // console.log('Check que', experimentState.actionQue);
         if (experimentState.actionQue.length > 0) {
           if (!readyToGo) {
             readyToGo = true;
             setTimeout(() => {
               readyToGo = false;
               const nextAction = experimentState.actionQue.shift();
-              console.log('Dispatched from Experiment Principle', nextAction, experimentState.actionQue);
+              // console.log('Dispatched from Experiment Principle', nextAction, experimentState.actionQue);
               if (nextAction) {
                 experimentState.actionQue = [... experimentState.actionQue];
                 concepts$.next(concepts);
@@ -35,7 +35,7 @@ export const experimentPrinciple: PrincipleFunction = (
                 experimentState.actionQue = [];
                 concepts$.next(concepts);
               }
-            }, 500);
+            }, 400);
           }
         }
       });

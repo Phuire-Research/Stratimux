@@ -1,10 +1,12 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
-import { counterAddType } from '../qualities/add.quality';
-import { counterSubtractType } from '../qualities/subtract.quality';
-import { counterName } from '../counter.concept';
-import { counterSelectCount } from '../counter.selector';
+import { counterAddType } from '../../counter/qualities/add.quality';
+import { counterSubtractType } from '../../counter/qualities/subtract.quality';
+import { counterName } from '../../counter/counter.concept';
+import { counterSelectCount } from '../../counter/counter.selector';
+import { ownershipBackTrackType } from '../../ownership/qualities/backTrack.quality';
+import { ownershipName } from '../../ownership/ownership.concept';
 
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
@@ -14,6 +16,8 @@ export function countingStrategy(): ActionStrategy {
     failureNode: null,
     preposition: 'and finally',
     denoter: 'One.',
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
@@ -21,6 +25,8 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: null,
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
@@ -28,6 +34,8 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: null,
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
@@ -35,6 +43,8 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: null,
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
@@ -42,6 +52,8 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: null,
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
 
   const params: ActionStrategyParameters = {
@@ -56,37 +68,52 @@ export const primedCountingTopic = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
+  const backTrackSemaphore = getSemaphore(concepts, ownershipName, ownershipBackTrackType);
+  const backTrack: ActionNode = {
+    actionType: ownershipBackTrackType,
+    semaphore: backTrackSemaphore,
+    successNode: null,
+    failureNode: null,
+  };
   const stepFour: ActionNode = {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: null,
-    failureNode: null,
+    failureNode: backTrack,
     preposition: 'and finally',
     denoter: 'One.',
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: stepFour,
-    failureNode: null,
+    failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     semaphore: subtractSemaphore,
     successNode: stepThree,
-    failureNode: null,
+    failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
     semaphore: subtractSemaphore,
     successNode: stepTwo,
-    failureNode: null,
+    failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
+    agreement: 500,
+    keyedSelectors: [counterSelectCount]
   };
 
   const params: ActionStrategyParameters = {
