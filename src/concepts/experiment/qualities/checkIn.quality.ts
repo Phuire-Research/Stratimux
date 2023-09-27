@@ -11,7 +11,9 @@ export const experimentCheckIn = prepareActionCreator(experimentCheckInType);
 
 export function checkInReducer(state: ExperimentState, action: Action): ExperimentState {
   if (action.strategy) {
+    console.log('Check in reducer', action);
     const nextAction = strategySuccess(action.strategy);
+    console.log('Check in reducer2', nextAction.strategy?.lastActionNode.action, nextAction.strategy?.lastActionNode.action?.stubs);
     if (nextAction.type !== axiumConcludeType) {
       return {
         ...state,
@@ -27,5 +29,4 @@ export function checkInReducer(state: ExperimentState, action: Action): Experime
 export const checkInQuality = createQuality(
   experimentCheckInType,
   checkInReducer,
-  defaultMethodCreator
 );

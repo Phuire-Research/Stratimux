@@ -7,7 +7,7 @@ import { selectState } from '../../model/selector';
 import { AxiumState, axiumName } from '../axium/axium.concept';
 import { ExperimentState, experimentName } from './experiment.concept';
 
-export const ownershipPrinciple: PrincipleFunction = (
+export const experimentPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
   _concepts: Concept[],
   concepts$: UnifiedSubject
@@ -19,22 +19,23 @@ export const ownershipPrinciple: PrincipleFunction = (
       const subscription = concepts$.subscribe(cpts => {
         const concepts = cpts;
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
+        console.log('Check que', experimentState.actionQue);
         if (experimentState.actionQue.length > 0) {
           if (!readyToGo) {
+            readyToGo = true;
             setTimeout(() => {
-              readyToGo = true;
+              readyToGo = false;
+              const nextAction = experimentState.actionQue.shift();
+              console.log('Dispatched from Experiment Principle', nextAction, experimentState.actionQue);
+              if (nextAction) {
+                experimentState.actionQue = [... experimentState.actionQue];
+                concepts$.next(concepts);
+                observer.next(nextAction);
+              } else {
+                experimentState.actionQue = [];
+                concepts$.next(concepts);
+              }
             }, 500);
-          } else {
-            readyToGo = false;
-            const nextAction = experimentState.actionQue.shift();
-            if (nextAction) {
-              experimentState.actionQue = [... experimentState.actionQue];
-              concepts$.next(concepts);
-              observer.next(nextAction);
-            } else {
-              experimentState.actionQue = [];
-              concepts$.next(concepts);
-            }
           }
         }
       });

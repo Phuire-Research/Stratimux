@@ -94,7 +94,7 @@ export const createAxiumConcept = (storeDialog?: boolean, logging?: boolean): Co
       appendConceptsToAddQueQuality,
       appendConceptsToRemoveQueQuality,
       removeConceptsViaQueQuality,
-      setModeQuality
+      setModeQuality,
     ],
     [axiumPrinciple],
     [blockingMode, permissiveMode]

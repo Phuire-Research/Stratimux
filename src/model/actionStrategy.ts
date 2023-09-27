@@ -148,8 +148,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
 export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
-  const strategy = { ..._strategy };
-  // console.log('SUCCESS', strategy.payload);
+  const strategy = _strategy;
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
@@ -185,8 +184,9 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
       const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        ...nextEntry,
+        nextEntry,
       ];
+      nextStrategy.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
     const conclude: ActionNode = {
@@ -250,8 +250,9 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
       const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
-        ...nextEntry,
+        nextEntry,
       ];
+      nextStrategy.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
     const conclude: ActionNode = {
@@ -323,8 +324,9 @@ export const strategyDecide = (
     const nextEntry = `${nextStrategy.topic}.`;
     nextStrategy.actionList = [
       ...strategy.actionList,
-      ...nextEntry,
+      nextEntry,
     ];
+    nextStrategy.lastActionNode = strategy.currentNode;
     return strategyBegin(nextStrategy);
   }
   const conclude: ActionNode = {

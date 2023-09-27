@@ -33,6 +33,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   let shouldBlock = false;
+  console.log('Action', action, qualityKeys, ownershipLedger);
   if (qualityKeys) {
     for (let i = 0; i < qualityKeys.length; i++) {
       if (ownershipLedger.has(`${qualityKeys[i].conceptName} ${qualityKeys[i].stateKeys}`)) {
@@ -48,6 +49,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
       }
     }
   }
+  console.log('Should Block', shouldBlock);
   return shouldBlock;
 };
 
@@ -55,10 +57,12 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
   const newConcepts = concepts;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
+  // console.log('CLEAR', action, ownershipLedger);
   if (action.type !== nullActionType) {
     if (action.stubs) {
       action.stubs.forEach(ticketStub => {
         const line = ownershipLedger.get(ticketStub.key);
+        // console.log('Start Clear', line);
         if (line) {
           const newLine = [] as OwnershipTicket[];
           for (const stub of line) {
@@ -66,6 +70,7 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
               newLine.push(stub);
             }
           }
+          // console.log('Check new line', newLine);
           if (newLine.length === 0) {
             ownershipLedger.delete(ticketStub.key);
           } else {
@@ -132,6 +137,7 @@ export const checkIn =
       ownershipLedger.set(key, [newTicket]);
     }
   });
+  console.log('Should have stubs', action, action.stubs);
   return  [
     newConcepts,
     action

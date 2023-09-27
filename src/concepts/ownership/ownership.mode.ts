@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Action } from '../../model/action';
+import { Action, createAction } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
@@ -8,6 +8,7 @@ import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } 
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
+import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -24,8 +25,9 @@ export const ownershipMode: Mode = (
     // Clear Stubs
     concepts = clearStubs(concepts, lastAction);
   }
-  if (action.type !== axiumConcludeType) {
-  // Check In Logic
+  if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
+    console.log('ENTERED', action);
+    // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
     // Quality Opted in Action
     if (shouldBlock && !action.keyedSelectors) {
@@ -35,9 +37,20 @@ export const ownershipMode: Mode = (
     // Action that would take Ownership and is Blocked
     } else if (shouldBlock && action.keyedSelectors) {
       if (action.strategy) {
-        if (action.strategy.currentNode.failureNode !== null) {
+        if (action.strategy.currentNode.failureNode === null) {
         // This assumes that the Strategy does not account for the Block
-          finalMode([strategyFailed(action.strategy), concepts, action$, concepts$]);
+          let nextAction = strategyFailed(action.strategy);
+          const lastAction = nextAction.strategy?.currentNode.action as Action;
+          concepts = clearStubs(concepts, lastAction);
+          if (nextAction.type === axiumConcludeType) {
+            nextAction = createAction(axiumAppendActionListToDialogType);
+            nextAction.payload = {
+              actionList: action.strategy.actionList,
+              strategyTopic: action.strategy.topic
+            } as AppendActionListToDialogPayload;
+          }
+          console.log('Should not be conclude', nextAction);
+          finalMode([nextAction, concepts, action$, concepts$]);
         } else {
         // This assumes that the Strategy is accounting for the Block
           concepts = updateAddToPendingActions(concepts, strategyFailed(action.strategy));
@@ -56,7 +69,7 @@ export const ownershipMode: Mode = (
     // Free to Run
       finalMode([action, concepts, action$, concepts$]);
     }
-  } else {
+  } else if (action.type !== axiumConcludeType) {
     finalMode([action, concepts, action$, concepts$]);
   }
 };
