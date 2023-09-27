@@ -3,6 +3,7 @@ import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.c
 import { Concept } from './concept';
 import { selectState } from './selector';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
+import { nullActionType } from './actionStrategy';
 // Define Ownership Here
 // As the Basis of anything Within Model Directory is that Such Enables the Concepts to Function as Intended
 // AKA Concept Model
@@ -54,23 +55,28 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
   const newConcepts = concepts;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
-  if (action.stubs) {
-    action.stubs.forEach(ticketStub => {
-      const line = ownershipLedger.get(ticketStub.key);
-      if (line) {
-        const newLine = [] as OwnershipTicket[];
-        for (const stub of line) {
-          if (stub.ticket !== ticketStub.ticket) {
-            newLine.push(stub);
+  if (action.type !== nullActionType) {
+    if (action.stubs) {
+      action.stubs.forEach(ticketStub => {
+        const line = ownershipLedger.get(ticketStub.key);
+        if (line) {
+          const newLine = [] as OwnershipTicket[];
+          for (const stub of line) {
+            if (stub.ticket !== ticketStub.ticket) {
+              newLine.push(stub);
+            }
+          }
+          if (newLine.length === 0) {
+            ownershipLedger.delete(ticketStub.key);
+          } else {
+            ownershipLedger.set(ticketStub.key, newLine);
           }
         }
-        if (newLine.length === 0) {
-          ownershipLedger.delete(ticketStub.key);
-        } else {
-          ownershipLedger.set(ticketStub.key, newLine);
-        }
-      }
-    });
+      });
+    }
+    if (action.strategy) {
+      return clearStubs(newConcepts, action.strategy.lastActionNode.action as Action);
+    }
   }
   return newConcepts;
 };

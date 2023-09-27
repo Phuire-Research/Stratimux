@@ -18,13 +18,11 @@ export const ownershipMode: Mode = (
   if (action.type === axiumSetBlockingModeType) {
     finalMode = blockingMode;
   }
-  // Clear previous Action from Strategy
+  // Clear previous Action Stubs associated with Strategy
   if (action.strategy && action.strategy.lastActionNode.action) {
     const lastAction = action.strategy.lastActionNode.action;
-    if (lastAction.stubs) {
-      // Clear Stubs
-      concepts = clearStubs(concepts, lastAction);
-    }
+    // Clear Stubs
+    concepts = clearStubs(concepts, lastAction);
   }
   if (action.type !== axiumConcludeType) {
   // Check In Logic

@@ -2,7 +2,7 @@ import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality'
 import { Action, ActionType, createAction } from './action';
 import { KeyedSelector } from './selector';
 
-const nullActionType: ActionType = 'null';
+export const nullActionType: ActionType = 'null';
 /**
  * ActionNode
  * Control Structure used by ActionStrategy
@@ -111,6 +111,7 @@ export function createStrategy(
     currentNode,
     actionList,
     lastActionNode: {
+      action: createAction(nullActionType),
       actionType: nullActionType,
       successNode: null,
       failureNode: null
