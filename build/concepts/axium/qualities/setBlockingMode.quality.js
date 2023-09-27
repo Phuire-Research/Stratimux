@@ -28,4 +28,4 @@ function setBlockingModeReducer(state, _action) {
     return Object.assign(Object.assign({}, state), { modeIndex: [0], methodSubscribers, open: false });
 }
 exports.setBlockingModeReducer = setBlockingModeReducer;
-exports.setBlockingModeQuality = (0, concept_2.createQuality)(exports.axiumSetBlockingModeType, setBlockingModeReducer, concept_1.createDefaultMethodCreator);
+exports.setBlockingModeQuality = (0, concept_2.createQuality)(exports.axiumSetBlockingModeType, setBlockingModeReducer, concept_1.defaultMethodCreator);

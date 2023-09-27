@@ -25,4 +25,4 @@ function initializePrinciplesReducer(state, _action) {
     return Object.assign(Object.assign({}, state), { subscribers });
 }
 exports.initializePrinciplesReducer = initializePrinciplesReducer;
-exports.initializePrinciplesQuality = (0, concept_2.createQuality)(exports.axiumInitializePrinciplesType, initializePrinciplesReducer, concept_1.createDefaultMethodCreator);
+exports.initializePrinciplesQuality = (0, concept_2.createQuality)(exports.axiumInitializePrinciplesType, initializePrinciplesReducer, concept_1.defaultMethodCreator);

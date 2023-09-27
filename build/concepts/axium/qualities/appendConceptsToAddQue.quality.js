@@ -12,4 +12,4 @@ function appendConceptsToAddQueReducer(state, action) {
     return Object.assign(Object.assign({}, state), { addConceptQue });
 }
 exports.appendConceptsToAddQueReducer = appendConceptsToAddQueReducer;
-exports.appendConceptsToAddQueQuality = (0, concept_2.createQuality)(exports.axiumAppendConceptsToAddQueType, appendConceptsToAddQueReducer, concept_1.createDefaultMethodCreator);
+exports.appendConceptsToAddQueQuality = (0, concept_2.createQuality)(exports.axiumAppendConceptsToAddQueType, appendConceptsToAddQueReducer, concept_1.defaultMethodCreator);

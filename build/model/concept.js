@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDefaultMethodCreator = exports.defaultReducer = exports.createQuality = exports.createConcept = void 0;
+exports.defaultMethodCreator = exports.defaultReducer = exports.createQuality = exports.createConcept = void 0;
 const rxjs_1 = require("rxjs");
 const action_1 = require("./action");
 const actionStrategy_1 = require("./actionStrategy");
@@ -66,7 +66,7 @@ function defaultReducer(state, _) {
     return state;
 }
 exports.defaultReducer = defaultReducer;
-const createDefaultMethodCreator = () => {
+const defaultMethodCreator = () => {
     const defaultSubject = new rxjs_1.Subject();
     const defaultMethod = defaultSubject.pipe((0, rxjs_2.map)((action) => {
         if (action.strategy) {
@@ -76,4 +76,4 @@ const createDefaultMethodCreator = () => {
     }));
     return [defaultMethod, defaultSubject];
 };
-exports.createDefaultMethodCreator = createDefaultMethodCreator;
+exports.defaultMethodCreator = defaultMethodCreator;

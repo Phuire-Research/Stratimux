@@ -43,4 +43,4 @@ function removeConceptsViaQueReducer(state, _action) {
         methodSubscribers: newMethodSubscribers, generalSubscribers: newGeneralSubscribers, removeConceptQue: [] });
 }
 exports.removeConceptsViaQueReducer = removeConceptsViaQueReducer;
-exports.removeConceptsViaQueQuality = (0, concept_2.createQuality)(exports.axiumRemoveConceptsViaQueType, removeConceptsViaQueReducer, concept_1.createDefaultMethodCreator);
+exports.removeConceptsViaQueQuality = (0, concept_2.createQuality)(exports.axiumRemoveConceptsViaQueType, removeConceptsViaQueReducer, concept_1.defaultMethodCreator);

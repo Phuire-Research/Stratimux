@@ -1,6 +1,6 @@
 import { addQuality } from './qualities/add.quality';
 import { subtractQuality } from './qualities/subtract.quality';
-import { chainCountQuality } from './qualities/chainCount.quality';
+import { setCountQuality } from './qualities/setCount.quality';
 import { createConcept } from '../../model/concept';
 export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
@@ -21,7 +21,7 @@ export const createCounterConcept = () => {
     [
       addQuality,
       subtractQuality,
-      chainCountQuality
+      setCountQuality
     ]
   );
 };

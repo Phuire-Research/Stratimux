@@ -8,7 +8,6 @@ const open_quality_1 = require("./qualities/open.quality");
 const badAction_quality_1 = require("./qualities/badAction.quality");
 const close_quality_1 = require("./qualities/close.quality");
 const log_quality_1 = require("./qualities/log.quality");
-const registerStreams_quality_1 = require("./qualities/registerStreams.quality");
 const registerSubscriber_quality_1 = require("./qualities/registerSubscriber.quality");
 const initializePrinciples_quality_1 = require("./qualities/initializePrinciples.quality");
 var initialization_strategy_1 = require("./strategies/initialization.strategy");
@@ -56,7 +55,6 @@ const createAxiumConcept = (storeDialog, logging) => {
         appendActionListToDialog_quality_1.appendActionListToDialogQuality,
         clearDialog_quality_1.clearDialogQuality,
         log_quality_1.logQuality,
-        registerStreams_quality_1.registerStreamsQuality,
         registerSubscriber_quality_1.registerSubscriberQuality,
         initializePrinciples_quality_1.initializePrinciplesQuality,
         setBlockingMode_quality_1.setBlockingModeQuality,

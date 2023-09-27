@@ -71,7 +71,11 @@ Please avoid using these qualities, but are providing explanations to understand
 * initializePrinciples - Is a delayed action to allow for the internal set up of the axium at run time.
 * open - Similar to conclude, notifies principles when the axium is open to their emissions. Part of the initialization, addConcept, and removeConcept strategies.
 * removeConceptsViaQue - This will run via the internal axium principle. Whenever there is an addition to this remove que.
-* setBlockingMode - Sets the mode to blocking and open to false. This would notify any principles to cease detecting for changes. This is part of the add and remove concept strategies. And while internal could be used if required.
+
+## Use With Care
+*These are part of the add and remove concept strategies. And while internal could be used if required.*
+* setBlockingMode - Sets the mode to blocking and open to False. This would notify any principles to cease detecting for changes. This is part of the add and remove concept strategies. And while internal could be used if required.
+* setDefaultMode - Sets the modeIndex to the defaultModeIndex and open to True. This informs principles that it is clear to detect changes.
 
 ## Useful Axium Qualities
 * open - Sets axium open property by default to True if no payload is supplied. Must be used after setBlockingMode in a strategy to reenable functionality of principles and external subscribers.

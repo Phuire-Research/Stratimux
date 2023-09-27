@@ -1,6 +1,6 @@
 import { createAxium } from '../model/axium';
-import { Concept  } from '../model/concept';
-import { createAction, primeAction } from '../model/action';
+import { Concept } from '../model/concept';
+import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { createChainConcept } from '../concepts/chain/chain.concept';

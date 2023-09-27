@@ -1,8 +1,9 @@
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 
 export const axiumOpenType: ActionType = 'Open Axium';
+export const axiumOpen = prepareActionCreator(axiumOpenType);
 
 export type OpenPayload = {
   open?: boolean;

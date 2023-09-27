@@ -13,4 +13,4 @@ function registerSubscriberReducer(state, action) {
     return Object.assign(Object.assign({}, state), { generalSubscribers });
 }
 exports.registerSubscriberReducer = registerSubscriberReducer;
-exports.registerSubscriberQuality = (0, concept_2.createQuality)(exports.axiumRegisterSubscriberType, registerSubscriberReducer, concept_1.createDefaultMethodCreator);
+exports.registerSubscriberQuality = (0, concept_2.createQuality)(exports.axiumRegisterSubscriberType, registerSubscriberReducer, concept_1.defaultMethodCreator);

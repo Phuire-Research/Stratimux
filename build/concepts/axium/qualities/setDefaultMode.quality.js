@@ -28,4 +28,4 @@ function setDefaultModeReducer(state, _action) {
     return Object.assign(Object.assign({}, state), { modeIndex: state.defaultModeIndex, methodSubscribers });
 }
 exports.setDefaultModeReducer = setDefaultModeReducer;
-exports.setDefaultModeQuality = (0, concept_2.createQuality)(exports.axiumSetDefaultModeType, setDefaultModeReducer, concept_1.createDefaultMethodCreator);
+exports.setDefaultModeQuality = (0, concept_2.createQuality)(exports.axiumSetDefaultModeType, setDefaultModeReducer, concept_1.defaultMethodCreator);

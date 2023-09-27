@@ -12,12 +12,10 @@ const ownershipPrinciple = (observer, _concepts, concepts$) => {
     let initDispatch = false;
     const sub = concepts$.subscribe(_cpts => {
         const axiumState = (0, selector_1.selectState)(_cpts, axium_concept_1.axiumName);
-        // console.log('Check', axiumState.open);
         if (axiumState.open) {
             const subscription = concepts$.subscribe(cpts => {
                 let concepts = cpts;
                 let ownershipState = (0, selector_1.selectState)(concepts, ownership_concept_1.ownershipName);
-                // console.log('Check', ownershipState);
                 if (ownershipState.initialized) {
                     // This will be the point of dispatch of Qued Actions
                     if (ownershipState.pendingActions) {
@@ -44,7 +42,6 @@ const ownershipPrinciple = (observer, _concepts, concepts$) => {
                     observer.next((0, actionStrategy_1.strategyBegin)((0, setOwnerShipMode_strategy_1.setOwnershipModeStrategy)(concepts, 'Ownership')));
                 }
             });
-            // Problem Step
             sub.unsubscribe();
             (0, principle_1.registerPrincipleSubscription)(observer, _cpts, ownership_concept_1.ownershipName, subscription);
         }

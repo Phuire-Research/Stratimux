@@ -6,7 +6,7 @@ const action_1 = require("../../../model/action");
 const concept_1 = require("../../../model/concept");
 const conclude_quality_1 = require("./conclude.quality");
 exports.axiumAppendActionListToDialogType = 'append Action List to Axium\'s Dialog';
-// const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$: Subject<Concept[]>) => {
+// const createAppendActionListToDialogMethodCreator: MethodCreator = (concepts$: UnifiedSubject) => {
 const createAppendActionListToDialogMethodCreator = () => {
     const logSubject = new rxjs_1.Subject();
     const logMethod = logSubject.pipe(

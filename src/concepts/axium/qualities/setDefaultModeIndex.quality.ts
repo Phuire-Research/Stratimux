@@ -4,12 +4,12 @@ import { AxiumState } from '../axium.concept';
 
 export const axiumSetDefaultModeIndexType: ActionType = 'set Axium\'s Default Mode Index';
 
-export type SetDefaultModeIndex = {
+export type SetDefaultModeIndexPayload = {
   index: number;
 };
 
 export function setDefaultModeIndexReducer(state: AxiumState, action: Action) {
-  const payload = action.payload as SetDefaultModeIndex;
+  const payload = action.payload as SetDefaultModeIndexPayload;
   return {
     ...state,
     defaultModeIndex: payload.index,

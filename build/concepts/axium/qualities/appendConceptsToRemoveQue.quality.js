@@ -14,4 +14,4 @@ function appendConceptsToRemoveQueReducer(state, action) {
     return Object.assign(Object.assign({}, state), { removeConceptQue: removeQue });
 }
 exports.appendConceptsToRemoveQueReducer = appendConceptsToRemoveQueReducer;
-exports.appendConceptsToRemoveQueQuality = (0, concept_2.createQuality)(exports.axiumAppendConceptsToRemoveQueType, appendConceptsToRemoveQueReducer, concept_1.createDefaultMethodCreator);
+exports.appendConceptsToRemoveQueQuality = (0, concept_2.createQuality)(exports.axiumAppendConceptsToRemoveQueType, appendConceptsToRemoveQueReducer, concept_1.defaultMethodCreator);

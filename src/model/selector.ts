@@ -4,6 +4,7 @@ import { Concept } from './concept';
 // Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
 //  Will not worry about such until we are working in a Massively Parallel Environment
 //  But this is where we would effect such and likewise the Consumer Function would have to be Updated
+// TO-DO: Have state keys be represented as an array of strings
 export type KeyedSelector = {
   conceptName: string,
   stateKeys: string

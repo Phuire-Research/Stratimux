@@ -15,7 +15,6 @@ const axiumPrinciple = (observer, concepts, concepts$) => {
     const subscriber = concepts$.subscribe(_concepts => {
         var _a;
         const axiumState = _concepts[0].state;
-        // console.log('Check', axiumState.addConceptQue);
         if (axiumState.addConceptQue.length === 0) {
             allowAdd = true;
         }
@@ -80,10 +79,8 @@ const axiumPrinciple = (observer, concepts, concepts$) => {
             newConcepts[0].mode = newModes;
             newAxiumState.modeNames = newModeNames;
             newAxiumState.cachedSemaphores = (0, action_1.createCacheSemaphores)(newConcepts);
-            // console.log('Principle', newConcepts.length);
             axiumState.concepts$.next(newConcepts);
             observer.next((0, actionStrategy_1.strategyBegin)((0, removeConcept_strategy_1.removeConceptsViaQueThenUnblockStrategy)(newConcepts)));
-            // Do More Things
         }
     });
     const primedRegisterSubscriber = (0, action_2.primeAction)(concepts, (0, action_1.createAction)(registerSubscriber_quality_1.axiumRegisterSubscriberType));

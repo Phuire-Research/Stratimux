@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeQuality = exports.closeReducer = exports.axiumCloseType = void 0;
+exports.closeQuality = exports.closeReducer = exports.axiumClose = exports.axiumCloseType = void 0;
 const concept_1 = require("../../../model/concept");
+const action_1 = require("../../../model/action");
 exports.axiumCloseType = 'Close Axium';
+exports.axiumClose = (0, action_1.prepareActionCreator)(exports.axiumCloseType);
 function closeReducer(state, _action) {
     var _a, _b;
     state.generalSubscribers.forEach(named => named.subscriber.unsubscribe());

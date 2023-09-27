@@ -177,6 +177,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
                 staged.step += 1;
               }
               // Horrifying
+              // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
               if (staged.stepFailed === -1) {
                 action$.next(action);
               }

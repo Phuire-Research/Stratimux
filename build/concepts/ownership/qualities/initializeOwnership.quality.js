@@ -7,4 +7,4 @@ function initializeOwnershipReducer(state, action) {
     return Object.assign(Object.assign({}, state), { initialized: true });
 }
 exports.initializeOwnershipReducer = initializeOwnershipReducer;
-exports.initializeOwnershipQuality = (0, concept_1.createQuality)(exports.ownershipInitializeOwnershipType, initializeOwnershipReducer, concept_1.createDefaultMethodCreator);
+exports.initializeOwnershipQuality = (0, concept_1.createQuality)(exports.ownershipInitializeOwnershipType, initializeOwnershipReducer, concept_1.defaultMethodCreator);

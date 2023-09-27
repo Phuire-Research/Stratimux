@@ -4,7 +4,7 @@ import { getSemaphore } from '../../../model/action';
 import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { ownershipName } from '../ownership.concept';
-import { SetDefaultModeIndex, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
+import { SetDefaultModeIndexPayload, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
 import { AxiumState } from '../../axium/axium.concept';
 
 export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
@@ -39,7 +39,7 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     semaphore: setDefaultModeIndexSemaphore,
     successNode: stepTwo,
     failureNode: null,
-    payload: { index: ownershipModeIndex } as SetDefaultModeIndex,
+    payload: { index: ownershipModeIndex } as SetDefaultModeIndexPayload,
     preposition: 'Successfully'
   };
   const params: ActionStrategyParameters = {

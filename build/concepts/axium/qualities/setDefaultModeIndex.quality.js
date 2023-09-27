@@ -8,4 +8,4 @@ function setDefaultModeIndexReducer(state, action) {
     return Object.assign(Object.assign({}, state), { defaultModeIndex: payload.index });
 }
 exports.setDefaultModeIndexReducer = setDefaultModeIndexReducer;
-exports.setDefaultModeIndexQuality = (0, concept_1.createQuality)(exports.axiumSetDefaultModeIndexType, setDefaultModeIndexReducer, concept_1.createDefaultMethodCreator);
+exports.setDefaultModeIndexQuality = (0, concept_1.createQuality)(exports.axiumSetDefaultModeIndexType, setDefaultModeIndexReducer, concept_1.defaultMethodCreator);
