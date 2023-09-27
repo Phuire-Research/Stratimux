@@ -14,7 +14,7 @@ const createExperimentState = (): ExperimentState => {
   };
 };
 
-export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
+export const createExperimentConcept = () => {
   return createConcept(
     experimentName,
     createExperimentState(),
