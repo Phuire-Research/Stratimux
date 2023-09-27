@@ -1,7 +1,7 @@
 import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
-import { OwnershipTicket, OwnershipTicketStub } from './ownership';
+import { OwnershipTicketStub } from './ownership';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
 

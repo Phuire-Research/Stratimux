@@ -1,5 +1,5 @@
-import { BehaviorSubject, map, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { Concept, Method, MethodCreator, Quality, Reducer, defaultReducer } from '../../../model/concept';
+import { map, Subject } from 'rxjs';
+import { Method, MethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -13,7 +13,7 @@ export type AppendActionListToDialogPayload = {
   strategyTopic: string;
 }
 
-// const createAppendActionListToDialogMethodCreator: MethodCreator = (subConcepts$: Subject<Concept[]>) => {
+// const createAppendActionListToDialogMethodCreator: MethodCreator = (concepts$: UnifiedSubject) => {
 const createAppendActionListToDialogMethodCreator: MethodCreator = () => {
   const logSubject = new Subject<Action>();
   const logMethod: Method = logSubject.pipe(

@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Action, ActionType, createAction } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
@@ -20,7 +20,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-export type MethodCreator = (subConcept$: Subject<Concept[]>) => [Method, Subject<Action>];
+export type MethodCreator = (concept$?: UnifiedSubject) => [Method, Subject<Action>];
 
 export type Quality = {
   actionType: ActionType;
@@ -121,7 +121,7 @@ export function defaultReducer(state: unknown, _: Action) {
   return state;
 }
 
-export const createDefaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
+export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();
   const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {

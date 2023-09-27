@@ -7,7 +7,6 @@ import { openQuality } from './qualities/open.quality';
 import { badActionQuality } from './qualities/badAction.quality';
 import { closeQuality } from './qualities/close.quality';
 import { logQuality } from './qualities/log.quality';
-import { registerStreamsQuality } from './qualities/registerStreams.quality';
 import { registerSubscriberQuality } from './qualities/registerSubscriber.quality';
 import { initializePrinciplesQuality } from './qualities/initializePrinciples.quality';
 export { initializationStrategy } from './strategies/initialization.strategy';
@@ -86,7 +85,6 @@ export const createAxiumConcept = (storeDialog?: boolean, logging?: boolean): Co
       appendActionListToDialogQuality,
       clearDialogQuality,
       logQuality,
-      registerStreamsQuality,
       registerSubscriberQuality,
       initializePrinciplesQuality,
       setBlockingModeQuality,

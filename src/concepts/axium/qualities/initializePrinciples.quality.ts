@@ -1,9 +1,8 @@
-import { map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Quality, Reducer, Principle, createDefaultMethodCreator  } from '../../../model/concept';
+import { Subject, Subscriber } from 'rxjs';
+import { Concept, defaultMethodCreator  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
-import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { UnifiedSubject } from '../../../model/unifiedSubject';
 
@@ -39,5 +38,5 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action) 
 export const initializePrinciplesQuality = createQuality(
   axiumInitializePrinciplesType,
   initializePrinciplesReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );

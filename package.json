@@ -24,7 +24,7 @@
       "pre-commit": "npm run test && npm run prettier-format && npm run lint"
     }
   },
-  "keywords": [],
+  "keywords": ["Unified Turing Machine", "Graph Programming", "Framework"],
   "author": "Micah T. Keller (public@phuire.org)",
   "devDependencies": {
     "@types/jest": "^28.1.8",

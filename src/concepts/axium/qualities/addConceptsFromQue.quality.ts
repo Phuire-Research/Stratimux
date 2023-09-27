@@ -1,9 +1,7 @@
-import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { Subject, Subscriber } from 'rxjs';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
-import { createPrinciple$ } from '../../../model/principle';
-import { Action, ActionType, createAction } from '../../../model/action';
-import { axiumBadActionType } from './badAction.quality';
+import { Action, ActionType } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 
@@ -39,5 +37,5 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
 export const addConceptsFromQueQuality = createQuality(
   axiumAddConceptFromQueType,
   addConceptsFromQueReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );

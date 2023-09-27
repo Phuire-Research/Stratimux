@@ -1,11 +1,7 @@
-import { BehaviorSubject, map, Subject, Subscriber } from 'rxjs';
-import { Concept, Method, Mode, Quality, Reducer, createDefaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/concept';
 import { NamedSubscriber } from '../axium.concept';
 import { Action, ActionType, } from '../../../model/action';
-import { strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
-import { createPrinciple$ } from '../../../model/principle';
-import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 
 export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Axium\'s Removal Concept Que';
@@ -58,5 +54,5 @@ export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) 
 export const removeConceptsViaQueQuality = createQuality(
   axiumRemoveConceptsViaQueType,
   removeConceptsViaQueReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );

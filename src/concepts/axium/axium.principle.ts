@@ -1,9 +1,8 @@
-import { defer, Observable, Subject, withLatestFrom, BehaviorSubject, Subscriber, map} from 'rxjs';
+import { Subject, Subscriber } from 'rxjs';
 import { Concept, Mode } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, createAction, createCacheSemaphores } from '../../model/action';
 import { AxiumState, axiumName } from './axium.concept';
-import { selectState } from '../../model/selector';
 import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from './qualities/registerSubscriber.quality';
 import { primeAction } from '../../model/action';
 import { strategyBegin } from '../../model/actionStrategy';
@@ -21,7 +20,6 @@ export const axiumPrinciple: PrincipleFunction = (
   let allowRemove = true;
   const subscriber = concepts$.subscribe(_concepts => {
     const axiumState = _concepts[0].state as AxiumState;
-    // console.log('Check', axiumState.addConceptQue);
     if (axiumState.addConceptQue.length === 0) {
       allowAdd = true;
     }
@@ -92,13 +90,11 @@ export const axiumPrinciple: PrincipleFunction = (
       newAxiumState.modeNames = newModeNames;
 
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
-      // console.log('Principle', newConcepts.length);
       axiumState.concepts$.next(newConcepts);
 
       observer.next(strategyBegin(
         removeConceptsViaQueThenUnblockStrategy(newConcepts)
       ));
-      // Do More Things
     }
   });
   const primedRegisterSubscriber = primeAction(concepts, createAction(axiumRegisterSubscriberType));

@@ -1,6 +1,5 @@
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { Action, ActionType, createAction } from './action';
-import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
 
 const nullActionType: ActionType = 'null';

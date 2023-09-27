@@ -1,4 +1,4 @@
-import { ConceptCreator, createConcept } from '../../model/concept';
+import { createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';

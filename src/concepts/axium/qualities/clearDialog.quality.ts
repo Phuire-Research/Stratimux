@@ -1,11 +1,11 @@
-import { Quality, Reducer, createDefaultMethodCreator, createQuality, defaultReducer } from '../../../model/concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { defaultMethodCreator, createQuality } from '../../../model/concept';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 
 export const axiumClearDialogType: ActionType = 'clear Axium Dialog';
+export const axiumClearDialog = prepareActionCreator(axiumClearDialogType);
 
 export function clearDialogReducer(state: AxiumState, action: Action) {
-  const payload = action.payload;
   return {
     ...state,
     dialog: '',
@@ -15,5 +15,5 @@ export function clearDialogReducer(state: AxiumState, action: Action) {
 export const clearDialogQuality = createQuality(
   axiumClearDialogType,
   clearDialogReducer,
-  createDefaultMethodCreator,
+  defaultMethodCreator,
 );

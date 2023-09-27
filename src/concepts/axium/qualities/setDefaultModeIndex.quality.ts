@@ -1,15 +1,15 @@
-import { Quality, Reducer, createDefaultMethodCreator, createQuality, defaultReducer } from '../../../model/concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { defaultMethodCreator, createQuality } from '../../../model/concept';
+import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 
 export const axiumSetDefaultModeIndexType: ActionType = 'set Axium\'s Default Mode Index';
 
-export type SetDefaultModeIndex = {
+export type SetDefaultModeIndexPayload = {
   index: number;
 };
 
 export function setDefaultModeIndexReducer(state: AxiumState, action: Action) {
-  const payload = action.payload as SetDefaultModeIndex;
+  const payload = action.payload as SetDefaultModeIndexPayload;
   return {
     ...state,
     defaultModeIndex: payload.index,
@@ -18,5 +18,5 @@ export function setDefaultModeIndexReducer(state: AxiumState, action: Action) {
 export const setDefaultModeIndexQuality = createQuality(
   axiumSetDefaultModeIndexType,
   setDefaultModeIndexReducer,
-  createDefaultMethodCreator
+  defaultMethodCreator
 );

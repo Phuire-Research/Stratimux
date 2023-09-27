@@ -1,6 +1,4 @@
-import { Quality, Reducer, Method } from '../../../model/concept';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { Chain } from '../chain.concept';
 

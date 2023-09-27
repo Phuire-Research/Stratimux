@@ -1,6 +1,6 @@
 import { map, Subject } from 'rxjs';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { Quality, Reducer, Method, MethodCreator } from '../../../model/concept';
+import { Method, MethodCreator } from '../../../model/concept';
 import { Counter } from '../counter.concept';
 import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
