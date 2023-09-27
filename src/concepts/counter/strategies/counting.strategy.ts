@@ -4,6 +4,7 @@ import { getSemaphore } from '../../../model/action';
 import { counterAddType } from '../qualities/add.quality';
 import { counterSubtractType } from '../qualities/subtract.quality';
 import { counterName } from '../counter.concept';
+import { counterSelectCount } from '../counter.selector';
 
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
@@ -86,6 +87,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     failureNode: null,
     preposition: '',
     denoter: 'One;',
+    keyedSelectors: [counterSelectCount]
   };
 
   const params: ActionStrategyParameters = {

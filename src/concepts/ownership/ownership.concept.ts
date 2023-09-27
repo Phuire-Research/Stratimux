@@ -14,14 +14,16 @@ export type OwnershipState = {
 }
 
 export const ownershipName = 'ownership';
-
-const createOwnershipState = (isResponsibleForMode: boolean): OwnershipState => {
+/**
+ * @param isResponsibleForMode If not set, ownership assumes responsibility.
+ */
+const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState => {
   return {
     initialized: false,
     ownershipLedger: createOwnershipLedger(),
     pendingActions: [],
     ticker: 0,
-    isResponsibleForMode
+    isResponsibleForMode: isResponsibleForMode ? isResponsibleForMode : true
   };
 };
 
