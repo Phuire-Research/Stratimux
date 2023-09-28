@@ -37,6 +37,7 @@ export interface ActionNode {
   failureNode: ActionNode | null;
   preposition?: string;
   denoter?: string;
+  lastActionNode?: ActionNode;
 }
 
 /**
@@ -57,7 +58,6 @@ export interface ActionStrategy {
   data?: unknown;
   currentNode: ActionNode;
   actionList: Array<string>;
-  lastActionNode: ActionNode;
   puntedStrategy?: ActionStrategy[];
 }
 
@@ -103,19 +103,18 @@ export function createStrategy(
 ): ActionStrategy {
   const data: unknown = params.data;
   const currentNode: ActionNode = params.initialNode;
+  currentNode.lastActionNode = {
+    action: createAction(nullActionType),
+    actionType: nullActionType,
+    successNode: null,
+    failureNode: null
+  };
   const actionList: Array<string> = [params.topic + '.'];
-
   return {
     topic: params.topic,
     data,
     currentNode,
     actionList,
-    lastActionNode: {
-      action: createAction(nullActionType),
-      actionType: nullActionType,
-      successNode: null,
-      failureNode: null
-    },
   };
 }
 
@@ -132,7 +131,6 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
     data: data ? data : strategy.data,
     currentNode: strategy.currentNode,
     actionList: strategy.actionList,
-    lastActionNode: strategy.lastActionNode,
   };
   if (strategy.currentNode.action !== null) {
     return strategy.currentNode.action;
@@ -164,13 +162,13 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
       nextNode.semaphore,
     );
     nextNode.action = nextAction;
+    nextNode.lastActionNode = strategy.currentNode;
     nextAction.strategy = {
       ...strategy,
       topic: strategy.topic,
       data: data ? data : strategy.data,
       currentNode: nextNode,
       actionList: [...strategy.actionList, actionListEntry],
-      lastActionNode: strategy.currentNode,
     };
     return nextAction;
   } else {
@@ -186,19 +184,19 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
         ...strategy.actionList,
         nextEntry,
       ];
-      nextStrategy.lastActionNode = strategy.currentNode;
+      nextStrategy.currentNode.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
       successNode: null,
       failureNode: null,
+      lastActionNode: strategy.currentNode
     };
     conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,
-      lastActionNode: strategy.currentNode,
     };
     return conclude.action;
   }
@@ -228,15 +226,15 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
       nextNode.semaphore
     );
     nextNode.action = nextAction;
+    nextNode.lastActionNode = strategy.currentNode;
     strategy.actionList = [...strategy.actionList, actionListEntry];
     nextAction = { ...nextAction };
     nextAction.strategy = {
       ...strategy,
       topic: strategy.topic,
       data: strategy.data,
-      currentNode: strategy.currentNode,
+      currentNode: nextNode,
       actionList: strategy.actionList,
-      lastActionNode: strategy.currentNode,
     };
     return nextAction;
   } else {
@@ -252,19 +250,19 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
         ...strategy.actionList,
         nextEntry,
       ];
-      nextStrategy.lastActionNode = strategy.currentNode;
+      nextStrategy.currentNode.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
       successNode: null,
-      failureNode: null
+      failureNode: null,
+      lastActionNode: strategy.currentNode
     };
     conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,
-      lastActionNode: strategy.currentNode,
     };
     return conclude.action;
   }
@@ -303,6 +301,7 @@ export const strategyDecide = (
         nextNode.semaphore
       );
       nextNode.action = nextAction;
+      nextNode.lastActionNode = strategy.currentNode;
       strategy.actionList = [...strategy.actionList, actionListEntry];
       nextAction.strategy = {
         ...strategy,
@@ -310,7 +309,6 @@ export const strategyDecide = (
         data: data ? data : strategy.data,
         currentNode: nextNode,
         actionList: strategy.actionList,
-        lastActionNode: strategy.currentNode,
       };
       return nextAction;
     }
@@ -327,19 +325,19 @@ export const strategyDecide = (
       ...strategy.actionList,
       nextEntry,
     ];
-    nextStrategy.lastActionNode = strategy.currentNode;
+    nextStrategy.currentNode.lastActionNode = strategy.currentNode;
     return strategyBegin(nextStrategy);
   }
   const conclude: ActionNode = {
     actionType: axiumConcludeType,
     successNode: null,
-    failureNode: null
+    failureNode: null,
+    lastActionNode: strategy.currentNode
   };
   conclude.action = createAction(conclude.actionType);
   conclude.action.strategy = {
     ...strategy,
     currentNode: conclude,
-    lastActionNode: strategy.currentNode,
   };
   return conclude.action;
 };
@@ -359,20 +357,14 @@ export const puntStrategy = (
 };
 
 export const backTrack = (_strategy: ActionStrategy): Action => {
-  const strategy = {..._strategy};
-  if (strategy.lastActionNode.actionType !== nullActionType) {
-    const currentActionType = strategy.currentNode.actionType;
-    strategy.actionList = [
-      ...strategy.actionList,
-      currentActionType
-    ];
-    const newNode: ActionNode = {
-      ...strategy.lastActionNode
-    };
-    strategy.lastActionNode = _strategy.currentNode;
-    strategy.currentNode = newNode;
+  const strategy = _strategy;
+  if (strategy.currentNode.lastActionNode?.actionType !== nullActionType) {
+    const newNode = strategy.currentNode.lastActionNode as ActionNode;
+    // strategy.currentNode = newNode;
     return newNode.action as Action;
   } else {
-    return createAction(axiumConcludeType);
+    const conclude = createAction(axiumConcludeType);
+    // Later
+    return conclude;
   }
 };

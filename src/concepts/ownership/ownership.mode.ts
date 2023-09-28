@@ -6,7 +6,7 @@ import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
-import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
+import { ActionStrategy, nullActionType, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 
@@ -20,10 +20,12 @@ export const ownershipMode: Mode = (
     finalMode = blockingMode;
   }
   // Clear previous Action Stubs associated with Strategy
-  if (action.strategy && action.strategy.lastActionNode.action) {
-    const lastAction = action.strategy.lastActionNode.action;
+  if (action.strategy && action.semaphore[2] !== -1 && action.strategy.currentNode.lastActionNode?.action?.stubs) {
+    const lastAction = action.strategy.currentNode.lastActionNode.action;
     // Clear Stubs
-    concepts = clearStubs(concepts, lastAction);
+    if (lastAction.type !== nullActionType) {
+      concepts = clearStubs(concepts, lastAction);
+    }
   }
   if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
     // Check In Logic

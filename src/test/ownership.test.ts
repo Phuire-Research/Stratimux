@@ -4,7 +4,7 @@ import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { createCounterConcept } from '../concepts/counter/counter.concept';
+import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
@@ -25,36 +25,49 @@ test('Ownership Test', (done) => {
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
         if (axiumState.lastStrategy === setOwnerShipModeTopic) {
-          console.log('Stage 1');
+          const ownership = selectState<OwnershipState>(cpts, ownershipName);
+          console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
+          const counter = selectState<Counter>(cpts, counterName);
+          console.log('Count: ', counter.count);
           dispatch(strategyBegin(puntCountingStrategy()), {
             iterateStep: true
           });
         }
       },
       (cpts, dispatch) => {
-        console.log('Stage 2');
+        const ownership = selectState<OwnershipState>(cpts, ownershipName);
+        console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
+        const counter = selectState<Counter>(cpts, counterName);
+        console.log('Count: ', counter.count);
         dispatch(strategyBegin(primedCountingStrategy(cpts)), {
           iterateStep: true
         });
       },
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
-        console.log('Stage 3', axiumState.lastStrategy, orderOfTopics);
+        const counter = selectState<Counter>(cpts, counterName);
+        // console.log('Stage 3', axiumState.lastStrategy, orderOfTopics);
         if (orderOfTopics.length === 2) {
+          // This will be the final test to be triggered by a log action.
+          console.log('Stage 3, If 3 Count: ', counter.count);
           expect(orderOfTopics[0]).toBe(countingTopic);
-          setTimeout(() => {done();}, 500);
           staged.close();
+          axium.close();
+          setTimeout(() => {done();}, 500);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&
           orderOfTopics.length === 0) {
+          console.log('Stage 3, If 1 Count: ', counter.count);
           orderOfTopics.push(axiumState.lastStrategy);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&
           orderOfTopics.length === 1) {
           if (orderOfTopics[0] !== axiumState.lastStrategy) {
+            console.log('Stage 3, If 2 Count: ', counter.count);
             orderOfTopics.push(axiumState.lastStrategy);
+            // Due to the halting behavior of a Unified Turing Machine, this will trigger the final test.
             dispatch(axiumLog(), {
               runOnce: true
             });

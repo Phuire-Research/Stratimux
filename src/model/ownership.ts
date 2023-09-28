@@ -81,7 +81,7 @@ export const clearStubs = (concepts: Concept[], action: Action): Concept[] => {
       });
     }
     if (action.strategy) {
-      const nextAction = action.strategy.lastActionNode.action;
+      const nextAction = action.strategy.currentNode.lastActionNode?.action;
       if (nextAction && nextAction.type !== nullActionType) {
         return clearStubs(newConcepts, nextAction);
       }
@@ -152,7 +152,6 @@ export const isActionReady = (concepts: Concept[], _action: Action): [Concept[],
     const action = _action;
     const stubs = action.stubs;
     if (stubs) {
-      // console.log('HITHERE', action);
       return stubAction(concepts, action);
     } else {
       return qualityAction(concepts, action);
@@ -194,7 +193,7 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
     const positions = ownershipLedger.get(stub.key);
     if (positions) {
       for (const [i, pos] of positions.entries()) {
-        if (i === 0 && pos.ticket === stub.ticket) {
+        if (i === 0 && pos.ticket >= stub.ticket) {
           break;
         } else {
           frontOfAllLines = false;
@@ -303,9 +302,26 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
   return [concepts, undefined];
 };
 
-export const areEqual = (first: unknown, second: unknown ) => {
-  // Really dumb compare, if and when this becomes a bottleneck, have Fun!
-  return JSON.stringify(first) === JSON.stringify(second);
+export const areEqual = (first: Action, second: Action ) => {
+  let equal = false;
+  if (first.strategy === undefined && second.strategy === undefined) {
+    if (first.type === second.type) {
+      if (first.payload === undefined && second.payload === undefined) {
+        equal = true;
+      }
+      equal = JSON.stringify(first.payload) === JSON.stringify(second.payload);
+    }
+    equal = false;
+  } else if (first.strategy?.topic === second.strategy?.topic) {
+    if (first.type === second.type) {
+      if (first.payload === undefined && second.payload === undefined) {
+        equal = true;
+      }
+      equal = JSON.stringify(first.payload) === JSON.stringify(second.payload);
+    }
+    equal = false;
+  }
+  return equal;
 };
 
 export const updateAddToPendingActions = (_concepts: Concept[], _action: Action) => {
@@ -315,30 +331,36 @@ export const updateAddToPendingActions = (_concepts: Concept[], _action: Action)
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const pendingActions = ownershipState.pendingActions;
   const newPendingActions: Action[] = [];
-  const strippedAction = {
-    ...action,
-    expiration: 0,
-  } as Action;
-  for (const pending of pendingActions) {
-    let found = false;
-    const strippedPending = {
-      ...pending,
-      expiration: 0,
-    };
-    const equal = areEqual(strippedAction, strippedPending);
-    if (equal && pending.keyedSelectors) {
-      [concepts, action] = editStubs(concepts, pending, action);
-      newPendingActions.push(action);
-      found = true;
-    } else if (equal) {
-      newPendingActions.push(action);
-    } else {
-      newPendingActions.push(pending);
+  // const strippedAction = {
+  //   ...action,
+  //   expiration: 0,
+  // } as Action;
+  if (pendingActions.length > 0) {
+    let added = false;
+    for (const pending of pendingActions) {
+      // const strippedPending = {
+      //   ...pending,
+      //   expiration: 0,
+      // };
+      // const equal = areEqual(strippedAction, strippedPending);
+      const equal = areEqual(action, pending);
+      if (equal && pending.keyedSelectors) {
+        [concepts, action] = editStubs(concepts, pending, action);
+        newPendingActions.push(action);
+        added = true;
+      } else if (equal) {
+        newPendingActions.push(action);
+        added = true;
+      } else {
+        newPendingActions.push(pending);
+      }
     }
-    if (!found) {
-      pendingActions.push(action);
+    if (!added) {
+      newPendingActions.push(action);
     }
+    ownershipState.pendingActions = [...newPendingActions];
+  } else {
+    ownershipState.pendingActions = [action];
   }
-  ownershipState.pendingActions = [...newPendingActions, action];
   return concepts;
 };

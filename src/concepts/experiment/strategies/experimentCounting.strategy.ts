@@ -10,6 +10,11 @@ import { ownershipName } from '../../ownership/ownership.concept';
 
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
+  const backTrack: ActionNode = {
+    actionType: ownershipBackTrackType,
+    successNode: null,
+    failureNode: null,
+  };
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
     successNode: null,
@@ -24,7 +29,7 @@ export function countingStrategy(): ActionStrategy {
     successNode: stepFive,
     preposition: '',
     denoter: 'One;',
-    failureNode: null,
+    failureNode: backTrack,
     agreement: 500,
     keyedSelectors: [counterSelectCount]
   };
@@ -33,7 +38,7 @@ export function countingStrategy(): ActionStrategy {
     successNode: stepFour,
     preposition: '',
     denoter: 'One;',
-    failureNode: null,
+    failureNode: backTrack,
     agreement: 500,
     keyedSelectors: [counterSelectCount]
   };
@@ -42,7 +47,7 @@ export function countingStrategy(): ActionStrategy {
     successNode: stepThree,
     preposition: '',
     denoter: 'One;',
-    failureNode: null,
+    failureNode: backTrack,
     agreement: 500,
     keyedSelectors: [counterSelectCount]
   };
@@ -51,7 +56,7 @@ export function countingStrategy(): ActionStrategy {
     successNode: stepTwo,
     preposition: '',
     denoter: 'One;',
-    failureNode: null,
+    failureNode: backTrack,
     agreement: 500,
     keyedSelectors: [counterSelectCount]
   };

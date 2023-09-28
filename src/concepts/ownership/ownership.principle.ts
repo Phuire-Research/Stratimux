@@ -18,6 +18,7 @@ export const ownershipPrinciple: PrincipleFunction = (
   concepts$: UnifiedSubject
 ) => {
   let initDispatch = false;
+  let finalCheck = true;
   const sub = concepts$.subscribe(_cpts => {
     const axiumState = selectState<AxiumState>(_cpts, axiumName);
     if (axiumState.open) {
@@ -29,32 +30,46 @@ export const ownershipPrinciple: PrincipleFunction = (
           if (ownershipState.pendingActions) {
             let newAction;
             // One Action at a Time
-            for (const [i, action] of ownershipState.pendingActions.entries()) {
+            for (const action of ownershipState.pendingActions) {
               if (!action.stubs) {
                 // console.log('Check last Action', action.strategy?.lastActionNode.action);
-                if (action.strategy?.lastActionNode.action?.stubs) {
-                  [concepts, newAction] = isActionReady(concepts, action.strategy.lastActionNode.action);
-                  // console.log('HITHERE', newAction);
+                if (action.strategy?.currentNode.lastActionNode?.action?.stubs) {
+                  [concepts, newAction] = isActionReady(concepts, action.strategy.currentNode.lastActionNode.action);
 
                   // eslint-disable-next-line max-depth
                   if (newAction) {
                     newAction = action;
+                    break;
                   }
                 }
               } else {
                 [concepts, newAction] = isActionReady(concepts, action);
-              }
-              if (newAction) {
-                ownershipState = selectState<OwnershipState>(concepts, ownershipName);
-                ownershipState.pendingActions = ownershipState.pendingActions.filter((_, indx) => {
-                  return i !== indx;
-                });
-                break;
+                if (newAction) {
+                  newAction = action;
+                  break;
+                }
               }
             }
             if (newAction) {
+              ownershipState = selectState<OwnershipState>(concepts, ownershipName);
+              const newPendingActions = [];
+              for (const pending of ownershipState.pendingActions) {
+                // eslint-disable-next-line max-depth
+                if (pending.type !== newAction.type && pending.expiration !== newAction.expiration) {
+                  newPendingActions.push(pending);
+                } else if (pending.type === newAction.type && pending.expiration !== newAction.expiration) {
+                  newPendingActions.push(pending);
+                }
+              }
+              ownershipState.pendingActions = [...newPendingActions];
               concepts$.next(concepts);
               observer.next(newAction);
+            } else if (ownershipState.pendingActions.length !== 0 && finalCheck) {
+              finalCheck = false;
+              setTimeout(() => {
+                finalCheck = true;
+                concepts$.next(concepts);
+              }, 50);
             }
           }
         } else if (!initDispatch && !ownershipState.initialized && ownershipState.isResponsibleForMode) {
