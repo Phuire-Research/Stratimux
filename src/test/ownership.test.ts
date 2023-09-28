@@ -19,6 +19,7 @@ import { axiumLog } from '../concepts/axium/qualities/log.quality';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
+  let finalRun = true;
   const axium = createAxium([createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
   const staged = axium.stage(
     'Testing Ownership Staging', [
@@ -47,13 +48,14 @@ test('Ownership Test', (done) => {
         const axiumState = cpts[0].state as AxiumState;
         const counter = selectState<Counter>(cpts, counterName);
         // console.log('Stage 3', axiumState.lastStrategy, orderOfTopics);
-        if (orderOfTopics.length === 2) {
+        if (orderOfTopics.length === 2 && finalRun) {
+          finalRun = false;
           // This will be the final test to be triggered by a log action.
           console.log('Stage 3, If 3 Count: ', counter.count);
           expect(orderOfTopics[0]).toBe(countingTopic);
           staged.close();
           axium.close();
-          setTimeout(() => {done();}, 500);
+          setTimeout(() => {done();}, 1000);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&

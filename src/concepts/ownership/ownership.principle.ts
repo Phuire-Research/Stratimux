@@ -69,7 +69,7 @@ export const ownershipPrinciple: PrincipleFunction = (
               setTimeout(() => {
                 finalCheck = true;
                 concepts$.next(concepts);
-              }, 50);
+              }, 200);
             }
           }
         } else if (!initDispatch && !ownershipState.initialized && ownershipState.isResponsibleForMode) {

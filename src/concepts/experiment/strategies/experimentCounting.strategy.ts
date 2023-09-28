@@ -21,7 +21,7 @@ export function countingStrategy(): ActionStrategy {
     failureNode: null,
     preposition: 'and finally',
     denoter: 'One.',
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepFour: ActionNode = {
@@ -30,7 +30,7 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: backTrack,
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepThree: ActionNode = {
@@ -39,7 +39,7 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: backTrack,
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepTwo: ActionNode = {
@@ -48,7 +48,7 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: backTrack,
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepOne: ActionNode = {
@@ -57,7 +57,7 @@ export function countingStrategy(): ActionStrategy {
     preposition: '',
     denoter: 'One;',
     failureNode: backTrack,
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
 
@@ -87,7 +87,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     failureNode: backTrack,
     preposition: 'and finally',
     denoter: 'One.',
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepThree: ActionNode = {
@@ -97,7 +97,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepTwo: ActionNode = {
@@ -107,7 +107,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepOne: ActionNode = {
@@ -117,7 +117,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     failureNode: backTrack,
     preposition: '',
     denoter: 'One;',
-    agreement: 500,
+    agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
 
