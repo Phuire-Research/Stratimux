@@ -2,8 +2,9 @@ import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { Counter } from '../counter.concept';
+import { counterSelectCount } from '../counter.selector';
 
-export const counterSetCountType = 'Counter Chain Count';
+export const counterSetCountType = 'set Count';
 
 export const counterSetCount = prepareActionCreator(counterSetCountType);
 export type SetCountPayload = {
@@ -20,6 +21,7 @@ export function setCountReducer(state: Counter, action: Action) {
 
 export const setCountQuality = createQuality(
   counterSetCountType,
-  defaultReducer,
-  defaultMethodCreator
+  setCountReducer,
+  defaultMethodCreator,
+  [counterSelectCount]
 );

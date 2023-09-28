@@ -4,6 +4,7 @@ import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
 import { ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
+import { backTrackQuality } from './qualities/backTrack.quality';
 
 export type OwnershipState = {
   initialized: boolean;
@@ -14,14 +15,16 @@ export type OwnershipState = {
 }
 
 export const ownershipName = 'ownership';
-
-const createOwnershipState = (isResponsibleForMode: boolean): OwnershipState => {
+/**
+ * @param isResponsibleForMode If not set, ownership assumes responsibility.
+ */
+const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState => {
   return {
     initialized: false,
     ownershipLedger: createOwnershipLedger(),
     pendingActions: [],
     ticker: 0,
-    isResponsibleForMode
+    isResponsibleForMode: isResponsibleForMode ? isResponsibleForMode : true
   };
 };
 
@@ -30,7 +33,8 @@ export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
     [
-      initializeOwnershipQuality
+      initializeOwnershipQuality,
+      backTrackQuality
     ],
     [
       ownershipPrinciple

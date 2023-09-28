@@ -3,7 +3,7 @@ import { Action, createAction} from '../../../model/action';
 import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { Subject, map } from 'rxjs';
 import { axiumConcludeType } from './conclude.quality';
-import { setDenoter, strategySuccess } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/actionStrategy';
 
 export const axiumSetModeType = 'set Axium Mode';
 
@@ -18,7 +18,9 @@ export const createOwnershipMethodCreator: MethodCreator = () : [Method, Subject
     map((action: Action) => {
       const payload = action.payload as SetModePayload;
       if (action.strategy) {
-        setDenoter(action.strategy, `to ${payload.modeName}.`);
+        action.strategy.currentNode.successNotes = {
+          denoter: `to ${payload.modeName}.`
+        };
         return strategySuccess(action.strategy);
       }
       return createAction(axiumConcludeType);

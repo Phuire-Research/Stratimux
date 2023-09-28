@@ -15,18 +15,22 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
   const stepTwo: ActionNode = {
     actionType: axiumAppendConceptsToAddQueType,
     successNode: null,
+    successNotes: {
+      preposition: 'Then Safely'
+    },
     failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumAppendConceptsToAddQueType),
     payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
-    preposition: 'Then Safely'
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     successNode: stepTwo,
+    successNotes: {
+      preposition: 'Immediately'
+    },
     failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumSetBlockingModeType),
     payload: {concepts} as AppendConceptsToAddQuePayload,
-    preposition: 'Immediately'
   };
 
   const params: ActionStrategyParameters = {
@@ -45,26 +49,32 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
   const stepThree: ActionNode = {
     actionType: axiumOpenType,
     successNode: null,
+    successNotes: {
+      preposition: 'Reinstate',
+      denoter: 'State.'
+    },
     failureNode: null,
     semaphore: openSemaphore,
-    preposition: 'Reinstate',
-    denoter: 'State.'
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: 'Then'
+    },
     failureNode: null,
     payload: {concepts: conceptualSet},
-    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumAddConceptFromQueType,
     semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: 'First'
+    },
     failureNode: null,
     payload: {action$} as AddConceptsFromQuePayload,
-    preposition: 'First'
   };
 
   const params: ActionStrategyParameters = {

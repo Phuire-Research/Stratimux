@@ -16,26 +16,32 @@ export function initializationStrategy(concepts: Concept[]): ActionStrategy {
     actionType: axiumOpenType,
     semaphore: openSemaphore,
     successNode: null,
+    successNotes: {
+      preposition: 'Finally',
+      denoter: 'to Notify Subscribers of State changes.'
+    },
     failureNode: null,
     payload: {concepts},
-    preposition: 'Finally',
-    denoter: 'to Notify Subscribers of State changes.'
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: 'Then'
+    },
     failureNode: null,
     payload: {concepts},
-    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumInitializePrinciplesType,
     semaphore: initSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: 'Begin with'
+    },
     failureNode: null,
     payload: {concepts},
-    preposition: 'Begin with'
   };
 
   const params: ActionStrategyParameters = {

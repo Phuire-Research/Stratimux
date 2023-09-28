@@ -126,10 +126,11 @@ export class UnifiedSubject extends Subject<Concept[]> {
   stage(title: string, stages: Staging[]) {
     this.currentStages.set(this.stageId, {title, stages, step: 0, stepFailed: -1});
     this.stageId++;
+    const close = () => {
+      this.currentStages.delete(this.stageId);
+    };
     return {
-      close: () => {
-        this.currentStages.delete(this.stageId);
-      }
+      close: close.bind(this)
     };
   }
 

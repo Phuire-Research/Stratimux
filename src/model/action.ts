@@ -20,11 +20,15 @@ export function primeAction(concepts: Concept[], action: Action, agreement?: num
   for (const concept of concepts) {
     const semaphore = getSemaphore(concepts, concept.name, action.type);
     if (semaphore[2] !== -1) {
-      return {
+      const newAction = {
         ...action,
         semaphore: semaphore,
         expiration: Date.now() + (agreement !== undefined ? agreement : 5000)
       };
+      if (newAction.strategy) {
+        newAction.strategy.currentNode.action = newAction;
+      }
+      return newAction;
     }
   }
   return {

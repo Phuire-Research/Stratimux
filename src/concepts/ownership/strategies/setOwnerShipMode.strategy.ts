@@ -23,24 +23,30 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     actionType: ownershipInitializeOwnershipType,
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
+    successNotes: {
+      preposition: 'Set',
+    },
     failureNode: null,
-    preposition: 'Set',
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetModeType,
     semaphore: setModeSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: 'Successfully'
+    },
     failureNode: null,
     payload: { modeIndex: 2, modeName } as SetModePayload,
-    preposition: 'Successfully'
   };
   const stepOne: ActionNode = {
     actionType: axiumSetDefaultModeIndexType,
     semaphore: setDefaultModeIndexSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: 'Successfully'
+    },
     failureNode: null,
     payload: { index: ownershipModeIndex } as SetDefaultModeIndexPayload,
-    preposition: 'Successfully'
   };
   const params: ActionStrategyParameters = {
     topic: setOwnerShipModeTopic,
