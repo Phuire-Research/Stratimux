@@ -33,11 +33,17 @@ export interface ActionNode {
   semaphore?: [number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
+  decisionNotes?: ActionNotes;
   successNode: ActionNode | null;
+  successNotes?: ActionNotes;
   failureNode: ActionNode | null;
+  failureNotes?: ActionNotes;
+  lastActionNode?: ActionNode;
+}
+
+export interface ActionNotes {
   preposition?: string;
   denoter?: string;
-  lastActionNode?: ActionNode;
 }
 
 /**
@@ -73,30 +79,30 @@ function isNotPunctuated(str: string): boolean {
   return notPunctuated;
 }
 
-function createSentence(actionNode: ActionNode, decisionKey?: string): string {
-  const preposition = actionNode.preposition ? `${actionNode.preposition} ` : '';
+function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes , decisionKey?: string): string {
+  const preposition = actionNotes?.preposition ? `${actionNotes.preposition} ` : '';
   const decision = decisionKey ? `${decisionKey} ` : '';
   const body = `${actionNode.actionType}`;
   let denoter = '.';
-  if (actionNode.denoter) {
-    if (isNotPunctuated(actionNode.denoter)) {
-      denoter = ` ${actionNode.denoter}`;
+  if (actionNotes?.denoter) {
+    if (isNotPunctuated(actionNotes.denoter)) {
+      denoter = ` ${actionNotes.denoter}`;
     } else {
-      denoter = actionNode.denoter;
+      denoter = actionNotes.denoter;
     }
   }
   return preposition + decision + body + denoter;
 }
 
-export function setPreposition(strategy: ActionStrategy, preposition: string) {
-  const target = strategy.currentNode;
-  target.preposition = preposition;
-}
+// export function setPreposition(strategy: ActionStrategy, preposition: string) {
+//   const target = strategy.currentNode;
+//   target.preposition = preposition;
+// }
 
-export function setDenoter(strategy: ActionStrategy, denoter: string) {
-  const target = strategy.currentNode;
-  target.denoter = denoter;
-}
+// export function setDenoter(strategy: ActionStrategy, denoter: string) {
+//   const target = strategy.currentNode;
+//   target.denoter = denoter;
+// }
 
 export function createStrategy(
   params: ActionStrategyParameters,
@@ -150,7 +156,8 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
-    strategy.currentNode.preposition !== undefined ? '' : 'Success with'
+    strategy.currentNode?.successNotes,
+    strategy.currentNode.successNotes?.preposition !== undefined ? '' : 'Success with'
   );
   if (strategy.currentNode.successNode !== null) {
     const nextNode = strategy.currentNode.successNode;
@@ -212,7 +219,8 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
-    strategy.currentNode.preposition !== undefined ? '' : 'Failed with'
+    strategy.currentNode.failureNotes,
+    strategy.currentNode.failureNotes?.preposition !== undefined ? '' : 'Failed with'
   );
   if (
     strategy.currentNode.failureNode !== null
@@ -284,6 +292,7 @@ export const strategyDecide = (
   let nextAction: Action;
   const actionListEntry = createSentence(
     strategy.currentNode,
+    strategy.currentNode.decisionNotes,
     decideKey
   );
 
@@ -360,6 +369,12 @@ export const backTrack = (_strategy: ActionStrategy): Action => {
   const strategy = _strategy;
   if (strategy.currentNode.lastActionNode?.actionType !== nullActionType) {
     const newNode = strategy.currentNode.lastActionNode as ActionNode;
+    if (newNode.action?.strategy?.actionList) {
+      newNode.action.strategy.actionList = [
+        ...newNode.action.strategy.actionList,
+        strategy.actionList[strategy.actionList.length - 1],
+      ];
+    }
     // strategy.currentNode = newNode;
     return newNode.action as Action;
   } else {

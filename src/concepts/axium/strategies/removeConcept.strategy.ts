@@ -44,24 +44,30 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
     actionType: axiumOpenType,
     semaphore: openSemaphore,
     successNode: null,
+    successNotes: {
+      preposition: 'Reinstate',
+      denoter: 'State.'
+    },
     failureNode: null,
-    preposition: 'Reinstate',
-    denoter: 'State.'
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: 'Then'
+    },
     failureNode: null,
     payload: {concepts} as SetDefaultModePayload,
-    preposition: 'Then'
   };
   const stepOne: ActionNode = {
     actionType: axiumRemoveConceptsViaQueType,
     semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: 'To Begin'
+    },
     failureNode: null,
-    preposition: 'To Begin'
   };
 
   const params: ActionStrategyParameters = {

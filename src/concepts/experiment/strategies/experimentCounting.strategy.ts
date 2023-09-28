@@ -18,17 +18,21 @@ export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
     successNode: null,
+    successNotes: {
+      preposition: 'and finally',
+      denoter: 'One.',
+    },
     failureNode: backTrack,
-    preposition: 'and finally',
-    denoter: 'One.',
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
     successNode: stepFive,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
@@ -36,8 +40,10 @@ export function countingStrategy(): ActionStrategy {
   const stepThree: ActionNode = {
     actionType: counterAddType,
     successNode: stepFour,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
@@ -45,8 +51,10 @@ export function countingStrategy(): ActionStrategy {
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     successNode: stepThree,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
@@ -54,8 +62,10 @@ export function countingStrategy(): ActionStrategy {
   const stepOne: ActionNode = {
     actionType: counterAddType,
     successNode: stepTwo,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
@@ -84,9 +94,11 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: null,
+    successNotes: {
+      preposition: 'and finally',
+      denoter: 'One.',
+    },
     failureNode: backTrack,
-    preposition: 'and finally',
-    denoter: 'One.',
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
@@ -94,9 +106,11 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: stepFour,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
-    preposition: '',
-    denoter: 'One;',
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
@@ -104,9 +118,11 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterSubtractType,
     semaphore: subtractSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
-    preposition: '',
-    denoter: 'One;',
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };
@@ -114,9 +130,11 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterAddType,
     semaphore: subtractSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: backTrack,
-    preposition: '',
-    denoter: 'One;',
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
   };

@@ -11,36 +11,46 @@ export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
     successNode: null,
+    successNotes: {
+      preposition: 'and finally',
+      denoter: 'One.',
+    },
     failureNode: null,
-    preposition: 'and finally',
-    denoter: 'One.',
   };
   const stepFour: ActionNode = {
     actionType: counterAddType,
     successNode: stepFive,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
     successNode: stepFour,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     successNode: stepThree,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
     successNode: stepTwo,
-    preposition: '',
-    denoter: 'One;',
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
   };
 
@@ -60,33 +70,41 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: null,
+    successNotes: {
+      preposition: 'and finally',
+      denoter: 'One.',
+    },
     failureNode: null,
-    preposition: 'and finally',
-    denoter: 'One.',
   };
   const stepThree: ActionNode = {
     actionType: counterAddType,
     semaphore: addSemaphore,
     successNode: stepFour,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
   };
   const stepTwo: ActionNode = {
     actionType: counterSubtractType,
     semaphore: subtractSemaphore,
     successNode: stepThree,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
   };
   const stepOne: ActionNode = {
     actionType: counterAddType,
     semaphore: subtractSemaphore,
     successNode: stepTwo,
+    successNotes: {
+      preposition: '',
+      denoter: 'One;',
+    },
     failureNode: null,
-    preposition: '',
-    denoter: 'One;',
   };
 
   const params: ActionStrategyParameters = {

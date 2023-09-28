@@ -4,7 +4,7 @@ import { createQuality } from '../../../model/concept';
 import { Counter } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 
-export const counterSetCountType = 'Counter Chain Count';
+export const counterSetCountType = 'set Count';
 
 export const counterSetCount = prepareActionCreator(counterSetCountType);
 export type SetCountPayload = {

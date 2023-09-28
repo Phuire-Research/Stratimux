@@ -32,10 +32,16 @@ export const ownershipPrinciple: PrincipleFunction = (
             // One Action at a Time
             for (const action of ownershipState.pendingActions) {
               if (!action.stubs) {
-                // console.log('Check last Action', action.strategy?.lastActionNode.action);
                 if (action.strategy?.currentNode.lastActionNode?.action?.stubs) {
                   [concepts, newAction] = isActionReady(concepts, action.strategy.currentNode.lastActionNode.action);
 
+                  // eslint-disable-next-line max-depth
+                  if (newAction) {
+                    newAction = action;
+                    break;
+                  }
+                } else {
+                  [concepts, newAction] = isActionReady(concepts, action);
                   // eslint-disable-next-line max-depth
                   if (newAction) {
                     newAction = action;
@@ -68,11 +74,6 @@ export const ownershipPrinciple: PrincipleFunction = (
               finalCheck = false;
               setTimeout(() => {
                 finalCheck = true;
-                // console.log('Check', ownershipState.ownershipLedger,
-                //   ownershipState.pendingActions[0]?.strategy?.currentNode.lastActionNode?.action?.stubs,
-                //   ownershipState.pendingActions[0]?.strategy?.currentNode.lastActionNode?.action?.type,
-                //   ownershipState.pendingActions[0]?.strategy?.topic
-                // );
                 concepts$.next(concepts);
               }, 200);
             }
