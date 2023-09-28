@@ -16,7 +16,7 @@ export function countingStrategy(): ActionStrategy {
     failureNode: null,
   };
   const stepFive: ActionNode = {
-    actionType: counterAddType,
+    actionType: counterSubtractType,
     successNode: null,
     failureNode: null,
     preposition: 'and finally',
