@@ -53,6 +53,7 @@ test('Ownership Test', (done) => {
           // This will be the final test to be triggered by a log action.
           console.log('Stage 3, If 3 Count: ', counter.count);
           expect(orderOfTopics[0]).toBe(countingTopic);
+          expect(counter.count).toBe(4);
           staged.close();
           axium.close();
           setTimeout(() => {done();}, 1000);
