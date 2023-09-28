@@ -20,10 +20,11 @@ export const ownershipMode: Mode = (
     finalMode = blockingMode;
   }
   // Clear previous Action Stubs associated with Strategy
-  if (action.strategy && action.semaphore[2] !== -1 && action.strategy.currentNode.lastActionNode?.action?.stubs) {
+  if (action.strategy && action.strategy.currentNode.lastActionNode?.action?.stubs) {
     const lastAction = action.strategy.currentNode.lastActionNode.action;
-    // Clear Stubs
-    if (lastAction.type !== nullActionType) {
+    if (action.type === axiumConcludeType) {
+      concepts = clearStubs(concepts, lastAction);
+    } else if (action.semaphore[2] !== -1 ) {
       concepts = clearStubs(concepts, lastAction);
     }
   }

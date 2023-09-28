@@ -257,9 +257,9 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
       actionType: axiumConcludeType,
       successNode: null,
       failureNode: null,
-      lastActionNode: strategy.currentNode
+      lastActionNode: strategy.currentNode,
     };
-    conclude.action = createAction(conclude.actionType);
+    conclude.action = createAction(axiumConcludeType);
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,

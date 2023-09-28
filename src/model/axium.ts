@@ -6,7 +6,7 @@ import {
   catchError,
 } from 'rxjs';
 import { Action, createAction, createCacheSemaphores } from './action';
-import { strategyBegin } from './actionStrategy';
+import { ActionNode, ActionStrategy, ActionStrategyParameters, createStrategy, puntStrategy, strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
   createAxiumConcept,
@@ -21,6 +21,20 @@ import {
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
+// const createPuntedDialog = (strategy: ActionStrategy, payload: AppendActionListToDialogPayload) => {
+//   const dialogNode: ActionNode = {
+//     actionType: axiumAppendActionListToDialogType,
+//     successNode: null,
+//     failureNode: null,
+//     payload: payload
+//   };
+//   const params: ActionStrategyParameters = {
+//     initialNode: dialogNode,
+//     topic: ''
+//   };
+//   return puntStrategy(createStrategy(params), strategy);
+// };
+
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
     action.strategy &&
@@ -33,6 +47,7 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
       strategyTopic: action.strategy.topic
     } as AppendActionListToDialogPayload;
     action$.next(appendToDialog);
+    action$.next(action);
   } else if (
     action.strategy &&
     action.type !== axiumBadActionType
@@ -53,7 +68,8 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
       strategyTopic: action.strategy.topic
     } as AppendActionListToDialogPayload;
     setTimeout(() => {
-      action$?.next(appendToDialog);
+      action$.next(appendToDialog);
+      action$.next(action);
     }, 0);
   } else if (
     action.strategy &&

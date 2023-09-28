@@ -18,7 +18,7 @@ export function countingStrategy(): ActionStrategy {
   const stepFive: ActionNode = {
     actionType: counterSubtractType,
     successNode: null,
-    failureNode: null,
+    failureNode: backTrack,
     preposition: 'and finally',
     denoter: 'One.',
     agreement: 1000,
