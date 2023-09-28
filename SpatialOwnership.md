@@ -1,4 +1,5 @@
 ## Spatial Ownership - Rough Draft
+*Note this in particular is a proof of concept release*
 The ownership concept must be explicitly loaded and introduces an additional mode that further transforms the functionality of the axium. Which allows for the locking of values, that other actions or strategies may be dependent upon. And if that strategy, or action with a KeyedSelector has taken a TicketStub of ownership of that value. Any quality or action that would transform such are added to a pendingActions until that block is cleared.
 
 But if a strategy is dependent on that value, that strategy will fail by default. Thus a specific case must be attached to the ActionNode that governs how to handle that specific Case. If so, will be added to a pendingActions that can later be dispatched alongside their TicketStubs and expiration times.

@@ -5,14 +5,6 @@ import { Concept } from './concept';
 import { selectState } from './selector';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 import { nullActionType } from './actionStrategy';
-import { ownershipBackTrackType } from '../concepts/ownership/qualities/backTrack.quality';
-// Define Ownership Here
-// As the Basis of anything Within Model Directory is that Such Enables the Concepts to Function as Intended
-// AKA Concept Model
-
-// Register
-
-// Unregister
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
