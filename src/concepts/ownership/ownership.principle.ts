@@ -68,6 +68,11 @@ export const ownershipPrinciple: PrincipleFunction = (
               finalCheck = false;
               setTimeout(() => {
                 finalCheck = true;
+                // console.log('Check', ownershipState.ownershipLedger,
+                //   ownershipState.pendingActions[0]?.strategy?.currentNode.lastActionNode?.action?.stubs,
+                //   ownershipState.pendingActions[0]?.strategy?.currentNode.lastActionNode?.action?.type,
+                //   ownershipState.pendingActions[0]?.strategy?.topic
+                // );
                 concepts$.next(concepts);
               }, 200);
             }

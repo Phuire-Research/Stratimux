@@ -194,7 +194,7 @@ const stubAction = (concepts: Concept[], _action: Action): [Concept[], Action | 
     if (positions) {
       for (const [i, pos] of positions.entries()) {
         if (i === 0 && pos.ticket >= stub.ticket) {
-          break;
+          continue;
         } else {
           frontOfAllLines = false;
           break;
@@ -241,8 +241,51 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
   const action = _action;
   const qualitySelectors = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   let readyToGo = true;
-
-  if (qualitySelectors) {
+  if (action.strategy) {
+    if (action.strategy.currentNode.lastActionNode?.action) {
+      const prevAction = action.strategy.currentNode.lastActionNode?.action;
+      let frontOfAllLines = true;
+      let expired = false;
+      // console.log('HIT', prevAction);
+      if (prevAction.stubs) {
+        // console.log('Check quality action', prevAction)
+        for (const stub of prevAction.stubs) {
+          if (action.expiration < Date.now()) {
+            expired = true;
+            break;
+          }
+          const positions = ownershipLedger.get(stub.key);
+          if (positions) {
+            for (const [i, pos] of positions.entries()) {
+              if (i === 0 && pos.ticket >= stub.ticket) {
+                continue;
+              } else {
+                frontOfAllLines = false;
+                break;
+              }
+            }
+          }
+        }
+        if (expired) {
+          for (const stub of prevAction.stubs) {
+            const positions = ownershipLedger.get(stub.key);
+            if (positions) {
+              const newLine = positions.filter(pos => pos.ticket !== stub.ticket);
+              if (newLine.length > 0) {
+                ownershipLedger.set(stub.key, newLine);
+              } else {
+                ownershipLedger.delete(stub.key);
+              }
+            }
+          }
+          return [concepts, createAction(axiumBadActionType, action)];
+        }
+        if (frontOfAllLines) {
+          return [concepts, action];
+        }
+      }
+    }
+  } else if (qualitySelectors) {
     for (const selector of qualitySelectors) {
       const key = `${selector.conceptName} ${selector.stateKeys}`;
       if (ownershipLedger.get(key)) {
@@ -254,51 +297,6 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], Action
       return [concepts, action];
     }
   }
-  // else if (action.strategy) {
-  //   if (action.strategy.lastActionNode.action) {
-  //     const prevAction = action.strategy.lastActionNode.action;
-  //     let frontOfAllLines = true;
-  //     let expired = false;
-  //     // console.log('HIT', prevAction);
-  //     if (prevAction.stubs) {
-  //       // console.log('Check quality action', prevAction)
-  //       for (const stub of prevAction.stubs) {
-  //         if (action.expiration < Date.now()) {
-  //           expired = true;
-  //           break;
-  //         }
-  //         const positions = ownershipLedger.get(stub.key);
-  //         if (positions) {
-  //           for (const [i, pos] of positions.entries()) {
-  //             if (i === 0 && pos.ticket === stub.ticket) {
-  //               break;
-  //             } else {
-  //               frontOfAllLines = false;
-  //               break;
-  //             }
-  //           }
-  //         }
-  //       }
-  //       if (expired) {
-  //         for (const stub of prevAction.stubs) {
-  //           const positions = ownershipLedger.get(stub.key);
-  //           if (positions) {
-  //             const newLine = positions.filter(pos => pos.ticket !== stub.ticket);
-  //             if (newLine.length > 0) {
-  //               ownershipLedger.set(stub.key, newLine);
-  //             } else {
-  //               ownershipLedger.delete(stub.key);
-  //             }
-  //           }
-  //         }
-  //         return [concepts, createAction(axiumBadActionType, action)];
-  //       }
-  //       if (frontOfAllLines) {
-  //         return [concepts, action];
-  //       }
-  //     }
-  //   }
-  // }
   return [concepts, undefined];
 };
 

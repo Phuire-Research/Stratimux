@@ -9,6 +9,11 @@ import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { ActionStrategy, nullActionType, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
+import { AxiumState } from '../axium/axium.concept';
+import { Counter, counterName } from '../counter/counter.concept';
+import { selectState } from '../../model/selector';
+import { ExperimentState, experimentName } from '../experiment/experiment.concept';
+import { OwnershipState, ownershipName } from './ownership.concept';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -28,6 +33,8 @@ export const ownershipMode: Mode = (
       concepts = clearStubs(concepts, lastAction);
     }
   }
+  // const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
+  // console.log('MODE', action.type, action.stubs, action.strategy?.topic, ownershipState.ownershipLedger);
   if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);

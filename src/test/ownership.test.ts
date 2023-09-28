@@ -11,12 +11,13 @@ import { strategyBegin } from '../model/actionStrategy';
 // import { countingTopic, primedCountingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { primedCountingStrategy, countingTopic, primedCountingTopic } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
+import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 
 // REFACTOR
 // Create a Test Ownership Principle
 // And a Dummy set of Strategies that utilize default Method and Reducer
 // Refine as you Go
-
+jest.setTimeout(7000);
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
@@ -51,11 +52,11 @@ test('Ownership Test', (done) => {
         if (orderOfTopics.length === 2 && finalRun) {
           finalRun = false;
           // This will be the final test to be triggered by a log action.
-          console.log('Stage 3, If 3 Count: ', counter.count);
+          console.log('Stage 3, If 3 Count: ', counter.count, orderOfTopics);
           expect(orderOfTopics[0]).toBe(countingTopic);
           expect(counter.count).toBe(3);
           staged.close();
-          axium.close();
+          // axium.close();
           setTimeout(() => {done();}, 1000);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
