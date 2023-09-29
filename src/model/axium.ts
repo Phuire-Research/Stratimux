@@ -155,13 +155,12 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     strategyBegin(initializationStrategy(concepts)),
   );
   const close = () => {
-    subConcepts$.complete();
     action$.next(createAction(axiumCloseType));
   };
   return {
     subscribe: subConcepts$.subscribe.bind(subConcepts$),
     unsubscribe: subConcepts$.unsubscribe.bind(subConcepts$),
-    close: close.bind(subConcepts$),
+    close: close,
     dispatch: (action: Action) => {
       action$.next(action);
     },

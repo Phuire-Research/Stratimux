@@ -202,7 +202,9 @@ export class UnifiedSubject extends Subject<Concept[]> {
 
       const len = observers.length;
       for (let i = 0; i < len; i++) {
-        observers[i].next(value);
+        if (observers[i]) {
+          observers[i].next(value);
+        }
       }
     }
   }

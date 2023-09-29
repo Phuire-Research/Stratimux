@@ -8,8 +8,8 @@ export const axiumClose = prepareActionCreator(axiumCloseType);
 export function closeReducer(state: AxiumState, _action: Action) {
   state.generalSubscribers.forEach(named => named.subscriber.unsubscribe());
   state.methodSubscribers.forEach(named => named.subscriber.unsubscribe());
-  state.action$?.complete();
-  state.concepts$?.complete();
+  state.action$.complete();
+  state.concepts$.complete();
   state.subConcepts$.complete();
   return {
     ...state,

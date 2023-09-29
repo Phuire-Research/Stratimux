@@ -89,7 +89,7 @@ test('Ownership Test', (done) => {
       expect(counter.count).toBe(1000);
       setTimeout(() => {done();}, 1000);
       sub.unsubscribe();
-      // axium.close();
+      axium.close();
     }
   });
 });
