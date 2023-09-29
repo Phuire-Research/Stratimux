@@ -2,7 +2,7 @@ import { createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
-import { ownershipPrinciple } from './ownership.principle';
+import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
 import { backTrackQuality } from './qualities/backTrack.quality';
 
@@ -37,7 +37,8 @@ export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
       backTrackQuality
     ],
     [
-      ownershipPrinciple
+      ownershipPrinciple,
+      ownershipExpirationPrinciple
     ],
     [ownershipMode]
   );

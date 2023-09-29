@@ -8,16 +8,10 @@ import { Counter, counterName, createCounterConcept } from '../concepts/counter/
 import { createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
-// import { countingTopic, primedCountingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { primedCountingStrategy, countingTopic, primedCountingTopic } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 
-// REFACTOR
-// Create a Test Ownership Principle
-// And a Dummy set of Strategies that utilize default Method and Reducer
-// Refine as you Go
-jest.setTimeout(7000);
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
@@ -36,11 +30,17 @@ test('Ownership Test', (done) => {
           });
         }
       },
+      (_, dispatch) => {
+        // Will fire at the end after both strategies conclude
+        console.log('SET COUNT');
+        dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
+      },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
+        // dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { runOnce: true});
         dispatch(strategyBegin(primedCountingStrategy(cpts)), {
           iterateStep: true
         });
@@ -56,8 +56,6 @@ test('Ownership Test', (done) => {
           expect(orderOfTopics[0]).toBe(countingTopic);
           expect(counter.count).toBe(3);
           staged.close();
-          // axium.close();
-          setTimeout(() => {done();}, 1000);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&
@@ -83,52 +81,15 @@ test('Ownership Test', (done) => {
     const state = selectState<OwnershipState>(concepts, ownershipName);
     const _axiumState = concepts[0].state as AxiumState;
     if (state.initialized && _axiumState.lastStrategy === setOwnerShipModeTopic) {
-      // const staged = axium.stage(
-      //   'Testing Ownership Staging', [
-      //     (_, dispatch) => {
-      //       console.log('Stage 1');
-      //       dispatch(strategyBegin(puntCountingStrategy()), {
-      //         iterateStep: true
-      //       });
-      //     },
-      //     (cpts, dispatch) => {
-      //       console.log('Stage 2');
-      //       dispatch(strategyBegin(primedCountingStrategy(cpts)), {
-      //         iterateStep: true
-      //       });
-      //     },
-      //     (cpts, _) => {
-      //       console.log('Stage 3', orderOfTopics.length);
-      //       const axiumState = cpts[0].state as AxiumState;
-      //       if (orderOfTopics.length === 2) {
-      //         expect(orderOfTopics[1]).toBe(primedCountingTopic);
-      //         setTimeout(() => {done();}, 500);
-      //         staged.close();
-      //       } else if (
-      //         (axiumState.lastStrategy === countingTopic ||
-      //         axiumState.lastStrategy === countingTopic) &&
-      //         orderOfTopics.length === 0) {
-      //         orderOfTopics.push(axiumState.lastStrategy);
-      //       } else if (
-      //         (axiumState.lastStrategy === countingTopic ||
-      //         axiumState.lastStrategy === countingTopic) &&
-      //         orderOfTopics.length === 1) {
-      //         orderOfTopics.push(axiumState.lastStrategy);
-      //       }
-      //     }
-      //   ]);
-
       expect(state.initialized).toBe(true);
-      // const ownership = selectState<OwnershipState>(concepts, ownershipName);
-      // console.log('Ready to Stage', staged, ownership.ownershipLedger, ownership.pendingActions);
+    }
+    const counter = selectState<Counter>(concepts, counterName);
+    if (counter.count >= 1000) {
+      console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
+      expect(counter.count).toBe(1000);
+      setTimeout(() => {done();}, 1000);
       sub.unsubscribe();
+      // axium.close();
     }
   });
 });
-
-// PUNT Additional Test: Have two Axiums interact with One Another
-// Going to Punt for now. Moving back towards creating the UI
-// As this system is Reserved for a Complex Set Up and the Interaction
-//  And the Interaction with the File System by default is that Set Up
-// When this becomes important again. The requirement for a FailureNode to be that of Null
-// Kicks in. As a Block of a Key is a Failure by Default

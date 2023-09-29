@@ -18,6 +18,7 @@ export type dispatchOptions = {
   setStep?: number;
   on?: {
     selector: KeyedSelector,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expected: any
   },
   debounce?: number;
@@ -197,12 +198,12 @@ export class UnifiedSubject extends Subject<Concept[]> {
           staged.stages[index](value, dispatcher);
         }
       });
-    }
-    const {observers} = this;
+      const {observers} = this;
 
-    const len = observers.length;
-    for (let i = 0; i < len; i++) {
-      observers[i].next(value);
+      const len = observers.length;
+      for (let i = 0; i < len; i++) {
+        observers[i].next(value);
+      }
     }
   }
 }
