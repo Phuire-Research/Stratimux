@@ -9,6 +9,9 @@ import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { ActionStrategy, nullActionType, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
+import { selectState } from '../../model/selector';
+import { OwnershipState, ownershipName } from './ownership.concept';
+import { counterSetCountType } from '../counter/qualities/setCount.quality';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -19,25 +22,10 @@ export const ownershipMode: Mode = (
   if (action.type === axiumSetBlockingModeType) {
     finalMode = blockingMode;
   }
-  // Clear previous Action Stubs associated with Strategy
-  if (action.strategy && action.strategy.currentNode.lastActionNode?.action?.stubs) {
-    const lastAction = action.strategy.currentNode.lastActionNode.action;
-    if (action.type === axiumConcludeType) {
-      concepts = clearStubs(concepts, lastAction);
-    } else if (action.semaphore[2] !== -1 ) {
-      concepts = clearStubs(concepts, lastAction);
-    }
-  }
   if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
-    // Quality Opted in Action
-    if (shouldBlock && !action.keyedSelectors) {
-    // Principle is then responsible to dispatch these actions;
-      concepts = updateAddToPendingActions(concepts, action);
-      concepts$.next(concepts);
-    // Action that would take Ownership and is Blocked
-    } else if (shouldBlock && action.keyedSelectors) {
+    if (shouldBlock) {
       if (action.strategy) {
         if (action.strategy.currentNode.failureNode === null) {
         // This assumes that the Strategy does not account for the Block
@@ -45,6 +33,7 @@ export const ownershipMode: Mode = (
           // const lastAction = nextAction.strategy?.currentNode.action as Action;
           // concepts = clearStubs(concepts, lastAction);
           if (nextAction.type === axiumConcludeType) {
+            concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
             nextAction = createAction(axiumAppendActionListToDialogType);
             nextAction.payload = {
               actionList: action.strategy.actionList,
@@ -54,20 +43,19 @@ export const ownershipMode: Mode = (
           finalMode([nextAction, concepts, action$, concepts$]);
         } else {
         // This assumes that the Strategy is accounting for the Block
-          [concepts, action] = checkIn(concepts, action);
           // console.log('Check Action Failed1', action);
+          [concepts, action] = checkIn(concepts, action);
           const nextAction = strategyFailed(action.strategy as ActionStrategy);
-          // console.log('Check Action Failed', nextAction.strategy?.lastActionNode.action);
           concepts = updateAddToPendingActions(concepts, nextAction);
           concepts$.next(concepts);
         }
-      } else {
+      }  else {
       // Principle is then responsible to dispatch these actions;
         concepts = updateAddToPendingActions(concepts, action);
         concepts$.next(concepts);
       }
-    // Action that would take Ownership but is Free
-    } else if (action.keyedSelectors) {
+    // } else if (action.keyedSelectors) {
+    } else if (action.strategy) {
       [concepts, action] = checkIn(concepts, action);
       finalMode([action, concepts, action$, concepts$]);
     } else {
@@ -77,4 +65,10 @@ export const ownershipMode: Mode = (
   } else if (action.type !== axiumConcludeType) {
     finalMode([action, concepts, action$, concepts$]);
   }
+
+  if (action.strategy?.stubs && action.type === axiumConcludeType) {
+    concepts = clearStubs(concepts, action.strategy);
+    concepts$.next(concepts);
+  }
+  const ownership = selectState<OwnershipState>(concepts, ownershipName);
 };

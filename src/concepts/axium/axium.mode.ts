@@ -45,7 +45,7 @@ export const permissiveMode: Mode = (
         // console.log('DEFAULT TESTING 2', action.type, action.semaphore, AxiumState.generation);
         const nextAction = primeAction(concepts, action);
         if (nextAction.type === axiumBadActionType) {
-          const payload = {...action};
+          const payload = [action];
           nextAction.payload = payload;
         }
         if (nextAction.semaphore[2] === axiumState.generation) {

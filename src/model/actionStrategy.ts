@@ -1,5 +1,6 @@
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { Action, ActionType, createAction } from './action';
+import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
 
 export const nullActionType: ActionType = 'null';
@@ -65,6 +66,7 @@ export interface ActionStrategy {
   currentNode: ActionNode;
   actionList: Array<string>;
   puntedStrategy?: ActionStrategy[];
+  stubs?: OwnershipTicketStub[];
 }
 
 function isNotPunctuated(str: string): boolean {
@@ -191,6 +193,8 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
         ...strategy.actionList,
         nextEntry,
       ];
+
+      nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
@@ -258,6 +262,8 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
         ...strategy.actionList,
         nextEntry,
       ];
+
+      nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
       return strategyBegin(nextStrategy);
     }
@@ -334,6 +340,7 @@ export const strategyDecide = (
       ...strategy.actionList,
       nextEntry,
     ];
+    nextStrategy.stubs = strategy.stubs;
     nextStrategy.currentNode.lastActionNode = strategy.currentNode;
     return strategyBegin(nextStrategy);
   }

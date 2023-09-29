@@ -12,18 +12,16 @@ export type Action = {
     payload?: unknown;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
-    stubs?: OwnershipTicketStub[];
     expiration: number;
 };
 
-export function primeAction(concepts: Concept[], action: Action, agreement?: number): Action {
+export function primeAction(concepts: Concept[], action: Action): Action {
   for (const concept of concepts) {
     const semaphore = getSemaphore(concepts, concept.name, action.type);
     if (semaphore[2] !== -1) {
       const newAction = {
         ...action,
         semaphore: semaphore,
-        expiration: Date.now() + (agreement !== undefined ? agreement : 5000)
       };
       if (newAction.strategy) {
         newAction.strategy.currentNode.action = newAction;
@@ -71,7 +69,7 @@ export function createAction(
   agreement?: number,
   _semaphore?: [number, number, number]
 ): Action {
-  const semaphore = _semaphore ? _semaphore : [0, 0, -1] as [number, number, number];
+  const semaphore = _semaphore !== undefined ? _semaphore : [0, 0, -1] as [number, number, number];
   return {
     type,
     semaphore,
