@@ -1,13 +1,17 @@
 ## Stage
+### Abstract
 This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That Stage will close and be added to the axium's badStages property.
 
 Once attached to the badStage property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
 
+## Working with the Stage Paradigm
 ```typescript
-export type Staged = {
+// Multiple Stages are a Plan
+export type Plan = {
   title: string;
   stages: Staging[],
-  step: number;
+  stage: number;
+  stageFailed: number;
 }
 
 export type dispatchOptions = {
@@ -69,7 +73,6 @@ const staged = axium.stage('Stage DispatchOptions Test',
     // Will wait until count is set to 2, then set the Stage Explicitly to the third Step counting from 0.
     dispatch(counterAdd(), {
         setStep: 2,
-        // runOnce: true,
         debounce: 0,
         on: {
         selector: counterSelectCount,
@@ -81,10 +84,11 @@ const staged = axium.stage('Stage DispatchOptions Test',
     runCount++;
     const counter = selectState<Counter>(concepts, counterName);
     console.log('Stage 3 ', counter, runCount);
-    // Will overflow causing the stage to close and add itself to bad Stages
+    // Will cause an action overflow forcing the stage to close and add itself to bad Stages
     dispatch(counterSubtract(), {
-        // Enabling will prevent close and cause this test to timeout
+        // Enabling will cause this test to timeout via the subscription watching for badStages to never be ran.
         // debounce: 500
+        // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
     });
     }
 ]);

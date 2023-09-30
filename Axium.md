@@ -1,8 +1,11 @@
 ## Axium
+### Abstract
 The main point of interaction and named holder of a set of concepts. This was inspired by axiom. But slightly changed towards the concept by act of unifying concepts, noting the "U." As a counter to the traditional axiom which is based on statements assumed to be true and likewise to be nonreducible. But can be reduced to their conceptual parts. Therefore an axium is the set of concepts and their qualities that allow for the emergence of new concepts. The advantage of this approach excluding the createAxium function. Is that the entirety of an axium may be decomposed to The Sum of its parts. That way versus creating some new arbitrary construct of a FileSystem. We are in competition as to whose FileSystem concept is best. As if someone improves upon a concept you are working on in this system. Versus creating some new library, you may take the parts of that concept into your own version of it. Thanks to the decomposable nature of qualities and their organization via the ActionStrategy pattern.
 
+#### Goal of this System
 There is much to be expanded upon this as a potential platform of doing. Where the goal would be the refinement towards discovery and stability of the most utilized concepts. So that may create some standard library of concepts to be shared. Versus the current generalized construct paradigm that this has been designed as a direct counter to. Of that mass repeated reimplementation of concepts as constructs that cannot readily be decomposed and reconfigured. As what is interesting is the discovery within this type of system of universal concepts and qualities. By way of matching functionality where we would least expect it. Would be considered a universal function.
 
+## Working with the Axium
 ```typescript
 export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) : {
   subscribe: () => {},
