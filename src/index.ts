@@ -11,8 +11,6 @@ export {
   strategyFailed,
   strategyDecide,
   puntStrategy,
-  setPreposition,
-  setDenoter
 } from './model/actionStrategy';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator } from './model/action';
@@ -36,7 +34,7 @@ export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './mo
 // Axium
 export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axium.concept';
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
-export { axiumSelectOpen } from './concepts/axium/axium.selector';
+export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadStages } from './concepts/axium/axium.selector';
 // Qualities
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';

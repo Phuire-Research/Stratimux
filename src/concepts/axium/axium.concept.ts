@@ -21,7 +21,7 @@ import { createConcept } from '../../model/concept';
 import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 import { clearDialogQuality } from './qualities/clearDialog.quality';
-import { Staged, UnifiedSubject } from '../../model/unifiedSubject';
+import { Plan, UnifiedSubject } from '../../model/unifiedSubject';
 
 export type NamedSubscriber = {
   name: string;
@@ -46,7 +46,7 @@ export type AxiumState = {
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   subConcepts$: UnifiedSubject;
-  badStages: Staged[];
+  badStages: Plan[];
   badActions: Action[];
 }
 
