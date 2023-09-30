@@ -15,7 +15,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
       const badStage = axiumState.badStages[0];
       const counter = selectState<Counter>(concepts, counterName);
       console.log('Stage Ran Away, badStages.length: ', axiumState.badStages.length, 'Count: ', counter.count);
-      expect(badStage.stepFailed).toBe(2);
+      expect(badStage.stageFailed).toBe(2);
       expect(counter.count).toBe(2);
       setTimeout(() => {done();}, 500);
       staged.close();
@@ -36,12 +36,8 @@ test('Axium Stage Dispatch Options Test', (done) => {
         dispatch(counterAdd(), {
           runOnce: true
         });
-        // if (counter.count === 2) {
-        // console.log('Counter should be 2', counter.count);
-        // expect(counter.count).toBe(2);
         dispatch(counterAdd(), {
           setStep: 2,
-          // runOnce: true,
           debounce: 0,
           on: {
             selector: counterSelectCount,
@@ -55,8 +51,9 @@ test('Axium Stage Dispatch Options Test', (done) => {
         console.log('Stage 3 ', counter, runCount);
         // Will cause the stage to close
         dispatch(counterSubtract(), {
-          // Enabling will prevent close and cause this test to timeout
+          // Enabling will cause this test to timeout via the subscription watching for badStages to never be ran.
           // debounce: 500
+          // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
         });
       }
     ]);

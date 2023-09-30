@@ -69,6 +69,8 @@ export interface ActionStrategy {
   stubs?: OwnershipTicketStub[];
 }
 
+export type ActionStrategyTopic = string;
+
 function isNotPunctuated(str: string): boolean {
   const punctuatedList = ['.', ',', '?', '!', ';'];
   let notPunctuated = true;

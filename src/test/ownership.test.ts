@@ -25,22 +25,25 @@ test('Ownership Test', (done) => {
           console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
           const counter = selectState<Counter>(cpts, counterName);
           console.log('Count: ', counter.count);
+          // This will place a counting strategy is a que to be later dispatched.
+          //    Via the experiment principle, to simulate an action moving off premise.
           dispatch(strategyBegin(puntCountingStrategy()), {
             iterateStep: true
           });
         }
       },
-      (_, dispatch) => {
-        // Will fire at the end after both strategies conclude
-        console.log('SET COUNT');
+      (cpts, dispatch) => {
+        // Will be ran after both counting strategies conclude.
+
+        const ownership = selectState<OwnershipState>(cpts, ownershipName);
+        console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
         dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
-        console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
+        console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
-        // dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { runOnce: true});
         dispatch(strategyBegin(primedCountingStrategy(cpts)), {
           iterateStep: true
         });
@@ -48,11 +51,11 @@ test('Ownership Test', (done) => {
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
         const counter = selectState<Counter>(cpts, counterName);
-        // console.log('Stage 3', axiumState.lastStrategy, orderOfTopics);
+        console.log('Stage 4', axiumState.lastStrategy, orderOfTopics);
         if (orderOfTopics.length === 2 && finalRun) {
           finalRun = false;
           // This will be the final test to be triggered by a log action.
-          console.log('Stage 3, If 3 Count: ', counter.count, orderOfTopics);
+          console.log('Stage 3, If #3 | Count: ', counter.count, orderOfTopics);
           expect(orderOfTopics[0]).toBe(countingTopic);
           expect(counter.count).toBe(3);
           staged.close();
@@ -60,16 +63,19 @@ test('Ownership Test', (done) => {
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&
           orderOfTopics.length === 0) {
-          console.log('Stage 3, If 1 Count: ', counter.count);
+          console.log('Stage 3, If #1 | Count: ', counter.count);
           orderOfTopics.push(axiumState.lastStrategy);
         } else if (
           (axiumState.lastStrategy === countingTopic ||
           axiumState.lastStrategy === primedCountingTopic) &&
           orderOfTopics.length === 1) {
           if (orderOfTopics[0] !== axiumState.lastStrategy) {
-            console.log('Stage 3, If 2 Count: ', counter.count);
+            console.log('Stage 3, If #2 | Count: ', counter.count);
             orderOfTopics.push(axiumState.lastStrategy);
-            // Due to the halting behavior of a Unified Turing Machine, this will trigger the final test.
+            // Due to the halting behavior of a Unified Turing Machine, this will trigger before set Count at step 2.
+            //  If commented out, set Count will trigger the the "If 3" check.
+            //  If both this line and step 2 are commented out, the "If 3" will never run.
+            //    This proves STRX as a Unified Turing Machine and this configuration Halting Complete.
             dispatch(axiumLog(), {
               runOnce: true
             });
