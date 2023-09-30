@@ -33,9 +33,11 @@ test('Axium Stage Dispatch Options Test', (done) => {
         runCount++;
         const counter = selectState<Counter>(concepts, counterName);
         console.log('Stage 2 ', counter, runCount);
+        // Sets count to 2 and only runs once per state update
         dispatch(counterAdd(), {
           runOnce: true
         });
+        // Will wait until count is set to 2, then set the Stage Explicitly to the third Step counting from 0.
         dispatch(counterAdd(), {
           setStep: 2,
           debounce: 0,
@@ -49,7 +51,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         runCount++;
         const counter = selectState<Counter>(concepts, counterName);
         console.log('Stage 3 ', counter, runCount);
-        // Will cause the stage to close
+        // Will cause an action overflow forcing the stage to close and add itself to bad Stages
         dispatch(counterSubtract(), {
           // Enabling will cause this test to timeout via the subscription watching for badStages to never be ran.
           // debounce: 500
