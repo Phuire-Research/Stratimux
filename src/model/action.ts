@@ -5,7 +5,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
-//    Logical determinations such as these will be determined in the future via generation over hand placement.
+//   Logical determinations such as these will be determined in the future via generation over hand placement.
 const axiumConcludeType: ActionType = 'Conclude';
 const axiumBadActionType: ActionType = 'Axium received a Bad Action';
 const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';

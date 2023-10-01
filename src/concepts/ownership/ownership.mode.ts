@@ -3,14 +3,13 @@ import { Action, createAction } from '../../model/action';
 import { Concept } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
-import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
-import { axiumConcludeType } from '../axium/qualities/conclude.quality';
 import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 import { selectState } from '../../model/selector';
 import { OwnershipState, ownershipName } from './ownership.concept';
+import { AxiumState } from '../axium/axium.concept';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -21,6 +20,8 @@ export const ownershipMode: Mode = (
   // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
+  } else {
+    finalMode = (concepts[0].mode as Mode[])[(concepts[0].state as AxiumState).defaultModeIndex];
   }
   // Logical Determination: axiumConcludeType
   // If generation is set to -1, then the action is not primed.
