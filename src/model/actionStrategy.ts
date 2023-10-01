@@ -97,16 +97,6 @@ function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes , deci
   return preposition + decision + body + denoter;
 }
 
-// export function setPreposition(strategy: ActionStrategy, preposition: string) {
-//   const target = strategy.currentNode;
-//   target.preposition = preposition;
-// }
-
-// export function setDenoter(strategy: ActionStrategy, denoter: string) {
-//   const target = strategy.currentNode;
-//   target.denoter = denoter;
-// }
-
 export function createStrategy(
   params: ActionStrategyParameters,
 ): ActionStrategy {

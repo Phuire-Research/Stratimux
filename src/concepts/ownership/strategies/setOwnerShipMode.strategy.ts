@@ -19,7 +19,7 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     }
   });
 
-  const stepThree: ActionNode = {
+  const stepTwo: ActionNode = {
     actionType: ownershipInitializeOwnershipType,
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
@@ -28,25 +28,15 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     },
     failureNode: null,
   };
-  const stepTwo: ActionNode = {
+  const stepOne: ActionNode = {
     actionType: axiumSetModeType,
     semaphore: setModeSemaphore,
-    successNode: stepThree,
-    successNotes: {
-      preposition: 'Successfully'
-    },
-    failureNode: null,
-    payload: { modeIndex: 2, modeName } as SetModePayload,
-  };
-  const stepOne: ActionNode = {
-    actionType: axiumSetDefaultModeIndexType,
-    semaphore: setDefaultModeIndexSemaphore,
     successNode: stepTwo,
     successNotes: {
       preposition: 'Successfully'
     },
     failureNode: null,
-    payload: { index: ownershipModeIndex } as SetDefaultModeIndexPayload,
+    payload: { modeIndex: 2, modeName } as SetModePayload,
   };
   const params: ActionStrategyParameters = {
     topic: setOwnerShipModeTopic,

@@ -21,20 +21,6 @@ import {
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
-// const createPuntedDialog = (strategy: ActionStrategy, payload: AppendActionListToDialogPayload) => {
-//   const dialogNode: ActionNode = {
-//     actionType: axiumAppendActionListToDialogType,
-//     successNode: null,
-//     failureNode: null,
-//     payload: payload
-//   };
-//   const params: ActionStrategyParameters = {
-//     initialNode: dialogNode,
-//     topic: ''
-//   };
-//   return puntStrategy(createStrategy(params), strategy);
-// };
-
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
     action.strategy &&
@@ -113,18 +99,7 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
         names.push(concept.name);
       });
     }
-    // if (concept.principles) {
-    //     const axiumState = selectState<AxiumState>(concepts, _axium.key);
-    //     concept.principles.forEach((principle) => {
-    //         const sub = createPrinciple$(principle, concept).subscribe(action => action$.next(action)) as Subscriber<Action>;
-    //         axiumState.subscribers.push({
-    //             key: concept.key,
-    //             subscriber: sub,
-    //         });
-    //     })
-    // }
   });
-  // const concepts$: BehaviorSubject<Concept[]> = new BehaviorSubject(concepts);
   axiumState.action$
     .pipe(
       withLatestFrom(axiumState.concepts$),
