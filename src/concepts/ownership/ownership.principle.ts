@@ -4,7 +4,7 @@ import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { AxiumState, axiumName } from '../axium/axium.concept';
-import { Action, createAction } from '../../model/action';
+import { Action, areSemaphoresEqual, createAction } from '../../model/action';
 import { selectState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { registerPrincipleSubscription } from '../../model/principle';
@@ -42,9 +42,9 @@ export const ownershipPrinciple: PrincipleFunction = (
               ownershipState = selectState<OwnershipState>(concepts, ownershipName);
               const newPendingActions = [];
               for (const pending of ownershipState.pendingActions) {
-                if (pending.type !== newAction.type && pending.expiration !== newAction.expiration) {
+                if (!areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
                   newPendingActions.push(pending);
-                } else if (pending.type === newAction.type && pending.expiration !== newAction.expiration) {
+                } else if (areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
                   newPendingActions.push(pending);
                 }
               }

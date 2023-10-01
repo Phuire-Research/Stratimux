@@ -1,11 +1,9 @@
 /* eslint-disable max-depth */
-import { Action, createAction, getSemaphore, primeAction } from '../model/action';
+import { Action, areSemaphoresEqual } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concept } from './concept';
 import { selectState } from './selector';
-import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
-import { ActionNode, ActionStrategy, nullActionType } from './actionStrategy';
-import { counterSetCountType } from '../concepts/counter/qualities/setCount.quality';
+import { ActionNode, ActionStrategy } from './actionStrategy';
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
@@ -226,8 +224,10 @@ const qualityAction = (concepts: Concept[], _action: Action): [Concept[], boolea
 
 const areSameDepth = (first: ActionNode, second: ActionNode, count: [number, number]): boolean => {
   const newCount: [number, number] = [
-    first.lastActionNode?.actionType !== nullActionType ? count[0] + 1 : count[0],
-    second.lastActionNode?.actionType !== nullActionType ? count[0] + 1 : count[0]
+    // Logical Determination: nullActionType
+    //  In addition we logically guarantee that action would be set at this point of execution
+    (first.lastActionNode?.action as Action).semaphore[3] !== 2 ? count[0] + 1 : count[0],
+    (second.lastActionNode?.action as Action).semaphore[3] !== 2 ? count[0] + 1 : count[0]
   ];
   if (count[0] !== newCount[0] && count[1] !== newCount[1] && newCount[0] === newCount[1]) {
     return areSameDepth(first.lastActionNode as ActionNode, second.lastActionNode as ActionNode, newCount);
@@ -242,7 +242,7 @@ export const areEqual = (first: Action, second: Action ) => {
   const firstStrategy = first.strategy;
   const secondStrategy = second.strategy;
   if (firstStrategy === undefined && secondStrategy === undefined) {
-    if (first.type === second.type) {
+    if (areSemaphoresEqual(first, second)) {
       if (first.payload === undefined && second.payload === undefined) {
         equal = true;
       } else {
@@ -251,7 +251,7 @@ export const areEqual = (first: Action, second: Action ) => {
     }
     equal = false;
   } else if (firstStrategy?.topic === secondStrategy?.topic) {
-    if (first.type === second.type) {
+    if (areSemaphoresEqual(first, second)) {
       if (first.payload === undefined && second.payload === undefined) {
         equal = true;
       } else if (JSON.stringify(first.payload) === JSON.stringify(second.payload)) {
