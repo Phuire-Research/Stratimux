@@ -38,7 +38,8 @@ import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality'
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
     action.strategy &&
-    action.type === axiumConcludeType
+    // Logical Determination: axiumConcludeType
+    action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
     const appendToDialog = createAction(axiumAppendActionListToDialogType);
@@ -59,7 +60,8 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
 export const defaultMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
     action.strategy &&
-    action.type === axiumConcludeType
+    // Logical Determination: axiumConcludeType
+    action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
     const appendToDialog = createAction(axiumAppendActionListToDialogType);

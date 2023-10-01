@@ -6,12 +6,11 @@ import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { axiumSetBlockingModeType } from '../axium/qualities/setBlockingMode.quality';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { axiumConcludeType } from '../axium/qualities/conclude.quality';
-import { ActionStrategy, nullActionType, strategyFailed } from '../../model/actionStrategy';
+import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/unifiedSubject';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 import { selectState } from '../../model/selector';
 import { OwnershipState, ownershipName } from './ownership.concept';
-import { counterSetCountType } from '../counter/qualities/setCount.quality';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -19,10 +18,15 @@ export const ownershipMode: Mode = (
   let action = _action;
   let concepts = _concepts;
   let finalMode: Mode = permissiveMode;
-  if (action.type === axiumSetBlockingModeType) {
+  // Logical Determination: setBlockingModeType
+  if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
   }
-  if (action.type !== axiumConcludeType && action.semaphore[2] !== -1) {
+  // Logical Determination: axiumConcludeType
+  // If generation is set to -1, then the action is not primed.
+  //  Therefore we pass straight to finalMode which will recall this Mode after priming the action.
+  //  This guarantees that action beyond this function will have a semaphore not set to [0, 0, -1, 0]
+  if (action.semaphore[3] !== 3 && action.semaphore[2] !== -1) {
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
     if (shouldBlock) {
@@ -30,9 +34,8 @@ export const ownershipMode: Mode = (
         if (action.strategy.currentNode.failureNode === null) {
         // This assumes that the Strategy does not account for the Block
           let nextAction = strategyFailed(action.strategy);
-          // const lastAction = nextAction.strategy?.currentNode.action as Action;
-          // concepts = clearStubs(concepts, lastAction);
-          if (nextAction.type === axiumConcludeType) {
+          // Logical Determination: axiumConcludeType
+          if (nextAction.semaphore[3] === 3) {
             concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
             nextAction = createAction(axiumAppendActionListToDialogType);
             nextAction.payload = {
@@ -62,11 +65,13 @@ export const ownershipMode: Mode = (
     // Free to Run
       finalMode([action, concepts, action$, concepts$]);
     }
-  } else if (action.type !== axiumConcludeType) {
+  // Logical Determination: axiumConcludeType
+  } else if (action.semaphore[3] !== 3) {
     finalMode([action, concepts, action$, concepts$]);
   }
 
-  if (action.strategy?.stubs && action.type === axiumConcludeType) {
+  // Logical Determination: axiumConcludeType
+  if (action.strategy?.stubs && action.semaphore[3] === 3) {
     concepts = clearStubs(concepts, action.strategy);
     concepts$.next(concepts);
   }

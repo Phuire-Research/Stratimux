@@ -10,11 +10,14 @@ import { UnifiedSubject } from '../../model/unifiedSubject';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;
+  // We are logically determining these semaphore values by hand for now.
   if (
-    action.type === axiumBadActionType &&
-    action.type === axiumConcludeType) {
+    // Logical Determination: axiumBadActionType
+    action.semaphore[3] === 1 ||
+    // Logical Determination: axiumConcludeType
+    action.semaphore[3] === 3) {
     actionable = false;
-    if (axiumState.logging && action.type === axiumBadActionType) {
+    if (axiumState.logging && action.semaphore[3] === 1) {
       console.warn('Bad Action', action);
     }
   }
@@ -26,10 +29,9 @@ export const permissiveMode: Mode = (
 ) => {
   const axiumState = concepts[0].state as AxiumState;
   if (isActionable(axiumState, action)) {
-    if (action.type !== axiumSetBlockingModeType) {
+    // Logical Determination: axiumSetBlockingModeType
+    if (action.semaphore[3] !== 4) {
       if (action.semaphore[2] !== -1 && action.semaphore[2] === axiumState.generation) {
-        // console.log('DEFAULT INNER: ', action.type);
-        // console.log(concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer)
         let subject: Subject<Action>;
         if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
           subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
@@ -38,13 +40,12 @@ export const permissiveMode: Mode = (
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
         const state = concepts[action.semaphore[0]].state;
         concepts[action.semaphore[0]].state = reduce(state, action);
-        // console.log('Default Mode Check Length: ', concepts.length)
         concepts$.next(concepts);
         axiumState.subConcepts$.next(concepts);
       } else {
-        // console.log('DEFAULT TESTING 2', action.type, action.semaphore, AxiumState.generation);
         const nextAction = primeAction(concepts, action);
-        if (nextAction.type === axiumBadActionType) {
+        // Logical Determination: axiumBadActionType
+        if (nextAction.semaphore[3] === 1) {
           const payload = [action];
           nextAction.payload = payload;
         }
@@ -77,7 +78,8 @@ export const blockingMode: Mode = (
       }
     } else {
       const nextAction = primeAction(concepts, action);
-      if (nextAction.type === axiumBadActionType) {
+      // Logical Determination: axiumBadActionType
+      if (nextAction.semaphore[3] === 1) {
         const payload = {...action};
         nextAction.payload = payload;
       }

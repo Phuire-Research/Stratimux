@@ -1,9 +1,8 @@
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
-import { Action, ActionType, createAction } from './action';
+import { Action, ActionType, createAction, nullActionType } from './action';
 import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
 
-export const nullActionType: ActionType = 'null';
 /**
  * ActionNode
  * Control Structure used by ActionStrategy
@@ -31,7 +30,7 @@ export interface ActionNode {
   actionType: ActionType;
   payload?: unknown;
   keyedSelectors?: KeyedSelector[];
-  semaphore?: [number, number, number];
+  semaphore?: [number, number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
   decisionNotes?: ActionNotes;
@@ -114,6 +113,7 @@ export function createStrategy(
   const data: unknown = params.data;
   const currentNode: ActionNode = params.initialNode;
   currentNode.lastActionNode = {
+    // This logically determines that all ActionNodes will have a Action associated.
     action: createAction(nullActionType),
     actionType: nullActionType,
     successNode: null,
@@ -204,7 +204,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
       actionType: axiumConcludeType,
       successNode: null,
       failureNode: null,
-      lastActionNode: strategy.currentNode
+      lastActionNode: strategy.currentNode,
     };
     conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
@@ -275,7 +275,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
       failureNode: null,
       lastActionNode: strategy.currentNode,
     };
-    conclude.action = createAction(axiumConcludeType);
+    conclude.action = createAction(conclude.actionType);
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,
@@ -350,7 +350,7 @@ export const strategyDecide = (
     actionType: axiumConcludeType,
     successNode: null,
     failureNode: null,
-    lastActionNode: strategy.currentNode
+    lastActionNode: strategy.currentNode,
   };
   conclude.action = createAction(conclude.actionType);
   conclude.action.strategy = {
