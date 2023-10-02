@@ -39,8 +39,8 @@ const staged = axium.stage(
         console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
-        // This will place a counting strategy is a que to be later dispatched.
-        //    Via the experiment principle, to simulate an action moving off premise.
+        // This will place a counting strategy in the experiment actionQue to be later dispatched.
+        //    Via its principle, to simulate an action moving off premise.
         dispatch(strategyBegin(puntCountingStrategy()), {
           iterateStep: true
         });
