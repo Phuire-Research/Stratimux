@@ -32,6 +32,7 @@ test('Ownership Test', (done) => {
           });
         }
       },
+      // Comment out if testing log and the halting quality of the Unified Turing Machine.
       (cpts, dispatch) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
@@ -57,6 +58,8 @@ test('Ownership Test', (done) => {
           console.log('Stage 3, If #3 | Count: ', counter.count, orderOfTopics);
           expect(orderOfTopics[0]).toBe(countingTopic);
           expect(counter.count).toBe(3);
+          // Comment in if testing the halting ability of log and setCount stage is commented out.
+          // setTimeout(() => {done();}, 1000);
           staged.close();
         } else if (
           (axiumState.lastStrategy === countingTopic ||
@@ -72,9 +75,12 @@ test('Ownership Test', (done) => {
             console.log('Stage 3, If #2 | Count: ', counter.count);
             orderOfTopics.push(axiumState.lastStrategy);
             // Due to the halting behavior of a Unified Turing Machine, this will trigger before set Count at step 2.
-            //  If commented out, set Count will trigger the the "If 3" check.
-            //  If both this line and step 2 are commented out, the "If 3" will never run.
-            //    This proves STRX as a Unified Turing Machine and this configuration Halting Complete.
+            //  If commented out, set Count will trigger the the "If #3" check.
+            //  If commenting out setCount stage, disable the test in the subscription
+            //    Then be sure to enabled the final done check in "If #3".
+            //    Then enabling the axiumLog dispatch will allow the test to conclude.
+            //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
+            //      This proves STRX as a Unified Turing Machine and this configuration Halting Complete.
             dispatch(axiumLog(), {
               runOnce: true
             });
@@ -93,6 +99,7 @@ test('Ownership Test', (done) => {
     if (counter.count >= 1000) {
       console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
       expect(counter.count).toBe(1000);
+      // Comment out if setCount stage is disabled and instead testing axiumLogs of "If #2" halting interaction.
       setTimeout(() => {done();}, 1000);
       sub.unsubscribe();
       axium.close();
