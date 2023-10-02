@@ -17,17 +17,18 @@ export const ownershipMode: Mode = (
   let action = _action;
   let concepts = _concepts;
   let finalMode: Mode = permissiveMode;
+  const axiumState = concepts[0].state as AxiumState;
   // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
   } else {
-    finalMode = (concepts[0].mode as Mode[])[(concepts[0].state as AxiumState).defaultModeIndex];
+    finalMode = (concepts[0].mode as Mode[])[axiumState.defaultModeIndex];
   }
   // Logical Determination: axiumConcludeType
   // If generation is set to -1, then the action is not primed.
   //  Therefore we pass straight to finalMode which will recall this Mode after priming the action.
   //  This guarantees that action beyond this function will have a semaphore not set to [0, 0, -1, 0]
-  if (action.semaphore[3] !== 3 && action.semaphore[2] !== -1) {
+  if (action.semaphore[3] !== 3 && action.semaphore[2] !== axiumState.generation) {
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
     if (shouldBlock) {
