@@ -2,11 +2,11 @@
 #### *The Unified Turing Machine - aka Hand Written Intelligence of Doing*
 *Note if you notice a strange set of capitalizations of concepts, this is a new format that is being formalized as conceptual logic. In addition, there was no generative intelligence used in the creation of this framework. This is 100% hand written.*
 ### Abstract
-One of the greatest gaps of understanding in the modern age is whether what we speak has some mechanical bearing, or is just some statistical output. What the Unified Turing Machine, and by extension STRX accomplishes is the unifying aspect of the mechanics of language to a code implementation. That currently we have trouble distinguishing logic from opinion, and is the very topic that this approach seeks to create a distinction between. Where we can describe the exact process that would transform some data into something else. Then back that description up with a code implementation that accomplishes the transformation. There is backing to this in the original Unified Science International Encyclopedia, via its entry on the "Foundations of Logic and Mathematics." But in the current generalized scope, there had been no further pursuit to understand the unifying aspect of language and mathematics, as if they have been considered completely separate concepts. Yet mathematics is just one aspect of programming, we formalize mainly through logic and describe our functions and variables via names. Therefore programming is a fundamentally unified format.
+One of the greatest gaps of understanding in the modern age is whether what we speak has some mechanical bearing, or is just some statistical output. What the Unified Turing Machine, and by extension STRX accomplishes is to make plain the unifying aspect of the unknown mechanics of language. This is accomplished via logical verbose descriptions that are unified by code implementations and proved via a test. That currently we have trouble distinguishing logic from opinion in our speech, thus this approach seeks to prove a distinction between speech that is testable versus not. Where we can describe logically the exact process that would transform some data into something else in our very speech. Then back that description up with a code implementation that accomplishes the transformation. There is backing to this in the original Unified Science International Encyclopedia, via its entry on the "Foundations of Logic and Mathematics." But in the current generalized scope, there had been no further pursuit to understand the unifying aspect of language and mathematics. And colloquially are presented as if they are completely separate concepts. Yet mathematics is just one aspect of programming, we formalize mainly through logic and describe our functions and variables via names. Therefore programming is a fundamentally unified format that may used to prove verbose logic.
 
-This is to push back against the notion that the human mind is just another stochastic parrot. That there can be decisions made that have some backing via some comparison that can be independent from the knowledge we are taught. Where we can have precise measurements and be bothered when a ruler's mark is slightly off. As all of this is the observation of qualities that are useful to us. And that is the very function of this framework. We organize by concepts, describe their qualities logically by their functionality, and test their implementations via code. Further this framework makes mundane the higher orders of logic that is currently obfuscated in the given frame of humanity. Via a direct demonstration of steps and how we can account for decisions between these steps in the process of creating some data.
+This is to push back against the notion that the human mind is just another stochastic parrot. That there can be decisions made that have some backing via sound logic that can be independent from the knowledge we are taught. "Where we can have precise measurements and be bothered when a ruler's mark is slightly off." As all of this is the observation of qualities that are useful to us. And that is the very function of this framework. We organize by concepts, describe their qualities logically by their functionality, and test their implementations via code. Further this framework makes mundane the higher orders of logic that are currently obfuscated in the given frame of humanity. Via a direct demonstration of steps and how we can account for decisions between these steps in the process of transforming some data. Or simply how we can prove a point in a testable fashion, versus the absolute need of referencing to back up opinion. As that is still just an informed opinion, versus logic.
 
-The inspiration for STRX was that of Redux and its origin via the FLUX design pattern. While maintaining several similarities for the sake of maintaining some familiarity of that pattern of design for developers. While offering enough of a departure where the traditional store is now referred to as the **Axium**. Where an axium is a set of concepts that are unified to form a greater conceptualization. Namely that of your application, but in contrast to its inspiration and accomplished by the ActionStrategy design pattern. A blunt demonstration of higher order logic, that allows qualities of other concepts to be used/unified together to perform some transformation. And further enhanced via the spatial ownership paradigm, that relays to the one universal concept that is plain. That all things in space, have a position and we may respect that position to allow multiple ActionStrategies to be ran concurrently without race conditions. This allows us to actively encouraging to cross the streams of state, or to be specific that of the unifying concepts and their qualities. To create an application that is greater than the sum of its parts due to its composability.
+The inspiration for STRX was that of Redux and its origin via the FLUX design pattern of a finite state machine. While maintaining several similarities for the sake of maintaining some familiarity of that pattern of design for developers. While offering enough of a departure where the traditional store is now referred to as the **Axium**. Where an axium is a set of concepts that are unified to form a greater conceptualization. Namely that of your application, but in contrast to its inspiration and accomplished by the ActionStrategy design pattern. Demonstrates a blunt demonstration of higher order logic, that allows qualities of other concepts to be used/unified together to perform some transformation. And further enhanced via the spatial ownership paradigm, that relays to the one universal concept that is plain. That all things in space, have a position and we may respect that position to allow multiple ActionStrategies to be ran concurrently without race conditions. Noting that despite the utilization of actions there are no string type comparisons beyond the initial creation for the sake of performance. This allows us to actively encouraging to cross the streams of state, or to be specific that of the unifying concepts and their qualities. To create an application that is greater than the sum of its parts due to its composability.
 
 ![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://github.com/Phuire-Research/STRX/blob/main/CrossTheStreams.gif?raw=true)
 
@@ -19,12 +19,103 @@ The inspiration for STRX was that of Redux and its origin via the FLUX design pa
 * [Unified Turing Machine](https://github.com/Phuire-Research/STRX/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## The Halting Problem
-Further the Unified Turing also accomplishes what has been considered to be an impossible to solve problem of its original. The halting problem. Noting that here we are using logic to solve this and via an order of requirements to have said solution. The primary requirement to satisfy the solution is that the main run time of a program, must be a recursive function. The ActionStrategy pattern in addition satisfies the requirement, via being a specific set of instruction that concludes, but is capable of a branching behavior that affords for error correction. The specific interest in presenting this solution at this time is to demonstrate a method of safety as to disallow some run away effect from an Artificial Intelligence agent.
+Further the Unified Turing also accomplishes what has been considered to be an impossible to solve problem of the original theoretical turing machine. The halting problem. Noting that here we are using logic to solve this and via a set of specified requirements to have said solution. The primary requirement to satisfy the solution is that the main run time of a program, must be a recursive function. The ActionStrategy pattern in addition satisfies the next requirement, via being a specific set of instruction that concludes, but is capable of a branching behavior that affords for error correction. The specific interest in presenting this solution at this time is to demonstrate a method of safety as to disallow some run away effect from an Artificial Intelligence agent if embodying a Unified Turing Machine.
 
-As the unfortunate truth of a Unified Turing Machine due to its recursive functionality. Is that it requires the ability to halt. Otherwise the developer will run into unexpected behavior in their applications as the unfortunate truth is that if the strategies and/or supporting framework are faulty. Our general good enough computers and their branch prediction will generate ghost actions and unexpected behaviors. Such as the thrashing of the applications memory. So by strange effect the solution to solve the halting problem, was a method of programming that went beyond data entry of classic. Utilizing logic over mathematics to create the scope of this framework to afford for the dynamic functionality of data transformation versus entry.
+As the unfortunate truth of a Unified Turing Machine due to its recursive functionality. Is that it requires the ability to halt to function. Otherwise the developer will run into unexpected behavior in their applications as the unfortunate truth is that if the strategies and/or supporting framework are faulty. Our general good enough computers and their branch prediction will generate ghost actions and other unexpected behaviors. Such as the thrashing the applications memory. So by strange effect the solution to solve the halting problem, was a method of programming that went beyond data entry of classic. Utilizing logic over mathematics to create the scope of this framework, to afford for the dynamic functionality of data transformation versus data entry.
+
+Or simply, due to the recursive functionality of STRX, that requires the ability to halt by design. Is accomplished via ActionStrategies, that perform higher order logic within the finite state machine that is the axium. That describes the exact steps to accomplish something. As every ActionStrategy has a conclusion, and can represent any calculation. This is the advent of "Logical Determinism," is the logical ability to disclude calculations that do not halt. As ActionStrategies represent a finite symbol selection of symbols that in branching sequence can be tested to be halting complete.
+### The Testable Proof
+```typescript
+// ./src/test/ownership.test.ts
+const orderOfTopics: string[] = [];
+let finalRun = true;
+const axium = createAxium([createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
+const staged = axium.stage(
+  'Testing Ownership Staging', [
+    (cpts, dispatch) => {
+      const axiumState = cpts[0].state as AxiumState;
+      if (axiumState.lastStrategy === setOwnerShipModeTopic) {
+        const ownership = selectState<OwnershipState>(cpts, ownershipName);
+        console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
+        const counter = selectState<Counter>(cpts, counterName);
+        console.log('Count: ', counter.count);
+        // This will place a counting strategy is a que to be later dispatched.
+        //    Via the experiment principle, to simulate an action moving off premise.
+        dispatch(strategyBegin(puntCountingStrategy()), {
+          iterateStep: true
+        });
+      }
+    },
+    (cpts, dispatch) => {
+      // Will be ran after both counting strategies conclude.
+      const ownership = selectState<OwnershipState>(cpts, ownershipName);
+      console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
+      dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
+    },
+    (cpts, dispatch) => {
+      const ownership = selectState<OwnershipState>(cpts, ownershipName);
+      console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
+      const counter = selectState<Counter>(cpts, counterName);
+      console.log('Count: ', counter.count);
+      dispatch(strategyBegin(primedCountingStrategy(cpts)), {
+        iterateStep: true
+      });
+    },
+    (cpts, dispatch) => {
+      const axiumState = cpts[0].state as AxiumState;
+      const counter = selectState<Counter>(cpts, counterName);
+      console.log('Stage 4', axiumState.lastStrategy, orderOfTopics);
+      if (orderOfTopics.length === 2 && finalRun) {
+        finalRun = false;
+        // This will be the final test to be triggered by a log action.
+        console.log('Stage 3, If #3 | Count: ', counter.count, orderOfTopics);
+        expect(orderOfTopics[0]).toBe(countingTopic);
+        expect(counter.count).toBe(3);
+        staged.close();
+      } else if (
+        (axiumState.lastStrategy === countingTopic ||
+        axiumState.lastStrategy === primedCountingTopic) &&
+        orderOfTopics.length === 0) {
+        console.log('Stage 3, If #1 | Count: ', counter.count);
+        orderOfTopics.push(axiumState.lastStrategy);
+      } else if (
+        (axiumState.lastStrategy === countingTopic ||
+        axiumState.lastStrategy === primedCountingTopic) &&
+        orderOfTopics.length === 1) {
+        if (orderOfTopics[0] !== axiumState.lastStrategy) {
+          console.log('Stage 3, If #2 | Count: ', counter.count);
+          orderOfTopics.push(axiumState.lastStrategy);
+          // Due to the halting behavior of a Unified Turing Machine, this will trigger before set Count at step 2.
+          //  If commented out, set Count will trigger the the "If 3" check.
+          //  If both this line and step 2 are commented out, the "If 3" will never run.
+          //    This proves STRX as a Unified Turing Machine and this configuration as Halting Complete.
+          dispatch(axiumLog(), {
+            runOnce: true
+          });
+        }
+      }
+    }
+  ]);
+const sub = axium.subscribe((concepts: Concept[]) => {
+  const state = selectState<OwnershipState>(concepts, ownershipName);
+  const _axiumState = concepts[0].state as AxiumState;
+  if (state.initialized && _axiumState.lastStrategy === setOwnerShipModeTopic) {
+    expect(state.initialized).toBe(true);
+  }
+  const counter = selectState<Counter>(concepts, counterName);
+  // This will run last, despite setCount being the second staged dispatch.
+  if (counter.count >= 1000) {
+    console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
+    expect(counter.count).toBe(1000);
+    setTimeout(() => {done();}, 1000);
+    sub.unsubscribe();
+    axium.close();
+  }
+}); 
+```
 
 ### STRX - *ST*rategic *R*eactive(X) Framework
-STRX is the graph computational framework release of a new Unified Turing Machine. The internal structure of this machine directly relays to a form of written intelligence of doing, over that of knowledge retrieval. But may be written to facilitate that same expert system paradigm of classic. The importance of this machine to the now of 2023, is the functionality of the ActionStrategy Pattern as it relays to human and machine intelligence. As the pattern itself is a Unified Set of logical explanations of doing as a series of functions. Unified to the mechanism of that doing via code implementations of that logical explanation. We organize using concepts as it relays to a historic pursuit of unifying all fields of science. And is the comparable comparison to a graph of machine learning universal functions, and the generated Neural Network of layers that aggregate to greater universal functions. The comparison to that of LLM, during runtime these actions are outputted to an ActionList that is later composed as a STRX sentence.
+STRX is the graph computational framework release of a new Unified Turing Machine. The internal structure of this machine directly relays to a form of written intelligence of doing, over that of knowledge retrieval, and data entry. But may be written to facilitate any preexisting paradigm such as that same expert system paradigm of classic. The importance of this machine to the now of 2023, is the functionality of the ActionStrategy Pattern as it relays to human and machine intelligence. As the pattern itself is a Unified Set of logical explanations of doing as a series of functions. Unified to the mechanism of that doing via code implementations of that logical explanation. We organize using concepts as it relays to a historic pursuit of unifying all fields of science. And is the comparable comparison to a graph of machine learning universal functions, and the generated Neural Network of layers that aggregate to greater universal functions. The comparison to that of LLM, during runtime these actions are outputted to an ActionList that is later composed as a STRX sentence.
 
 #### The Anatomy of a STRX Sentence
 ```
@@ -60,27 +151,25 @@ In addition, principles here act as a containing observer that allows for utiliz
 
 ## STRX was Designed Specifically to Mirror the Functionality of Neural Networks to Decompose their Black Box Universal Functions.
 ![Fourier Universal Function, Credit to Emergent Garden @Youtube](https://github.com/Phuire-Research/STRX/blob/main/fourierUniversalFunction-CC-Emergent-Garden.png?raw=true)
-
 The above would be some Neural Network's universal function made to fit some unknown function via a fourier transform. If we know the function ahead of the time we may set the weights specifically to represent that function. The question that is obfuscated in current understanding is by what mechanism is this Neural Network choosing the next node on the graph to determine its output? As the decision is obfuscated by the weighted sum between each layer of the Neural Network.
 
 ![Neural Network Diagram](https://github.com/Phuire-Research/STRX/blob/main/NeuralNetwork.png?raw=true)
+This is the reason for STRX's recursive functionality. Is that the life time of an ActionStrategy is the exact point of comparison between that of a set of universal functions on a graph and the weighted sum between each layer in the graph above. But direct and without the need to calculate the others nodes in the network. As the method allows for the next node to be some logical deterministic instruction via its method. But the entire function is the net run time of that action through the axium's mode. As the mode is just a function that relays to composition of functions that satisfy the quality of an action to it's reducer and method dictated by the ActionStrategy. Keep in mind a function is allowed to be composed of functions. Therefore what is obfuscated within networks, is not only the function themselves, but the decisions made between the Neural Networks layers that control the final output by weighted sum, based on some input. Except here the mode can be represented as a singular universal function or node, that does not have to rely on the sum of weights to divine a weighted sum to inform its output. And is instead direct and in plain text in the spirit of the open internet.
 
-This is the reason for STRX's recursive functionality. Is that the life time of an ActionStrategy is the exact point of comparison between that of a set of universal functions on a graph and the weighted sum between each layer in the graph above. But direct and without the need to calculate the others nodes in the network. As the method allows for the next node to be some logical deterministic instruction via its method. But the entire function is the net run time of that action through the axium's mode. As the mode is just a function that relays to composition of functions of a quality to it's reducer and method dictated by the ActionStrategy. Keep in mind a function is allowed to be composed of functions. Therefore what is obfuscated within networks, is not only the function themselves, but the decisions made between the Neural Networks layers that control the final output by weighted sum, based on some input. Except here the mode can be represented as a singular universal function or node, that does not have to rely on the sum of weights to divine a weighted sum to inform its output. And is instead direct.
-
-This is what allows for STRX to act as a comparable mirror to that of a Neural Network, while succeeding it in a directed flow. Except that it is transparent and inherently more efficient via exact instructions. Versus the probabilistic derivative towards 100% accuracy the a universal function represents. For a Neural Network to be considered a comparably mirror to a Unified Turing Machine, would be to forgo the weighted averaging sum of layers. Would be the creation of some directed path that formalizes the output of the Neural Network based on the input. But that data does not exist and this framework, or rather Unified Turing Machines would be the path towards creating that data.
+This is what allows for STRX to act as a comparable mirror to that of a Neural Network, while succeeding it in a directed flow. Except that it is transparent and inherently more efficient via exact instructions. Versus the fundamental issue of probabilistic derivatives that get infinitely close to 100% accuracy that a universal function represents. For a Neural Network to be considered a comparably mirror to a Unified Turing Machine, would be a network that forgoes nodes not fully utilized within the weighted averaging sum of layers. A form of logical determination within the network itself that can disclude nodes from the weighted sums calculation. Would be the creation of some directed path that formalizes the output of the Neural Network based on the input. But that data does not exist and this framework, or rather Unified Turing Machines would be the path towards creating that data.
 
 In addition if one accepts some logical determinism where we can disclude specific symbols that a classic turing machine would utilize. Noting that the quality selection uses semaphores versus type comparison of its inspiration. Then this system can be proven to halt via some specific configurations of concepts and their qualities. As the semaphore are the finite symbol reference table of a classical Turing Machine. Except here it is fully dynamic and may expand or reduce in its possible finite symbol selection at run time. And likewise represents the direct path through graph of potential possibilities in a blunt fashion.
 
-We could limit use case like the its Inspiration as a State Machine to control form and functionality of some user interface, or client facing application. But in contrast, this system was designed with the whole computer system and internet in mind. And may be massively expanded and rewritten into other languages if they are able to Satisfy the same dynamic requirements of this system. Thus the graph computation model is purely agnostic to location and based upon the passing of ActionStrategies via messages. And is the spatial equivalent of a Neural Network, but without the need for the weight sum. But in contrast to its conception in 2018, it is now possible to use the same Neural Networks to decompose their functionality into a predictable safe compositions. That can further reinforce the same networks. As this is not to detract from that investment, but to provide a safe transparent mechanism of explainability.
+We could limit use case like the its inspiration as a state machine to control form and functionality of some user interface, or client facing application. But in contrast, this system was designed with the whole computer system and internet in mind. Is capable of being location and form agnostic. And may be massively expanded and rewritten into other languages if they are able to satisfy the same dynamic requirements of this system. Thus as the graph computation model is purely agnostic to location of nodes and draws inspiration from "SmallTalk," via the passing of ActionStrategies via messages between cells/nodes. And is the spatial equivalent of a Neural Network, but without the need for the weight sum. But in contrast to its conception in 2018, it is now possible to use the same Neural Networks to decompose their functionality into a predictable safe compositions. That can further reinforce the same networks. As this is not to detract from that investment, but to provide a safe transparent mechanism of explainability.
 
-This system may become more atomic over time to better represent the dynamics of our Sentences. But during specific stage, this is a fine starting point towards the decomposition of the complexities of intelligence. As the weighted Sum is still massively useful, when there is no direct obvious answer to find some solution to an input. But within this scope would be an entirely different type of Neural Network which does not currently exist. As that would be the generation of novelty over some averaged statistical gradient descent of known data. Is the same as attempting to find the next **Ah-Ha!**
+This system may become more atomic over time to better represent the dynamics of language. But during this specific stage, this is a fine starting point towards the decomposition of the complexities of intelligence. As the weighted sum is still massively useful, when there is no direct obvious answer to find some solution to an input. But within this scope would be an entirely different type of Neural Network which does not currently exist. As that would be the generation of novelty over some averaged statistical gradient descent of known data. Would be finding new arrangements of concept and their qualities to find the next **Ah-Ha!**
 
 ## Release Disclosure
-The internals of this application feature a design pattern released in 2018, ActionStrategy. This resulting framework and the creation of a Unified Turing Machine is the consequence of the complexity that this pattern imposes, despite its simplicity. Thus this framework simplifies the handling of its complex nature and solves the deficiencies of working with this pattern in preexisting frameworks capable of it. Noting that the Unified Turing Machine itself was an indirect discovery handles such complexity. 
+The internals of this application feature a design pattern released in 2018, ActionStrategy. This resulting framework and the creation of a Unified Turing Machine is the consequence of the complexity that this pattern imposes, despite its outward simplicity. Thus this framework simplifies the handling of its complex nature and solves the deficiencies of working with this pattern in preexisting frameworks capable of it. Noting that the Unified Turing Machine itself was an indirect discovery in order to handle such complexity.
 
 This release has no license attached to provide a grace period to protect any potential patents that would result from the release of this repository. And should be considered to be a research release and work in progress. As it is the intention to fully open source this framework, host on npm, and translate into each programming language that might support it in the near future.
 
-To some this might be the holy grail of training sound logic and reasoning into Neural Networks that is comparable to ourselves. For me, this is a framework that I have wanted to release as my self studied dissertation that has been on hold for 5 years. The Unified Turing Machine is my thesis, that it works the test, the documents shared alongside this repository the paper. Hope everyone enjoyed the Ai summer. This work is meant to enhance such, not take away in something that could be greater than the sums of its parts.
+To some this might be the holy grail of training sound logic and reasoning into Neural Networks that is comparable to ourselves. For me, this is a framework that I have wanted to release as my self studied dissertation that has been on hold for 5 years. The Unified Turing Machine is my thesis, that it works the test, the documents shared alongside this repository the paper. Hope everyone enjoyed the Ai summer of 2023. This work is meant to enhance such, not take away in something that could be greater than the sums of its parts.
 
 Be responsible, safe, and have fun!
 

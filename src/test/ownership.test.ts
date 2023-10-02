@@ -34,7 +34,6 @@ test('Ownership Test', (done) => {
       },
       (cpts, dispatch) => {
         // Will be ran after both counting strategies conclude.
-
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
         dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
@@ -90,6 +89,7 @@ test('Ownership Test', (done) => {
       expect(state.initialized).toBe(true);
     }
     const counter = selectState<Counter>(concepts, counterName);
+    // This will run last, despite setCount being the second staged dispatch.
     if (counter.count >= 1000) {
       console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
       expect(counter.count).toBe(1000);
