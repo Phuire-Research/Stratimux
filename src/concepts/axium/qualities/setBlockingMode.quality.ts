@@ -1,4 +1,4 @@
-import { Subject, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
