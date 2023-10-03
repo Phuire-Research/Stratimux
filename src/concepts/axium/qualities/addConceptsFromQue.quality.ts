@@ -1,4 +1,4 @@
-import { Subject, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { Action, ActionType } from '../../../model/action';
@@ -18,6 +18,13 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator(state.subConcepts$);
+        quality.method.pipe(
+          catchError((err: unknown, caught: Observable<Action>) => {
+            if (state.logging) {
+              console.error('METHOD ERROR', err);
+            }
+            return caught;
+          }));
         const methodSub = quality.method.subscribe((action: Action) => {
           const action$ = state.action$ as Subject<Action>;
           blockingMethodSubscription(action$, action);

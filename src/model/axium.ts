@@ -6,7 +6,7 @@ import {
   catchError,
 } from 'rxjs';
 import { Action, createAction, createCacheSemaphores } from './action';
-import { ActionNode, ActionStrategy, ActionStrategyParameters, createStrategy, puntStrategy, strategyBegin } from './actionStrategy';
+import { strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
   createAxiumConcept,
@@ -19,7 +19,6 @@ import {
   AppendActionListToDialogPayload,
   axiumAppendActionListToDialogType
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
-import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
@@ -70,16 +69,22 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
 };
 
 export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
-  // const action$: Subject<Action> = new Subject();
   const concepts: Concept[] = [createAxiumConcept(logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
   concepts.forEach((concept, _index) => {
-    concept.qualities.forEach((quality, index) => {
+    concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
         quality.method = method;
         quality.subject = subject;
+        quality.method.pipe(
+          catchError((err: unknown, caught: Observable<Action>) => {
+            if (axiumState.logging) {
+              console.error('METHOD ERROR', err);
+            }
+            return caught;
+          }));
         const methodSub = quality.method.subscribe((action: Action) => {
           blockingMethodSubscription(axiumState.action$, action);
         }) as Subscriber<Action>;
@@ -107,7 +112,6 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
       catchError((err: unknown, caught: Observable<[Action, Concept[]]>) => {
-        // Will need to Refine this Function Continuously
         if (axiumState.logging) {
           console.error('ACTION STREAM ERROR', err);
         }
@@ -116,7 +120,6 @@ export function createAxium(initialConcepts: Concept[], logging?: boolean, store
     )
     .subscribe(([action, _concepts]: [Action, Concept[]]) => {
       // Would be notifying methods
-      // console.log('Check Length', concepts.length)
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
       const modes = _concepts[0].mode as Mode[];
