@@ -21,13 +21,6 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   concepts.forEach(concept => {
     concept.qualities.forEach(quality => {
       if (quality.method) {
-        quality.method.pipe(
-          catchError((err: unknown, caught: Observable<Action>) => {
-            if (state.logging) {
-              console.error('METHOD ERROR', err);
-            }
-            return caught;
-          }));
         const sub = quality.method.subscribe(action => {
           const action$ = state.action$ as Subject<Action>;
           blockingMethodSubscription(action$, action);
