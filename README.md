@@ -1,5 +1,5 @@
 ![STRX](https://github.com/Phuire-Research/STRX/blob/main/STRX.png?raw=true)
-### *The Unified Turing Machine - Plain Text Intelligence of Doing in the Spirit of the Open Internet*
+#### *The Unified Turing Machine - Plain Text Intelligence of Doing in the Spirit of the Open Internet*
 *Note if you notice a strange set of capitalizations of concepts, this is a new format that is being formalized as conceptual logic. In addition, there was no generative intelligence used in the creation of this framework. This is **100% hand written.***
 
 ----
