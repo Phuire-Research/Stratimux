@@ -82,3 +82,14 @@ export {
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
 export { selectOwnershipLedger } from './concepts/ownership/ownership.selector';
+export { ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
+export { ClearPayloadStubsPayload, ownershipClearPayloadStubsType } from './concepts/ownership/qualities/clearPayloadStubs.quality';
+export { ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
+export {
+  ClearPendingActionsOfStrategyPayload,
+  ownershipClearPendingActionsOfStrategyType
+} from './concepts/ownership/qualities/clearPendingActionsOfStrategy.quality';
+export {
+  ownershipClearStrategyStubsFromLedgerAndSelfType
+} from './concepts/ownership/qualities/clearStrategyStubsFromLedgerAndSelf.quality';
+export { ownershipResetOwnershipLedgerType } from './concepts/ownership/qualities/resetOwnershipLedger.quality';

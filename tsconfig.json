@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2016",
-    "module": "commonjs",
+    "module": "CommonJS",
     "lib": ["ES2016"],
     "allowJs": false,
     "outDir": "build",
@@ -9,7 +9,8 @@
     "strict": true,
     "esModuleInterop": true,
     "types": ["node", "jest"],
-    "skipLibCheck": false
+    "skipLibCheck": false,
+    "noEmit": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts"]
