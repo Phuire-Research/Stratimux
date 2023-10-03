@@ -1,6 +1,6 @@
 {
   "name": "@phuire/strx",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Unified Turing Machine",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
