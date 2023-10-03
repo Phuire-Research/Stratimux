@@ -22,7 +22,8 @@ export type {
   Method,
   Principle,
   Mode,
-  ConceptCreator
+  ConceptCreator,
+  MethodCreator
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
 export { selectState, selectConcept, selectSlice } from './model/selector';
@@ -36,6 +37,7 @@ export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axiu
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
 export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadStages } from './concepts/axium/axium.selector';
 // Qualities
+export { axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
 export { axiumClose, axiumCloseType } from './concepts/axium/qualities/close.quality';
