@@ -6,7 +6,7 @@ import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.pr
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
 import { backTrackQuality } from './qualities/backTrack.quality';
 import { clearPayloadStubsQuality } from './qualities/clearPayloadStubs.quality';
-import { clearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality copy';
+import { clearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
 import { clearPendingActionsQuality } from './qualities/clearPendingActions.quality';
 import { clearPendingActionsOfStrategyQuality } from './qualities/clearPendingActionsOfStrategy.quality';
 import { resetOwnershipLedgerQuality } from './qualities/resetOwnershipLedger.quality';
