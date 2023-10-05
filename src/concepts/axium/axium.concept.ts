@@ -29,6 +29,8 @@ export type NamedSubscriber = {
 }
 
 export type AxiumState = {
+  // Would be unique identifier on a network
+  name: string;
   open: boolean;
   logging: boolean;
   dialog: string;
@@ -52,8 +54,9 @@ export type AxiumState = {
 
 export const axiumName = 'axium';
 
-const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState => {
+const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean): AxiumState => {
   return {
+    name,
     open: false,
     logging: logging ? logging : false,
     dialog: '',
@@ -76,10 +79,10 @@ const createAxiumState = (storeDialog?: boolean, logging?: boolean): AxiumState 
   };
 };
 
-export const createAxiumConcept = (storeDialog?: boolean, logging?: boolean): Concept =>  {
+export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?: boolean): Concept =>  {
   return createConcept(
     axiumName,
-    createAxiumState(storeDialog, logging),
+    createAxiumState(name, storeDialog, logging),
     [
       openQuality,
       badActionQuality,

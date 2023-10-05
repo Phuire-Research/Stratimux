@@ -4,18 +4,20 @@ import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.c
 import { Concept } from './concept';
 import { selectState } from './selector';
 import { ActionNode, ActionStrategy } from './actionStrategy';
+import { AxiumState } from '../concepts/axium/axium.concept';
+import { randomUUID } from 'crypto';
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
 export type OwnershipTicket = {
-  ticket: number;
+  ticket: string;
   // new Date().now() + Agreement
   expiration: number;
 }
 
 export type OwnershipTicketStub = {
   key: string,
-  ticket: number,
+  ticket: string,
 }
 
 export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, OwnershipTicket[]>());
@@ -143,16 +145,22 @@ export const checkIn =
       }
       if (!found) {
         const expiration = action.expiration;
+        const axiumState = concepts[0].state as AxiumState;
+        // This can be improved by checking to see if UUID does not exist on ledger.
+        //    Likewise would be proven to halt beyond @100%.
+        //      Via the handling the axium name to be that of a guaranteed unique network identifier.
+        //        In addition to authentication with incoming actions.
+        //        As the benefit is knowing that all UUIDs have an expiration and are bound to their origin.
+        const ticket = axiumState.name + randomUUID();
         const newTicketStub = {
           key,
-          ticket: ownershipState.ticker,
+          ticket,
           expiration
         };
         const newTicket = {
-          ticket: ownershipState.ticker,
+          ticket,
           expiration
         };
-        ownershipState.ticker += 1;
         strategy.stubs?.push(newTicketStub);
         if (entry) {
           entry.push(newTicket);

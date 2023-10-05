@@ -9,7 +9,7 @@ import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
 
 test('Axium Test', (done) => {
-  const axium = createAxium([createCounterConcept(), createChainConcept()], true, true);
+  const axium = createAxium('chainConceptTest', [createCounterConcept(), createChainConcept()], true, true);
   let count = 0;
   let willDispatch = true;
   const sub = axium.subscribe((concepts: Concept[]) => {

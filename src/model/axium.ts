@@ -68,8 +68,8 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
   }
 };
 
-export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
-  const concepts: Concept[] = [createAxiumConcept(logging, storeDialog), ...initialConcepts];
+export function createAxium(name: string, initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
+  const concepts: Concept[] = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
   concepts.forEach((concept, _index) => {

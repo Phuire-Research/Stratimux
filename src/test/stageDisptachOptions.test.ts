@@ -8,7 +8,7 @@ import { counterSelectCount } from '../concepts/counter/counter.selector';
 
 test('Axium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
-  const axium = createAxium([createCounterConcept()], true);
+  const axium = createAxium('axiumStageDispatchOptionsTest', [createCounterConcept()], true);
   axium.subscribe((concepts) => {
     const axiumState = concepts[0].state as AxiumState;
     if (axiumState.badStages.length > 0) {

@@ -15,7 +15,6 @@ export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
-  ticker: number;
   isResponsibleForMode: boolean;
 }
 
@@ -28,7 +27,6 @@ const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState =>
     initialized: false,
     ownershipLedger: createOwnershipLedger(),
     pendingActions: [],
-    ticker: 0,
     isResponsibleForMode: isResponsibleForMode ? isResponsibleForMode : true
   };
 };

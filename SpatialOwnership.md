@@ -30,13 +30,11 @@ export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
-  ticker: number;
   isResponsibleForMode: boolean;
 }
 ```
 * initialized - Value to control when your principles or external subscriptions should engage with the Ownership Concept. It simply notes when the principles are active.
 * ownershipLedger - Is a simple map that use a key that is informed by a KeyedSelector and value that is a populated ownership ticket.
-* ticker - Starting at 0, this will update for each ticket and stub relationship created within this system and corresponds to the ticket number value.
 * isResponsibleForMode - The just in case your choose to implement your own mode that would require ownership, and can be set to false via the createOwnershipConcept function. Note that you must create your own initialization strategy to set your own Mode.
 
 ### Useful Ownership Qualities

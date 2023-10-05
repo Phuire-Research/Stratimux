@@ -8,7 +8,7 @@ test('Axium Selector Test', (done) => {
   const counter = createCounterConcept();
   const counterState = counter.state as Counter;
   counterState.count = 10;
-  const axium = createAxium([counter], true, true);
+  const axium = createAxium('axiumSelectorTest', [counter], true, true);
   const sub = axium.subscribe((concepts: Concept[]) => {
     const state = selectState<Counter>(concepts, counterName);
     // const count = selectSlice<number>(concepts, counterSelectCount);
@@ -22,7 +22,7 @@ test('Axium Selector State Slice Test', (done) => {
   const counter = createCounterConcept();
   const counterState = counter.state as Counter;
   counterState.count = 10;
-  const axium = createAxium([counter], true, true);
+  const axium = createAxium('axiumSelectorStateSlicedTest', [counter], true, true);
   const sub = axium.subscribe((concepts: Concept[]) => {
     const count = selectSlice<number>(concepts, counterSelectCount);
     expect(count).toBe(10);

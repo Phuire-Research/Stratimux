@@ -28,7 +28,7 @@ export const ownershipMode: Mode = (
   // If generation is set to -1, then the action is not primed.
   //  Therefore we pass straight to finalMode which will recall this Mode after priming the action.
   //  This guarantees that action beyond this function will have a semaphore not set to [0, 0, -1, 0]
-  if (action.semaphore[3] !== 3 && action.semaphore[2] !== axiumState.generation) {
+  if (action.semaphore[3] !== 3 && action.semaphore[3] !== 1 && action.semaphore[2] !== axiumState.generation) {
     // Check In Logic
     const shouldBlock = ownershipShouldBlock(concepts, action);
     if (shouldBlock) {
@@ -68,14 +68,17 @@ export const ownershipMode: Mode = (
       finalMode([action, concepts, action$, concepts$]);
     }
   // Logical Determination: axiumConcludeType
-  } else if (action.semaphore[3] !== 3) {
+  } else if (action.semaphore[3] !== 3 && action.semaphore[1] !== 1) {
     finalMode([action, concepts, action$, concepts$]);
-  }
 
-  // Logical Determination: axiumConcludeType
-  if (action.strategy?.stubs && action.semaphore[3] === 3) {
+  // Logical Determination: axiumConcludeType, axiumBadActionType
+  } else if (action.strategy?.stubs && (action.semaphore[3] === 3 || action.semaphore[3] === 1)) {
     concepts = clearStubs(concepts, action.strategy);
     concepts$.next(concepts);
+    if (action.semaphore[3] === 1) {
+      finalMode([action, concepts, action$, concepts$]);
+    }
+  } else if (action.semaphore[3] === 1) {
+    finalMode([action, concepts, action$, concepts$]);
   }
-  const ownership = selectState<OwnershipState>(concepts, ownershipName);
 };

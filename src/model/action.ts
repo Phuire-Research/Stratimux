@@ -18,15 +18,23 @@ export type Action = {
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     expiration: number;
+    axium?: string;
 };
 
 export function primeAction(concepts: Concept[], action: Action): Action {
   for (const concept of concepts) {
     const semaphore = getSemaphore(concepts, concept.name, action.type);
     if (semaphore[2] !== -1) {
+      let axium;
+      if (action.axium) {
+        axium = action.axium;
+      } else {
+        axium = (concepts[0].state as AxiumState).name;
+      }
       const newAction = {
         ...action,
         semaphore: semaphore,
+        axium,
       };
       if (newAction.strategy) {
         newAction.strategy.currentNode.action = newAction;
@@ -34,11 +42,16 @@ export function primeAction(concepts: Concept[], action: Action): Action {
       return newAction;
     }
   }
-  return {
+  const badAction: Action = {
     type: axiumBadActionType,
-    semaphore: [0, 0, -1, getSpecialSemaphore(axiumBadActionType)],
-    expiration: Date.now() + 5000
+    semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType),
+    expiration: Date.now() + 5000,
   };
+  if (action.strategy) {
+    badAction.strategy = action.strategy;
+    badAction.strategy.currentNode.action = badAction;
+  }
+  return badAction;
 }
 
 export function getSemaphore(concepts: Concept[], conceptName: string, actionType: ActionType): [number, number, number, number] {

@@ -7,7 +7,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 
 test('Axium Counting Strategy Test', (done) => {
-  const axium = createAxium([createCounterConcept()], true, true);
+  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
   const staged = axium.stage('Counting Strategy Stage',
     [
       (_, dispatch) => {
