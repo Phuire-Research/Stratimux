@@ -21,6 +21,7 @@ The design decision here allows us to forgo the need for dependency injection. A
 
 ```typescript
 export type AxiumState {
+  name: string;
   open: boolean;
   logging: boolean;
   dialog: string;
@@ -39,6 +40,7 @@ export type AxiumState {
   subConcepts$: Subject<Concept[]>;
 }
 ```
+* name - This should be set to a unique network identifier, and/or the concept of your system.
 * open - This is utilized by principles and external subscribers to denote when they should initialize their functionality. 
 * logging - controls whether the STRX dialog paragraphs are emitted upon strategy completion. In addition to other debugging procedures.
 * dialog - Is the internal representation of the strategies that the axium has ran.
