@@ -15,7 +15,7 @@ import { counterSetCount } from '../concepts/counter/qualities/setCount.quality'
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
-  const axium = createAxium([createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
+  const axium = createAxium('ownershipTest', [createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
   const staged = axium.stage(
     'Testing Ownership Staging', [
       (cpts, dispatch) => {
