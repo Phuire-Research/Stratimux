@@ -1,8 +1,10 @@
 ## Stage
 ### Abstract
-This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That Stage will close and be added to the axium's badStages property.
+This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That Stage will close and be added to the axium's badPlans property.
 
-Once attached to the badStage property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
+Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
+
+"You stage a plan and a plan has multiple stages."
 
 ## Working with the Stage Paradigm
 ```typescript
@@ -86,7 +88,7 @@ const staged = axium.stage('Stage DispatchOptions Test',
     console.log('Stage 3 ', counter, runCount);
     // Will cause an action overflow forcing the stage to close and add itself to bad Stages
     dispatch(counterSubtract(), {
-        // Enabling will cause this test to timeout via the subscription watching for badStages to never be ran.
+        // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
         // debounce: 500
         // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
     });
@@ -96,11 +98,11 @@ const staged = axium.stage('Stage DispatchOptions Test',
 const sub = axium.subscribe((concepts) => {
     const axiumState = concepts[0].state as AxiumState;
     // This will run once the last step of the stage we created overflows, this is for demonstration purposes only.
-    if (axiumState.badStages.length > 0) {
-        const badStage = axiumState.badStages[0];
+    if (axiumState.badPlans.length > 0) {
+        const badPlan = axiumState.badPlans[0];
         const counter = selectState<Counter>(concepts, counterName);
-        console.log('Stage Ran Away, badStages.length: ', axiumState.badStages.length, 'Count: ', counter.count);
-        expect(badStage.stepFailed).toBe(2);
+        console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter.count);
+        expect(badPlan.stepFailed).toBe(2);
         expect(counter.count).toBe(2);
         sub.unsubscribe();
     }

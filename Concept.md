@@ -27,7 +27,8 @@ export type Quality = {
   methodCreator?: MethodCreator;
   method?: Method;
   subject?: Subject<Action>;
-  keyedSelectors?: KeyedSelector[]
+  keyedSelectors?: KeyedSelector[];
+  analytics?: Record<string,unknown>;
 };
 ```
 * actionType - Is the type of action and logical explanation of functionality
@@ -36,6 +37,7 @@ export type Quality = {
 * method - Is the implementation of the strategy pattern via to facilitate higher order functionality to enable additional composability.
 * subject - Used within the mode to inform the method of an action to be consumed.
 * keyedSelector - Ops-in the quality or actions into the ownership paradigm and likewise can be used to select some aspect of state from the set of concepts.
+* analytics - This field holds record entries such as time, cost, and success rate. This is for advanced systems that perform analytics to better describe ActionStrategies and their selection at run time.
 
 ## The Programmed Definition of a Concept
 ```typescript

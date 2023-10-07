@@ -35,7 +35,7 @@ export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './mo
 // Axium
 export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axium.concept';
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
-export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadStages } from './concepts/axium/axium.selector';
+export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
 // Qualities
 export { axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';

@@ -188,7 +188,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
       plan.stage = plan.stages.length;
       const deleted = this.currentStages.delete(key);
       if (deleted) {
-        axiumState.badStages.push(plan);
+        axiumState.badPlans.push(plan);
       }
     }
   }

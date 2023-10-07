@@ -14,7 +14,7 @@ The inspiration for STRX was that of Redux and its origin via the FLUX design pa
 ![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://github.com/Phuire-Research/STRX/blob/main/CrossTheStreams.gif?raw=true)
 
 ### Concept Index
-* [ActionStrategy](https://github.com/Phuire-Research/STRX/blob/main/ActionStrategy.md) - Created in 2018, this is the governing concept that allows for the Unified Turing Machine to have a strong halting quality. Likewise the direct analog of higher order logic.
+* [ActionStrategy](https://github.com/Phuire-Research/STRX/blob/main/ActionStrategy.md) - Created in 2018, this is the governing concept that allows for the Unified Turing Machine to have a strong halting quality. Likewise the direct analog of higher order logic and universal transformer.
 * [Axium](https://github.com/Phuire-Research/STRX/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
 * [Concept](https://github.com/Phuire-Research/STRX/blob/main/Concept.md) - The programming abstraction of a concept that is decomposable to the sum of its parts via: state, qualities, principles, and mode.
 * [Stage](https://github.com/Phuire-Research/STRX/blob/main/Stage.md) - Introducing the stage design pattern. A specific helper function to prevent action overflow in action dispatches in subscriptions. 
