@@ -22,6 +22,9 @@ import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 import { clearDialogQuality } from './qualities/clearDialog.quality';
 import { Plan, UnifiedSubject } from '../../model/unifiedSubject';
+import { clearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
+import { clearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
+import { clearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
 
 export type NamedSubscriber = {
   name: string;
@@ -48,7 +51,7 @@ export type AxiumState = {
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   subConcepts$: UnifiedSubject;
-  badStages: Plan[];
+  badPlans: Plan[];
   badActions: Action[];
 }
 
@@ -74,7 +77,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     subConcepts$: new UnifiedSubject(),
-    badStages: [],
+    badPlans: [],
     badActions: []
   };
 };
@@ -100,6 +103,9 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       appendConceptsToRemoveQueQuality,
       removeConceptsViaQueQuality,
       setModeQuality,
+      clearBadActionTypeFromBadActionListQuality,
+      clearBadStrategyTopicFromBadActionListQuality,
+      clearBadPlanFromBadPlanListQuality
     ],
     [axiumPrinciple],
     [blockingMode, permissiveMode]

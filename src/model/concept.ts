@@ -28,7 +28,8 @@ export type Quality = {
   methodCreator?: MethodCreator;
   method?: Method;
   subject?: Subject<Action>;
-  keyedSelectors?: KeyedSelector[]
+  keyedSelectors?: KeyedSelector[];
+  analytics?: Record<string,unknown>;
 };
 
 export type Concept = {
@@ -61,7 +62,7 @@ export function createConcept(
     state,
     qualities,
     principles,
-    mode
+    mode,
   };
 }
 
@@ -107,13 +108,15 @@ export function createQuality(
   reducer: Reducer,
   methodCreator?: MethodCreator,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyedSelectors?: KeyedSelector[]
+  keyedSelectors?: KeyedSelector[],
+  analytics?: Record<string,unknown>
 ): Quality {
   return {
     actionType,
     reducer,
     methodCreator,
-    keyedSelectors
+    keyedSelectors,
+    analytics
   };
 }
 

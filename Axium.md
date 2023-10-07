@@ -89,6 +89,9 @@ Please avoid using these qualities, but are providing explanations to understand
 * setMode - If your concept requires a specific modification to the functionality of the stream. This will set the mode index to that stream. Specifically this shouldn't have to be used. But is left to the developer if they run into such a case.
 * setDefaultModeIndex - Should be used if your mode is to be considered the default mode of your application. For utilization within a strategy after setMode. Be sure to a run time search for your concept name and mode, after your concept is added via the addConcept strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the last go To for your applications functionality.
 * clearDialog - Clears the currently stored STRX dialog, may be used within a strategy.
+* clearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
+* clearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
+* clearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.stage(). Via their topic as payload and clears such.
 
 ## Axium Strategies Concept Set Transformation
 ```typescript
