@@ -6,12 +6,12 @@ import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.
 import { ownershipName } from '../ownership.concept';
 import { SetDefaultModeIndexPayload, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
 import { AxiumState } from '../../axium/axium.concept';
+import { createPayload } from '../../../model/selector';
 
 export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
 export function setOwnershipModeStrategy(concepts: Concept[], modeName: string): ActionStrategy {
   const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipName, ownershipInitializeOwnershipType);
   const setModeSemaphore = getSemaphore(concepts, ownershipName, axiumSetModeType);
-  const setDefaultModeIndexSemaphore = getSemaphore(concepts, ownershipName, axiumSetDefaultModeIndexType);
   let ownershipModeIndex = 2;
   (concepts[0].state as AxiumState).modeNames.forEach((key, i) => {
     if (key === ownershipName) {
@@ -36,7 +36,7 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
       preposition: 'Successfully'
     },
     failureNode: null,
-    payload: { modeIndex: 2, modeName } as SetModePayload,
+    payload: createPayload<SetModePayload>({ modeIndex: ownershipModeIndex, modeName }),
   };
   const params: ActionStrategyParameters = {
     topic: setOwnerShipModeTopic,

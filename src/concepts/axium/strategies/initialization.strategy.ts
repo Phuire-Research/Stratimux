@@ -1,10 +1,11 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
-import { axiumOpenType } from '../qualities/open.quality';
-import { axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
-import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { OpenPayload, axiumOpenType } from '../qualities/open.quality';
+import { InitializePrinciplesPayload, axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
+import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
+import { createPayload } from '../../../model/selector';
 
 export const initializeTopic = 'Axium Initialization Strategy';
 export function initializationStrategy(concepts: Concept[]): ActionStrategy {
@@ -21,7 +22,7 @@ export function initializationStrategy(concepts: Concept[]): ActionStrategy {
       denoter: 'to Notify Subscribers of State changes.'
     },
     failureNode: null,
-    payload: {concepts},
+    payload: createPayload<OpenPayload>({open: true}),
   };
   const stepTwo: ActionNode = {
     actionType: axiumSetDefaultModeType,
@@ -31,7 +32,7 @@ export function initializationStrategy(concepts: Concept[]): ActionStrategy {
       preposition: 'Then'
     },
     failureNode: null,
-    payload: {concepts},
+    payload: createPayload<SetDefaultModePayload>({concepts}),
   };
   const stepOne: ActionNode = {
     actionType: axiumInitializePrinciplesType,
@@ -41,7 +42,7 @@ export function initializationStrategy(concepts: Concept[]): ActionStrategy {
       preposition: 'Begin with'
     },
     failureNode: null,
-    payload: {concepts},
+    payload: createPayload<InitializePrinciplesPayload>({concepts}),
   };
 
   const params: ActionStrategyParameters = {

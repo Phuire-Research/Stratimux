@@ -1,7 +1,7 @@
 import { createAxium } from '../model/axium';
 import { Concept } from '../model/concept';
 import { primeAction } from '../model/action';
-import { selectState } from '../model/selector';
+import { createPayload, selectState } from '../model/selector';
 import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { createChainConcept } from '../concepts/chain/chain.concept';
 import { ChainDispatchActionsPayload, chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
@@ -18,15 +18,21 @@ test('Axium Test', (done) => {
       willDispatch = false;
       const primedAdd = primeAction(concepts, counterAdd());
       const primedSubtract = primeAction(concepts, counterSubtract());
-      const primedPrepareChain = primeAction(concepts, chainDispatchActions({
-        actions: [
-          primedAdd,
-          primedAdd,
-          primedSubtract,
-          primedAdd,
-          primedSubtract,
-          primedAdd,
-        ]} as ChainDispatchActionsPayload));
+      const primedPrepareChain =
+      primeAction(concepts,
+        chainDispatchActions(
+          createPayload<ChainDispatchActionsPayload>({
+            actions: [
+              primedAdd,
+              primedAdd,
+              primedSubtract,
+              primedAdd,
+              primedSubtract,
+              primedAdd,
+            ]
+          })
+        )
+      );
       axium.dispatch(primedPrepareChain);
     }
     else if (count === 7) {

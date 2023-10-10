@@ -1,13 +1,14 @@
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumClearBadStrategyTopicFromBadActionListType: ActionType = 'clear Strategy Topic from Axium\'s badAction list';
 export const axiumClearBadStrategyTopicFromBadActionList = prepareActionCreator(axiumClearBadStrategyTopicFromBadActionListType);
 export type ClearBadStrategyTopicFromBadActionListPayload = string;
 
 function clearBadStrategyTopicFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
-  const strategyTopic = action.payload as ClearBadStrategyTopicFromBadActionListPayload;
+  const strategyTopic = selectPayload<ClearBadStrategyTopicFromBadActionListPayload>(action);
   const badActions = state.badActions.filter(act => {
     if (act.strategy && act.strategy.topic !== strategyTopic) {
       return true;

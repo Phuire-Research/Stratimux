@@ -5,6 +5,7 @@ import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { UnifiedSubject } from '../../../model/unifiedSubject';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set new Subscribers to General Subscribers list';
 
@@ -13,7 +14,7 @@ export type InitializePrinciplesPayload = {
 }
 
 export function initializePrinciplesReducer(state: AxiumState, _action: Action) {
-  const payload = _action.payload as InitializePrinciplesPayload;
+  const payload = selectPayload<InitializePrinciplesPayload>(_action);
   const concepts = payload.concepts;
   const action$ = state.action$ as Subject<Action>;
   const subConcepts$ = state.concepts$ as UnifiedSubject;

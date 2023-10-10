@@ -2,6 +2,7 @@ import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { Action, ActionType } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumAppendConceptsToRemoveQueType: ActionType = 'append Concepts to Axium\'s Remove Concept Que';
 
@@ -10,7 +11,7 @@ export type AppendConceptsToRemoveQuePayload = {
 }
 
 export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
-  const payload = action.payload as AppendConceptsToRemoveQuePayload;
+  const payload = selectPayload<AppendConceptsToRemoveQuePayload>(action);
   let removeQue = state.removeConceptQue;
   removeQue = [
     ...removeQue,

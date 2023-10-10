@@ -3,6 +3,7 @@ import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { Counter } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
+import { selectPayload } from '../../../model/selector';
 
 export const counterSetCountType = 'set Count';
 
@@ -12,7 +13,7 @@ export type SetCountPayload = {
 }
 
 export function setCountReducer(state: Counter, action: Action) {
-  const payload = action.payload as SetCountPayload;
+  const payload = selectPayload<SetCountPayload>(action);
   return {
     ...state,
     count: payload.newCount

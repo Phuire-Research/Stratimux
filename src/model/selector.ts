@@ -1,3 +1,4 @@
+import { Action } from './action';
 import { Concept } from './concept';
 
 // Dumb association, as we would be setting this value via a generated value
@@ -19,6 +20,23 @@ export function selectState<T>(concepts: Concept[], name: string): T {
     }
   }
   return concept?.state as T;
+}
+
+/**
+ * Simple helper function that returns payload casted to T.
+ *  Prior to emitting action, use createPayload with the action's payload type to provide the logical guarantee.
+ *    As Typescript does not care if payload is undefined or the entire window object.
+ *    You must set the payload, if the payload is required in your logic.
+ */
+export function selectPayload<T>(action: Action): T {
+  return action.payload as T;
+}
+
+/**
+ * Provides logical guarantee that your payload is set to the appropriate type without casting.
+ */
+export function createPayload<T>(payload: T): T {
+  return payload;
 }
 
 // Note: The Concept Key within the selector has to be set Explicitly for now
