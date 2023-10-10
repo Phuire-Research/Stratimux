@@ -6,8 +6,9 @@ import { AddConceptsFromQuePayload, axiumAddConceptFromQueType } from '../qualit
 import { AppendConceptsToAddQuePayload, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
 import { axiumOpenType } from '../qualities/open.quality';
 import { axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
-import { axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
+import { createPayload } from '../../../model/selector';
 
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
@@ -20,7 +21,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
     },
     failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumAppendConceptsToAddQueType),
-    payload: {concepts: newConcepts} as AppendConceptsToAddQuePayload,
+    payload: createPayload<AppendConceptsToAddQuePayload>({concepts: newConcepts}),
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
@@ -30,7 +31,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
     },
     failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumSetBlockingModeType),
-    payload: {concepts} as AppendConceptsToAddQuePayload,
+    payload: createPayload<AppendConceptsToAddQuePayload>({concepts}),
   };
 
   const params: ActionStrategyParameters = {
@@ -64,7 +65,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
       preposition: 'Then'
     },
     failureNode: null,
-    payload: {concepts: conceptualSet},
+    payload: createPayload<SetDefaultModePayload>({concepts: conceptualSet}),
   };
   const stepOne: ActionNode = {
     actionType: axiumAddConceptFromQueType,
@@ -74,7 +75,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
       preposition: 'First'
     },
     failureNode: null,
-    payload: {action$} as AddConceptsFromQuePayload,
+    payload: createPayload<AddConceptsFromQuePayload>({action$}),
   };
 
   const params: ActionStrategyParameters = {

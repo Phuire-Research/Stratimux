@@ -26,7 +26,7 @@ export type {
   MethodCreator
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
-export { selectState, selectConcept, selectSlice } from './model/selector';
+export { selectState, selectConcept, selectSlice, createPayload, selectPayload } from './model/selector';
 export { PrincipleFunction } from './model/principle';
 export type { dispatchOptions, Staging, UnifiedSubject } from './model/unifiedSubject';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';

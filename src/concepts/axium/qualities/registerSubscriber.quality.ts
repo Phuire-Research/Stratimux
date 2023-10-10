@@ -3,6 +3,7 @@ import { defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumRegisterSubscriberType: ActionType = 'register Subscriber to Axium\'s General Subscriber list';
 
@@ -12,7 +13,7 @@ export type RegisterSubscriberPayload = {
 }
 
 export function registerSubscriberReducer(state: AxiumState, action: Action) {
-  const payload = action.payload as RegisterSubscriberPayload;
+  const payload = selectPayload<RegisterSubscriberPayload>(action);
   const generalSubscribers = state.generalSubscribers;
   const subscriber = payload.subscriber;
   const name = payload.name;

@@ -7,6 +7,7 @@ import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/s
 import { axiumOpenType } from '../qualities/open.quality';
 import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
+import { createPayload } from '../../../model/selector';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
@@ -18,14 +19,14 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
     semaphore: appendConceptsToRemoveQueSemaphore,
     successNode: null,
     failureNode: null,
-    payload: {concepts: targetConcepts} as AppendConceptsToRemoveQuePayload
+    payload: createPayload<AppendConceptsToRemoveQuePayload>({concepts: targetConcepts})
   };
   const stepOne: ActionNode = {
     actionType: axiumSetBlockingModeType,
     semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
     failureNode: null,
-    payload: {concepts} as SetBlockingModePayload
+    payload: createPayload<SetBlockingModePayload>({concepts})
   };
   const params: ActionStrategyParameters = {
     topic: addConceptsToRemovalQueThenBlockTopic,
@@ -58,7 +59,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
       preposition: 'Then'
     },
     failureNode: null,
-    payload: {concepts} as SetDefaultModePayload,
+    payload: createPayload<SetDefaultModePayload>({concepts}),
   };
   const stepOne: ActionNode = {
     actionType: axiumRemoveConceptsViaQueType,

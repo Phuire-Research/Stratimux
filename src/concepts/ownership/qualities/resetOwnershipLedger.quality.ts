@@ -5,7 +5,7 @@ import { createOwnershipLedger } from '../../../model/ownership';
 
 export const ownershipResetOwnershipLedgerType: ActionType = 'reset Ownership Ledger';
 
-export function resetOwnershipLedgerReducer(state: OwnershipState, action: Action): OwnershipState {
+export function resetOwnershipLedgerReducer(state: OwnershipState, _: Action): OwnershipState {
   return {
     ...state,
     ownershipLedger: createOwnershipLedger()

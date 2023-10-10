@@ -4,6 +4,7 @@ import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { defaultMethodSubscription } from '../../../model/axium';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
 
@@ -15,7 +16,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(named => named.subscriber.unsubscribe());
   methodSubscribers = [];
-  const payload = _action.payload as SetDefaultModePayload;
+  const payload = selectPayload<SetDefaultModePayload>(_action);
   const concepts = payload.concepts;
   concepts.forEach(concept => {
     concept.qualities.forEach(quality => {

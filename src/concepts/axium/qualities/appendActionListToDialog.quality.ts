@@ -5,6 +5,7 @@ import { createAction } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { axiumConcludeType } from './conclude.quality';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumAppendActionListToDialogType: ActionType = 'append Action List to Axium\'s Dialog';
 
@@ -37,7 +38,7 @@ const createAppendActionListToDialogMethodCreator: MethodCreator = () => {
 };
 
 export function appendActionListToDialogReducer(state: AxiumState, action: Action) {
-  const payload = action.payload as AppendActionListToDialogPayload;
+  const payload = selectPayload<AppendActionListToDialogPayload>(action);
   let newDialog = '';
   if (state.storeDialog) {
     payload.actionList.forEach(str => {newDialog += str + ' ';});

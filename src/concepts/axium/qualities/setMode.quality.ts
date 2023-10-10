@@ -4,6 +4,7 @@ import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { Subject, map } from 'rxjs';
 import { axiumConcludeType } from './conclude.quality';
 import { strategySuccess } from '../../../model/actionStrategy';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumSetModeType = 'set Axium Mode';
 
@@ -30,7 +31,7 @@ export const createOwnershipMethodCreator: MethodCreator = () : [Method, Subject
 };
 
 export function setModeReducer(state: AxiumState, _action: Action) {
-  const payload = _action.payload as SetModePayload;
+  const payload = selectPayload<SetModePayload>(_action);
   return {
     ...state,
     modeIndex: [payload.modeIndex],

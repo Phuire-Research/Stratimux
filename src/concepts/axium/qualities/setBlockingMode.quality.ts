@@ -4,6 +4,7 @@ import { Action, ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
+import { selectPayload } from '../../../model/selector';
 
 export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
 
@@ -16,7 +17,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   methodSubscribers.forEach(named => named.subscriber.unsubscribe());
   methodSubscribers = [];
 
-  const payload = _action.payload as SetBlockingModePayload;
+  const payload = selectPayload<SetBlockingModePayload>(_action);
   const concepts = payload.concepts;
   concepts.forEach(concept => {
     concept.qualities.forEach(quality => {

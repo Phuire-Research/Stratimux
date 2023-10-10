@@ -2,12 +2,13 @@ import { createQuality, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
+import { selectPayload } from '../../../model/selector';
 
 export const ownershipClearPayloadStubsType: ActionType = 'clear payload Stubs from Ownership Ledger';
 export type ClearPayloadStubsPayload = OwnershipTicketStub[];
 
 export function clearPayloadStubsReducer(state: OwnershipState, action: Action): OwnershipState {
-  const stubs = action.payload as ClearPayloadStubsPayload;
+  const stubs = selectPayload<ClearPayloadStubsPayload>(action);
   const ownershipLedger = state.ownershipLedger;
   stubs.forEach(ticketStub => {
     const line = ownershipLedger.get(ticketStub.key);

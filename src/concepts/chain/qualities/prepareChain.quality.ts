@@ -1,5 +1,6 @@
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
+import { selectPayload } from '../../../model/selector';
 import { Chain } from '../chain.concept';
 
 export const chainDispatchActionsType: ActionType = 'dispatch Actions from Action Que via Payload to be Chained';
@@ -11,7 +12,7 @@ export type ChainDispatchActionsPayload = {
 }
 
 export function prepareChainReducer(state: Chain, action: Action) {
-  const payload = action.payload as ChainDispatchActionsPayload;
+  const payload = selectPayload<ChainDispatchActionsPayload>(action);
   return {
     ...state,
     actionQue: [

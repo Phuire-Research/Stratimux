@@ -61,7 +61,7 @@ const staged = axium.stage(
       // Will be ran after both counting strategies conclude.
       const ownership = selectState<OwnershipState>(cpts, ownershipName);
       console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-      dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
+      dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStep: true});
     },
     (cpts, dispatch) => {
       const ownership = selectState<OwnershipState>(cpts, ownershipName);

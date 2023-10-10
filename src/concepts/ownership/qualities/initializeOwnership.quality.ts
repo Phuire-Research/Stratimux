@@ -4,7 +4,7 @@ import { OwnershipState } from '../ownership.concept';
 
 export const ownershipInitializeOwnershipType: ActionType = 'Ownership Initialize to True to enable Ownership Principle';
 
-export function initializeOwnershipReducer(state: OwnershipState, action: Action) {
+export function initializeOwnershipReducer(state: OwnershipState, _: Action) {
   return {
     ...state,
     initialized: true
