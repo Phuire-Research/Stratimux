@@ -29,6 +29,7 @@ export type Quality = {
   method?: Method;
   subject?: Subject<Action>;
   keyedSelectors?: KeyedSelector[];
+  meta?: Record<string,unknown>;
   analytics?: Record<string,unknown>;
 };
 
@@ -38,9 +39,8 @@ export type Concept = {
   qualities: Quality[];
   principles?: PrincipleFunction[];
   mode?: Mode[];
+  meta?: Record<string,unknown>;
 };
-
-// deno-lint-ignore no-explicit-any
 
 export type ConceptCreator = (
   name?: string,
@@ -48,6 +48,7 @@ export type ConceptCreator = (
   qualities?: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
+  meta?: Record<string,unknown>
 ) => Concept;
 
 export function createConcept(
@@ -56,6 +57,7 @@ export function createConcept(
   qualities: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
+  meta?: Record<string,unknown>
 ): Concept {
   return {
     name,
@@ -63,6 +65,7 @@ export function createConcept(
     qualities,
     principles,
     mode,
+    meta
   };
 }
 
@@ -109,13 +112,15 @@ export function createQuality(
   methodCreator?: MethodCreator,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],
-  analytics?: Record<string,unknown>
+  meta?: Record<string,unknown>,
+  analytics?: Record<string,unknown>,
 ): Quality {
   return {
     actionType,
     reducer,
     methodCreator,
     keyedSelectors,
+    meta,
     analytics
   };
 }

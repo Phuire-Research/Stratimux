@@ -28,6 +28,7 @@ export type Quality = {
   method?: Method;
   subject?: Subject<Action>;
   keyedSelectors?: KeyedSelector[];
+  meta?: Record<string,unknown>;
   analytics?: Record<string,unknown>;
 };
 ```
@@ -37,6 +38,7 @@ export type Quality = {
 * method - Is the implementation of the strategy pattern via to facilitate higher order functionality to enable additional composability.
 * subject - Used within the mode to inform the method of an action to be consumed.
 * keyedSelector - Ops-in the quality or actions into the ownership paradigm and likewise can be used to select some aspect of state from the set of concepts.
+* meta - Decorator property, this is for internal use.
 * analytics - This field holds record entries such as time, cost, and success rate. This is for advanced systems that perform analytics to better describe ActionStrategies and their selection at run time.
 
 ## The Programmed Definition of a Concept
@@ -47,6 +49,7 @@ export type Concept = {
   qualities: Quality[];
   principles?: PrincipleFunction[];
   mode?: Mode[];
+  meta?: Record<string,unknown>;
 };
 ```
 * name - The identifier of the concept to be used in conjunction with selection.
@@ -54,6 +57,7 @@ export type Concept = {
 * qualities - Is a list of qualities that relay to the actions that mechanize the concept throughout your applications.
 * principles - Are observers of state of your application or that of external mechanisms. That emit some action into the axium based upon that observation.
 * mode - A mode is a function and point of recursion of the runtime that the concept may utilize to achieve a specific functionality necessary for that concept. This should rarely be expanded upon.
+* meta - Decorator property, this is for internal use.
 
 ## Principle
 ``` typescript
