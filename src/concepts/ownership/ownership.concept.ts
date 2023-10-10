@@ -1,4 +1,4 @@
-import { createConcept } from '../../model/concept';
+import { ConceptCreator, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
@@ -31,7 +31,7 @@ const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState =>
   };
 };
 
-export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
+export const createOwnershipConcept: ConceptCreator = (isResponsibleForMode?: boolean) => {
   return createConcept(
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),

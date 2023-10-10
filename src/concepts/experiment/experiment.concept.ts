@@ -1,4 +1,4 @@
-import { createConcept } from '../../model/concept';
+import { ConceptCreator, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { checkInQuality } from './qualities/checkIn.quality';
 import { experimentPrinciple } from './experiment.principle';
@@ -15,7 +15,7 @@ const createExperimentState = (): ExperimentState => {
   };
 };
 
-export const createExperimentConcept = () => {
+export const createExperimentConcept: ConceptCreator = () => {
   return createConcept(
     experimentName,
     createExperimentState(),

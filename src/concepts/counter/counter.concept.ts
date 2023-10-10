@@ -1,7 +1,7 @@
 import { addQuality } from './qualities/add.quality';
 import { subtractQuality } from './qualities/subtract.quality';
 import { setCountQuality } from './qualities/setCount.quality';
-import { createConcept } from '../../model/concept';
+import { ConceptCreator, createConcept } from '../../model/concept';
 export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
 export type Counter = {
@@ -14,7 +14,7 @@ const initialCounterState: Counter = {
   count: 0
 };
 
-export const createCounterConcept = () => {
+export const createCounterConcept: ConceptCreator = () => {
   return createConcept(
     counterName,
     initialCounterState,
