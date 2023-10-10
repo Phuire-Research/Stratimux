@@ -22,7 +22,7 @@ The inspiration for STRX was that of Redux and its origin via the FLUX design pa
 * [Unified Turing Machine](https://github.com/Phuire-Research/STRX/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## The Halting Problem
-* [Video Citation: The requirement to stop within a behavior tree. GDC 2016](https://youtube.com/clip/UgkxtZlIbvaMv0OUCJ5kJFiaUCjmEQCBD0C6?si=tkrAkvbpqByq096U)
+* [Video Citation: The requirement to stop within a behavior tree. Artificial Intelligence Summit @GDC 2016](https://youtube.com/clip/UgkxtZlIbvaMv0OUCJ5kJFiaUCjmEQCBD0C6?si=tkrAkvbpqByq096U)
 
 Noting that in the clip above, the speaker is using behavior trees and the stopping term. Here within STRX, a behavior tree would be an ActionStrategy that is dispatched via a staged "Plan." What separates STRX from the approach above is that we are using the finite state machine pattern to avoid the use of the infinitely looping check of some observed value. In addition we are referring to this as halting.
 
