@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "rimraf ./dist && tsup src/index.ts --format cjs,esm --dts",
+    "prepublishOnly": "rimraf ./dist && tsup src/index.ts --format cjs,esm --dts",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
     "lint": "eslint . --ext .ts",
