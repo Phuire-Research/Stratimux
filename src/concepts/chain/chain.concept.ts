@@ -7,7 +7,7 @@ export type Chain = {
     actionQue: Action[];
 };
 
-export const chainName = 'Chain';
+export const chainName = 'chain';
 
 const initialChainState: Chain = {
   actionQue: [],
