@@ -34,7 +34,7 @@ test('Axium Principle Stage', (done) => {
             selector: axiumSelectOpen,
             expected: true
           },
-          debounce: 0
+          debounce: 1
         });
       },
       (concepts) => {

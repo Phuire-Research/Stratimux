@@ -105,7 +105,7 @@ const handleStageDelimiter =
     } else if (stageDelimiter) {
       stageDelimiter = {
         stage: plan.stage,
-        prevActions: [...stageDelimiter.prevActions ,action.type],
+        prevActions: [...stageDelimiter.prevActions, action.type],
         unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
         runOnceMap: new Map()
       };
@@ -154,7 +154,6 @@ export class UnifiedSubject extends Subject<Concept[]> {
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
-    console.log('HIT2', stageDelimiter, run, goodAction);
     this.stageDelimiters.set(key, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;
@@ -200,7 +199,6 @@ export class UnifiedSubject extends Subject<Concept[]> {
       plan.stage = plan.stages.length;
       const deleted = this.currentStages.delete(key);
       if (deleted) {
-        console.log('DELETED', deleted);
         axiumState.badPlans.push(plan);
       }
     }
