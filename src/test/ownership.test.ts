@@ -26,7 +26,7 @@ test('Ownership Test', (done) => {
     createCounterConcept(),
     createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
   ], true, true);
-  const staged = axium.stage(
+  const plan = axium.stage(
     'Testing Ownership Staging', [
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
@@ -38,7 +38,7 @@ test('Ownership Test', (done) => {
           // This will place a counting strategy in the experiment actionQue to be later dispatched.
           //    Via its principle, to simulate an action moving off premise.
           dispatch(strategyBegin(puntCountingStrategy()), {
-            iterateStep: true
+            iterateStage: true
           });
         }
       },
@@ -47,7 +47,7 @@ test('Ownership Test', (done) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStep: true});
+        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStage: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
@@ -55,7 +55,7 @@ test('Ownership Test', (done) => {
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
         dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
-          iterateStep: true
+          iterateStage: true
         });
       },
       (cpts, dispatch) => {
@@ -70,7 +70,7 @@ test('Ownership Test', (done) => {
           expect(counter.count).toBe(3);
           // Comment in if testing the halting ability of log and setCount stage is commented out.
           // setTimeout(() => {done();}, 1000);
-          staged.close();
+          plan.conclude();
         } else if (
           (axiumState.lastStrategy === experimentCountingTopic ||
           axiumState.lastStrategy === experimentPrimedCountingTopic) &&

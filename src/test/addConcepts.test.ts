@@ -9,14 +9,14 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], true, true);
-  const staged = axium.stage('Add Concepts Stage',[
+  const plan = axium.stage('Add Concepts Stage',[
     (concepts, dispatch) => {
       dispatch(
         strategyBegin(
           addConceptsToAddQueThenBlockStrategy(concepts,[createCounterConcept()])
         ),
         {
-          iterateStep: true
+          iterateStage: true
         }
       );
     },
@@ -25,7 +25,7 @@ test('Axium add Concepts Strategy Test', (done) => {
       if (concepts[1].name === counterName) {
         exists = true;
         dispatch(strategyBegin(countingStrategy()), {
-          iterateStep: true
+          iterateStage: true
         });
       }
       expect(exists).toBe(true);
@@ -36,7 +36,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         const counter = selectState<Counter>(concepts, counterName);
         expect(counter.count).toBe(1);
         setTimeout(() => {done();}, 500);
-        staged.close();
+        plan.conclude();
       }
     }
   ]);
