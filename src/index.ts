@@ -22,7 +22,6 @@ export type {
   Method,
   Principle,
   Mode,
-  ConceptCreator,
   MethodCreator
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';

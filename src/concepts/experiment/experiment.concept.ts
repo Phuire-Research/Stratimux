@@ -1,30 +1,29 @@
-import { ConceptCreator, createConcept } from '../../model/concept';
+import { Mode, Quality, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
-import { checkInQuality } from './qualities/checkIn.quality';
-import { experimentPrinciple } from './experiment.principle';
+import { PrincipleFunction } from '../../model/principle';
 
-export type ExperimentState = {
+export type ExperimentActionQueState = {
   actionQue: Action[],
 }
 
 export const experimentName = 'experiment';
 
-const createExperimentState = (): ExperimentState => {
+export const createExperimentActionQueState = (): ExperimentActionQueState => {
   return {
     actionQue: [],
   };
 };
 
-export const createExperimentConcept: ConceptCreator = () => {
+export const createExperimentConcept = (
+  state: any,
+  qualities?: Quality[],
+  principles?: PrincipleFunction[],
+  mode?: Mode[]) => {
   return createConcept(
     experimentName,
-    createExperimentState(),
-    [
-      checkInQuality
-    ],
-    [
-      experimentPrinciple
-    ],
-    []
+    state,
+    qualities,
+    principles,
+    mode
   );
 };

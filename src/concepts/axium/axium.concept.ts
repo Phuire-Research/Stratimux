@@ -1,5 +1,5 @@
-import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
-import { Concept, ConceptCreator } from '../../model/concept';
+import { Subject, Subscriber } from 'rxjs';
+import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { blockingMode, permissiveMode } from './axium.mode';

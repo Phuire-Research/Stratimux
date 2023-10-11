@@ -42,21 +42,10 @@ export type Concept = {
   meta?: Record<string,unknown>;
 };
 
-export type ConceptCreator = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...args: any[]
-  // name?: string,
-  // state?: unknown,
-  // qualities?: Quality[],
-  // principles?: PrincipleFunction[],
-  // mode?: Mode[],
-  // meta?: Record<string,unknown>
-) => Concept;
-
 export function createConcept(
   name: string,
   state: unknown,
-  qualities: Quality[],
+  qualities?: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
   meta?: Record<string,unknown>
@@ -64,7 +53,7 @@ export function createConcept(
   return {
     name,
     state,
-    qualities,
+    qualities: qualities ? qualities : [],
     principles,
     mode,
     meta
