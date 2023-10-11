@@ -1,4 +1,4 @@
-## Stage
+## Stage Planner
 ### Abstract
 This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That plan will conclude and be added to the axium's badPlans property.
 
@@ -55,7 +55,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - The interface that you will be interacting with when setting up your stages, noting placement of concepts and the dispatch function.
-* UnifiedSubject - This is a specialized subject for utilized within STRX to allow for this staging paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
+* UnifiedSubject - This is a specialized subject for utilized within STRX to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
 
 ## Example
 ```typescript
