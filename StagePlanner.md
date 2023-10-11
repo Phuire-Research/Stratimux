@@ -6,7 +6,7 @@ Once attached to the badPlan property, it would be possible to reinitialize said
 
 *"You stage a plan and a plan has multiple stages."*
 
-## Working with the Stage Paradigm
+## Working with the Stage Planner Paradigm
 The added benefit of the creation of a plan to control the flow of actions. Allows the ability to create a series of stages to handle how the dispatch would be handled within a subscription, but with the added benefit of iterating through each stage your plan. A typical plan would typically be composed of an initialization, main run time, and likewise the ability to conclude. 3 acts if you will.
 ```typescript
 // Multiple Stages are a Plan
@@ -42,7 +42,7 @@ export type dispatchOptions = {
 * setStage - This will set the stage to a specific stage index, useful if some strategy failed and the staging needs to be reset to prepare for that strategy again. This will always override iterateStage.
 * on - Simple handler that will prevent dispatch until the selected value is set to what is expected. Keep in mind this should also be occupied by a debounce, as this dispatch will run on each successful state update. This should be utilized alongside iterateStage, setStage, or debounce to prevent action overflow.
  
-### Internals
+### Stage Planner Internals
 ```typescript
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
 export type Staging = (
@@ -124,7 +124,7 @@ To prevent action overflow, each stage is paying attention to consecutive action
 
 Keep in mind behind the scenes during a STRX runtime, there will be multiple strategies running concurrently. Observe the runCount specified in this example. Please look to the STRX's tests folder.
 
-## Stage within your Principle
+## Stage Planner within your Principle
 STRX is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
 ```typescript
 const plan = concept$.stage('Principle Stage Example', [
