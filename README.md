@@ -39,7 +39,11 @@ Or simply, due to the recursive functionality of STRX, that requires the ability
 // ./src/test/ownership.test.ts
 const orderOfTopics: string[] = [];
 let finalRun = true;
-const axium = createAxium(['ownershipTest', createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
+const axium = createAxium('ownershipTest', [
+  createOwnershipConcept(),
+  createCounterConcept(),
+  createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
+], true, true);
 const staged = axium.stage(
   'Testing Ownership Staging', [
     (cpts, dispatch) => {

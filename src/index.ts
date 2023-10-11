@@ -94,3 +94,19 @@ export {
   ownershipClearStrategyStubsFromLedgerAndSelfType
 } from './concepts/ownership/qualities/clearStrategyStubsFromLedgerAndSelf.quality';
 export { ownershipResetOwnershipLedgerType } from './concepts/ownership/qualities/resetOwnershipLedger.quality';
+
+// Experiment
+export {
+  ExperimentActionQueState,
+  createExperimentActionQueState,
+  createExperimentConcept,
+  experimentName
+} from './concepts/experiment/experiment.concept';
+export {checkInQuality, experimentCheckIn, experimentCheckInType} from './concepts/experiment/qualities/checkIn.quality';
+export {
+  experimentCountingStrategy,
+  experimentCountingTopic,
+  experimentPrimedCountingStrategy,
+  experimentPrimedCountingTopic
+} from './concepts/experiment/strategies/experimentCounting.strategy';
+export {experimentActionQuePrinciple} from './concepts/experiment/experiment.principle';
