@@ -14,8 +14,8 @@ export type Plan = {
 
 export type dispatchOptions = {
   runOnce?: boolean;
-  iterateStep?: boolean;
-  setStep?: number;
+  iterateStage?: boolean;
+  setStage?: number;
   on?: {
     selector: KeyedSelector,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +29,6 @@ export type Staging = (
   concepts: Concept[],
   dispatch: (action: Action, options: dispatchOptions) => void
 ) => void;
-// export type Stage = (id: number) => () => void;
 export type StageDelimiter = {
   stage: number,
   prevActions: ActionType[],
@@ -61,6 +60,16 @@ const handleRun =
           ];
         }
       } else {
+        const unionExpiration: number[] = [];
+        stageDelimiter.prevActions = stageDelimiter.prevActions.filter((at, i) => {
+          if (at !== action.type && stageDelimiter.unionExpiration[i] !== action.expiration) {
+            unionExpiration.push(unionExpiration[i]);
+            return true;
+          } else {
+            return false;
+          }
+        });
+        stageDelimiter.unionExpiration = unionExpiration;
         return [
           stageDelimiter, false
         ];
@@ -178,11 +187,11 @@ export class UnifiedSubject extends Subject<Concept[]> {
       }
       this.stageDelimiters.set(key, stageDelimiter);
       if (!debounce && run) {
-        if (options?.setStep) {
-          plan.stage = options.setStep;
-        }
-        if (options?.iterateStep) {
+        if (options?.iterateStage) {
           plan.stage += 1;
+        }
+        if (options?.setStage) {
+          plan.stage = options.setStage;
         }
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
@@ -193,7 +202,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     } else if (
       options?.runOnce === undefined &&
       (options.on === undefined ||
-      (options.on && (!options.debounce && (options.iterateStep === undefined || options.setStep === plan.stage)))
+      (options.on && (!options.debounce && (options.iterateStage === undefined || options.setStage === plan.stage)))
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;

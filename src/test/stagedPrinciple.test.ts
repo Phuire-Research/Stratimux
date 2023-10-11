@@ -29,12 +29,11 @@ test('Axium Principle Stage', (done) => {
     const stage = concept$.stage('Experiment Principle', [
       (___, dispatch) => {
         dispatch(experimentMockToTrue(), {
-          iterateStep: true,
+          iterateStage: true,
           on: {
             selector: axiumSelectOpen,
             expected: true
           },
-          debounce: 1
         });
       },
       (concepts) => {

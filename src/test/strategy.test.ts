@@ -12,7 +12,7 @@ test('Axium Counting Strategy Test', (done) => {
     [
       (_, dispatch) => {
         dispatch(strategyBegin(countingStrategy()), {
-          iterateStep: true
+          iterateStage: true
         });
       }, (concepts) => {
         const axiumState = concepts[0].state as AxiumState;

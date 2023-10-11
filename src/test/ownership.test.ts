@@ -38,7 +38,7 @@ test('Ownership Test', (done) => {
           // This will place a counting strategy in the experiment actionQue to be later dispatched.
           //    Via its principle, to simulate an action moving off premise.
           dispatch(strategyBegin(puntCountingStrategy()), {
-            iterateStep: true
+            iterateStage: true
           });
         }
       },
@@ -47,7 +47,7 @@ test('Ownership Test', (done) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStep: true});
+        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStage: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
@@ -55,7 +55,7 @@ test('Ownership Test', (done) => {
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
         dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
-          iterateStep: true
+          iterateStage: true
         });
       },
       (cpts, dispatch) => {

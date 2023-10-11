@@ -16,7 +16,7 @@ test('Axium add Concepts Strategy Test', (done) => {
           addConceptsToAddQueThenBlockStrategy(concepts,[createCounterConcept()])
         ),
         {
-          iterateStep: true
+          iterateStage: true
         }
       );
     },
@@ -25,7 +25,7 @@ test('Axium add Concepts Strategy Test', (done) => {
       if (concepts[1].name === counterName) {
         exists = true;
         dispatch(strategyBegin(countingStrategy()), {
-          iterateStep: true
+          iterateStage: true
         });
       }
       expect(exists).toBe(true);

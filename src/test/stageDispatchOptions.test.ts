@@ -28,7 +28,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         const counter = selectState<Counter>(concepts, counterName);
         console.log('Stage 1 ', counter, runCount);
         dispatch(counterAdd(), {
-          iterateStep: true
+          iterateStage: true
         });
       }, (concepts, dispatch) => {
         runCount++;
@@ -40,24 +40,28 @@ test('Axium Stage Dispatch Options Test', (done) => {
         });
         // Will wait until count is set to 2, then set the Stage Explicitly to the third Step counting from 0.
         dispatch(counterAdd(), {
-          setStep: 2,
-          debounce: 0,
+          setStage: 2,
           on: {
             selector: counterSelectCount,
             expected: 2
-          }
+          },
+          // Requires debounce, because the previous action is of the same type, but runs only once.
+          debounce: 1
         });
         // }
       }, (concepts, dispatch) => {
         runCount++;
         const counter = selectState<Counter>(concepts, counterName);
         console.log('Should run twice, Stage 3 ', counter, runCount);
-        // Will cause an action overflow forcing the stage to close and add itself to bad Stages
+        // Will cause an action overflow forcing the stage to close and add itself to badPlans
         dispatch(counterSubtract(), {
           // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
           // debounce: 500
           // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
         });
+        // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.
+        dispatch(counterAdd(), {});
+        console.log('Should run twice. 1st will be before "Stage Ran Away," and 2nd will be final console log output.');
       }
     ]);
 });

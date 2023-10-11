@@ -17,7 +17,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
         strategyBegin(
           addConceptsToRemovalQueThenBlockStrategy(concepts,[createCounterConcept()])
         ), {
-          iterateStep: true
+          iterateStage: true
         }
       );
     },
