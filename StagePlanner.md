@@ -55,7 +55,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - The interface that you will be interacting with when setting up your stages, noting placement of concepts and the dispatch function.
-* UnifiedSubject - This is a specialized subject for utilized within STRX to allow for this staging paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
+* UnifiedSubject - This is a specialized subject for utilized within STRX to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
 
 ## Example
 ```typescript
