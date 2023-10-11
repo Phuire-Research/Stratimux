@@ -9,16 +9,17 @@ import { counterSelectCount } from '../concepts/counter/counter.selector';
 test('Axium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
   const axium = createAxium('axiumStageDispatchOptionsTest', [createCounterConcept()], true);
-  axium.subscribe((concepts) => {
+  const sub = axium.subscribe((concepts) => {
     const axiumState = concepts[0].state as AxiumState;
     if (axiumState.badPlans.length > 0) {
       const badPlan = axiumState.badPlans[0];
       const counter = selectState<Counter>(concepts, counterName);
       console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter.count);
+      staged.close();
+      sub.unsubscribe();
       expect(badPlan.stageFailed).toBe(2);
       expect(counter.count).toBe(2);
       setTimeout(() => {done();}, 500);
-      staged.close();
     }
   });
   const staged = axium.stage('Stage DispatchOptions Test',
@@ -50,7 +51,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
       }, (concepts, dispatch) => {
         runCount++;
         const counter = selectState<Counter>(concepts, counterName);
-        console.log('Stage 3 ', counter, runCount);
+        console.log('Should run twice, Stage 3 ', counter, runCount);
         // Will cause an action overflow forcing the stage to close and add itself to bad Stages
         dispatch(counterSubtract(), {
           // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.

@@ -42,16 +42,22 @@ const handleRun =
     : [StageDelimiter, boolean] => {
     if (options?.on) {
       if (selectSlice(value, options?.on.selector) === options?.on.expected) {
-        const runOnceMap = stageDelimiter.runOnceMap.get(action.type + plan.stage);
-        if (runOnceMap === undefined) {
-          stageDelimiter.runOnceMap.set(action.type + plan.stage, true);
+        if (options.runOnce) {
+          const runOnceMap = stageDelimiter.runOnceMap.get(action.type + plan.stage);
+          if (runOnceMap === undefined) {
+            stageDelimiter.runOnceMap.set(action.type + plan.stage, true);
+            return [
+              stageDelimiter, true
+            ];
+          } else {
+            stageDelimiter.runOnceMap.set(action.type + plan.stage, false);
+            return [
+              stageDelimiter, false
+            ];
+          }
+        } else {
           return [
             stageDelimiter, true
-          ];
-        } else {
-          stageDelimiter.runOnceMap.set(action.type + plan.stage, false);
-          return [
-            stageDelimiter, false
           ];
         }
       } else {
@@ -99,7 +105,7 @@ const handleStageDelimiter =
     } else if (stageDelimiter) {
       stageDelimiter = {
         stage: plan.stage,
-        prevActions: [...stageDelimiter.prevActions ,action.type],
+        prevActions: [...stageDelimiter.prevActions, action.type],
         unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
         runOnceMap: new Map()
       };
@@ -126,9 +132,10 @@ export class UnifiedSubject extends Subject<Concept[]> {
   }
   stage(title: string, stages: Staging[]) {
     this.currentStages.set(this.stageId, {title, stages, stage: 0, stageFailed: -1});
+    const stageId = this.stageId;
     this.stageId++;
     const close = () => {
-      this.currentStages.delete(this.stageId);
+      this.currentStages.delete(stageId);
     };
     return {
       close: close.bind(this)
@@ -183,7 +190,11 @@ export class UnifiedSubject extends Subject<Concept[]> {
           action$.next(action);
         }
       }
-    } else if (options?.runOnce === undefined) {
+    } else if (
+      options?.runOnce === undefined &&
+      (options.on === undefined ||
+      (options.on && (!options.debounce && (options.iterateStep === undefined || options.setStep === plan.stage)))
+      )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;
       const deleted = this.currentStages.delete(key);

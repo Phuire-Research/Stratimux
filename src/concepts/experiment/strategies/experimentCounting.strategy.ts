@@ -8,8 +8,8 @@ import { counterSelectCount } from '../../counter/counter.selector';
 import { ownershipBackTrackType } from '../../ownership/qualities/backTrack.quality';
 import { ownershipName } from '../../ownership/ownership.concept';
 
-export const countingTopic = 'Counting Strategy';
-export function countingStrategy(): ActionStrategy {
+export const experimentCountingTopic = 'Counting Strategy';
+export function experimentCountingStrategy(): ActionStrategy {
   const backTrack: ActionNode = {
     actionType: ownershipBackTrackType,
     successNode: null,
@@ -72,15 +72,15 @@ export function countingStrategy(): ActionStrategy {
   };
 
   const params: ActionStrategyParameters = {
-    topic: countingTopic,
+    topic: experimentCountingTopic,
     initialNode: stepOne,
   };
 
   return createStrategy(params);
 }
 
-export const primedCountingTopic = 'Counting Strategy with Primed Actions';
-export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
+export const experimentPrimedCountingTopic = 'Counting Strategy with Primed Actions';
+export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
   const backTrackSemaphore = getSemaphore(concepts, ownershipName, ownershipBackTrackType);
@@ -140,7 +140,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
   };
 
   const params: ActionStrategyParameters = {
-    topic: primedCountingTopic,
+    topic: experimentPrimedCountingTopic,
     initialNode: stepOne,
   };
 

@@ -1,21 +1,31 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
-import { selectState } from '../model/selector';
+import { createPayload, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createExperimentConcept } from '../concepts/experiment/experiment.concept';
+import { createExperimentActionQueState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
-import { primedCountingStrategy, countingTopic, primedCountingTopic } from '../concepts/experiment/strategies/experimentCounting.strategy';
+import {
+  experimentPrimedCountingStrategy,
+  experimentCountingTopic,
+  experimentPrimedCountingTopic
+} from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
-import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
+import { SetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
+import { checkInQuality } from '../concepts/experiment/qualities/checkIn.quality';
+import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
-  const axium = createAxium('ownershipTest', [createOwnershipConcept(), createCounterConcept(), createExperimentConcept()], true, true);
+  const axium = createAxium('ownershipTest', [
+    createOwnershipConcept(),
+    createCounterConcept(),
+    createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
+  ], true, true);
   const staged = axium.stage(
     'Testing Ownership Staging', [
       (cpts, dispatch) => {
@@ -37,14 +47,14 @@ test('Ownership Test', (done) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-        dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStep: true});
+        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStep: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
         const counter = selectState<Counter>(cpts, counterName);
         console.log('Count: ', counter.count);
-        dispatch(strategyBegin(primedCountingStrategy(cpts)), {
+        dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
           iterateStep: true
         });
       },
@@ -56,20 +66,20 @@ test('Ownership Test', (done) => {
           finalRun = false;
           // This will be the final test to be triggered by a log action.
           console.log('Stage 3, If #3 | Count: ', counter.count, orderOfTopics);
-          expect(orderOfTopics[0]).toBe(countingTopic);
+          expect(orderOfTopics[0]).toBe(experimentCountingTopic);
           expect(counter.count).toBe(3);
           // Comment in if testing the halting ability of log and setCount stage is commented out.
           // setTimeout(() => {done();}, 1000);
           staged.close();
         } else if (
-          (axiumState.lastStrategy === countingTopic ||
-          axiumState.lastStrategy === primedCountingTopic) &&
+          (axiumState.lastStrategy === experimentCountingTopic ||
+          axiumState.lastStrategy === experimentPrimedCountingTopic) &&
           orderOfTopics.length === 0) {
           console.log('Stage 3, If #1 | Count: ', counter.count);
           orderOfTopics.push(axiumState.lastStrategy);
         } else if (
-          (axiumState.lastStrategy === countingTopic ||
-          axiumState.lastStrategy === primedCountingTopic) &&
+          (axiumState.lastStrategy === experimentCountingTopic ||
+          axiumState.lastStrategy === experimentPrimedCountingTopic) &&
           orderOfTopics.length === 1) {
           if (orderOfTopics[0] !== axiumState.lastStrategy) {
             console.log('Stage 3, If #2 | Count: ', counter.count);

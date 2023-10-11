@@ -1,7 +1,7 @@
 import { ActionNode, ActionStrategy, ActionStrategyParameters, createStrategy, puntStrategy } from '../../../model/actionStrategy';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentCheckInType } from '../qualities/checkIn.quality';
-import { countingStrategy } from './experimentCounting.strategy';
+import { experimentCountingStrategy } from './experimentCounting.strategy';
 
 export const puntCountingStrategyTopic = 'This will Punt the Counting Strategy into the Experiment\'s Action Que';
 export function puntCountingStrategy(): ActionStrategy {
@@ -17,5 +17,5 @@ export function puntCountingStrategy(): ActionStrategy {
     initialNode: stepOne,
   };
 
-  return puntStrategy(countingStrategy(), createStrategy(params));
+  return puntStrategy(experimentCountingStrategy(), createStrategy(params));
 }
