@@ -15,14 +15,14 @@ test('Axium Stage Dispatch Options Test', (done) => {
       const badPlan = axiumState.badPlans[0];
       const counter = selectState<Counter>(concepts, counterName);
       console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter.count);
-      staged.close();
+      plan.conclude();
       sub.unsubscribe();
       expect(badPlan.stageFailed).toBe(2);
       expect(counter.count).toBe(2);
       setTimeout(() => {done();}, 500);
     }
   });
-  const staged = axium.stage('Stage DispatchOptions Test',
+  const plan = axium.stage('Stage DispatchOptions Test',
     [
       (concepts, dispatch) => {
         const counter = selectState<Counter>(concepts, counterName);
@@ -61,7 +61,10 @@ test('Axium Stage Dispatch Options Test', (done) => {
         });
         // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.
         dispatch(counterAdd(), {});
-        console.log('Should run twice. 1st will be before "Stage Ran Away," and 2nd will be final console log output.');
+        console.log(
+          'Will also run twice. 1st will be before "Stage Ran Away,"',
+          'and after "Should run twice." The 2nd will be final console log output.'
+        );
       }
     ]);
 });

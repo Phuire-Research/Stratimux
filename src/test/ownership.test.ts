@@ -26,7 +26,7 @@ test('Ownership Test', (done) => {
     createCounterConcept(),
     createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
   ], true, true);
-  const staged = axium.stage(
+  const plan = axium.stage(
     'Testing Ownership Staging', [
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
@@ -70,7 +70,7 @@ test('Ownership Test', (done) => {
           expect(counter.count).toBe(3);
           // Comment in if testing the halting ability of log and setCount stage is commented out.
           // setTimeout(() => {done();}, 1000);
-          staged.close();
+          plan.conclude();
         } else if (
           (axiumState.lastStrategy === experimentCountingTopic ||
           axiumState.lastStrategy === experimentPrimedCountingTopic) &&

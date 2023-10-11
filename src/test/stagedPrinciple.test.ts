@@ -26,7 +26,7 @@ const experimentMockToTrueQuality = createQuality(experimentMockToTrueType, expe
 
 test('Axium Principle Stage', (done) => {
   const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concept[], concept$: UnifiedSubject) => {
-    const stage = concept$.stage('Experiment Principle', [
+    const plan = concept$.stage('Experiment Principle', [
       (___, dispatch) => {
         dispatch(experimentMockToTrue(), {
           iterateStage: true,
@@ -41,7 +41,7 @@ test('Axium Principle Stage', (done) => {
         if (experimentState.mock) {
           expect(experimentState.mock).toBe(true);
           setTimeout(() => done(), 1000);
-          stage.close();
+          plan.conclude();
         }
       }
     ]);

@@ -11,7 +11,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], true, true);
-  const staged = axium.stage('Remove Concepts Stage',[
+  const plan = axium.stage('Remove Concepts Stage',[
     (concepts, dispatch) => {
       dispatch(
         strategyBegin(
@@ -33,7 +33,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
         });
         expect(exists).toBe(false);
         setTimeout(() => {done();}, 500);
-        staged.close();
+        plan.conclude();
       }
     }
   ]);

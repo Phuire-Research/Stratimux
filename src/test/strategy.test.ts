@@ -8,7 +8,7 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
-  const staged = axium.stage('Counting Strategy Stage',
+  const plan = axium.stage('Counting Strategy Stage',
     [
       (_, dispatch) => {
         dispatch(strategyBegin(countingStrategy()), {
@@ -20,7 +20,7 @@ test('Axium Counting Strategy Test', (done) => {
           const counter = selectState<Counter>(concepts, counterName);
           expect(counter.count).toBe(1);
           setTimeout(() => {done();}, 500);
-          staged.close();
+          plan.conclude();
         }
       }
     ]);
