@@ -17,7 +17,7 @@ The inspiration for STRX was that of Redux and its origin via the FLUX design pa
 * [ActionStrategy](https://github.com/Phuire-Research/STRX/blob/main/ActionStrategy.md) - Created in 2018, this is the governing concept that allows for the Unified Turing Machine to have a strong halting quality. Likewise the direct analog of higher order logic and universal transformer.
 * [Axium](https://github.com/Phuire-Research/STRX/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
 * [Concept](https://github.com/Phuire-Research/STRX/blob/main/Concept.md) - The programming abstraction of a concept that is decomposable to the sum of its parts via: state, qualities, principles, and mode.
-* [Stage](https://github.com/Phuire-Research/STRX/blob/main/Stage.md) - Introducing the stage design pattern. A specific helper function to prevent action overflow in action dispatches in subscriptions. 
+* [Stage Planner](https://github.com/Phuire-Research/STRX/blob/main/StagePlanner.md) - Introducing the stage planner paradigm. A specialized helper function to prevent action overflow when dispatching actions in subscriptions. 
 * [Spatial Ownership](https://github.com/Phuire-Research/STRX/blob/main/SpatialOwnership.md) - Streamlines the complex nature of the ActionStrategy as it relates to itself and other axiums. This is what allows STRX to be a graph computation paradigm.
 * [Unified Turing Machine](https://github.com/Phuire-Research/STRX/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
@@ -88,7 +88,7 @@ const plan = axium.stage(
         expect(counter.count).toBe(3);
         // Comment in if testing the halting ability of log and setCount stage is commented out.
         // setTimeout(() => {done();}, 1000);
-        staged.close();
+        plan.conclude();
       } else if (
         (axiumState.lastStrategy === experimentCountingTopic ||
         axiumState.lastStrategy === experimentPrimedCountingTopic) &&
