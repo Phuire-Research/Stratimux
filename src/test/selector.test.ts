@@ -1,6 +1,6 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
-import { createPayload, selectPayload, selectSlice, selectState } from '../model/selector';
+import { selectPayload, selectSlice, selectState } from '../model/selector';
 import { Counter, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { SetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
@@ -12,6 +12,7 @@ test('Axium Selector Test', (done) => {
   const axium = createAxium('axiumSelectorTest', [counter], true, true);
   const sub = axium.subscribe((concepts: Concept[]) => {
     const state = selectState<Counter>(concepts, counterName);
+    console.log('CHECK COUNT', state.count);
     expect(state.count).toBe(10);
     done();
   });
@@ -30,7 +31,7 @@ test('Axium Selector State Slice Test', (done) => {
 });
 
 test('Axium Selector Payload Test', (done) => {
-  const setCount = counterSetCount(createPayload<SetCountPayload>({newCount: 10 }));
+  const setCount = counterSetCount({newCount: 10 });
   const payload = selectPayload<SetCountPayload>(setCount);
   expect(payload.newCount).toBe(10);
   done();

@@ -1,17 +1,18 @@
 import { Subject, Subscriber } from 'rxjs';
 import { Concept, defaultMethodCreator  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { UnifiedSubject } from '../../../model/unifiedSubject';
 import { selectPayload } from '../../../model/selector';
 
-export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set new Subscribers to General Subscribers list';
-
 export type InitializePrinciplesPayload = {
     concepts: Concept[];
 }
+export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set new Subscribers to General Subscribers list';
+export const axiumInitializePrinciples =
+  prepareActionWithPayloadCreator<InitializePrinciplesPayload>(axiumInitializePrinciplesType);
 
 export function initializePrinciplesReducer(state: AxiumState, _action: Action) {
   const payload = selectPayload<InitializePrinciplesPayload>(_action);

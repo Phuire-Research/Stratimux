@@ -1,20 +1,18 @@
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionCreator } from '../../../model/action';
+import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 
-export const axiumOpenType: ActionType = 'Open Axium';
-export const axiumOpen = prepareActionCreator(axiumOpenType);
+export type OpenPayload = boolean;
 
-export type OpenPayload = {
-  open?: boolean;
-} | undefined;
+export const axiumOpenType: ActionType = 'Open Axium';
+export const axiumOpen = prepareActionWithPayloadCreator<OpenPayload>(axiumOpenType);
 
 export function openReducer(state: AxiumState, action: Action) {
   const payload = selectPayload<OpenPayload>(action);
   return {
     ...state,
-    open: payload?.open ? payload.open : true
+    open: payload,
   };
 }
 export const openQuality = createQuality(

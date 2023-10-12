@@ -1,6 +1,6 @@
 import { createAxium  } from '../model/axium';
 import { Concept } from '../model/concept';
-import { createPayload, selectState } from '../model/selector';
+import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
@@ -14,8 +14,8 @@ import {
   experimentPrimedCountingTopic
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
-import { SetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { checkInQuality } from '../concepts/experiment/qualities/checkIn.quality';
+import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
+import { checkInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
 
 test('Ownership Test', (done) => {
@@ -24,7 +24,7 @@ test('Ownership Test', (done) => {
   const axium = createAxium('ownershipTest', [
     createOwnershipConcept(),
     createCounterConcept(),
-    createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
+    createExperimentConcept(createExperimentActionQueState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
   ], true, true);
   const plan = axium.stage(
     'Testing Ownership Staging', [
@@ -47,7 +47,7 @@ test('Ownership Test', (done) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-        dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStage: true});
+        dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStage: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);

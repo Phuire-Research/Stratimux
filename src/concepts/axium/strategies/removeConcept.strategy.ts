@@ -1,33 +1,28 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
+import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
-import { axiumRemoveConceptsViaQueType } from '../qualities/removeConceptsViaQue.quality';
-import { AppendConceptsToRemoveQuePayload, axiumAppendConceptsToRemoveQueType } from '../qualities/appendConceptsToRemoveQue.quality';
-import { SetBlockingModePayload, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
-import { axiumOpenType } from '../qualities/open.quality';
-import { SetDefaultModePayload, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
+import { axiumRemoveConceptsViaQue, axiumRemoveConceptsViaQueType } from '../qualities/removeConceptsViaQue.quality';
+import { axiumAppendConceptsToRemoveQue, axiumAppendConceptsToRemoveQueType } from '../qualities/appendConceptsToRemoveQue.quality';
+import { axiumSetBlockingMode, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
+import { axiumOpen, axiumOpenType } from '../qualities/open.quality';
+import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
 import { axiumName } from '../axium.concept';
-import { createPayload } from '../../../model/selector';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumName, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumName, axiumAppendConceptsToRemoveQueType);
 
-  const stepTwo: ActionNode = {
-    actionType: axiumAppendConceptsToRemoveQueType,
+  const stepTwo: ActionNode = createActionNode(axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
     semaphore: appendConceptsToRemoveQueSemaphore,
     successNode: null,
     failureNode: null,
-    payload: createPayload<AppendConceptsToRemoveQuePayload>({concepts: targetConcepts})
-  };
-  const stepOne: ActionNode = {
-    actionType: axiumSetBlockingModeType,
+  });
+  const stepOne: ActionNode = createActionNode(axiumSetBlockingMode({concepts}), {
     semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
     failureNode: null,
-    payload: createPayload<SetBlockingModePayload>({concepts})
-  };
+  });
   const params: ActionStrategyParameters = {
     topic: addConceptsToRemovalQueThenBlockTopic,
     initialNode: stepOne
@@ -41,8 +36,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
 
-  const stepThree: ActionNode = {
-    actionType: axiumOpenType,
+  const stepThree: ActionNode = createActionNode(axiumOpen(true), {
     semaphore: openSemaphore,
     successNode: null,
     successNotes: {
@@ -50,26 +44,23 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
       denoter: 'State.'
     },
     failureNode: null,
-  };
-  const stepTwo: ActionNode = {
-    actionType: axiumSetDefaultModeType,
+  });
+  const stepTwo: ActionNode = createActionNode(axiumSetDefaultMode({concepts}), {
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
     failureNode: null,
-    payload: createPayload<SetDefaultModePayload>({concepts}),
-  };
-  const stepOne: ActionNode = {
-    actionType: axiumRemoveConceptsViaQueType,
+  });
+  const stepOne: ActionNode = createActionNode(axiumRemoveConceptsViaQue(), {
     semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
     successNotes: {
       preposition: 'To Begin'
     },
     failureNode: null,
-  };
+  });
 
   const params: ActionStrategyParameters = {
     topic: removeConceptsViaQueThenUnblockTopic,

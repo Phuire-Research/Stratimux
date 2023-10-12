@@ -1,16 +1,16 @@
 import { Subject, Subscriber } from 'rxjs';
 import { Concept, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { defaultMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
-export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
-
 export type SetDefaultModePayload = {
     concepts: Concept[]
 }
+export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
+export const axiumSetDefaultMode = prepareActionWithPayloadCreator<SetDefaultModePayload>(axiumSetDefaultModeType);
 
 export function setDefaultModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;

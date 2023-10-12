@@ -1,4 +1,4 @@
-import { ActionType } from '../../../model/action';
+import { ActionType, prepareActionCreator } from '../../../model/action';
 
 /**
  * axiumConcludeType
@@ -9,3 +9,4 @@ import { ActionType } from '../../../model/action';
  * This should not be used Directly
  */
 export const axiumConcludeType: ActionType = 'Conclude';
+export const axiumConclude = prepareActionCreator(axiumConcludeType);

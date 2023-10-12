@@ -1,22 +1,20 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
+import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
-import { counterAddType } from '../../counter/qualities/add.quality';
-import { counterSubtractType } from '../../counter/qualities/subtract.quality';
+import { counterAdd, counterAddType } from '../../counter/qualities/add.quality';
+import { counterSubtract, counterSubtractType } from '../../counter/qualities/subtract.quality';
 import { counterName } from '../../counter/counter.concept';
 import { counterSelectCount } from '../../counter/counter.selector';
-import { ownershipBackTrackType } from '../../ownership/qualities/backTrack.quality';
+import { ownershipBackTrack, ownershipBackTrackType } from '../../ownership/qualities/backTrack.quality';
 import { ownershipName } from '../../ownership/ownership.concept';
 
 export const experimentCountingTopic = 'Counting Strategy';
 export function experimentCountingStrategy(): ActionStrategy {
-  const backTrack: ActionNode = {
-    actionType: ownershipBackTrackType,
+  const backTrack = createActionNode(ownershipBackTrack(), {
     successNode: null,
     failureNode: null,
-  };
-  const stepFive: ActionNode = {
-    actionType: counterSubtractType,
+  });
+  const stepFive = createActionNode(counterSubtract(),{
     successNode: null,
     successNotes: {
       preposition: 'and finally',
@@ -25,9 +23,8 @@ export function experimentCountingStrategy(): ActionStrategy {
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepFour: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepFour = createActionNode(counterAdd(), {
     successNode: stepFive,
     successNotes: {
       preposition: '',
@@ -36,9 +33,8 @@ export function experimentCountingStrategy(): ActionStrategy {
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepThree: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepThree = createActionNode(counterAdd(), {
     successNode: stepFour,
     successNotes: {
       preposition: '',
@@ -47,9 +43,8 @@ export function experimentCountingStrategy(): ActionStrategy {
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepTwo: ActionNode = {
-    actionType: counterSubtractType,
+  });
+  const stepTwo = createActionNode(counterSubtract(), {
     successNode: stepThree,
     successNotes: {
       preposition: '',
@@ -58,9 +53,8 @@ export function experimentCountingStrategy(): ActionStrategy {
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepOne: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepOne = createActionNode(counterAdd(), {
     successNode: stepTwo,
     successNotes: {
       preposition: '',
@@ -69,7 +63,7 @@ export function experimentCountingStrategy(): ActionStrategy {
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
+  });
 
   const params: ActionStrategyParameters = {
     topic: experimentCountingTopic,
@@ -84,14 +78,12 @@ export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStr
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
   const backTrackSemaphore = getSemaphore(concepts, ownershipName, ownershipBackTrackType);
-  const backTrack: ActionNode = {
-    actionType: ownershipBackTrackType,
+  const backTrack = createActionNode(ownershipBackTrack(), {
     semaphore: backTrackSemaphore,
     successNode: null,
     failureNode: null,
-  };
-  const stepFour: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepFour = createActionNode(counterAdd(), {
     semaphore: addSemaphore,
     successNode: null,
     successNotes: {
@@ -101,9 +93,8 @@ export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStr
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepThree: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepThree = createActionNode(counterAdd(), {
     semaphore: addSemaphore,
     successNode: stepFour,
     successNotes: {
@@ -113,9 +104,8 @@ export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStr
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepTwo: ActionNode = {
-    actionType: counterSubtractType,
+  });
+  const stepTwo = createActionNode(counterSubtract(), {
     semaphore: subtractSemaphore,
     successNode: stepThree,
     successNotes: {
@@ -125,9 +115,8 @@ export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStr
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
-  const stepOne: ActionNode = {
-    actionType: counterAddType,
+  });
+  const stepOne = createActionNode(counterAdd(), {
     semaphore: subtractSemaphore,
     successNode: stepTwo,
     successNotes: {
@@ -137,7 +126,7 @@ export function experimentPrimedCountingStrategy(concepts: Concept[]): ActionStr
     failureNode: backTrack,
     agreement: 1000,
     keyedSelectors: [counterSelectCount]
-  };
+  });
 
   const params: ActionStrategyParameters = {
     topic: experimentPrimedCountingTopic,

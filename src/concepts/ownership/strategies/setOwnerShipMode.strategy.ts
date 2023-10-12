@@ -1,12 +1,10 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/actionStrategy';
+import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
-import { ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
-import { SetModePayload, axiumSetModeType } from '../../axium/qualities/setMode.quality';
+import { ownershipInitializeOwnership, ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
+import { axiumSetMode, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { ownershipName } from '../ownership.concept';
-import { SetDefaultModeIndexPayload, axiumSetDefaultModeIndexType } from '../../axium/qualities/setDefaultModeIndex.quality';
 import { AxiumState } from '../../axium/axium.concept';
-import { createPayload } from '../../../model/selector';
 
 export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
 export function setOwnershipModeStrategy(concepts: Concept[], modeName: string): ActionStrategy {
@@ -19,25 +17,22 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     }
   });
 
-  const stepTwo: ActionNode = {
-    actionType: ownershipInitializeOwnershipType,
+  const stepTwo: ActionNode = createActionNode(ownershipInitializeOwnership(), {
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
     successNotes: {
       preposition: 'Set',
     },
     failureNode: null,
-  };
-  const stepOne: ActionNode = {
-    actionType: axiumSetModeType,
+  });
+  const stepOne: ActionNode = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
     semaphore: setModeSemaphore,
     successNode: stepTwo,
     successNotes: {
       preposition: 'Successfully'
     },
     failureNode: null,
-    payload: createPayload<SetModePayload>({ modeIndex: ownershipModeIndex, modeName }),
-  };
+  });
   const params: ActionStrategyParameters = {
     topic: setOwnerShipModeTopic,
     initialNode: stepOne,

@@ -5,7 +5,7 @@ import { Counter } from '../counter.concept';
 import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
-import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
+import { axiumConclude } from '../../axium/qualities/conclude.quality';
 
 export const counterSubtractType: ActionType = 'Counter Subtract';
 
@@ -25,7 +25,7 @@ const subtractMethodCreator: MethodCreator = () => {
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return createAction(axiumConcludeType);
+      return axiumConclude();
     })
   );
   return [

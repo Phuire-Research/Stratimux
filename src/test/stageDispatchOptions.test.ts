@@ -1,6 +1,6 @@
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
-import { Counter, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
+import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';

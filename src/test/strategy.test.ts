@@ -1,5 +1,4 @@
 import { createAxium } from '../model/axium';
-import { Concept } from '../model/concept';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
