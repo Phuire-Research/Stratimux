@@ -1,4 +1,4 @@
-import { Subject, Subscriber } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
@@ -7,7 +7,7 @@ import { openQuality } from './qualities/open.quality';
 import { badActionQuality } from './qualities/badAction.quality';
 import { closeQuality } from './qualities/close.quality';
 import { logQuality } from './qualities/log.quality';
-import { registerSubscriberQuality } from './qualities/registerSubscriber.quality';
+import { registerSubscriberQuality } from './qualities/registerSubscription.quality';
 import { initializePrinciplesQuality } from './qualities/initializePrinciples.quality';
 export { initializationStrategy } from './strategies/initialization.strategy';
 import { setBlockingModeQuality } from './qualities/setBlockingMode.quality';
@@ -21,14 +21,15 @@ import { createConcept } from '../../model/concept';
 import { setModeQuality } from './qualities/setMode.quality';
 import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
 import { clearDialogQuality } from './qualities/clearDialog.quality';
-import { Plan, UnifiedSubject } from '../../model/unifiedSubject';
+import { NamedStagePlanner, Plan, UnifiedSubject } from '../../model/stagePlanner';
 import { clearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
 import { clearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
 import { clearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
+import { registerStagePlannerQuality } from './qualities/registerStagePlanner.quality';
 
-export type NamedSubscriber = {
+export type NamedSubscription = {
   name: string;
-  subscriber: Subscriber<Action>;
+  subscription: Subscription;
 }
 
 export type AxiumState = {
@@ -44,8 +45,9 @@ export type AxiumState = {
   modeIndex: number;
   defaultModeIndex: number;
   modeNames: string[]
-  methodSubscribers: NamedSubscriber[];
-  generalSubscribers: NamedSubscriber[];
+  methodSubscribers: NamedSubscription[];
+  generalSubscribers: NamedSubscription[];
+  stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
@@ -70,8 +72,9 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     modeIndex: 0,
     defaultModeIndex: 1,
     modeNames: [axiumName, axiumName],
-    methodSubscribers: [] as NamedSubscriber[],
-    generalSubscribers: [] as NamedSubscriber[],
+    methodSubscribers: [] as NamedSubscription[],
+    generalSubscribers: [] as NamedSubscription[],
+    stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
@@ -94,6 +97,7 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       clearDialogQuality,
       logQuality,
       registerSubscriberQuality,
+      registerStagePlannerQuality,
       initializePrinciplesQuality,
       setBlockingModeQuality,
       setDefaultModeQuality,

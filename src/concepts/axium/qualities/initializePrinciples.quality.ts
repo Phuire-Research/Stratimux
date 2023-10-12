@@ -4,7 +4,7 @@ import { createPrinciple$ } from '../../../model/principle';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
-import { UnifiedSubject } from '../../../model/unifiedSubject';
+import { UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 
 export type InitializePrinciplesPayload = {
@@ -26,7 +26,7 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action) 
         const observable = createPrinciple$(principle, concepts, subConcepts$);
         subscribers.push({
           name: concept.name,
-          subscriber: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
+          subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
         });
       });
     }

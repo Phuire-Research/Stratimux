@@ -16,9 +16,7 @@ import {
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
 import { axiumCloseType } from '../concepts/axium/qualities/close.quality';
 import {
-  AppendActionListToDialogPayload,
   axiumAppendActionListToDialog,
-  axiumAppendActionListToDialogType
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
@@ -90,7 +88,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
         axiumState = concepts[0].state as AxiumState;
         axiumState.methodSubscribers.push({
           name: concept.name,
-          subscriber: methodSub,
+          subscription: methodSub,
         });
       }
     });

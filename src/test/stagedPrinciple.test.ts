@@ -5,7 +5,7 @@ import { PrincipleFunction } from '../model/principle';
 import { Action, ActionType, prepareActionCreator } from '../model/action';
 import { Subscriber } from 'rxjs';
 import { Concept, createQuality } from '../model/concept';
-import { UnifiedSubject } from '../model/unifiedSubject';
+import { UnifiedSubject } from '../model/stagePlanner';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 type ExperimentState = {

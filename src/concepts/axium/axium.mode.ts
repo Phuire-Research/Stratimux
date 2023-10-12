@@ -6,7 +6,7 @@ import { axiumBadActionType } from './qualities/badAction.quality';
 import { Concept } from '../../model/concept.js';
 import { axiumSetBlockingModeType } from './qualities/setBlockingMode.quality';
 import { axiumConcludeType } from './qualities/conclude.quality';
-import { UnifiedSubject } from '../../model/unifiedSubject';
+import { UnifiedSubject } from '../../model/stagePlanner';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;

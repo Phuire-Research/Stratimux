@@ -4,12 +4,27 @@ import { Concept } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, selectSlice } from './selector';
 import { Action, ActionType } from './action';
+import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 
 export type Plan = {
   title: string;
   stages: Staging[],
   stage: number;
   stageFailed: number;
+}
+
+export type NamedStagePlanner = {
+  name: string;
+  title: string;
+  planId: number;
+  conclude: () => void;
+}
+
+export type StagePlanner = {
+  title: string;
+  planId: number;
+  conclude: () => void;
 }
 
 export type dispatchOptions = {
@@ -35,6 +50,26 @@ export type StageDelimiter = {
   unionExpiration: number[];
   runOnceMap: Map<string, boolean>
 }
+
+export const stageWaitForOpenThenIterate = (action: Action): Staging => (concepts: Concept[], dispatch: Dispatcher) => {
+  dispatch(action, {
+    on: {
+      selector: axiumSelectOpen,
+      expected: true
+    },
+    iterateStage: true
+  });
+};
+
+export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (concepts: Concept[], dispatch: Dispatcher) => {
+  dispatch(action, {
+    on: {
+      selector: ownershipSelectInitialized,
+      expected: true
+    },
+    iterateStage: true
+  });
+};
 
 const handleRun =
   (value: Concept[], stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
@@ -133,20 +168,22 @@ const handleStageDelimiter =
   };
 
 export class UnifiedSubject extends Subject<Concept[]> {
-  private stageId = 0;
+  private planId = 0;
   private currentStages: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   constructor() {
     super();
   }
-  stage(title: string, stages: Staging[]) {
-    this.currentStages.set(this.stageId, {title, stages, stage: 0, stageFailed: -1});
-    const stageId = this.stageId;
-    this.stageId++;
+  stage(title: string, stages: Staging[]): StagePlanner {
+    this.currentStages.set(this.planId, {title, stages, stage: 0, stageFailed: -1});
+    const planId = this.planId;
+    this.planId++;
     const conclude = () => {
-      this.currentStages.delete(stageId);
+      this.currentStages.delete(planId);
     };
     return {
+      title: title,
+      planId: planId,
       conclude: conclude.bind(this)
     };
   }
