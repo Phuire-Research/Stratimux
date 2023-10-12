@@ -1,4 +1,4 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
+import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { axiumRemoveConceptsViaQue, axiumRemoveConceptsViaQueType } from '../qualities/removeConceptsViaQue.quality';
@@ -13,12 +13,12 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumName, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumName, axiumAppendConceptsToRemoveQueType);
 
-  const stepTwo: ActionNode = createActionNode(axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
+  const stepTwo = createActionNode(axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
     semaphore: appendConceptsToRemoveQueSemaphore,
     successNode: null,
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(axiumSetBlockingMode({concepts}), {
+  const stepOne = createActionNode(axiumSetBlockingMode({concepts}), {
     semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
     failureNode: null,
@@ -36,7 +36,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
 
-  const stepThree: ActionNode = createActionNode(axiumOpen(true), {
+  const stepThree = createActionNode(axiumOpen(true), {
     semaphore: openSemaphore,
     successNode: null,
     successNotes: {
@@ -45,7 +45,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
     },
     failureNode: null,
   });
-  const stepTwo: ActionNode = createActionNode(axiumSetDefaultMode({concepts}), {
+  const stepTwo = createActionNode(axiumSetDefaultMode({concepts}), {
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
     successNotes: {
@@ -53,7 +53,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): Ac
     },
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(axiumRemoveConceptsViaQue(), {
+  const stepOne = createActionNode(axiumRemoveConceptsViaQue(), {
     semaphore: removeConceptsViaQueSemaphore,
     successNode: stepTwo,
     successNotes: {

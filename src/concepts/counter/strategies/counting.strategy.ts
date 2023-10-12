@@ -1,4 +1,4 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
+import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { counterAdd, counterAddType } from '../qualities/add.quality';
@@ -7,7 +7,7 @@ import { counterName } from '../counter.concept';
 
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
-  const stepFive: ActionNode = createActionNode(counterSubtract(), {
+  const stepFive = createActionNode(counterSubtract(), {
     successNode: null,
     successNotes: {
       preposition: 'and finally',
@@ -15,7 +15,7 @@ export function countingStrategy(): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepFour: ActionNode = createActionNode(counterAdd(), {
+  const stepFour = createActionNode(counterAdd(), {
     successNode: stepFive,
     successNotes: {
       preposition: '',
@@ -23,7 +23,7 @@ export function countingStrategy(): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepThree: ActionNode = createActionNode(counterAdd(), {
+  const stepThree = createActionNode(counterAdd(), {
     successNode: stepFour,
     successNotes: {
       preposition: '',
@@ -31,7 +31,7 @@ export function countingStrategy(): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepTwo: ActionNode = createActionNode(counterSubtract(), {
+  const stepTwo = createActionNode(counterSubtract(), {
     successNode: stepThree,
     successNotes: {
       preposition: '',
@@ -39,7 +39,7 @@ export function countingStrategy(): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(counterAdd(), {
+  const stepOne = createActionNode(counterAdd(), {
     successNode: stepTwo,
     successNotes: {
       preposition: '',
@@ -60,7 +60,7 @@ export const primedCountingTopic = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
-  const stepFour: ActionNode = createActionNode(counterAdd(), {
+  const stepFour = createActionNode(counterAdd(), {
     semaphore: addSemaphore,
     successNode: null,
     successNotes: {
@@ -69,7 +69,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepThree: ActionNode = createActionNode(counterAdd(), {
+  const stepThree = createActionNode(counterAdd(), {
     semaphore: addSemaphore,
     successNode: stepFour,
     successNotes: {
@@ -78,7 +78,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepTwo: ActionNode = createActionNode(counterSubtract(), {
+  const stepTwo = createActionNode(counterSubtract(), {
     semaphore: subtractSemaphore,
     successNode: stepThree,
     successNotes: {
@@ -87,7 +87,7 @@ export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
     },
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(counterAdd(), {
+  const stepOne = createActionNode(counterAdd(), {
     semaphore: subtractSemaphore,
     successNode: stepTwo,
     successNotes: {

@@ -1,4 +1,4 @@
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
+import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { ownershipInitializeOwnership, ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
@@ -17,7 +17,7 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     }
   });
 
-  const stepTwo: ActionNode = createActionNode(ownershipInitializeOwnership(), {
+  const stepTwo = createActionNode(ownershipInitializeOwnership(), {
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
     successNotes: {
@@ -25,7 +25,7 @@ export function setOwnershipModeStrategy(concepts: Concept[], modeName: string):
     },
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
+  const stepOne = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
     semaphore: setModeSemaphore,
     successNode: stepTwo,
     successNotes: {
