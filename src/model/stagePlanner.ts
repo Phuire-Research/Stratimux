@@ -251,6 +251,12 @@ export class UnifiedSubject extends Subject<Concept[]> {
         if (options?.setStage) {
           plan.stage = options.setStage;
         }
+        if (options?.iterateStage || (options?.setStage && options.setStage !== plan.stage)) {
+          stageDelimiter.prevActions = [];
+          stageDelimiter.unionExpiration = [];
+          stageDelimiter.runOnceMap = new Map();
+          this.stageDelimiters.set(key, stageDelimiter);
+        }
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
         if (plan.stageFailed === -1) {
