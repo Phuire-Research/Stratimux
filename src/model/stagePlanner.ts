@@ -147,12 +147,33 @@ const handleStageDelimiter =
         goodAction = false;
       }
     } else if (stageDelimiter) {
-      stageDelimiter = {
-        stage: plan.stage,
-        prevActions: [...stageDelimiter.prevActions, action.type],
-        unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
-        runOnceMap: new Map()
-      };
+      if (stageDelimiter.prevActions.length > 4) {
+        stageDelimiter = {
+          stage: plan.stage,
+          prevActions: [
+            stageDelimiter.prevActions[1],
+            stageDelimiter.prevActions[2],
+            stageDelimiter.prevActions[3],
+            stageDelimiter.prevActions[4],
+            action.type
+          ],
+          unionExpiration: [
+            stageDelimiter.unionExpiration[1],
+            stageDelimiter.unionExpiration[2],
+            stageDelimiter.unionExpiration[3],
+            stageDelimiter.unionExpiration[4],
+            action.expiration
+          ],
+          runOnceMap: new Map()
+        };
+      } else {
+        stageDelimiter = {
+          stage: plan.stage,
+          prevActions: [...stageDelimiter.prevActions, action.type],
+          unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
+          runOnceMap: new Map()
+        };
+      }
     } else {
       stageDelimiter = {
         stage: plan.stage,
@@ -229,6 +250,12 @@ export class UnifiedSubject extends Subject<Concept[]> {
         }
         if (options?.setStage) {
           plan.stage = options.setStage;
+        }
+        if (options?.iterateStage || (options?.setStage && options.setStage !== plan.stage)) {
+          stageDelimiter.prevActions = [];
+          stageDelimiter.unionExpiration = [];
+          stageDelimiter.runOnceMap = new Map();
+          this.stageDelimiters.set(key, stageDelimiter);
         }
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
