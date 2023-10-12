@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
+import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { Action, getSemaphore} from '../../../model/action';
 import { axiumAddConceptFromQue, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
@@ -12,7 +12,7 @@ import { axiumName } from '../axium.concept';
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
 export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]) {
-  const stepTwo: ActionNode = createActionNode(axiumAppendConceptsToAddQue({concepts: newConcepts}),{
+  const stepTwo = createActionNode(axiumAppendConceptsToAddQue({concepts: newConcepts}),{
     successNode: null,
     successNotes: {
       preposition: 'Then Safely'
@@ -20,7 +20,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
     failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumAppendConceptsToAddQueType),
   });
-  const stepOne: ActionNode = createActionNode(axiumSetBlockingMode({concepts}), {
+  const stepOne = createActionNode(axiumSetBlockingMode({concepts}), {
     successNode: stepTwo,
     successNotes: {
       preposition: 'Immediately'
@@ -42,7 +42,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
   const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(conceptualSet, axiumName, axiumOpenType);
 
-  const stepThree: ActionNode = createActionNode(axiumOpen(true), {
+  const stepThree = createActionNode(axiumOpen(true), {
     successNode: null,
     successNotes: {
       preposition: 'Reinstate',
@@ -51,7 +51,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
     failureNode: null,
     semaphore: openSemaphore,
   });
-  const stepTwo: ActionNode = createActionNode(axiumSetDefaultMode({concepts: conceptualSet}), {
+  const stepTwo = createActionNode(axiumSetDefaultMode({concepts: conceptualSet}), {
     semaphore: setDefaultModeSemaphore,
     successNode: stepThree,
     successNotes: {
@@ -59,7 +59,7 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
     },
     failureNode: null,
   });
-  const stepOne: ActionNode = createActionNode(axiumAddConceptFromQue(),{
+  const stepOne = createActionNode(axiumAddConceptFromQue(),{
     semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
     successNotes: {
