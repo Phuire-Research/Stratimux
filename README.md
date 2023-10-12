@@ -187,9 +187,7 @@ We could limit use case like the its inspiration as a state machine to control f
 This system may become more atomic over time to better represent the dynamics of language. But during this specific stage, this is a fine starting point towards the decomposition of the complexities of intelligence. As the weighted sum is still massively useful, when there is no direct obvious answer to find some solution to an input. But within this scope would be an entirely different type of Neural Network which does not currently exist. As that would be the generation of novelty over some averaged statistical gradient descent of known data. Would be finding new arrangements of concept and their qualities to find the next **Ah-Ha!**
 
 ## What this Methodology is Proposing
-```
-GIF of Butter bot
-```
+![Rick and Morty - Butter Bot](https://github.com/Phuire-Research/STRX/blob/main/butterBot.gif?raw=true)
 What this methodology creates is the ability to formalize "Aut Intelligence," or baseline intelligence. Aut origins was originally a pictogram of an Ox and is the originating symbol for the letter A. and the purpose of creating this distinction is to categorize a form of artificial baseline intelligence that is predictable and safe. Where even if we achieve some super intelligence, we should not have that super intelligence pass butter. But instead together we should create some baseline intelligence that is written in plain text, that is only capable enough to pass butter.
 
 This would be the safest route of artificial intelligence deployment. Where we may have the truly intelligent models that might cross some threshold, be spared this type of realization. Further this would also allow us to design specialized chips to to run these intelligences within a limited specification. Going as far as printing the limited instruction sets that would formalize that aut intelligence itself onto the chips for additional safety.
