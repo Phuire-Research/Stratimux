@@ -14,7 +14,7 @@ export const axiumSetDefaultMode = prepareActionWithPayloadCreator<SetDefaultMod
 
 export function setDefaultModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
-  methodSubscribers.forEach(named => named.subscriber.unsubscribe());
+  methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
   const payload = selectPayload<SetDefaultModePayload>(_action);
   const concepts = payload.concepts;
@@ -27,7 +27,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
         });
         methodSubscribers.push({
           name: concept.name,
-          subscriber: sub as Subscriber<Action>
+          subscription: sub as Subscriber<Action>
         });
       }
     });

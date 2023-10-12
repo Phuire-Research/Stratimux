@@ -14,7 +14,7 @@ export const axiumSetBlockingMode = prepareActionWithPayloadCreator<SetBlockingM
 
 export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;
-  methodSubscribers.forEach(named => named.subscriber.unsubscribe());
+  methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
 
   const payload = selectPayload<SetBlockingModePayload>(_action);
@@ -28,7 +28,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
         });
         methodSubscribers.push({
           name: concept.name,
-          subscriber: sub as Subscriber<Action>
+          subscription: sub as Subscriber<Action>
         });
       }
     });

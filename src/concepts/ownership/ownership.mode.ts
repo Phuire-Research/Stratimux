@@ -5,7 +5,7 @@ import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
-import { UnifiedSubject } from '../../model/unifiedSubject';
+import { UnifiedSubject } from '../../model/stagePlanner';
 import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 import { selectState } from '../../model/selector';
 import { OwnershipState, ownershipName } from './ownership.concept';

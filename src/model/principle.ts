@@ -1,8 +1,8 @@
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concept } from './concept';
-import { Action, createAction, primeAction } from './action';
-import { RegisterSubscriberPayload, axiumRegisterSubscriberType } from '../concepts/axium/qualities/registerSubscriber.quality';
-import { UnifiedSubject } from './unifiedSubject';
+import { Action, primeAction } from './action';
+import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
+import { UnifiedSubject } from './stagePlanner';
 
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -20,8 +20,7 @@ export function createPrinciple$(
   });
 }
 
-export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concept[], name: string, subscriber: Subscription) {
-  const primedRegisterSubscriber = primeAction(concepts, createAction(axiumRegisterSubscriberType));
-  primedRegisterSubscriber.payload = { subscriber, name } as RegisterSubscriberPayload;
+export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concept[], name: string, subscription: Subscription) {
+  const primedRegisterSubscriber = primeAction(concepts, axiumRegisterSubscriber({ subscription, name }));
   observer.next(primedRegisterSubscriber);
 }

@@ -5,7 +5,7 @@ import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
 import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
-import { UnifiedSubject } from './unifiedSubject';
+import { UnifiedSubject } from './stagePlanner';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;

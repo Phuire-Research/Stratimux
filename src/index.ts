@@ -27,7 +27,8 @@ export type {
 export type { KeyedSelector } from './model/selector';
 export { selectState, selectConcept, selectSlice, selectPayload } from './model/selector';
 export { PrincipleFunction } from './model/principle';
-export type { dispatchOptions, Staging, UnifiedSubject } from './model/unifiedSubject';
+export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
+export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 
 //** Concept Exports */
@@ -46,6 +47,16 @@ export {
   axiumSetDefaultModeIndexType,
   SetDefaultModeIndexPayload
 } from './concepts/axium/qualities/setDefaultModeIndex.quality';
+export {
+  axiumRegisterSubscriber,
+  RegisterSubscriberPayload,
+  axiumRegisterSubscriberType
+} from './concepts/axium/qualities/registerSubscription.quality';
+export {
+  axiumRegisterStagePlanner,
+  RegisterStagePlannerPayload,
+  axiumRegisterStagePlannerType
+} from './concepts/axium/qualities/registerStagePlanner.quality';
 export { axiumClearDialog, axiumClearDialogType } from './concepts/axium/qualities/clearDialog.quality';
 export { axiumSetDefaultMode, axiumSetDefaultModeType, SetDefaultModePayload } from './concepts/axium/qualities/setDefaultMode.quality';
 export { axiumSetBlockingMode, axiumSetBlockingModeType, SetBlockingModePayload } from './concepts/axium/qualities/setBlockingMode.quality';
@@ -86,7 +97,7 @@ export {
 // Ownership
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
-export { selectOwnershipLedger } from './concepts/ownership/ownership.selector';
+export { ownershipSelectInitialized, ownershipSelectLedger } from './concepts/ownership/ownership.selector';
 // Qualities
 export { ownershipBackTrack, ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
 export {

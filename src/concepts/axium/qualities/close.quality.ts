@@ -5,16 +5,18 @@ import { AxiumState } from '../axium.concept';
 export const axiumCloseType: ActionType = 'Close Axium';
 export const axiumClose = prepareActionCreator(axiumCloseType);
 
-export function closeReducer(state: AxiumState, _action: Action) {
-  state.generalSubscribers.forEach(named => named.subscriber.unsubscribe());
-  state.methodSubscribers.forEach(named => named.subscriber.unsubscribe());
+export function closeReducer(state: AxiumState, _action: Action): AxiumState {
+  state.generalSubscribers.forEach(named => named.subscription.unsubscribe());
+  state.methodSubscribers.forEach(named => named.subscription.unsubscribe());
+  state.stagePlanners.forEach(named => named.conclude());
   state.action$.complete();
   state.concepts$.complete();
   state.subConcepts$.complete();
   return {
     ...state,
     methodSubscribers: [],
-    generalSubscribers: []
+    generalSubscribers: [],
+    stagePlanners: [],
   };
 }
 
