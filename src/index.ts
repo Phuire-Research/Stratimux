@@ -11,6 +11,7 @@ export {
   strategyFailed,
   strategyDecide,
   puntStrategy,
+  createActionNode
 } from './model/actionStrategy';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator } from './model/action';
