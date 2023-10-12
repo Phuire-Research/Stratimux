@@ -1,8 +1,9 @@
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 
 export const ownershipInitializeOwnershipType: ActionType = 'Ownership Initialize to True to enable Ownership Principle';
+export const ownershipInitializeOwnership = prepareActionCreator(ownershipInitializeOwnershipType);
 
 export function initializeOwnershipReducer(state: OwnershipState, _: Action) {
   return {

@@ -1,12 +1,13 @@
 import { Method, MethodCreator, createQuality, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket } from '../../../model/ownership';
 import { Subject, map } from 'rxjs';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
+import { axiumConclude } from '../../axium/qualities/conclude.quality';
 
 export const ownershipClearStrategyStubsFromLedgerAndSelfType: ActionType = 'clear current Strategy Stubs from Ownership Ledger and Itself';
+export const ownershipClearStrategyStubsFromLedgerAndSelf = prepareActionCreator(ownershipClearStrategyStubsFromLedgerAndSelfType);
 
 const createClearStrategyStubsFromLedgerAndSelfMethodCreator: MethodCreator = () => {
   const logSubject = new Subject<Action>();
@@ -16,7 +17,7 @@ const createClearStrategyStubsFromLedgerAndSelfMethodCreator: MethodCreator = ()
         action.strategy.stubs = undefined;
         return strategySuccess(action.strategy);
       }
-      return createAction(axiumConcludeType);
+      return axiumConclude();
     })
   );
   return [

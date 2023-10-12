@@ -1,17 +1,18 @@
 import { AxiumState } from '../axium.concept';
-import { Action, createAction} from '../../../model/action';
+import { Action, createAction, prepareActionWithPayloadCreator} from '../../../model/action';
 import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { Subject, map } from 'rxjs';
 import { axiumConcludeType } from './conclude.quality';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
 
-export const axiumSetModeType = 'set Axium Mode';
-
 export type SetModePayload = {
   modeIndex: number;
   modeName: string;
 }
+
+export const axiumSetModeType = 'set Axium Mode';
+export const axiumSetMode = prepareActionWithPayloadCreator<SetModePayload>(axiumSetModeType);
 
 export const createOwnershipMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();

@@ -4,7 +4,7 @@ import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
-import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './unifiedSubject';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,7 +127,7 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return createAction(axiumConcludeType);
+      return axiumConclude();
     }),
   );
   return [defaultMethod, defaultSubject];

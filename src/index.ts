@@ -25,7 +25,7 @@ export type {
   MethodCreator
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
-export { selectState, selectConcept, selectSlice, createPayload, selectPayload } from './model/selector';
+export { selectState, selectConcept, selectSlice, selectPayload } from './model/selector';
 export { PrincipleFunction } from './model/principle';
 export type { dispatchOptions, Staging, UnifiedSubject } from './model/unifiedSubject';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
@@ -36,15 +36,19 @@ export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axiu
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
 export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
 // Qualities
-export { axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
+export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
 export { axiumClose, axiumCloseType } from './concepts/axium/qualities/close.quality';
-export { axiumSetModeType, SetModePayload } from './concepts/axium/qualities/setMode.quality';
-export { axiumSetDefaultModeIndexType, SetDefaultModeIndexPayload } from './concepts/axium/qualities/setDefaultModeIndex.quality';
+export { axiumSetMode, axiumSetModeType, SetModePayload } from './concepts/axium/qualities/setMode.quality';
+export {
+  axiumSetDefaultModeIndex,
+  axiumSetDefaultModeIndexType,
+  SetDefaultModeIndexPayload
+} from './concepts/axium/qualities/setDefaultModeIndex.quality';
 export { axiumClearDialog, axiumClearDialogType } from './concepts/axium/qualities/clearDialog.quality';
-export { axiumSetDefaultModeType, SetDefaultModePayload } from './concepts/axium/qualities/setDefaultMode.quality';
-export { axiumSetBlockingModeType, SetBlockingModePayload } from './concepts/axium/qualities/setBlockingMode.quality';
+export { axiumSetDefaultMode, axiumSetDefaultModeType, SetDefaultModePayload } from './concepts/axium/qualities/setDefaultMode.quality';
+export { axiumSetBlockingMode, axiumSetBlockingModeType, SetBlockingModePayload } from './concepts/axium/qualities/setBlockingMode.quality';
 // Strategies
 export {
   addConceptsToAddQueThenBlockStrategy,
@@ -83,17 +87,27 @@ export {
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
 export { selectOwnershipLedger } from './concepts/ownership/ownership.selector';
-export { ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
-export { ClearPayloadStubsPayload, ownershipClearPayloadStubsType } from './concepts/ownership/qualities/clearPayloadStubs.quality';
-export { ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
+// Qualities
+export { ownershipBackTrack, ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
 export {
+  ownershipClearPayloadStubs,
+  ClearPayloadStubsPayload,
+  ownershipClearPayloadStubsType
+} from './concepts/ownership/qualities/clearPayloadStubs.quality';
+export { ownershipClearPendingActions, ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
+export {
+  ownershipClearPendingActionsOfStrategy,
   ClearPendingActionsOfStrategyPayload,
   ownershipClearPendingActionsOfStrategyType
 } from './concepts/ownership/qualities/clearPendingActionsOfStrategy.quality';
 export {
+  ownershipClearStrategyStubsFromLedgerAndSelf,
   ownershipClearStrategyStubsFromLedgerAndSelfType
 } from './concepts/ownership/qualities/clearStrategyStubsFromLedgerAndSelf.quality';
-export { ownershipResetOwnershipLedgerType } from './concepts/ownership/qualities/resetOwnershipLedger.quality';
+export {
+  ownershipResetOwnershipLedger,
+  ownershipResetOwnershipLedgerType
+} from './concepts/ownership/qualities/resetOwnershipLedger.quality';
 
 // Experiment
 export {
@@ -102,7 +116,11 @@ export {
   createExperimentConcept,
   experimentName
 } from './concepts/experiment/experiment.concept';
-export {checkInQuality, experimentCheckIn, experimentCheckInType} from './concepts/experiment/qualities/checkIn.quality';
+export {
+  checkInStrategyQuality,
+  experimentCheckInStrategy,
+  experimentCheckInStrategyType
+} from './concepts/experiment/qualities/checkInStrategy.quality';
 export {
   experimentCountingStrategy,
   experimentCountingTopic,

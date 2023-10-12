@@ -17,6 +17,7 @@ import { axiumBadActionType } from '../concepts/axium/qualities/badAction.qualit
 import { axiumCloseType } from '../concepts/axium/qualities/close.quality';
 import {
   AppendActionListToDialogPayload,
+  axiumAppendActionListToDialog,
   axiumAppendActionListToDialogType
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 
@@ -27,11 +28,10 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
-    const appendToDialog = createAction(axiumAppendActionListToDialogType);
-    appendToDialog.payload = {
+    const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
       strategyTopic: action.strategy.topic
-    } as AppendActionListToDialogPayload;
+    });
     action$.next(appendToDialog);
     action$.next(action);
   } else if (
@@ -49,11 +49,10 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
-    const appendToDialog = createAction(axiumAppendActionListToDialogType);
-    appendToDialog.payload = {
+    const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
       strategyTopic: action.strategy.topic
-    } as AppendActionListToDialogPayload;
+    });
     setTimeout(() => {
       action$.next(appendToDialog);
       action$.next(action);
@@ -122,6 +121,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
+      // console.log('CHECK ACTION STREAM', action);
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);

@@ -1,4 +1,4 @@
-import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { Action, ActionType, createAction, nullActionType } from './action';
 import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
@@ -41,6 +41,47 @@ export interface ActionNode {
   lastActionNode?: ActionNode;
 }
 
+export interface ActionNodeOptions {
+  keyedSelectors?: KeyedSelector[];
+  semaphore?: [number, number, number, number];
+  agreement?: number;
+  decisionNodes?: Record<string, ActionNode>;
+  decisionNotes?: ActionNotes;
+  successNode: ActionNode | null;
+  successNotes?: ActionNotes;
+  failureNode: ActionNode | null;
+  failureNotes?: ActionNotes;
+  lastActionNode?: ActionNode;
+}
+
+/**
+ * Decomposes an action into an ActionNode to be later Recomposed.
+ * @param action Action properties of KeyedSelector, Agreement, and Semaphore take priority over options.
+ * @param options successNode and failureNodes are always required. If using decisionNodes, set both to null.
+ * @returns ActionNode
+ */
+export function createActionNode(action: Action, options: ActionNodeOptions): ActionNode {
+  return {
+    actionType: action.type,
+    payload: action.payload,
+    keyedSelectors: action.keyedSelectors ? action.keyedSelectors : options.keyedSelectors,
+    agreement: action.agreement ? action.agreement : options.agreement,
+    semaphore: action.semaphore ? action.semaphore : options.semaphore,
+    successNode: options.successNode,
+    successNotes: options.successNotes,
+    failureNode: options.failureNode,
+    failureNotes: options.failureNotes,
+    decisionNodes: options.decisionNodes,
+    decisionNotes: options.decisionNotes,
+    lastActionNode: options.lastActionNode
+  };
+}
+
+/**
+ * Will decorate the final STRX sentence
+ * @preposition - Would append your string.
+ * @denoter - Would include some string ending in punctuation.
+ */
 export interface ActionNotes {
   preposition?: string;
   denoter?: string;
@@ -49,11 +90,9 @@ export interface ActionNotes {
 /**
  * ActionStrategyParams
  * Interface of ActionStrategy Construction
- *
- * @param payload - Payload to be carried throughout the strategy.
+ * @param data - Payload to be carried throughout the strategy.
  * @param initialNode - Starting point of your ActionStrategy
  */
-
 export interface ActionStrategyParameters {
   topic: string;
   data?: unknown;
@@ -135,7 +174,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
   if (strategy.currentNode.action !== null) {
     return strategy.currentNode.action;
   } else {
-    return createAction(axiumConcludeType);
+    return axiumConclude();
   }
 };
 
@@ -374,11 +413,8 @@ export const backTrack = (_strategy: ActionStrategy): Action => {
         strategy.actionList[strategy.actionList.length - 1],
       ];
     }
-    // strategy.currentNode = newNode;
     return newNode.action as Action;
   } else {
-    const conclude = createAction(axiumConcludeType);
-    // Later
-    return conclude;
+    return axiumConclude();
   }
 };

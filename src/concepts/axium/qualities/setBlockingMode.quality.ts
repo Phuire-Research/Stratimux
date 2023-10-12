@@ -1,16 +1,16 @@
 import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { Concept, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
-export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
-
 export type SetBlockingModePayload = {
     concepts: Concept[]
 }
+export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
+export const axiumSetBlockingMode = prepareActionWithPayloadCreator<SetBlockingModePayload>(axiumSetBlockingModeType);
 
 export function setBlockingModeReducer(state: AxiumState, _action: Action) {
   let methodSubscribers = state.methodSubscribers;

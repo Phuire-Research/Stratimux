@@ -167,7 +167,6 @@ export const checkIn =
         } else {
           ownershipLedger.set(key, [newTicket]);
         }
-        console.log('Check Ticket', newTicket);
       }
     });
   }

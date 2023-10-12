@@ -42,7 +42,7 @@ let finalRun = true;
 const axium = createAxium('ownershipTest', [
   createOwnershipConcept(),
   createCounterConcept(),
-  createExperimentConcept(createExperimentActionQueState(), [checkInQuality], [experimentActionQuePrinciple])
+  createExperimentConcept(createExperimentActionQueState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
 ], true, true);
 const plan = axium.stage(
   'Testing Ownership Staging', [
@@ -56,7 +56,7 @@ const plan = axium.stage(
         // This will place a counting strategy in the experiment actionQue to be later dispatched.
         //    Via its principle, to simulate an action moving off premise.
         dispatch(strategyBegin(puntCountingStrategy()), {
-          iterateStep: true
+          iterateStage: true
         });
       }
     },
@@ -65,7 +65,7 @@ const plan = axium.stage(
       // Will be ran after both counting strategies conclude.
       const ownership = selectState<OwnershipState>(cpts, ownershipName);
       console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-      dispatch(counterSetCount(createPayload<SetCountPayload>({newCount: 1000}), undefined, 7000), { iterateStep: true});
+      dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStage: true});
     },
     (cpts, dispatch) => {
       const ownership = selectState<OwnershipState>(cpts, ownershipName);
@@ -73,7 +73,7 @@ const plan = axium.stage(
       const counter = selectState<Counter>(cpts, counterName);
       console.log('Count: ', counter.count);
       dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
-        iterateStep: true
+        iterateStage: true
       });
     },
     (cpts, dispatch) => {
@@ -134,15 +134,15 @@ const sub = axium.subscribe((concepts: Concept[]) => {
   }
 });
 ```
-The above demonstrates two solutions. One of the ability to network axiums together unlike the design of FLUX that would restrict all calculations to a singular source of truth. That is accomplished via the ownership pattern and halts upon multiple concluding strategies that would have some race condition within the network. The second would be the comments to demonstrate the power of a finite state machine and its ability to return some output that can be logically determined. Noting the comment selections. This is presented as such to provide a testable back and forth with the developer to inform some intuition as to STRX's inner workings.
+the above demonstrates two solutions. one of the ability to network axiums together unlike the design of flux that would restrict all calculations to a singular source of truth. that is accomplished via the ownership pattern and halts upon multiple concluding strategies that would have some race condition within the network. the second would be the comments to demonstrate the power of a finite state machine and its ability to return some output that can be logically determined. noting the comment selections. this is presented as such to provide a testable back and forth with the developer to inform some intuition as to strx's inner workings.
 
-### STRX - *ST*rategic *R*eactive(X) Framework
-STRX is the graph computational framework release of a new Unified Turing Machine. The internal structure of this machine directly relays to a form of written intelligence of doing, over that of knowledge retrieval, and data entry. But may be written to facilitate any preexisting paradigm such as that same expert system paradigm of classic. The importance of this machine to the now of 2023, is the functionality of the ActionStrategy pattern as it relays to human and machine intelligence. As the pattern itself is a unified set of logical explanations of doing as a series of functions. Unified to the mechanism of that doing via code implementations of that logical explanation. We organize using concepts as it relays to a historic pursuit of unifying all fields of science in addition to a logical explanation. And is the comparable comparison to a graph of machine learning universal functions, and the generated Neural Network of layers that aggregate to greater universal functions. The comparison to that of LLM, during runtime these actions are outputted to an ActionList that is later composed as a STRX sentence.
+### strx - *st*rategic *r*eactive(x) framework
+strx is the graph computational framework release of a new unified turing machine. the internal structure of this machine directly relays to a form of written intelligence of doing, over that of knowledge retrieval, and data entry. but may be written to facilitate any preexisting paradigm such as that same expert system paradigm of classic. the importance of this machine to the now of 2023, is the functionality of the actionstrategy pattern as it relays to human and machine intelligence. as the pattern itself is a unified set of logical explanations of doing as a series of functions. unified to the mechanism of that doing via code implementations of that logical explanation. we organize using concepts as it relays to a historic pursuit of unifying all fields of science in addition to a logical explanation. and is the comparable comparison to a graph of machine learning universal functions, and the generated neural network of layers that aggregate to greater universal functions. the comparison to that of llm, during runtime these actions are outputted to an actionlist that is later composed as a strx sentence.
 
-#### The Anatomy of a STRX Sentence
+#### the anatomy of a strx sentence
 ```
-Preposition(/+)Decision + Body + Denoter
-Example: Finally + Open Axium + to Notify Subscribers of State changes.
+preposition(/+)decision + body + denoter
+example: Finally + Open Axium + to Notify Subscribers of State changes.
 ```
 This allows for a STRX Dialog to be constructed in the same formalization of that of a paragraph. Where the strategy topic is the literal topic sentence of a paragraph. And is followed by all steps and possible decision that create a unified paragraph.
 ```

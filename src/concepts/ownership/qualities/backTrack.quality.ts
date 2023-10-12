@@ -1,10 +1,11 @@
 import { Method, MethodCreator, createQuality, defaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { Action, ActionType, createAction } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { Subject, map } from 'rxjs';
 import { backTrack } from '../../../model/actionStrategy';
-import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
+import { axiumConclude } from '../../axium/qualities/conclude.quality';
 
 export const ownershipBackTrackType: ActionType = 'backtracking to previous ActionNode';
+export const ownershipBackTrack = prepareActionCreator(ownershipBackTrackType);
 
 const createBackTrackMethodCreator: MethodCreator = () => {
   const backTrackSubject = new Subject<Action>();
@@ -14,7 +15,7 @@ const createBackTrackMethodCreator: MethodCreator = () => {
         const newAction = backTrack(action.strategy);
         return newAction;
       }
-      return createAction(axiumConcludeType);
+      return axiumConclude();
     })
   );
   return [
@@ -22,7 +23,6 @@ const createBackTrackMethodCreator: MethodCreator = () => {
     backTrackSubject
   ];
 };
-
 
 export const backTrackQuality = createQuality(
   ownershipBackTrackType,

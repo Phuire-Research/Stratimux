@@ -17,6 +17,7 @@ export type Action = {
     payload?: unknown;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
+    agreement?: number;
     expiration: number;
     axium?: string;
 };
@@ -120,14 +121,23 @@ export function createAction(
     semaphore,
     payload,
     keyedSelectors,
-    // Temporary until we have proper SLA
+    agreement,
     expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
   };
 }
 
 export function prepareActionCreator(actionType: ActionType) {
   return (
-    payload?: unknown,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    _semaphore?: [number, number, number, number]
+  ) => {
+    return createAction(actionType, undefined, keyedSelectors, agreement, _semaphore);
+  };
+}
+export function prepareActionWithPayloadCreator<T>(actionType: ActionType) {
+  return (
+    payload: T,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
     _semaphore?: [number, number, number, number]

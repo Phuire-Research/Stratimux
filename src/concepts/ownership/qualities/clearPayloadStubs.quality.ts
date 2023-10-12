@@ -1,11 +1,12 @@
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
 import { selectPayload } from '../../../model/selector';
 
-export const ownershipClearPayloadStubsType: ActionType = 'clear payload Stubs from Ownership Ledger';
 export type ClearPayloadStubsPayload = OwnershipTicketStub[];
+export const ownershipClearPayloadStubsType: ActionType = 'clear payload Stubs from Ownership Ledger';
+export const ownershipClearPayloadStubs = prepareActionWithPayloadCreator<ClearPayloadStubsPayload>(ownershipClearPayloadStubsType);
 
 export function clearPayloadStubsReducer(state: OwnershipState, action: Action): OwnershipState {
   const stubs = selectPayload<ClearPayloadStubsPayload>(action);

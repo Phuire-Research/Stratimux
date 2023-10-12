@@ -37,7 +37,7 @@ export interface ActionNode {
 ```
 * action - Is an union data pattern to bind the functionality of the ActionNode, ActionStrategy, and Action. This allows for each part to be responsible for itself and to allow for additional functionality at runtime.
 * actionType - Is merely the type of action to be created at runtime, these should be verbose as to their intended effect as it informs the STRX sentence structure's body.
-* payload - Is set to unknown to allow for the explicit typecasting during consumption, reducer, method, or principle. Use createPayload<_Type>(payload: _Type) to ensure type casting in the reducer will be the same type as used in createPayload. This is a logical determination in line with Javascript core functionality.
+* payload - Is set to unknown to allow for the explicit typecasting during consumption, reducer, method, or principle. Be sure to import actions directly to ensure payload type safety in the reducer. This is a logical determination in line with Javascript core functionality.
 * keyedSelectors - An Array of KeyedSelector that locks some property during the life time of the created action.
 * semaphore - First is concept's index, second is the quality's index, and the final is the generation of the sets of concepts currently stored on the Axium. *Explicitly setting this value, denotes a primed action without additional look up at runtime.*
 * agreement - Is time in milliseconds of the lock's expiration time. Default is currently 5000, but such will be reduced upon testing and feedback.

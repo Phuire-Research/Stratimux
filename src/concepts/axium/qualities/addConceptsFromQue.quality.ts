@@ -1,15 +1,12 @@
 import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
-import { Action, ActionType } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 
 export const axiumAddConceptFromQueType: ActionType = 'Add Concepts from Axium Concept Que';
-
-export type AddConceptsFromQuePayload = {
-    action$: Subject<Action>;
-}
+export const axiumAddConceptFromQue = prepareActionCreator(axiumAddConceptFromQueType);
 
 function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
   const methodSubscribers = state.methodSubscribers;

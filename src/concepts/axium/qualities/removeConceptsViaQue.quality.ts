@@ -1,10 +1,11 @@
 import { defaultMethodCreator } from '../../../model/concept';
 import { NamedSubscriber } from '../axium.concept';
-import { Action, ActionType, } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator, } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 
 export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Axium\'s Removal Concept Que';
+export const axiumRemoveConceptsViaQue = prepareActionCreator(axiumRemoveConceptsViaQueType);
 
 export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
   const methodSubscribers = state.methodSubscribers;
