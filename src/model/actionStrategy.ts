@@ -95,12 +95,12 @@ export interface ActionNotes {
  */
 export interface ActionStrategyParameters {
   topic: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   initialNode: ActionNode;
 }
 export interface ActionStrategy {
   topic: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   currentNode: ActionNode;
   actionList: Array<string>;
   puntedStrategy?: ActionStrategy[];
@@ -139,7 +139,7 @@ function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes , deci
 export function createStrategy(
   params: ActionStrategyParameters,
 ): ActionStrategy {
-  const data: unknown = params.data;
+  const data: Record<string, unknown> | undefined = params.data;
   const currentNode: ActionNode = params.initialNode;
   currentNode.lastActionNode = {
     // This logically determines that all ActionNodes will have a Action associated.
@@ -157,7 +157,7 @@ export function createStrategy(
   };
 }
 
-export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action => {
+export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, unknown>): Action => {
   strategy.currentNode.action = createAction(
     strategy.currentNode.actionType,
     strategy.currentNode.payload,
@@ -184,7 +184,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: unknown): Action 
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-export const strategySuccess = (_strategy: ActionStrategy, data?: unknown) => {
+export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string, unknown>) => {
   const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
@@ -323,7 +323,7 @@ export const strategyDecide = (
   _strategy: ActionStrategy,
   decideKey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: unknown,
+  data?: Record<string, unknown>,
 ) => {
   const strategy = {..._strategy};
   let nextAction: Action;
