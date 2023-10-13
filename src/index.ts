@@ -14,7 +14,7 @@ export {
   createActionNode
 } from './model/actionStrategy';
 export type { Action, ActionType } from './model/action';
-export { primeAction, createAction, getSemaphore, prepareActionCreator } from './model/action';
+export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
 export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
 export type {
   Concept,
