@@ -11,6 +11,15 @@ import { UnifiedSubject  } from '../../model/stagePlanner';
 import { BadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { axiumSelectOpen } from '../axium/axium.selector';
+import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+
+function denoteExpiredPending(action: Action): Action {
+  if (action.strategy) {
+    const strategy = action.strategy;
+    action.strategy.data = strategyData_appendFailure(strategy, failureConditions.ownershipExpired);
+  }
+  return action;
+}
 
 export const ownershipPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -63,7 +72,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             const newPending: Action[] = [];
             for (const pending of ownershipState.pendingActions) {
               if (pending.expiration < Date.now()) {
-                badActions.push(pending);
+                badActions.push(denoteExpiredPending(pending));
               } else {
                 newPending.push(pending);
               }

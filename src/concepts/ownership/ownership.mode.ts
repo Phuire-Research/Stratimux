@@ -10,6 +10,7 @@ import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } fr
 import { selectState } from '../../model/selector';
 import { OwnershipState, ownershipName } from './ownership.concept';
 import { AxiumState } from '../axium/axium.concept';
+import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
@@ -33,9 +34,13 @@ export const ownershipMode: Mode = (
     const shouldBlock = ownershipShouldBlock(concepts, action);
     if (shouldBlock) {
       if (action.strategy) {
+        const strategy = action.strategy;
         if (action.strategy.currentNode.failureNode === null) {
         // This assumes that the Strategy does not account for the Block
-          let nextAction = strategyFailed(action.strategy);
+          let nextAction = strategyFailed(
+            strategy,
+            strategyData_appendFailure(strategy, failureConditions.ownershipBlocked)
+          );
           // Logical Determination: axiumConcludeType
           if (nextAction.semaphore[3] === 3) {
             concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
@@ -50,7 +55,10 @@ export const ownershipMode: Mode = (
         // This assumes that the Strategy is accounting for the Block
           // console.log('Check Action Failed1', action);
           [concepts, action] = checkIn(concepts, action);
-          const nextAction = strategyFailed(action.strategy as ActionStrategy);
+          const nextAction = strategyFailed(
+            strategy,
+            strategyData_appendFailure(strategy, failureConditions.ownershipBlocked)
+          );
           concepts = updateAddToPendingActions(concepts, nextAction);
           concepts$.next(concepts);
         }
