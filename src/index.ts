@@ -13,6 +13,14 @@ export {
   puntStrategy,
   createActionNode
 } from './model/actionStrategy';
+export {
+  failureConditions,
+  strategyData_appendFailure,
+  strategyData_selectFailureCondition,
+  strategyData_clearFailureCondition,
+  strategyData_select,
+  strategyData_unifyData
+} from './model/actionStrategyData';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
 export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
@@ -29,6 +37,7 @@ export type { KeyedSelector } from './model/selector';
 export { selectState, selectConcept, selectSlice, selectPayload } from './model/selector';
 export { PrincipleFunction } from './model/principle';
 export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
+export { createActionController$ } from './model/actionController';
 export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 
