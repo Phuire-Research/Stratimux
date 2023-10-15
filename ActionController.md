@@ -1,4 +1,4 @@
-# ActionController
+# Action Controller
 This was the original inspiration for the STRX Principle concept. Except here we decomposed and recomposed the concept into two parts. Here the ActionController in contrast to its original is an subject that fires once and has an expiration. This streamlines the difficulty of working with this concept, as originally to make it wholly responsible for itself, it would require an additional subscription to determine whether it should be open or closed. But now with the additional refinement of each action having an expiration, we can define the expiration as the limit to the lifespan of each action. And would be the second point of failure that an ActionStrategy would move into a failure state.
 
 The purpose of the ActionController is to perform singular actions that effect one thing asynchronously. For example in a FileSystem concept, it would be the literal Method, that would allow for manipulation of files. As each operation can have a failure state that is outside of the control of STRX. Such as a file being open by a user, or the lack of permission allotted to the run time.
