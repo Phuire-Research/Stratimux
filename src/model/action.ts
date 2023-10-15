@@ -2,6 +2,8 @@ import { Concept } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
+import { BadActionPayload, axiumBadAction } from '../concepts/axium/qualities/badAction.quality';
+import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
@@ -22,35 +24,46 @@ export type Action = {
     axium?: string;
 };
 
+const createPayload = <T>(payload: T) => payload;
+
 export function primeAction(concepts: Concept[], action: Action): Action {
-  for (const concept of concepts) {
-    const semaphore = getSemaphore(concepts, concept.name, action.type);
-    if (semaphore[2] !== -1) {
-      let axium;
-      if (action.axium) {
-        axium = action.axium;
-      } else {
-        axium = (concepts[0].state as AxiumState).name;
+  const expired = action.expiration < Date.now();
+  if (!expired) {
+    for (const concept of concepts) {
+      const semaphore = getSemaphore(concepts, concept.name, action.type);
+      if (semaphore[2] !== -1 && action.expiration) {
+        let axium;
+        if (action.axium) {
+          axium = action.axium;
+        } else {
+          axium = (concepts[0].state as AxiumState).name;
+        }
+        const newAction = {
+          ...action,
+          semaphore: semaphore,
+          axium,
+        };
+        if (newAction.strategy) {
+          newAction.strategy.currentNode.action = newAction;
+        }
+        return newAction;
       }
-      const newAction = {
-        ...action,
-        semaphore: semaphore,
-        axium,
-      };
-      if (newAction.strategy) {
-        newAction.strategy.currentNode.action = newAction;
-      }
-      return newAction;
     }
   }
   const badAction: Action = {
     type: axiumBadActionType,
-    semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType),
+    payload: createPayload<BadActionPayload>([action]),
     expiration: Date.now() + 5000,
+    semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType)
   };
   if (action.strategy) {
     badAction.strategy = action.strategy;
     badAction.strategy.currentNode.action = badAction;
+    if (expired) {
+      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumExpired);
+    } else {
+      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumBadGeneration);
+    }
   }
   return badAction;
 }
