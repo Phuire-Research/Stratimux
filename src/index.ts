@@ -13,6 +13,7 @@ export {
   strategyDecide,
   strategyPunt,
   strategySequence,
+  strategyBackTrack
 } from './model/actionStrategy';
 export {
   failureConditions,
