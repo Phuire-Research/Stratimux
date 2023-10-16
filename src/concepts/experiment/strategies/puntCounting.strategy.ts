@@ -1,4 +1,4 @@
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy, puntStrategy } from '../../../model/actionStrategy';
+import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy, strategyPunt } from '../../../model/actionStrategy';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality';
 import { experimentCountingStrategy } from './experimentCounting.strategy';
@@ -16,5 +16,5 @@ export function puntCountingStrategy(): ActionStrategy {
     initialNode: stepOne,
   };
 
-  return puntStrategy(experimentCountingStrategy(), createStrategy(params));
+  return strategyPunt(experimentCountingStrategy(), createStrategy(params));
 }

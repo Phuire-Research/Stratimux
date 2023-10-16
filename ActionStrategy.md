@@ -34,6 +34,20 @@ export interface ActionNode {
   preposition?: string;
   denoter?: string;
 }
+
+// Used via the createActionNode function.
+export interface ActionNodeOptions {
+  keyedSelectors?: KeyedSelector[];
+  semaphore?: [number, number, number, number];
+  agreement?: number;
+  decisionNodes?: Record<string, ActionNode>;
+  decisionNotes?: ActionNotes;
+  successNode: ActionNode | null;
+  successNotes?: ActionNotes;
+  failureNode: ActionNode | null;
+  failureNotes?: ActionNotes;
+  lastActionNode?: ActionNode;
+}
 ```
 * action - Is an union data pattern to bind the functionality of the ActionNode, ActionStrategy, and Action. This allows for each part to be responsible for itself and to allow for additional functionality at runtime.
 * actionType - Is merely the type of action to be created at runtime, these should be verbose as to their intended effect as it informs the STRX sentence structure's body.
@@ -81,20 +95,24 @@ export interface ActionStrategy {
 ## Consumer Functions
 ```typescript
 function createStrategy(params: ActionStrategyParameters): ActionStrategy;
+function createActionNode(action: Action, options: ActionNodeOptions): ActionNode;
 function strategyBegin(strategy: ActionStrategy, data?: unknown): Action;
 function strategySuccess(strategy: ActionStrategy, data?: unknown): Action;
 function strategyFailed(strategy: ActionStrategy, data?: unknown): Action;
 function strategyDecide(strategy: ActionStrategy, decideKey: string, data?: unknown): Action;
-function puntStrategy(puntedStrategy: ActionStrategy, newStrategy: ActionStrategy): ActionStrategy;
+function strategyPunt(puntedStrategy: ActionStrategy, newStrategy: ActionStrategy): ActionStrategy;
+function strategySequence(strategies: ActionStrategy): ActionStrategy | undefined;
 ```
 * createStrategy - Creates a new strategy and returns such to be activated by the strategyBegin consumer function. Data of strategy may be set explicitly.
+* createActionNode - Used in conjunction with createStrategy, keep in mind that ActionNodes must be defined in reversed order. As sequentially the only means to add each to either the Success/Failure/Decision nodes is if they are predefined. Creates a new ActionNode that decomposes the supplied Action, this ensures type safety with the action's payload. ActionNodeOptions assigns which ActionNodes will be next within the final ActionStrategy.
 * strategyBegin - Returns the initial action of the strategy, updates the ActionList, and creates a union binding between the ActionStrategy and newly created action.
 * strategySuccess - Initializes the successNode action, otherwise if null will conclude the Strategy by returning the conclude action. If ActionNode or Strategy's currentNode does not set its preposition, will set such to "Success with"
 * strategyFailed - Same as the above, but if the preposition is not set, will set such to "Failed With". And is the default ActionNode called if a lock is dictated while ownership is loaded.
 * strategyDecide - Decide key will override or be placed after the preposition if set. And will be used to return the next ActionNode that the key corresponds to. If null, conclude action will be returned.
-* puntStrategy - Will return a new strategy with the old strategy within the puntedStrategy Field. That will execute once the new strategy concludes via the consuming functions. That will call strategyBegin on first index of puntedStrategies if present, then remove such from the list, and successNode/decisionNode/failureNode all point to null.
+* strategyPunt - Will return a new strategy with the old strategy within the puntedStrategy Field. That will execute once the new strategy concludes via the consuming functions. That will call strategyBegin on first index of puntedStrategies if present, then remove such from the list, and successNode/decisionNode/failureNode all point to null.
+* strategySequence - This will take a list of ActionStrategies and return the first strategy with the rest placed in order in the puntedStrategy property. These will fire upon each possible conclusion of the included strategies.
 
-*Note: The data field sets only the data of the strategy, if one wants to edit or set the payload. It should be done explicitly via a type casting. Of the createdAction, or the ActionNode ahead of time.*
+*Note: The data field sets only the data of the strategy, if one wants to edit or set the payload. It should be done explicitly the createActionNode function and set by that specific action creator. Do note you may edit the payload once the new ActionNode is created.*
 The same is true when accessing the payload from a reducer, method, or principle. As this system is purposefully designed to not function by way of nested types such as:
 ```
 SomethingFactory<AnotherFactor<Factory>>

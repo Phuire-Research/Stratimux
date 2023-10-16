@@ -392,7 +392,7 @@ export const strategyDecide = (
   return conclude.action;
 };
 // Remember Water Boy
-export const puntStrategy = (
+export const strategyPunt = (
   puntedStrategy: ActionStrategy,
   newStrategy: ActionStrategy,
 ) => {
@@ -406,7 +406,21 @@ export const puntStrategy = (
   return newStrategy;
 };
 
-export const backTrack = (_strategy: ActionStrategy): Action => {
+export const strategySequence = (strategies: ActionStrategy[]): ActionStrategy | undefined => {
+  if (strategies.length > 0) {
+    const first = strategies[0];
+    const list = [];
+    for (let i = 1; i < strategies.length; i++) {
+      list.push(strategies[i]);
+    }
+    first.puntedStrategy = list;
+    return first;
+  } else {
+    return undefined;
+  }
+};
+
+export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
   const strategy = _strategy;
   if (strategy.currentNode.lastActionNode?.actionType !== nullActionType) {
     const newNode = strategy.currentNode.lastActionNode as ActionNode;

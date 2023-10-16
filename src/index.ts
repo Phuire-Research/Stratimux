@@ -6,12 +6,14 @@ export type {
 } from './model/actionStrategy';
 export {
   createStrategy,
+  createActionNode,
   strategyBegin,
   strategySuccess,
   strategyFailed,
   strategyDecide,
-  puntStrategy,
-  createActionNode
+  strategyPunt,
+  strategySequence,
+  strategyBackTrack
 } from './model/actionStrategy';
 export {
   failureConditions,
