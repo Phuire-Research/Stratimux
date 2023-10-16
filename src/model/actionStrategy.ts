@@ -219,6 +219,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
+      nextStrategy.puntedStrategy = strategy.puntedStrategy;
       const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
@@ -288,6 +289,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
     ) {
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
+      nextStrategy.puntedStrategy = strategy.puntedStrategy;
       const nextEntry = `${nextStrategy.topic}.`;
       nextStrategy.actionList = [
         ...strategy.actionList,
@@ -366,6 +368,7 @@ export const strategyDecide = (
   ) {
     const nextStrategy =
               strategy.puntedStrategy.shift() as ActionStrategy;
+    nextStrategy.puntedStrategy = strategy.puntedStrategy;
     const nextEntry = `${nextStrategy.topic}.`;
     nextStrategy.actionList = [
       ...strategy.actionList,
