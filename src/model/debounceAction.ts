@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   MonoTypeOperatorFunction,
   Observable,
@@ -93,7 +95,7 @@ function createOperatorSubscriber<T>(
   destination: Subscriber<any>,
   onNext?: (value: T) => void,
   onComplete?: () => void,
-  onError?: (err: any) => void,
+  onError?: (err: unknown) => void,
   onFinalize?: () => void
 ): Subscriber<T> {
   return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);

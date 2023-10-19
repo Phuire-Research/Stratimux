@@ -17,7 +17,7 @@ export const createExperimentState = (): ExperimentState => {
 };
 
 export const createExperimentConcept = (
-  state: any,
+  state: unknown,
   qualities?: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[]) => {

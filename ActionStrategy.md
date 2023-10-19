@@ -146,7 +146,8 @@ export const createAsyncMethodDebounceWithConcepts =
 * createMethodWithConcepts - This will allow your method to have the most recent concepts to be accessed via the asyncMethod function.
 * createAsyncMethod - Handled differently than the rest, you will have to use the passed controller to fire your actions back into the action stream.
 * createAsyncMethodWithConcepts - Will also have access to the most recent concepts.
-*Note if you are implementing your own debounceAction how these methods work. They are handling a passed conclude from debounceAction within their map/switchMap*
+
+*Note if you are implementing your own debounceAction, pay attention to how these method helpers work. They are handling a passed conclude from debounceAction within their map/switchMap*
 * createMethodDebounce - After the first action, this will filter actions within the duration to be set to the conclude action.
 * createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts. 
 * createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the first action upon its own conditions are met asynchronously.
