@@ -20,9 +20,6 @@ type Action = {
 };
 type Method = Observable<Action>;
 
-
-
-
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {
     const defaultSubject = new Subject<Action>();
@@ -134,9 +131,17 @@ export const createAsyncMethodDebounce =
     const defaultSubject = new Subject<Action>();
     const defaultMethod: Method = defaultSubject.pipe(
       debounceAction(duration),
-      switchMap(act => createActionController$(act, (controller: ActionController, action: Action) => {
-        asyncMethod(controller, action);
-      })),
+      switchMap((act) => {
+        if (act.semaphore[3] !== 3) {
+          return createActionController$(act, (controller: ActionController, action: Action) => {
+            asyncMethod(controller, action);
+          });
+        } else {
+          return createActionController$(act, (controller: ActionController, _) => {
+            controller.fire(act);
+          });
+        }
+      }),
     );
     return [defaultMethod, defaultSubject];
   };
@@ -147,10 +152,17 @@ export const createAsyncMethodDebounceWithConcepts =
     const defaultMethod: Method = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$ as UnifiedSubject),
-      switchMap(([act, concepts] : [Action, Concept[]]) =>
-        createActionController$(act, (controller: ActionController, action: Action) => {
-          asyncMethodWithConcepts(controller, action, concepts);
-        })),
+      switchMap(([act, concepts] : [Action, Concept[]]) => {
+        if (act.semaphore[3] !== 3) {
+          return createActionController$(act, (controller: ActionController, action: Action) => {
+            asyncMethodWithConcepts(controller, action, concepts);
+          });
+        } else {
+          return createActionController$(act, (controller: ActionController, _) => {
+            controller.fire(act);
+          });
+        }
+      })
     );
     return [defaultMethod, defaultSubject];
   };

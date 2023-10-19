@@ -1,3 +1,4 @@
+import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentConcept, createExperimentState } from '../concepts/experiment/experiment.concept';
 import { asyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
@@ -8,7 +9,6 @@ import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 
-jest.setTimeout(10000);
 test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [debounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async method creator with Concepts', [createCounterConcept(), experiment]);
@@ -64,14 +64,14 @@ test('Async debounce method prevent excess count', (done) => {
       const counterState = selectState<Counter>(concepts, counterName);
       console.log('Async Debounce HIT 4', counterState);
       if (counterState.count === 1) {
-        console.log('Async Debounce HIT 4', counterState);
+        console.log('FINAL Async Debounce HIT 4', counterState);
         expect(counterState.count).toBe(1);
         plan.conclude();
       }
     }
   ]);
   setTimeout(() => {
-    const secondPlan = axium.stage('timed mock to true', [
+    const secondPlan = axium.stage('second timed mock', [
       (_, dispatch) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
@@ -89,9 +89,9 @@ test('Async debounce method prevent excess count', (done) => {
       },
       (concepts, _) => {
         const counterState = selectState<Counter>(concepts, counterName);
-        console.log('Async Plan 2 Debounce HIT 4', counterState);
+        console.log('Async 2 Debounce HIT 4', counterState);
         if (counterState.count === 2) {
-          console.log('Async Plan 2 Debounce HIT 4', counterState);
+          console.log('FINAL Async 2 Debounce HIT 4', counterState);
           expect(counterState.count).toBe(2);
           secondPlan.conclude();
           setTimeout(() => {
@@ -100,5 +100,8 @@ test('Async debounce method prevent excess count', (done) => {
         }
       }
     ]);
-  }, 600);
+    // Axium must be primed, therefore we kick it back into gear.
+    // Downside of halting quality.
+    axium.dispatch(axiumKick());
+  }, 1000);
 });

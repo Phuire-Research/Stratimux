@@ -94,6 +94,7 @@ Please avoid using these qualities, but are providing explanations to understand
 * clearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
 * clearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
 * clearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.stage(). Via their topic as payload and clears such.
+* kick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of STRX's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
 
 ## Axium Strategies Concept Set Transformation
 ```typescript

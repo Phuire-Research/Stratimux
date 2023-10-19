@@ -196,9 +196,9 @@ export class UnifiedSubject extends Subject<Concept[]> {
     super();
   }
   stage(title: string, stages: Staging[]): StagePlanner {
-    this.currentStages.set(this.planId, {title, stages, stage: 0, stageFailed: -1});
     const planId = this.planId;
     this.planId++;
+    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1});
     const conclude = () => {
       this.currentStages.delete(planId);
     };

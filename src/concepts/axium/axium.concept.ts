@@ -26,6 +26,7 @@ import { clearBadActionTypeFromBadActionListQuality } from './qualities/clearBad
 import { clearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
 import { clearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
 import { registerStagePlannerQuality } from './qualities/registerStagePlanner.quality';
+import { kickQuality } from './qualities/kick.quality';
 
 export type NamedSubscription = {
   name: string;
@@ -92,6 +93,7 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
     axiumName,
     createAxiumState(name, storeDialog, logging),
     [
+      kickQuality,
       openQuality,
       badActionQuality,
       closeQuality,

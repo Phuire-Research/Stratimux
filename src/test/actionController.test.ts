@@ -29,7 +29,7 @@ test('ActionController Next Test', (done) => {
   const act = axiumLog(undefined, 200);
   const cont = new ActionController(act);
   cont.subscribe(action => {
-    expect(action.type).toBe(axiumConcludeType);
+    expect(action.type).toBe(axiumLogType);
     done();
   });
   cont.fire(act);
@@ -41,7 +41,7 @@ test('ActionController createActionController$ Test', (done) => {
     controller.fire(action);
   });
   cont.subscribe(action => {
-    expect(action.type).toBe(axiumConcludeType);
+    expect(action.type).toBe(axiumLogType);
     done();
   });
 });

@@ -120,7 +120,7 @@ SomethingFactory<AnotherFactor<Factory>>
 This was a purposeful design choice, if you find yourself doing such. Known this system is already complicated enough.
 
 ## Helper Functions for Standard Method Creators
-*Note you still need to create a function of MethodCreator to use these Helpers*
+*You still need to create a function of type MethodCreator to use these Helpers. :MethodCreator = () =>  methodCreator*
 ```typescript
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {}
@@ -146,7 +146,8 @@ export const createAsyncMethodDebounceWithConcepts =
 * createMethodWithConcepts - This will allow your method to have the most recent concepts to be accessed via the asyncMethod function.
 * createAsyncMethod - Handled differently than the rest, you will have to use the passed controller to fire your actions back into the action stream.
 * createAsyncMethodWithConcepts - Will also have access to the most recent concepts.
+*Note if you are implementing your own debounceAction how these methods work. They are handling a passed conclude from debounceAction within their map/switchMap*
 * createMethodDebounce - After the first action, this will filter actions within the duration to be set to the conclude action.
-* createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts.
+* createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts. 
 * createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the first action upon its own conditions are met asynchronously.
 * createAsyncMethodDebounceWithConcepts - Filters and then first the first action once conditions are met, and provides access to the most recent concepts.

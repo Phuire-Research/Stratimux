@@ -3,11 +3,18 @@ import { defaultMethodCreator, Method, MethodCreator } from '../../../model/conc
 import { Counter } from '../counter.concept';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
+// import { createMethod } from '../../../model/method';
+// import { strategySuccess } from '../../../model/actionStrategy';
 
 export const counterAddType: ActionType = 'Counter Add';
 
 export const counterAdd = prepareActionCreator(counterAddType);
-
+// const createAddMethodCreator: MethodCreator = () => createMethod((action) => {
+//   if (action.strategy) {
+//     return strategySuccess(action.strategy);
+//   }
+//   return action;
+// });
 export function addReducer(state: Counter, _: Action) {
   return {
     ...state,

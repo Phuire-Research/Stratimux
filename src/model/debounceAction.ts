@@ -142,12 +142,12 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
             subscriber.add(activeTask);
           } else {
             // All this code just to place this code block.
-            const conclude = axiumConclude();
+            const conclude = {
+              ...value,
+              ...axiumConclude(),
+            };
             subscriber.next(
-              {
-                ...value,
-                ...conclude,
-              }
+              conclude
             );
           }
         },

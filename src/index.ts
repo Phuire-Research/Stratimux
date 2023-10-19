@@ -62,6 +62,7 @@ export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axiu
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
 export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
 // Qualities
+export { axiumKick, axiumKickType } from './concepts/axium/qualities/kick.quality';
 export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
