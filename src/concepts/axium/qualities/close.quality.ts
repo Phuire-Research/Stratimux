@@ -10,7 +10,7 @@ export type ClosePayload = {
   exit: boolean
 };
 export const axiumCloseType: ActionType = 'Close Axium';
-export const axiumClose = prepareActionWithPayloadCreator(axiumCloseType);
+export const axiumClose = prepareActionWithPayloadCreator<ClosePayload>(axiumCloseType);
 
 export function closeReducer(state: AxiumState, _action: Action): AxiumState {
   const {exit} = selectPayload<ClosePayload>(_action);
