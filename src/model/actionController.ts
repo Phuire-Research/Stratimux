@@ -1,4 +1,4 @@
-import { Action, axiumBadAction, strategyFailed } from '../index';
+import { Action, ActionStrategy, axiumBadAction, axiumConclude, axiumConcludeType, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
@@ -20,6 +20,12 @@ export class ActionController extends Subject<Action> {
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
+        const badAction = axiumBadAction([this.action]);
+        if (this.action.strategy) {
+          badAction.strategy = this.action.strategy;
+          (badAction.strategy as ActionStrategy).currentNode.action = badAction;
+          (badAction.strategy as ActionStrategy).currentNode.actionType = badAction.type;
+        }
         this.next(axiumBadAction([this.action]));
       }
     }, this.expiration - Date.now());
@@ -40,10 +46,22 @@ export class ActionController extends Subject<Action> {
         clearTimeout(this.timer);
         this.timer.unref();
       }
+      let nextAction;
+      if (action.strategy) {
+        nextAction = action;
+      } else if (action.semaphore[3] !== 1) {
+        const conclude = axiumConclude();
+        nextAction = {
+          ...action,
+          ...conclude
+        };
+      } else {
+        nextAction = action;
+      }
       const { observers } = this;
       const len = observers.length;
       for (let i = 0; i < len; i++) {
-        observers[i].next(action);
+        observers[i].next(nextAction);
       }
       this.complete();
     }

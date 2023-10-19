@@ -14,7 +14,7 @@ function addConceptsFromQueReducer(state: AxiumState, _ : Action) {
   addConceptsQue.forEach(concept => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        [quality.method, quality.subject] = quality.methodCreator(state.subConcepts$);
+        [quality.method, quality.subject] = quality.methodCreator(state.concepts$);
         quality.method.pipe(
           catchError((err: unknown, caught: Observable<Action>) => {
             if (state.logging) {

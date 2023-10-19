@@ -23,6 +23,12 @@ export {
   strategyData_select,
   strategyData_unifyData
 } from './model/actionStrategyData';
+export {
+  createMethod,
+  createAsyncMethod,
+  createMethodWithConcepts,
+  createAsyncMethodWithConcepts
+} from './model/method';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
 export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
@@ -135,8 +141,8 @@ export {
 
 // Experiment
 export {
-  ExperimentActionQueState,
-  createExperimentActionQueState,
+  ExperimentState,
+  createExperimentState,
   createExperimentConcept,
   experimentName
 } from './concepts/experiment/experiment.concept';

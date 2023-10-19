@@ -1,6 +1,6 @@
 import { map, Subject } from 'rxjs';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { Method, MethodCreator } from '../../../model/concept';
+import { defaultMethodCreator, Method, MethodCreator } from '../../../model/concept';
 import { Counter } from '../counter.concept';
 import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -18,25 +18,9 @@ export function subtractReducer(state: Counter) {
   };
 }
 
-const subtractMethodCreator: MethodCreator = () => {
-  const subtractSubject = new Subject<Action>();
-  const subtractMethod: Method = subtractSubject.pipe<Action>(
-    map((action: Action) => {
-      if (action.strategy) {
-        return strategySuccess(action.strategy);
-      }
-      return axiumConclude();
-    })
-  );
-  return [
-    subtractMethod,
-    subtractSubject
-  ];
-};
-
 export const subtractQuality = createQuality(
   counterSubtractType,
   subtractReducer,
-  subtractMethodCreator,
+  defaultMethodCreator,
   [counterSelectCount]
 );

@@ -28,7 +28,8 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     // Allows for reducer next in sequence
     const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic
+      strategyTopic: action.strategy.topic,
+      strategyData: action.strategy.data
     });
     action$.next(appendToDialog);
     action$.next(action);
@@ -49,7 +50,8 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     // Allows for reducer next in sequence
     const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic
+      strategyTopic: action.strategy.topic,
+      strategyData: action.strategy.data
     });
     setTimeout(() => {
       action$.next(appendToDialog);
@@ -72,7 +74,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   concepts.forEach((concept, _index) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
+        const [method, subject] = quality.methodCreator(axiumState.concepts$);
         quality.method = method;
         quality.subject = subject;
         quality.method.pipe(

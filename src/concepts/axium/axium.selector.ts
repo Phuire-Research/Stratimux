@@ -10,6 +10,11 @@ export const axiumSelectLastStrategy: KeyedSelector = {
   stateKeys: 'lastStrategy',
 };
 
+export const axiumSelectLastStrategyData: KeyedSelector = {
+  conceptName: 'axium',
+  stateKeys: 'lastStrategyData',
+};
+
 export const axiumSelectBadPlans: KeyedSelector = {
   conceptName: 'axium',
   stateKeys: 'badPlans',

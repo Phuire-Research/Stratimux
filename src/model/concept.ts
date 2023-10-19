@@ -1,11 +1,12 @@
-import { Observable, Subject } from 'rxjs';
-import { Action, ActionType, createAction } from './action';
+import { Observable, Subject, debounceTime, switchMap, withLatestFrom } from 'rxjs';
+import { Action, ActionType } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
-import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
+import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
+import { ActionController, createActionController$ } from './actionController';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -127,10 +128,11 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
       if (action.strategy) {
         return strategySuccess(action.strategy);
       }
-      return axiumConclude();
+      return {
+        ...action,
+        type: axiumConcludeType
+      };
     }),
   );
   return [defaultMethod, defaultSubject];
 };
-
-// export type createMethod = (subject: Subject<Action>) => Method;

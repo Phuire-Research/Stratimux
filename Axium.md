@@ -27,6 +27,7 @@ export type AxiumState {
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
+  lastStrategyData: unknown;
   generation: number;
   modeIndex: number;
   defaultModeIndex: number;
@@ -46,6 +47,7 @@ export type AxiumState {
 * dialog - Is the internal representation of the strategies that the axium has ran.
 * storeDialog - This is set to false by default to save on memory, but if true will store each dialog, and allows such to be subscribed to.
 * lastStrategy - Informs specifically the of the last ActionStrategy topic to have ran through the system. This is used via testing or the deployment of addition strategies upon completion.
+* lastStrategyData - Paired with lastStrategy. Use to access thee last data of the previous strategy.
 * generation - This iterates each time the Set of Concepts is transformed. And if an action is received of the wrong generation. Will be primed at run time, if not found this will emit a badAction that if logging is set to True. Will be emitted to the console alongside the invalidated action as payload.
 * modeIndex - This determines which Mode is currently being ran from the lists of modes stored on the axium concept.
 * defaultModeIndex - This determines what mode will be set by setDefaultMode. Of importance for adding and removing strategies.

@@ -3,13 +3,13 @@ import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
-import { ExperimentActionQueState } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 
 export const experimentCheckInStrategyType = 'Experiment Check in Action';
 
 export const experimentCheckInStrategy = prepareActionCreator(experimentCheckInStrategyType);
 
-export function checkInStrategyReducer(state: ExperimentActionQueState, action: Action): ExperimentActionQueState {
+export function checkInStrategyReducer(state: ExperimentState, action: Action): ExperimentState {
   if (action.strategy) {
     // console.log('Check in reducer', action);
     const nextAction = strategySuccess(action.strategy);
