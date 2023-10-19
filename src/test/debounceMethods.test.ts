@@ -12,7 +12,7 @@ import { selectState } from '../model/selector';
 test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [debounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async method creator with Concepts', [createCounterConcept(), experiment]);
-  const plan = axium.stage('timed mock to true', [
+  const plan = axium.stage('Experiment debounce add one', [
     (_, dispatch) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
         iterateStage: true
@@ -43,8 +43,8 @@ test('Debounce method prevent excess count', (done) => {
 
 test('Async debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [asyncDebounceNextActionNodeQuality]);
-  const axium = createAxium('Experiment async method creator with Concepts', [createCounterConcept(), experiment]);
-  const plan = axium.stage('timed mock to true', [
+  const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
+  const plan = axium.stage('Experiment async debounce add one', [
     (_, dispatch) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
         iterateStage: true
@@ -71,7 +71,7 @@ test('Async debounce method prevent excess count', (done) => {
     }
   ]);
   setTimeout(() => {
-    const secondPlan = axium.stage('second timed mock', [
+    const secondPlan = axium.stage('Second experiment async debounce add one', [
       (_, dispatch) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
