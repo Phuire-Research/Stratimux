@@ -47,15 +47,24 @@ export class ActionController extends Subject<Action> {
         this.timer.unref();
       }
       let nextAction;
+      let end = true;
+      // Logically Determined axiumConclude
+      if (action.semaphore[3] === 3) {
+        end = false;
+      }
       if (action.strategy) {
         nextAction = action;
-      } else if (action.semaphore[3] !== 1) {
+      // Logically Determined axiumConclude
+      } else if (action.semaphore[3] === 3) {
+        nextAction = action;
+      // Logically Determined axiumBadAction
+      } else if (!action.strategy && action.semaphore[3] !== 1) {
         const conclude = axiumConclude();
         nextAction = {
           ...action,
           ...conclude
         };
-      } else {
+      }  else {
         nextAction = action;
       }
       const { observers } = this;
@@ -63,7 +72,9 @@ export class ActionController extends Subject<Action> {
       for (let i = 0; i < len; i++) {
         observers[i].next(nextAction);
       }
-      this.complete();
+      if (end) {
+        this.complete();
+      }
     }
   }
 }

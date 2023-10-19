@@ -221,6 +221,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
+    // console.log('HIT', action, goodAction, run);
     this.stageDelimiters.set(key, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;

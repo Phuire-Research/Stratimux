@@ -27,8 +27,15 @@ export {
   createMethod,
   createAsyncMethod,
   createMethodWithConcepts,
-  createAsyncMethodWithConcepts
+  createAsyncMethodWithConcepts,
+  createMethodDebounce,
+  createAsyncMethodDebounce,
+  createMethodDebounceWithConcepts,
+  createAsyncMethodDebounceWithConcepts
 } from './model/method';
+export {
+  debounceAction
+} from './model/debounceAction';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
 export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
