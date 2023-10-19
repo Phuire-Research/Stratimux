@@ -52,7 +52,7 @@ export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumS
 export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
-export { axiumClose, axiumCloseType } from './concepts/axium/qualities/close.quality';
+export { axiumClose, axiumCloseType, ClosePayload } from './concepts/axium/qualities/close.quality';
 export { axiumBadAction, axiumBadActionType } from './concepts/axium/qualities/badAction.quality';
 export { axiumSetMode, axiumSetModeType, SetModePayload } from './concepts/axium/qualities/setMode.quality';
 export {

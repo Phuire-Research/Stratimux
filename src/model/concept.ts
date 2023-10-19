@@ -132,3 +132,5 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   );
   return [defaultMethod, defaultSubject];
 };
+
+// export type createMethod = (subject: Subject<Action>) => Method;

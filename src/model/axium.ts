@@ -14,7 +14,7 @@ import {
   initializationStrategy,
 } from '../concepts/axium/axium.concept';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
-import { axiumCloseType } from '../concepts/axium/qualities/close.quality';
+import { axiumClose, axiumCloseType } from '../concepts/axium/qualities/close.quality';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
@@ -132,8 +132,10 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   axiumState.action$.next(
     strategyBegin(initializationStrategy(concepts)),
   );
-  const close = () => {
-    action$.next(createAction(axiumCloseType));
+  const close = (exit?: boolean) => {
+    action$.next(axiumClose({
+      exit: exit ? exit : false
+    }));
   };
   return {
     subscribe: subConcepts$.subscribe.bind(subConcepts$),
