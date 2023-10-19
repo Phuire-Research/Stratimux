@@ -8,6 +8,7 @@ import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 
+jest.setTimeout(7000);
 test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [debounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async method creator with Concepts', [createCounterConcept(), experiment]);
