@@ -6,9 +6,7 @@ import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
 import { UnifiedSubject } from '../../model/stagePlanner';
-import { AppendActionListToDialogPayload, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
-import { selectState } from '../../model/selector';
-import { OwnershipState, ownershipName } from './ownership.concept';
+import { AppendActionListToDialogPayload, axiumAppendActionListToDialog, axiumAppendActionListToDialogType } from '../axium/qualities/appendActionListToDialog.quality';
 import { AxiumState } from '../axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
 
@@ -44,11 +42,11 @@ export const ownershipMode: Mode = (
           // Logical Determination: axiumConcludeType
           if (nextAction.semaphore[3] === 3) {
             concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
-            nextAction = createAction(axiumAppendActionListToDialogType);
-            nextAction.payload = {
+            nextAction = axiumAppendActionListToDialog({
               actionList: action.strategy.actionList,
-              strategyTopic: action.strategy.topic
-            } as AppendActionListToDialogPayload;
+              strategyTopic: action.strategy.topic,
+              strategyData: action.strategy.data
+            });
           }
           finalMode([nextAction, concepts, action$, concepts$]);
         } else {

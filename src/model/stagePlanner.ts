@@ -196,9 +196,9 @@ export class UnifiedSubject extends Subject<Concept[]> {
     super();
   }
   stage(title: string, stages: Staging[]): StagePlanner {
-    this.currentStages.set(this.planId, {title, stages, stage: 0, stageFailed: -1});
     const planId = this.planId;
     this.planId++;
+    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1});
     const conclude = () => {
       this.currentStages.delete(planId);
     };
@@ -221,6 +221,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
+    // console.log('HIT', action, goodAction, run);
     this.stageDelimiters.set(key, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;

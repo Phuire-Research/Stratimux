@@ -5,7 +5,7 @@ import { OwnershipState, createOwnershipConcept, ownershipName } from '../concep
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createExperimentActionQueState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
+import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import {
@@ -24,7 +24,7 @@ test('Ownership Test', (done) => {
   const axium = createAxium('ownershipTest', [
     createOwnershipConcept(),
     createCounterConcept(),
-    createExperimentConcept(createExperimentActionQueState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
+    createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
   ], true, true);
   const plan = axium.stage(
     'Testing Ownership Staging', [

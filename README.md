@@ -46,7 +46,7 @@ let finalRun = true;
 const axium = createAxium('ownershipTest', [
   createOwnershipConcept(),
   createCounterConcept(),
-  createExperimentConcept(createExperimentActionQueState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
+  createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
 ], true, true);
 const plan = axium.stage(
   'Testing Ownership Staging', [

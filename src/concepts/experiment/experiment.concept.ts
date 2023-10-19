@@ -2,15 +2,17 @@ import { Mode, Quality, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
 
-export type ExperimentActionQueState = {
+export type ExperimentState = {
   actionQue: Action[],
+  mock: boolean,
 }
 
 export const experimentName = 'experiment';
 
-export const createExperimentActionQueState = (): ExperimentActionQueState => {
+export const createExperimentState = (): ExperimentState => {
   return {
     actionQue: [],
+    mock: false
   };
 };
 

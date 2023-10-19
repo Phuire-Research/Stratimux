@@ -1,30 +1,20 @@
-import { Method, MethodCreator, createQuality, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
+import { MethodCreator, createQuality } from '../../../model/concept';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket } from '../../../model/ownership';
-import { Subject, map } from 'rxjs';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { axiumConclude } from '../../axium/qualities/conclude.quality';
+import { createMethod } from '../../../model/method';
 
 export const ownershipClearStrategyStubsFromLedgerAndSelfType: ActionType = 'clear current Strategy Stubs from Ownership Ledger and Itself';
 export const ownershipClearStrategyStubsFromLedgerAndSelf = prepareActionCreator(ownershipClearStrategyStubsFromLedgerAndSelfType);
 
-const createClearStrategyStubsFromLedgerAndSelfMethodCreator: MethodCreator = () => {
-  const logSubject = new Subject<Action>();
-  const logMethod: Method = logSubject.pipe(
-    map((action: Action) => {
-      if (action.strategy) {
-        action.strategy.stubs = undefined;
-        return strategySuccess(action.strategy);
-      }
-      return axiumConclude();
-    })
-  );
-  return [
-    logMethod,
-    logSubject
-  ];
-};
+const createClearStrategyStubsFromLedgerAndSelfMethodCreator: MethodCreator = () => createMethod((action) => {
+  if (action.strategy) {
+    action.strategy.stubs = undefined;
+    return strategySuccess(action.strategy);
+  }
+  return action;
+});
 
 export function clearStrategyStubsFromLedgerAndSelfReducer(state: OwnershipState, action: Action): OwnershipState {
   const stubs = action?.strategy?.stubs;

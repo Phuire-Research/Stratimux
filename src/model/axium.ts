@@ -14,7 +14,7 @@ import {
   initializationStrategy,
 } from '../concepts/axium/axium.concept';
 import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
-import { axiumCloseType } from '../concepts/axium/qualities/close.quality';
+import { axiumClose, axiumCloseType } from '../concepts/axium/qualities/close.quality';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
@@ -28,7 +28,8 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     // Allows for reducer next in sequence
     const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic
+      strategyTopic: action.strategy.topic,
+      strategyData: action.strategy.data
     });
     action$.next(appendToDialog);
     action$.next(action);
@@ -49,7 +50,8 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     // Allows for reducer next in sequence
     const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic
+      strategyTopic: action.strategy.topic,
+      strategyData: action.strategy.data
     });
     setTimeout(() => {
       action$.next(appendToDialog);
@@ -72,7 +74,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   concepts.forEach((concept, _index) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        const [method, subject] = quality.methodCreator(axiumState.subConcepts$);
+        const [method, subject] = quality.methodCreator(axiumState.concepts$);
         quality.method = method;
         quality.subject = subject;
         quality.method.pipe(
@@ -132,8 +134,10 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   axiumState.action$.next(
     strategyBegin(initializationStrategy(concepts)),
   );
-  const close = () => {
-    action$.next(createAction(axiumCloseType));
+  const close = (exit?: boolean) => {
+    action$.next(axiumClose({
+      exit: exit ? exit : false
+    }));
   };
   return {
     subscribe: subConcepts$.subscribe.bind(subConcepts$),
