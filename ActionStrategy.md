@@ -157,3 +157,5 @@ export const createAsyncMethodDebounceWithConcepts =
 * createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts. 
 * createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the most recent action upon its own conditions are met asynchronously after the set duration.
 * createAsyncMethodDebounceWithConcepts - Filters and then first the first action once conditions are met, and provides access to the most recent concepts.
+
+If you find yourself needing to filter out actions within a duration, after the first successful dispatch, in contrast to the most recent above. Then that would be a stage behavior via the option debounce there. If there are multiple sources that may end up dispatching that action while requiring the first within a duration. Then this would likewise be a prime example for moving actions into a principle action que within that strategy.
