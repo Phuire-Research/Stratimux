@@ -240,6 +240,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,
+      data: data ? data : strategy.data
     };
     return conclude.action;
   }
@@ -250,7 +251,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
  * If no failureNode is found, will return EndOfActionStrategy instead.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
  */
-export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
+export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, unknown>) {
   const strategy = {..._strategy};
   let nextAction: Action;
   const actionListEntry = createSentence(
@@ -310,6 +311,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: unknown) {
     conclude.action.strategy = {
       ...strategy,
       currentNode: conclude,
+      data: data ? data : strategy.data
     };
     return conclude.action;
   }
@@ -388,6 +390,7 @@ export const strategyDecide = (
   conclude.action.strategy = {
     ...strategy,
     currentNode: conclude,
+    data: data ? data : strategy.data
   };
   return conclude.action;
 };
