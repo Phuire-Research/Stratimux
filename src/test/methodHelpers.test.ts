@@ -2,7 +2,7 @@ import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concept
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
   experimentAsyncIterateIdThenReceiveInMethodQuality
-} from '../concepts/experiment/qualities/asyncIterateIdThenReceiveInMethod.quality copy';
+} from '../concepts/experiment/qualities/asyncIterateIdThenReceiveInMethod.quality';
 import { experimentIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
 import { mockToTrueQuality } from '../concepts/experiment/qualities/mockTrue.quality';
 import { timerEmitActionQuality } from '../concepts/experiment/qualities/timerEmitAction.quality';
@@ -104,7 +104,6 @@ test('Async Method Test with Concepts id comparison', (done) => {
     (concepts, _) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      console.log('PING', experimentState);
       if (lastStrategy === asyncIterateIdThenAddToDataTopic) {
         const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         if (data) {
