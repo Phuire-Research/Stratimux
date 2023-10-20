@@ -38,12 +38,12 @@ export const createMethod =
     return [defaultMethod, defaultSubject];
   };
 export const createMethodWithConcepts =
-  (method: (action: Action) => Action, concepts$: UnifiedSubject): [Method, Subject<Action>] => {
+  (methodWithConcepts: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject): [Method, Subject<Action>] => {
     const defaultSubject = new Subject<Action>();
     const defaultMethod: Method = defaultSubject.pipe(
       withLatestFrom(concepts$ as UnifiedSubject),
       map(([act, concepts] : [Action, Concept[]]) => {
-        const methodAction = method(act);
+        const methodAction = methodWithConcepts(act, concepts);
         if (methodAction.strategy) {
           return methodAction;
         }
@@ -71,10 +71,9 @@ export const createAsyncMethodWithConcepts =
     const defaultSubject = new Subject<Action>();
     const defaultMethod: Method = defaultSubject.pipe(
       withLatestFrom(concepts$ as UnifiedSubject),
-      switchMap(([act, concepts] : [Action, Concept[]]) =>
-        createActionController$(act, (controller: ActionController, action: Action) => {
-          asyncMethodWithConcepts(controller, action, concepts);
-        })),
+      switchMap(([act, concepts] : [Action, Concept[]]) => createActionController$(act, (controller: ActionController, action: Action) => {
+        asyncMethodWithConcepts(controller, action, concepts);
+      })),
     );
     return [defaultMethod, defaultSubject];
   };

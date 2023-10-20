@@ -59,13 +59,14 @@ export const strategyData_select = <T>(strategy: ActionStrategy): T | undefined 
   }
 };
 
-export const strategyData_unifyData = (strategy: ActionStrategy, data: Record<string,unknown>): Record<string,unknown> => {
-  if (strategy.data) {
-    return {
-      ...strategy.data,
-      ...data
-    };
-  } else {
-    return {...data};
-  }
-};
+export const strategyData_unifyData =
+  <T extends Record<string, unknown>>(strategy: ActionStrategy, data: Record<string,unknown> | T): Record<string,unknown> => {
+    if (strategy.data) {
+      return {
+        ...strategy.data,
+        ...data
+      };
+    } else {
+      return {...data};
+    }
+  };

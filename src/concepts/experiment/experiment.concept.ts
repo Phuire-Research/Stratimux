@@ -5,6 +5,7 @@ import { PrincipleFunction } from '../../model/principle';
 export type ExperimentState = {
   actionQue: Action[],
   mock: boolean,
+  id: number
 }
 
 export const experimentName = 'experiment';
@@ -12,7 +13,8 @@ export const experimentName = 'experiment';
 export const createExperimentState = (): ExperimentState => {
   return {
     actionQue: [],
-    mock: false
+    mock: false,
+    id: 0,
   };
 };
 

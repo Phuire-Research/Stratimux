@@ -130,7 +130,7 @@ This was a purposeful design choice, if you find yourself doing such. Known this
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {}
 export const createMethodWithConcepts =
-  (method: (action: Action) => Action, concepts$: UnifiedSubject): [Method, Subject<Action>] => {}
+  (method: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject): [Method, Subject<Action>] => {}
 export const createAsyncMethod =
   (asyncMethod: (controller: ActionController, action: Action) => void): [Method, Subject<Action>] => {}
 export const createAsyncMethodWithConcepts =
@@ -153,7 +153,7 @@ export const createAsyncMethodDebounceWithConcepts =
 * createAsyncMethodWithConcepts - Will also have access to the most recent concepts.
 
 *Note if you are implementing your own debounceAction, pay attention to how these method helpers work. They are handling a passed conclude from debounceAction within their map/switchMap*
-* createMethodDebounce - After the first action, this will filter actions within the duration to be set to the conclude action.
+* createMethodDebounce - Will fire after the set duration with the most recent action, and filter previous actions within the duration to be set to the conclude action.
 * createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts. 
-* createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the first action upon its own conditions are met asynchronously.
+* createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the most recent action upon its own conditions are met asynchronously after the set duration.
 * createAsyncMethodDebounceWithConcepts - Filters and then first the first action once conditions are met, and provides access to the most recent concepts.

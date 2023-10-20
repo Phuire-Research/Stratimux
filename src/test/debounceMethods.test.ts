@@ -1,13 +1,18 @@
+import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createExperimentConcept, createExperimentState } from '../concepts/experiment/experiment.concept';
+import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
+import { experimentDebounceAsyncIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality copy 2';
 import { asyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
+import { DebounceIterateIdThenReceiveInMethodPayload, experimentDebounceIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
 import { debounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
 import { experimentAsyncDebounceAddOneStrategy } from '../concepts/experiment/strategies/asyncDebounceAddOne.strategy';
 import { experimentDebounceAddOneStrategy } from '../concepts/experiment/strategies/debounceAddOne.strategy';
+import { debounceAsyncIterateIdThenAddToData, debounceAsyncIterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/debounceAsyncIterateIdThenAddToData.strategy';
+import { debounceIterateIdThenAddToData, debounceIterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/debounceIterateIdThenAddToData.strategy copy';
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
-import { selectState } from '../model/selector';
+import { selectSlice, selectState } from '../model/selector';
 
 test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [debounceNextActionNodeQuality]);
@@ -104,4 +109,98 @@ test('Async debounce method prevent excess count', (done) => {
     // Downside of halting quality.
     axium.dispatch(axiumKick());
   }, 1000);
+});
+
+test('Debounce Method Test with Concepts id comparison', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceIterateIdThenReceiveInMethodQuality]);
+  const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
+  const plan = axium.stage('Debounce Iterate id with concepts', [
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      dispatch(strategyBegin(debounceIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+      console.log('Debounce: ', experimentState.id, lastStrategy, data);
+      dispatch(strategyBegin(debounceIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+      console.log('Debounce: ', experimentState.id, lastStrategy, data);
+      dispatch(strategyBegin(debounceIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, _) => {
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+      console.log('Debounce: ', experimentState.id, lastStrategy, data);
+      if (lastStrategy === debounceIterateIdThenAddToDataTopic) {
+        if (data) {
+          console.log('Strategy Data: ', data, 'Experiment State ID: ', experimentState.id);
+          expect(data.id).toBe(3);
+          expect(data.setId).toBe(2);
+          expect(experimentState.id).toBe(3);
+          plan.conclude();
+          done();
+        }
+      }
+    }
+  ]);
+});
+
+test('Debounce Async Method Test with Concepts id comparison', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceAsyncIterateIdThenReceiveInMethodQuality]);
+  const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
+  const plan = axium.stage('Debounce Async Iterate id with concepts', [
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      dispatch(strategyBegin(debounceAsyncIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+      console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
+      dispatch(strategyBegin(debounceAsyncIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, dispatch) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+      console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
+      dispatch(strategyBegin(debounceAsyncIterateIdThenAddToData(experimentState.id)), {
+        iterateStage: true
+      });
+    },
+    (concepts, _) => {
+      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+      console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
+      if (lastStrategy === debounceAsyncIterateIdThenAddToDataTopic) {
+        if (data) {
+          console.log('Strategy Data: ', data, 'Experiment State ID: ', experimentState.id);
+          expect(data.id).toBe(3);
+          expect(data.setId).toBe(2);
+          expect(experimentState.id).toBe(3);
+          plan.conclude();
+          done();
+        }
+      }
+    }
+  ]);
 });
