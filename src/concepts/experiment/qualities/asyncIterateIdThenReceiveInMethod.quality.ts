@@ -15,13 +15,11 @@ export const experimentAsyncIterateIdThenReceiveInMethod = prepareActionCreator(
 
 const experimentAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
   createAsyncMethodWithConcepts((controller, action, concepts) => {
-    console.log('HIT');
     setTimeout(() => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (action.strategy) {
         const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: experimentState.id});
         const strategy = strategySuccess(action.strategy, data);
-        console.log('FIRE');
         controller.fire(strategy);
       }
       controller.fire(action);

@@ -12,7 +12,7 @@ export type DebounceAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentDebounceAsyncIterateIdThenReceiveInMethodType
-  = 'Experiment asynchronously iterate ID then receive in Method via Concept select';
+  = 'Debounce Experiment asynchronously iterate ID then receive in Method via Concept select';
 export const experimentDebounceAsyncIterateIdThenReceiveInMethod
   = prepareActionWithPayloadCreator<DebounceAsyncIterateIdThenReceiveInMethodPayload>(
     experimentDebounceAsyncIterateIdThenReceiveInMethodType
