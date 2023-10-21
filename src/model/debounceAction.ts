@@ -38,70 +38,6 @@ function fromInteropObservable<T>(obj: any) {
     throw new TypeError('Provided object does not correctly implement Symbol.observable');
   });
 }
-// const isArrayLike = (<T>(x: any): x is ArrayLike<T> => x && typeof x.length === 'number' && typeof x !== 'function');
-// function fromArrayLike<T>(array: ArrayLike<T>) {
-//   return new Observable((subscriber: Subscriber<T>) => {
-//     // Loop over the array and emit each value. Note two things here:
-//     // 1. We're making sure that the subscriber is not closed on each loop.
-//     //    This is so we don't continue looping over a very large array after
-//     //    something like a `take`, `takeWhile`, or other synchronous unsubscription
-//     //    has already unsubscribed.
-//     // 2. In this form, reentrant code can alter that array we're looping over.
-//     //    This is a known issue, but considered an edge case. The alternative would
-//     //    be to copy the array before executing the loop, but this has
-//     //    performance implications.
-//     for (let i = 0; i < array.length && !subscriber.closed; i++) {
-//       subscriber.next(array[i]);
-//     }
-//     subscriber.complete();
-//   });
-// }
-// function isPromise(value: any): value is PromiseLike<any> {
-//   return isFunction(value?.then);
-// }
-// const timeoutProvider: TimeoutProvider = {
-//   // When accessing the delegate, use the variable rather than `this` so that
-//   // the functions can be called without being bound to the provider.
-//   setTimeout(handler: () => void, timeout?: number, ...args) {
-//     const { delegate } = timeoutProvider;
-//     if (delegate?.setTimeout) {
-//       return delegate.setTimeout(handler, timeout, ...args);
-//     }
-//     return setTimeout(handler, timeout, ...args);
-//   },
-//   clearTimeout(handle) {
-//     const { delegate } = timeoutProvider;
-//     return (delegate?.clearTimeout || clearTimeout)(handle as any);
-//   },
-//   delegate: undefined,
-// };
-// function reportUnhandledError(err: any) {
-//   timeoutProvider.setTimeout(() => {
-//     const { onUnhandledError } = config;
-//     if (onUnhandledError) {
-//       // Execute the user-configured error handler.
-//       onUnhandledError(err);
-//     } else {
-//       // Throw so it is picked up by the runtime's uncaught error mechanism.
-//       throw err;
-//     }
-//   });
-// }
-// function fromPromise<T>(promise: PromiseLike<T>) {
-//   return new Observable((subscriber: Subscriber<T>) => {
-//     promise
-//       .then(
-//         (value) => {
-//           if (!subscriber.closed) {
-//             subscriber.next(value);
-//             subscriber.complete();
-//           }
-//         },
-//         (err: any) => subscriber.error(err)
-//       )
-//       .then(null, reportUnhandledError);
-//   });
-// }
 function createInvalidObservableTypeError(input: any) {
   // TODO: We should create error codes that can be looked up, so this can be less verbose.
   return new TypeError(
@@ -118,21 +54,6 @@ function innerFrom<T>(input: ObservableInput<T>): Observable<T> {
     if (isInteropObservable(input)) {
       return fromInteropObservable(input);
     }
-    // if (isArrayLike(input)) {
-    //   return fromArrayLike(input);
-    // }
-    // if (isPromise(input)) {
-    //   return fromPromise(input);
-    // }
-    // if (isAsyncIterable(input)) {
-    //   return fromAsyncIterable(input);
-    // }
-    // if (isIterable(input)) {
-    //   return fromIterable(input);
-    // }
-    // if (isReadableStreamLike(input)) {
-    //   return fromReadableStreamLike(input);
-    // }
   }
 
   throw createInvalidObservableTypeError(input);
@@ -321,13 +242,9 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
 
     const send = () => {
       if (hasValue) {
-        // Ensure we clear out our value and hasValue flag
-        // before we emit, otherwise reentrant code can cause
-        // issues here.
         hasValue = false;
         const value = sendValue!;
         sendValue = null;
-        // Emit the value.
         subscriber.next(value);
         !isComplete && startThrottle(value);
       }
@@ -336,11 +253,6 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
     source.subscribe(
       createOperatorSubscriber(
         subscriber,
-        // Regarding the presence of throttled.closed in the following
-        // conditions, if a synchronous duration selector is specified - weird,
-        // but legal - an already-closed subscription will be assigned to
-        // throttled, so the subscription's closed property needs to be checked,
-        // too.
         (value) => {
           hasValue = true;
           sendValue = value;
