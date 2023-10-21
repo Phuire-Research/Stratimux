@@ -4,7 +4,7 @@ import { UnifiedSubject } from './stagePlanner';
 import { ActionController, createActionController$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
-import { debounceAction, throttleAction } from './debounceAction';
+import { debounceAction, throttleAction } from './actionOperators';
 import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
 
 export type ActionType = string;

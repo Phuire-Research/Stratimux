@@ -31,11 +31,16 @@ export {
   createMethodDebounce,
   createAsyncMethodDebounce,
   createMethodDebounceWithConcepts,
-  createAsyncMethodDebounceWithConcepts
+  createAsyncMethodDebounceWithConcepts,
+  createMethodThrottle,
+  createMethodThrottleWithConcepts,
+  createAsyncMethodThrottle,
+  createAsyncMethodThrottleWithConcepts
 } from './model/method';
 export {
-  debounceAction
-} from './model/debounceAction';
+  debounceAction,
+  throttleAction
+} from './model/actionOperators';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
 export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
