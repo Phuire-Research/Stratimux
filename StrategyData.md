@@ -11,13 +11,14 @@ export const strategyData_appendFailure = (strategy: ActionStrategy, condition: 
 export const strategyData_selectFailureCondition = (strategy: ActionStrategy): failureConditions | string | undefined => {};
 export const strategyData_clearFailureCondition = (strategy: ActionStrategy): Record<string, unknown> | undefined => {};
 export const strategyData_select = <T>(strategy: ActionStrategy): T | undefined => {};
-export const strategyData_unifyData = (strategy: ActionStrategy, data: Record<string,unknown>): Record<string,unknown> => {};
+export const strategyData_unifyData =
+  <T extends Record<string, unknown>>(strategy: ActionStrategy, data: Record<string,unknown> | T): Record<string,unknown> => {}
 ```
 * strategyData_appendFailure - This will append a "failureCondition," property that is informed either by the failureConditions enum or your string. This allows for your failureNodes to make intelligent decisions. Or if there is no data field present, it will create a new record with this property.
 * strategyData_selectFailureCondition - This will return the failure condition or undefined if not set.
 * strategyData_clearFailureCondition - This will clear such from the current record, otherwise if there are no additional properties on the record, or if no record is present at the time of clear, it will return undefined. As this forces data validation to ensure there is some data to unify given some success.
 * strategyData_select - This will simply return and set the current type of the returned data. But forces type safety via the possibility of an undefined type. Note here that the strength of TypeScript allows for Records to be return or casted as a Slice of the given type, even if other Actions have added properties that would not be accounted for within your transformation context.
-* strategyData_unifyData - The reason for all the undefined returns. This will take the current records, decomposed, and recompose such together with the newest data taking precedent. 
+* strategyData_unifyData - The reason for all the undefined returns. This will take the current records, decomposed, and recompose such together with the newest data taking precedent. The generic allows for the unifying of types via the & operator. It is suggested that per strategy you create a type for that specific data, whether within your strategy or the unifying concept that will utilize such.
 
 ## The Reason for this Approach
 We are using within the context your concepts the creation of consumer functions to ensure type safety even within the context of data that would be unified with other concepts. That these records might have the failureCondition property. But your logic would only care for the parameters that it is attempting to transform. This in effect allows for the creation of new emergent data if the "crossing of the streams." And in contrast to previous methods of programming, this would be similar to the creation of the assembly line within the context of programming. As classically the assembly line is generalized within the context of classic via the utilization of factories. As factories have assembly lines, but you are traditionally only caring for the output based on some input.

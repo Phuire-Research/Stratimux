@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  InteropObservable,
   MonoTypeOperatorFunction,
   Observable,
+  ObservableInput,
   OperatorFunction,
   SchedulerAction,
   SchedulerLike,
   Subscriber,
   Subscription,
-  asyncScheduler
+  ThrottleConfig,
+  asyncScheduler,
+  timer
 } from 'rxjs';
 import { Action } from './action';
 import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
@@ -16,7 +20,44 @@ import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
 function hasLift(source: any): source is { lift: InstanceType<typeof Observable>['lift'] } {
   return typeof source?.lift === 'function';
 }
+function isFunction(value: any): value is (...args: any[]) => any {
+  return typeof value === 'function';
+}
+const observable: string | symbol = (() => (typeof Symbol === 'function' && Symbol.observable) || '@@observable')();
 
+function isInteropObservable(input: any): input is InteropObservable<any> {
+  return isFunction(input[observable]);
+}
+function fromInteropObservable<T>(obj: any) {
+  return new Observable((subscriber: Subscriber<T>) => {
+    const obs = obj[observable]();
+    if (isFunction(obs.subscribe)) {
+      return obs.subscribe(subscriber);
+    }
+    // Should be caught by observable subscribe function error handling.
+    throw new TypeError('Provided object does not correctly implement Symbol.observable');
+  });
+}
+function createInvalidObservableTypeError(input: any) {
+  // TODO: We should create error codes that can be looked up, so this can be less verbose.
+  return new TypeError(
+    `You provided ${
+      input !== null && typeof input === 'object' ? 'an invalid object' : `'${input}'`
+    } where a stream was expected. You can provide an Observable, Promise, ReadableStream, Array, AsyncIterable, or Iterable.`
+  );
+}
+function innerFrom<T>(input: ObservableInput<T>): Observable<T> {
+  if (input instanceof Observable) {
+    return input;
+  }
+  if (input !== null) {
+    if (isInteropObservable(input)) {
+      return fromInteropObservable(input);
+    }
+  }
+
+  throw createInvalidObservableTypeError(input);
+}
 function operate<T, R>(
   init: (liftedSource: Observable<T>, subscriber: Subscriber<R>) => (() => void) | void
 ): OperatorFunction<T, R> {
@@ -164,4 +205,77 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
       )
     );
   });
+}
+
+function throttle(durationSelector: (value: Action) => ObservableInput<any>, config?: ThrottleConfig): MonoTypeOperatorFunction<Action> {
+  return operate((source, subscriber) => {
+    const { leading = true, trailing = false } = config ?? {};
+    let hasValue = false;
+    let sendValue: Action | null = null;
+    let throttled: Subscription | null = null;
+    let isComplete = false;
+
+    const endThrottling = (value: Action) => {
+      throttled?.unsubscribe();
+      throttled = null;
+      if (trailing) {
+        send();
+        isComplete && subscriber.complete();
+      } else {
+        passConclude(value);
+      }
+    };
+
+    const cleanupThrottling = () => {
+      throttled = null;
+      isComplete && subscriber.complete();
+    };
+
+    const startThrottle = (value: Action) =>
+      (throttled = innerFrom(durationSelector(value)).subscribe(createOperatorSubscriber(subscriber, endThrottling, cleanupThrottling)));
+    const passConclude = (value: Action) => {
+      subscriber.next({
+        ...value,
+        ...axiumConclude()
+      });
+    };
+
+    const send = () => {
+      if (hasValue) {
+        hasValue = false;
+        const value = sendValue!;
+        sendValue = null;
+        subscriber.next(value);
+        !isComplete && startThrottle(value);
+      }
+    };
+
+    source.subscribe(
+      createOperatorSubscriber(
+        subscriber,
+        (value) => {
+          hasValue = true;
+          sendValue = value;
+          !(throttled && !throttled.closed) && (leading ? send() : startThrottle(value));
+        },
+        () => {
+          isComplete = true;
+          !(trailing && hasValue && throttled && !throttled.closed) && subscriber.complete();
+        }
+      )
+    );
+  });
+}
+/**
+ * This will permit the first action, then filter actions for the specified duration, but will still emit actions as axiumConclude
+ *  Thus this needs to be taken into account in the Method using throttleAction if implemented directly.
+ *   But will be handled automatically in actionControllers and associated debounce createMethods.
+ */
+export function throttleAction(
+  duration: number,
+  scheduler: SchedulerLike = asyncScheduler,
+  config?: ThrottleConfig
+): MonoTypeOperatorFunction<Action> {
+  const duration$ = timer(duration, scheduler);
+  return throttle(() => duration$, config);
 }
