@@ -36,7 +36,7 @@ export type dispatchOptions = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expected: any
   },
-  debounce?: number;
+  throttle?: number;
 }
 
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
@@ -135,7 +135,7 @@ const handleStageDelimiter =
     let goodAction = true;
     if (stageDelimiter &&
         stageDelimiter.prevActions.includes(action.type) &&
-        options?.debounce === undefined) {
+        options?.throttle === undefined) {
       if (plan.stage !== stageDelimiter?.stage) {
         stageDelimiter = {
           stage: plan.stage,
@@ -216,7 +216,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     action: Action,
     options: dispatchOptions): void {
     let stageDelimiter = this.stageDelimiters.get(key);
-    let debounce = false;
+    let throttle = false;
     let goodAction = true;
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
@@ -225,7 +225,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     this.stageDelimiters.set(key, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;
-      if (options?.debounce !== undefined) {
+      if (options?.throttle !== undefined) {
         let previousExpiration = 0;
         for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
           if (stageDelimiter.prevActions[i] === action.type) {
@@ -233,8 +233,8 @@ export class UnifiedSubject extends Subject<Concept[]> {
             break;
           }
         }
-        if (previousExpiration !== action.expiration && action.expiration - previousExpiration < options?.debounce) {
-          debounce = true;
+        if (previousExpiration !== action.expiration && action.expiration - previousExpiration < options?.throttle) {
+          throttle = true;
         } else {
           for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
             if (stageDelimiter.prevActions[i] === action.type) {
@@ -245,7 +245,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
         }
       }
       this.stageDelimiters.set(key, stageDelimiter);
-      if (!debounce && run) {
+      if (!throttle && run) {
         if (options?.iterateStage) {
           plan.stage += 1;
         }
@@ -267,7 +267,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
     } else if (
       options?.runOnce === undefined &&
       (options.on === undefined ||
-      (options.on && (!options.debounce && (options.iterateStage === undefined || options.setStage === plan.stage)))
+      (options.on && (!options.throttle && (options.iterateStage === undefined || options.setStage === plan.stage)))
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;

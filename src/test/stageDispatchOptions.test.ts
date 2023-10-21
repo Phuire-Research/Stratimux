@@ -45,8 +45,8 @@ test('Axium Stage Dispatch Options Test', (done) => {
             selector: counterSelectCount,
             expected: 2
           },
-          // Requires debounce, because the previous action is of the same type, but runs only once.
-          debounce: 1
+          // Requires throttle, because the previous action is of the same type, but runs only once.
+          throttle: 1
         });
         // }
       }, (concepts, dispatch) => {
@@ -56,7 +56,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         // Will cause an action overflow forcing the stage to close and add itself to badPlans
         dispatch(counterSubtract(), {
           // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
-          // debounce: 500
+          // throttle: 500
           // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
         });
         // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.

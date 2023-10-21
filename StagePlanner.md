@@ -1,6 +1,6 @@
 ## Stage Planner
 ### Abstract
-This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no debounce option. That plan will conclude and be added to the axium's badPlans property.
+This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no throttle option. That plan will conclude and be added to the axium's badPlans property.
 
 Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
 
@@ -25,7 +25,7 @@ export type Plan = {
 ```typescript
 export type dispatchOptions = {
   runOnce?: boolean;
-  debounce?: number;
+  throttle?: number;
   setStep?: number;
   iterateStep?: boolean;
   on?: {
@@ -37,10 +37,10 @@ export type dispatchOptions = {
 ```
 * dispatchOptions
 * runOnce - If enabled on the dispatch options, this will permit only one dispatch of that action within its stage.
-* debounce - Required to prevent the stage to be considered bad if rerunning the same action within the same stage, specific use case is tracking some position over time. If on is part of options, this will only come into play after that action is first dispatched.
+* throttle - Required to prevent the stage to be considered bad if rerunning the same action within the same stage, specific use case is tracking some position over time. If on is part of options, this will only come into play after that action is first dispatched.
 * incrementStage - Will increment to the next stage index, this should be your default option for dispatching actions or strategies to prevent action overflow.
 * setStage - This will set the stage to a specific stage index, useful if some strategy failed and the staging needs to be reset to prepare for that strategy again. This will always override iterateStage.
-* on - Simple handler that will prevent dispatch until the selected value is set to what is expected. Keep in mind this should also be occupied by a debounce, as this dispatch will run on each successful state update. This should be utilized alongside iterateStage, setStage, or debounce to prevent action overflow.
+* on - Simple handler that will prevent dispatch until the selected value is set to what is expected. Keep in mind this should also be occupied by a throttle, as this dispatch will run on each successful state update. This should be utilized alongside iterateStage, setStage, or throttle to prevent action overflow.
  
 ### Stage Planner Internals
 ```typescript
@@ -97,8 +97,8 @@ const plan = axium.stage('Stage DispatchOptions Test',
           selector: counterSelectCount,
           expected: 2
         },
-        // Requires debounce, because the previous action is of the same type, but runs only once.
-        debounce: 1
+        // Requires throttle, because the previous action is of the same type, but runs only once.
+        throttle: 1
       });
       // }
     }, (concepts, dispatch) => {
@@ -108,7 +108,7 @@ const plan = axium.stage('Stage DispatchOptions Test',
       // Will cause an action overflow forcing the current stage to conclude and add the plan to badPlans
       dispatch(counterSubtract(), {
         // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
-        // debounce: 500
+        // throttle: 500
         // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
       });
       // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.
@@ -120,7 +120,7 @@ const plan = axium.stage('Stage DispatchOptions Test',
     }
   ]);
 ```
-To prevent action overflow, each stage is paying attention to consecutive actions of the same type. Noting that this can likewise be overwhelmed via a debounce set to 0. If debounce 0 is utilized, the current stage should change.
+To prevent action overflow, each stage is paying attention to consecutive actions of the same type. Noting that this can likewise be overwhelmed via a throttle set to 0. If throttle 0 is utilized, the current stage should change.
 
 Keep in mind behind the scenes during a STRX runtime, there will be multiple strategies running concurrently. Observe the runCount specified in this example. Please look to the STRX's tests folder.
 

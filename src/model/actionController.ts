@@ -54,7 +54,12 @@ export const createActionController$ = (act: Action, controlling: (controller: A
   const ctrl = new ActionController(act);
   // Needs to have timeout so that subscribers have time to attach in case the controller fires synchronously.
   setTimeout(() => {
-    controlling(ctrl, act);
+    // Logically Determined axiumConclude;
+    if (act.semaphore[3] === 3) {
+      ctrl.fire(act);
+    } else {
+      controlling(ctrl, act);
+    }
   }, 0);
   return ctrl;
 };
