@@ -5,24 +5,35 @@ import { failureConditions, strategyData_appendFailure } from './actionStrategyD
 export class ActionController extends Subject<Action> {
   expiration: number;
   expired: boolean;
-  timer: NodeJS.Timeout;
+  timer: NodeJS.Timeout | undefined;
   action: Action;
   constructor(action: Action) {
     super();
     this.expiration = action.expiration;
     this.expired = false;
     this.action = action;
-    this.timer = setTimeout(() => {
-      this.expired = true;
+    if (this.expiration < Date.now()) {
       if (this.action.strategy) {
-        this.next(strategyFailed(
+        this.fire(strategyFailed(
           this.action.strategy,
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
         this.next(axiumBadAction([this.action]));
       }
-    }, this.expiration - Date.now());
+    } else {
+      this.timer = setTimeout(() => {
+        this.expired = true;
+        if (this.action.strategy) {
+          this.next(strategyFailed(
+            this.action.strategy,
+            strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
+          ));
+        } else {
+          this.next(axiumBadAction([this.action]));
+        }
+      }, this.expiration - Date.now());
+    }
   }
   /**
    * Next fires once and then completes.
@@ -36,7 +47,7 @@ export class ActionController extends Subject<Action> {
    */
   fire(action: Action) {
     if (!this.closed) {
-      if (!this.expired) {
+      if (!this.expired && this.timer) {
         clearTimeout(this.timer);
         this.timer.unref();
       }
