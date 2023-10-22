@@ -26,13 +26,14 @@ export function appendActionListToDialogReducer(state: AxiumState, action: Actio
       ...state,
       dialog: state.dialog + newDialog,
       lastStrategy: payload.strategyTopic,
-      lastStrategyData: payload.strategyData
+      lastStrategyData: payload.strategyData,
+      lastStrategyDialog: newDialog
     };
   }
   return {
     ...state,
     lastStrategy: payload.strategyTopic,
-    lastStrategyData: payload.strategyData
+    lastStrategyData: payload.strategyData,
   };
 }
 

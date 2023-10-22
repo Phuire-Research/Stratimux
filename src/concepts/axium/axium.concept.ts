@@ -42,6 +42,7 @@ export type AxiumState = {
   storeDialog: boolean;
   lastStrategy: string;
   lastStrategyData: unknown;
+  lastStrategyDialog: string;
   generation: number;
   cachedSemaphores: Map<string,Map<string,[number,number,number, number]>>
   modeIndex: number;
@@ -70,6 +71,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     storeDialog: storeDialog ? storeDialog : false,
     lastStrategy: '',
     lastStrategyData: '',
+    lastStrategyDialog: '',
     generation: 0,
     cachedSemaphores: new Map<string, Map<string, [number, number, number, number]>>(),
     modeIndex: 0,

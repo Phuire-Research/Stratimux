@@ -107,6 +107,8 @@ function strategyFailed(strategy: ActionStrategy, data?: unknown): Action;
 function strategyDecide(strategy: ActionStrategy, decideKey: string, data?: unknown): Action;
 function strategyPunt(puntedStrategy: ActionStrategy, newStrategy: ActionStrategy): ActionStrategy;
 function strategySequence(strategies: ActionStrategy): ActionStrategy | undefined;
+function strategyRecurse(_strategy: ActionStrategy, control: {payload?: unknown, data?: Record<string, unknown>}): Action => {}
+function strategyBackTrack(_strategy: ActionStrategy): Action => {}
 ```
 * createStrategy - Creates a new strategy and returns such to be activated by the strategyBegin consumer function. Data of strategy may be set explicitly.
 * createActionNode - Used in conjunction with createStrategy, keep in mind that ActionNodes must be defined in reversed order. As sequentially the only means to add each to either the Success/Failure/Decision nodes is if they are predefined. Creates a new ActionNode that decomposes the supplied Action, this ensures type safety with the action's payload. ActionNodeOptions assigns which ActionNodes will be next within the final ActionStrategy.
@@ -116,6 +118,8 @@ function strategySequence(strategies: ActionStrategy): ActionStrategy | undefine
 * strategyDecide - Decide key will override or be placed after the preposition if set. And will be used to return the next ActionNode that the key corresponds to. If null, conclude action will be returned.
 * strategyPunt - Will return a new strategy with the old strategy within the puntedStrategy Field. That will execute once the new strategy concludes via the consuming functions. That will call strategyBegin on first index of puntedStrategies if present, then remove such from the list, and successNode/decisionNode/failureNode all point to null.
 * strategySequence - This will take a list of ActionStrategies and return the first strategy with the rest placed in order in the puntedStrategy property. These will fire upon each possible conclusion of the included strategies.
+* strategyRecurse - Used within specified qualities that have some controlling mechanism such as a self depleting list to allow the recursion to be halting complete. The main purpose of this helper function is to allow for asynchronous recursion. As methods force the user to use then function chaining over async await for promises.
+* strategyBackTrack - Main purpose is to be used within failure states of your ActionStrategies and the functional part of the ownershipBackTrackQuality. Use with care as this functionality can create indefinite recursion if not handled properly. As this merely returns the previous lastActionNode as a new Action with associated ActionStrategy and ActionNode without appending itself to the ActionList.
 
 *Note: The data field sets only the data of the strategy, if one wants to edit or set the payload. It should be done explicitly the createActionNode function and set by that specific action creator. Do note you may edit the payload once the new ActionNode is created.*
 The same is true when accessing the payload from a reducer, method, or principle. As this system is purposefully designed to not function by way of nested types such as:

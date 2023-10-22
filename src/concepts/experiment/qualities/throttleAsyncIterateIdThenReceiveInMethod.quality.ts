@@ -32,7 +32,6 @@ const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator 
           }
         );
         const strategy = strategySuccess(action.strategy, data);
-        console.log('FIRE', strategy);
         controller.fire(strategy);
       }
       controller.fire(action);

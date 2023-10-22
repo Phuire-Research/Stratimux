@@ -438,3 +438,41 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
     return axiumConclude();
   }
 };
+
+/**
+ * The main functionality of this helper function is to allow for asynchronous recursion within your strategies.
+ *  As the difficulty of working with async code within a node, is that you must use a then operation
+ *    This simplifies the process of asynchronously depleting a list until your call the next strategy decision function.
+ *      Likewise this should be used within the context of a method, not within a strategy creator function.
+ * @param _strategy Target ActionStrategy.
+ * @param control A depleting list should be either the payload or data passed into this function to allow this to be halting complete.
+ * @param payload If set will set the payload for both action and the newly created ActionNode.
+ * @param data If set will set the data on the ActionStrategy attached to the returned action.
+ * @returns Action
+ */
+export const strategyRecurse = (_strategy: ActionStrategy, control: {payload?: unknown, data?: Record<string, unknown>}): Action => {
+  const strategy = {
+    ..._strategy
+  };
+  const currentNode = {
+    ..._strategy.currentNode
+  };
+  const action = {
+    ...currentNode.action
+  } as Action;
+  action.payload = control.payload ? control.payload : (_strategy.currentNode.action as Action).payload;
+  currentNode.payload = control.payload ? control.payload : _strategy.currentNode.payload;
+  currentNode.lastActionNode = _strategy.currentNode;
+  strategy.data = control.data ? control.data : _strategy.data;
+  strategy.actionList = [
+    ...strategy.actionList,
+    createSentence(
+      _strategy.currentNode,
+      _strategy.currentNode.successNotes,
+    )
+  ];
+  currentNode.action = action;
+  strategy.currentNode = currentNode;
+  action.strategy = strategy;
+  return action;
+};
