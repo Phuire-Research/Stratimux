@@ -5,7 +5,7 @@ import {
   Subscriber,
   catchError,
 } from 'rxjs';
-import { Action, createAction, createCacheSemaphores } from './action';
+import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Mode } from './concept';
 import {
@@ -13,8 +13,7 @@ import {
   AxiumState,
   initializationStrategy,
 } from '../concepts/axium/axium.concept';
-import { axiumBadActionType } from '../concepts/axium/qualities/badAction.quality';
-import { axiumClose, axiumCloseType } from '../concepts/axium/qualities/close.quality';
+import { axiumClose } from '../concepts/axium/qualities/close.quality';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
@@ -29,13 +28,14 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
     const appendToDialog = axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
       strategyTopic: action.strategy.topic,
-      strategyData: action.strategy.data
+      strategyData: action.strategy.data,
     });
     action$.next(appendToDialog);
     action$.next(action);
   } else if (
     action.strategy &&
-    action.type !== axiumBadActionType
+    // Logical Determination: axiumBadType
+    action.semaphore[3] !== 1
   ) {
     action$.next(action);
   }
@@ -59,7 +59,8 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
     }, 0);
   } else if (
     action.strategy &&
-    action.type !== axiumBadActionType
+    // Logical Determination: axiumBadType
+    action.semaphore[3] !== 1
   ) {
     setTimeout(() => {
       action$?.next(action);
