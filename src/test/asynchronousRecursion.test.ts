@@ -7,7 +7,7 @@ import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
 
 test('Asynchronous recursion', (done) => {
-  const list = ['This', 'list', 'will', 'deplete','to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
+  const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
   const experiment = createExperimentConcept(createExperimentState(), [experimentRecurseIterateIdQuality]);
   const axium = createAxium('Experiment async method creator with Concepts', [experiment], false, true);
   const plan = axium.stage('Experiment debounce add one', [
