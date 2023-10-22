@@ -35,7 +35,7 @@ export enum failureConditions {
   axiumBadGeneration = 'axiumBadGeneration'
 }
 ```
-Note with the above, due to there being by default 3 different types of failure within an ActionStrategy within STRX. That being "Expiration," "Blocked," and "Bad Generation."  Expiration, which we treat as an absolute failure with no recovery, **unless** that action has already been dispatched and is being controlled by an ActionController in an asynchronous context.
+Note with the above, due to there being by default 3 different types of failure within an ActionStrategy within STRX. That being "Expiration," "Blocked," and "Bad Generation."  Expiration, which we treat as an absolute failure with no recovery, **unless** that action has already been dispatched to its method and is being controlled by an ActionController in an asynchronous context.
 
 If a expired action must be recovered for your planning, please use a subscription or plan to pay attention to the badActions list on the "Axium." From there you can determine either you action's type or strategy topic to reissue such if it expired. Blocked signifies that the "Ownership" concept is currently loaded at the target transformation is temporarily being blocked. These actions will still exist on the ownership pendingAction list, but may still expire as a badAction appending "ownershipExpired" to your strategies data.
 
