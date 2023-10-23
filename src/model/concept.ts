@@ -163,3 +163,21 @@ export const isConceptLoaded = (concepts: Concept[], conceptName: string): boole
   }
   return false;
 };
+
+export const areConceptsLoaded = (concepts: Concept[], conceptNames: string[]): boolean => {
+  let allExists = true;
+  for (const name of conceptNames) {
+    let found = false;
+    for (const concept of concepts) {
+      if (name === concept.name) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      allExists = false;
+      break;
+    }
+  }
+  return allExists;
+};
