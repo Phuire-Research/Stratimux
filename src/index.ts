@@ -44,7 +44,7 @@ export {
 } from './model/actionOperators';
 export type { Action, ActionType } from './model/action';
 export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
-export { createConcept, createQuality, defaultReducer, defaultMethodCreator } from './model/concept';
+export { createConcept, createQuality, defaultReducer, defaultMethodCreator, isConceptLoaded } from './model/concept';
 export type {
   Concept,
   Quality,
@@ -53,7 +53,6 @@ export type {
   Principle,
   Mode,
   MethodCreator,
-  isConceptLoaded
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
 export { selectState, selectConcept, selectSlice, selectPayload } from './model/selector';

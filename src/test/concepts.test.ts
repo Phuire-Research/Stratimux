@@ -1,6 +1,6 @@
 import { counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createAxium } from '../model/axium';
-import { isConceptLoaded } from '../model/concept';
+import { isConceptLoaded } from '../index';
 
 test('Concepts exists', (done) => {
   const axium = createAxium('Mock Axium', [createCounterConcept()]);
