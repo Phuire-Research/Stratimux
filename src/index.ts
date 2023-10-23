@@ -52,7 +52,8 @@ export type {
   Method,
   Principle,
   Mode,
-  MethodCreator
+  MethodCreator,
+  isConceptLoaded
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
 export { selectState, selectConcept, selectSlice, selectPayload } from './model/selector';
