@@ -197,18 +197,8 @@ What this methodology creates is the ability to formalize "Autonomous Baseline I
 
 This would be the safest route of artificial intelligence deployment. Where we may have the truly intelligent models that might cross some threshold, be spared this type of realization. Further this would also allow us to design specialized chips to to run these intelligences within a limited specification. Going as far as printing the limited instruction sets that would formalize that aut intelligence itself onto the chips for additional safety.
 
-## Release Disclosure
-The internals of this application feature a design pattern released in 2018, ActionStrategy. This resulting framework and the creation of a Unified Turing Machine is the consequence of the complexity that this pattern imposes, despite its outward simplicity. Thus this framework simplifies the handling of its complex nature and solves the deficiencies of working with this pattern in preexisting frameworks capable of it. Noting that the Unified Turing Machine itself was an indirect discovery in order to handle such complexity.
-
-This release has no license attached to provide a grace period to protect any potential patents that would result from the release of this repository. And should be considered to be a research release and work in progress. As it is the intention to fully open source this framework, host on npm, and translate into each programming language that might support it in the near future.
-
-To some this might be the holy grail of training sound logic and reasoning into Neural Networks that is comparable to ourselves. For me, this is a framework that I have wanted to release as my self studied dissertation that has been on hold for 5 years. The Unified Turing Machine is my thesis, that it works the test, the documents shared alongside this repository the paper. Hope everyone enjoyed the Ai summer of 2023. This work is meant to enhance such, not take away in something that could be greater than the sums of its parts.
-
-Be responsible, safe, and have fun!
-
-# Safety Statement
-Please note that while the ActionStrategy pattern is a fully dynamic method of programming. It runs into issues for the sake of its dynamics, traditionally classical methods of programming are transactional in nature and built for data entry. This runs into issues within our good enough implementations of our computer systems. Via branch prediction specifically. If not handled with halting in mind, and why I feel safe saying that the Unified Turing Machine solves the problem. The ActionStrategy pattern is fully capable of thrashing your applications memory via the creation of ghost actions, or duplicate actions that simply do not make sense. And would be seen as a hard requirement to be able to halt, for the machine to function within the branch prediction paradigm in the first place.
-
-This is a large reason why I had pulled the approach and proof of concept of the original Unified Turing Machine at the beginning of 2023. But with the advent of the "Stage Planner" paradigm, such asserts a hard correction to prevent the creation of ghost duplicate actions, as well as prevent action overflow. Thus if one is training a Neural Network on an approach similar to ActionStrategy pattern to improve reasoning and logic, be mindful that there is runaway potential if not handled with care. The beginning of this year on my part was dedicated to solving the zero day of some party who was utilizing this approach as a trade secret. With this release, is the bundled experience of working with the ActionStrategy pattern over the last 5 years and attempting to find the safest implementation.
-
-So while this approach can be considered as a holy grail to some. Be mindful of India Jones and what cup the grail turned out to be.
+## Statements
+* [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
+* [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)
