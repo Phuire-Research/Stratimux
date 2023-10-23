@@ -15,5 +15,5 @@ Therefore the halting quality is a valuable measurement not in absolutes, but by
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
-* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StatementMI.md)
 * [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)
