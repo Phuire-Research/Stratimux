@@ -199,6 +199,6 @@ This would be the safest route of artificial intelligence deployment. Where we m
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
-* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StatementMI.md)
 * [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
 * [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)

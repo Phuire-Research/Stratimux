@@ -9,5 +9,5 @@ Be responsible, safe, and have fun!
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
-* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StatementMI.md)
 * [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
