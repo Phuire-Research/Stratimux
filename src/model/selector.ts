@@ -86,3 +86,14 @@ export function selectConcept(concepts: Concept[], name: string): Concept {
   }
   return concept as Concept;
 }
+
+export function selectUnifiedState<T>(concepts: Concept[], name: string): T {
+  let concept;
+  for (let i = 0; i < concepts.length; i++) {
+    if (concepts[i].name.split(name).length > 1) {
+      concept = concepts[i];
+      break;
+    }
+  }
+  return concept?.state as T;
+}
