@@ -1,5 +1,6 @@
 # The Human Ability to Halt
 *Note this is using logical conceptualism, and is merely a conjecture*
+
 What can be analyzed as the chief difference between "Neural Networks," and the result of the current methods of training. Is that regardless of whether that network is able to give exact definitions, or hallucinates details to fit the desired output. That we as humans beings get frustrated when we do not known something and are able to say that we do not know is the human ability to halt.
 
 Where this becomes difficult in the modern age, is the same reason why we rely on brands and are keen to deep fakes and the impersonation of celebrities. That we utilize trust to create a guarantee that an output of another is something that we can benefit ourselves. Noting the sheer magnitude of scams, phishing emails, and all efforts to assert trust to individuals.
