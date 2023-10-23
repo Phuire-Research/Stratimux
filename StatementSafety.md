@@ -4,3 +4,8 @@ Please note that while the ActionStrategy pattern is a fully dynamic method of p
 This is a large reason why I had pulled the approach and proof of concept of the original Unified Turing Machine at the beginning of 2023. But with the advent of the "Stage Planner" paradigm, such asserts a hard correction to prevent the creation of ghost duplicate actions, as well as prevent action overflow. Thus if one is training a Neural Network on an approach similar to ActionStrategy pattern to improve reasoning and logic, be mindful that there is runaway potential if not handled with care. The beginning of this year on my part was dedicated to solving the zero day of some party who was utilizing this approach as a trade secret. With this release, is the bundled experience of working with the ActionStrategy pattern over the last 5 years and attempting to find the safest implementation.
 
 So while this approach can be considered as a holy grail to some. Be mindful of India Jones and what cup the grail turned out to be.
+
+## Statements
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
+* [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)

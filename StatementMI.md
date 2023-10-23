@@ -8,3 +8,8 @@ The main difficulty if these two types of graphs have a comparable comparison, w
 As the difficulty being demonstrated within "Decomposing Large Language Models into Understandable Components." Demonstrates that there is some space saving mechanism being trained into networks. That allows for neurons to have such variable activation. That the entire scope of the network is likewise exponential in its scope, beyond the surface level comparison.
 
 Therefore the main difficulty here would be effecting neural networks for the intended alignment, while also providing a guarantee that the specific regulation. Does not inadvertently cause a run away effect in other activations. Keeping in mind the exponential scope of that network.
+
+## Statements
+* [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
+* [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
+* [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)
