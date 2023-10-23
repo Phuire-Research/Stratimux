@@ -12,3 +12,8 @@ That the moment that someone speaks with confidence, we are trusting their own h
 We likewise need to keep in mind humanities willingness to believe those who speak with confidence. Especially if they are utilizing iconography that in the past has been proven to be trustworthy.
 
 Therefore the halting quality is a valuable measurement not in absolutes, but by way of varying degree towards the ability to halt. And further is likewise a direct measurement of "Logical Consistency." And is one of the addition measurements being proposed by this framework towards guaranteeing safety alongside alignment approaches like "Mechanistic Interpretability."
+
+## Statements
+* [Safety Statement](https://github.com/Phuire-Research/STRX/blob/main/StatementSafety.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StrategyData.md)
+* [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)
