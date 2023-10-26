@@ -7,7 +7,7 @@ import {
 } from 'rxjs';
 import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, Mode } from './concept';
+import { Concept, Concepts, Mode, forEachConcept } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -69,13 +69,18 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
 };
 
 export function createAxium(name: string, initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
-  const concepts: Concept[] = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
+  const concepts: Concepts = {};
+  const init = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
+  init.forEach((concept, i) => {
+    concept.semaphore = i;
+    concepts[i] = concept;
+  });
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
-  concepts.forEach((concept, _index) => {
+  forEachConcept(concepts, ((concept, semaphore) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        const [method, subject] = quality.methodCreator(axiumState.concepts$);
+        const [method, subject] = quality.methodCreator(axiumState.concepts$, semaphore);
         quality.method = method;
         quality.subject = subject;
         quality.method.pipe(
@@ -95,7 +100,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
         });
       }
     });
-    if (_index !== 0 && concept.mode !== undefined) {
+    if (semaphore !== 0 && concept.mode !== undefined) {
       axiumState = concepts[0].state as AxiumState;
       const names = axiumState.modeNames;
       const modes = concepts[0].mode as Mode[];
@@ -104,21 +109,21 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
         names.push(concept.name);
       });
     }
-  });
+  }));
   axiumState.action$
     .pipe(
       withLatestFrom(axiumState.concepts$),
       // This will be where the Ownership Principle will be Loaded
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
-      catchError((err: unknown, caught: Observable<[Action, Concept[]]>) => {
+      catchError((err: unknown, caught: Observable<[Action, Concepts]>) => {
         if (axiumState.logging) {
           console.error('ACTION STREAM ERROR', err);
         }
         return caught;
       }),
     )
-    .subscribe(([action, _concepts]: [Action, Concept[]]) => {
+    .subscribe(([action, _concepts]: [Action, Concepts]) => {
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;

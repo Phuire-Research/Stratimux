@@ -1,5 +1,5 @@
 import { Subscriber } from 'rxjs';
-import { Concept } from '../../model/concept';
+import { Concept, Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
@@ -23,8 +23,9 @@ function denoteExpiredPending(action: Action): Action {
 
 export const ownershipPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
-  _concepts: Concept[],
-  concepts$: UnifiedSubject
+  _concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ) => {
   let initDispatch = false;
   let finalCheck = true;
@@ -105,8 +106,9 @@ export const ownershipPrinciple: PrincipleFunction = (
 
 export const ownershipExpirationPrinciple: PrincipleFunction = (
   _: Subscriber<Action>,
-  _concepts: Concept[],
-  concepts$: UnifiedSubject
+  _concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ) => {
   const plan = concepts$.stage('ownership Principle Plan', [
     (concepts, dispatch) => {

@@ -1,5 +1,5 @@
 import { createAxium } from '../model/axium';
-import { Concept } from '../model/concept';
+import { Concept, Concepts } from '../model/concept';
 import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
@@ -12,7 +12,7 @@ test('Axium Test', (done) => {
   const axium = createAxium('chainConceptTest', [createCounterConcept(), createChainConcept()], true, true);
   let count = 0;
   let willDispatch = true;
-  const sub = axium.subscribe((concepts: Concept[]) => {
+  const sub = axium.subscribe((concepts: Concepts) => {
     count++;
     if (willDispatch) {
       willDispatch = false;

@@ -6,7 +6,7 @@ import {
 import { experimentIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
 import { mockToTrueQuality } from '../concepts/experiment/qualities/mockTrue.quality';
 import { timerEmitActionQuality } from '../concepts/experiment/qualities/timerEmitAction.quality';
-import { timerEmitActionWithConceptsQuality } from '../concepts/experiment/qualities/timerEmitActionWithConcepts.quality';
+import { timerEmitActionWithStateQuality } from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
 import {
   asyncIterateIdThenAddToData,
   asyncIterateIdThenAddToDataTopic
@@ -14,9 +14,9 @@ import {
 import { iterateIdThenAddToData, iterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/iterateIdThenAddToData.strategy';
 import { timedMockToTrue } from '../concepts/experiment/strategies/timedMockToTrue.strategy';
 import {
-  timedMockToTrueWithConcepts,
-  timedMockToTrueWithConceptsTopic
-} from '../concepts/experiment/strategies/timedMockToTrueWithConcepts.strategy';
+  timedMockToTrueWithState,
+  timedMockToTrueWithStateTopic
+} from '../concepts/experiment/strategies/timedMockToTrueWithState.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
@@ -41,19 +41,19 @@ test('Async Method Test', (done) => {
   ]);
 });
 
-test('Async Method with Concepts Test', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [timerEmitActionWithConceptsQuality, mockToTrueQuality]);
-  const axium = createAxium('Experiment async method creator with Concepts', [experiment]);
+test('Async Method with State Test', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [timerEmitActionWithStateQuality, mockToTrueQuality]);
+  const axium = createAxium('Experiment async method creator with State', [experiment]);
   const plan = axium.stage('timed mock to true', [
     (_, dispatch) => {
-      dispatch(strategyBegin(timedMockToTrueWithConcepts()), {
+      dispatch(strategyBegin(timedMockToTrueWithState()), {
         iterateStage: true
       });
     },
     (concepts, _) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (lastStrategy === timedMockToTrueWithConceptsTopic) {
+      if (lastStrategy === timedMockToTrueWithStateTopic) {
         const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         if (data) {
           expect(data.mock).toBe(false);
@@ -66,7 +66,7 @@ test('Async Method with Concepts Test', (done) => {
   ]);
 });
 
-test('Method Test with Concepts id comparison', (done) => {
+test('Method Test with State id comparison', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [experimentIterateIdThenReceiveInMethodQuality]);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.stage('Iterate id', [
@@ -92,7 +92,7 @@ test('Method Test with Concepts id comparison', (done) => {
   ]);
 });
 
-test('Async Method Test with Concepts id comparison', (done) => {
+test('Async Method Test with State id comparison', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncIterateIdThenReceiveInMethodQuality]);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.stage('Iterate id', [
@@ -108,7 +108,7 @@ test('Async Method Test with Concepts id comparison', (done) => {
         const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         if (data) {
           console.log('Async Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
-          expect(data.id).toBe(1);
+          expect(data.id).toBe(0);
           expect(experimentState.id).toBe(1);
           plan.conclude();
           done();

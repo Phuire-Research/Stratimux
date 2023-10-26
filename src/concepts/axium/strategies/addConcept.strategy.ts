@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { Concept, Concepts } from '../../../model/concept';
 import { Action, getSemaphore} from '../../../model/action';
 import { axiumAddConceptFromQue, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
 import { axiumAppendConceptsToAddQue, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
@@ -11,7 +11,7 @@ import { axiumName } from '../axium.concept';
 
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
-export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]) {
+export function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConcepts: Concept[]) {
   const stepTwo = createActionNode(axiumAppendConceptsToAddQue({concepts: newConcepts}),{
     successNode: null,
     successNotes: {
@@ -37,7 +37,7 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newCon
 }
 // Step Two
 export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
-export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, conceptualSet: Concept[]): ActionStrategy {
+export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): ActionStrategy {
   const addConceptsFromQueSemaphore = getSemaphore(conceptualSet, axiumName, axiumAddConceptFromQueType);
   const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(conceptualSet, axiumName, axiumOpenType);

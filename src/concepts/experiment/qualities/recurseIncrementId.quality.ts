@@ -1,27 +1,26 @@
-import { MethodCreator, defaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { Action, prepareActionCreator, prepareActionWithPayloadCreator } from '../../../model/action';
+import { MethodCreator } from '../../../model/concept';
+import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodWithConcepts, createMethodWithConcepts } from '../../../model/method';
-import { selectPayload, selectState } from '../../../model/selector';
+import { createAsyncMethodWithState } from '../../../model/method';
+import { selectPayload } from '../../../model/selector';
 import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
 export type RecurseIterateId = {controlling: string[]};
 export const experimentRecurseIterateIdType
-  = 'Asynchronous experiment, recursively iterate ID and receive in Method via Concept select';
+  = 'Asynchronous experiment, recursively iterate ID and receive in Method via State';
 
 export const experimentRecurseIterateId = prepareActionWithPayloadCreator<RecurseIterateId>(experimentRecurseIterateIdType);
 
-const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
-  createAsyncMethodWithConcepts((controller, action, concepts) => {
+const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+  createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<RecurseIterateId>(action);
       payload.controlling.shift();
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: experimentState.id});
+        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
         if (payload.controlling.length > 0) {
           const strategy = strategyRecurse(action.strategy, {payload});
           controller.fire(strategy);
@@ -32,7 +31,7 @@ const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: UnifiedSub
       }
       controller.fire(action);
     }, 50);
-  }, concepts$ as UnifiedSubject);
+  }, concepts$ as UnifiedSubject, semaphore as number);
 
 function experimentRecurseIterateIdReducer(state: ExperimentState, _: Action): ExperimentState {
   return {

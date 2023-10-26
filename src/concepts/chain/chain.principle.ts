@@ -1,17 +1,19 @@
-import { Subscriber, Subject } from 'rxjs';
-import { Concept } from '../../model/concept';
+import { Subscriber } from 'rxjs';
+import { Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
 import { Chain, chainName } from './chain.concept';
 import { selectState } from '../../model/selector';
 import { AxiumState } from '../axium/axium.concept';
+import { UnifiedSubject } from '../../model/stagePlanner';
 
 export const chainPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
-  _concepts: Concept[],
-  concepts$: Subject<Concept[]>,
+  _concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ) => {
-  const subscription = concepts$.subscribe((concepts: Concept[]) => {
+  const subscription = concepts$.subscribe((concepts: Concepts) => {
     const chainState = selectState<Chain>(concepts, chainName);
     if (chainState.actionQue.length > 0) {
       // pass = false;

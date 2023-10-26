@@ -1,7 +1,7 @@
 /* eslint-disable max-depth */
 import { Action, areSemaphoresEqual } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
-import { Concept } from './concept';
+import { Concept, Concepts } from './concept';
 import { selectState } from './selector';
 import { ActionNode, ActionStrategy } from './actionStrategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -22,7 +22,7 @@ export type OwnershipTicketStub = {
 
 export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, OwnershipTicket[]>());
 
-export const ownershipShouldBlock = (concepts: Concept[], action: Action): boolean => {
+export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolean => {
   const qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   const actionSelectors = action.keyedSelectors;
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
@@ -64,7 +64,7 @@ export const ownershipShouldBlock = (concepts: Concept[], action: Action): boole
   return shouldBlock;
 };
 
-export const clearStubs = (concepts: Concept[], strategy: ActionStrategy): Concept[] => {
+export const clearStubs = (concepts: Concepts, strategy: ActionStrategy): Concepts => {
   const newConcepts = concepts;
   const stubs = strategy.stubs;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
@@ -92,7 +92,7 @@ export const clearStubs = (concepts: Concept[], strategy: ActionStrategy): Conce
   return newConcepts;
 };
 
-export const editStubs = (_concepts: Concept[], oldAction: Action, newAction: Action): [Concept[], Action] => {
+export const editStubs = (_concepts: Concepts, oldAction: Action, newAction: Action): [Concepts, Action] => {
   const concepts = _concepts;
   const oldStrategy = oldAction.strategy as ActionStrategy;
   const newStrategy = newAction.strategy as ActionStrategy;
@@ -119,7 +119,7 @@ export const editStubs = (_concepts: Concept[], oldAction: Action, newAction: Ac
 };
 
 export const checkIn =
-(concepts: Concept[], action: Action): [Concept[], Action] => {
+(concepts: Concepts, action: Action): [Concepts, Action] => {
   const newConcepts = concepts;
   const ownershipState = selectState<OwnershipState>(newConcepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
@@ -176,7 +176,7 @@ export const checkIn =
   ];
 };
 
-export const isActionReady = (concepts: Concept[], _action: Action): [Concept[], boolean] => {
+export const isActionReady = (concepts: Concepts, _action: Action): [Concepts, boolean] => {
   const action = _action;
   const stubs = action.strategy?.stubs;
   if (stubs) {
@@ -186,7 +186,7 @@ export const isActionReady = (concepts: Concept[], _action: Action): [Concept[],
   }
 };
 
-const stubActionStrategy = (concepts: Concept[], _action: Action): [Concept[], boolean] => {
+const stubActionStrategy = (concepts: Concepts, _action: Action): [Concepts, boolean] => {
   const action = _action;
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
@@ -209,7 +209,7 @@ const stubActionStrategy = (concepts: Concept[], _action: Action): [Concept[], b
   return [concepts, frontOfAllLines];
 };
 
-const qualityAction = (concepts: Concept[], _action: Action): [Concept[], boolean] => {
+const qualityAction = (concepts: Concepts, _action: Action): [Concepts, boolean] => {
   const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
   const ownershipLedger = ownershipState.ownershipLedger;
   const action = _action;
@@ -274,7 +274,7 @@ export const areEqual = (first: Action, second: Action ) => {
   return equal;
 };
 
-export const updateAddToPendingActions = (_concepts: Concept[], _action: Action) => {
+export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) => {
   let concepts = _concepts;
   const action = _action;
   // console.log('CHECK ADD TO PENDING ACTIONS', action);

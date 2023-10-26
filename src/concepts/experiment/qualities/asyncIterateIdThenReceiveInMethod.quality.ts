@@ -1,30 +1,28 @@
-import { MethodCreator, defaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodWithConcepts, createMethodWithConcepts } from '../../../model/method';
-import { selectState } from '../../../model/selector';
+import { createAsyncMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
 export const experimentAsyncIterateIdThenReceiveInMethodType
-  = 'Experiment asynchronously iterate ID then receive in Method via Concept select';
+  = 'Experiment asynchronously iterate ID then receive in Method via State';
 
 export const experimentAsyncIterateIdThenReceiveInMethod = prepareActionCreator(experimentAsyncIterateIdThenReceiveInMethodType);
 
-const experimentAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
-  createAsyncMethodWithConcepts((controller, action, concepts) => {
+const experimentAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+  createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: experimentState.id});
+        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
         const strategy = strategySuccess(action.strategy, data);
         controller.fire(strategy);
       }
       controller.fire(action);
     }, 50);
-  }, concepts$ as UnifiedSubject);
+  }, concepts$ as UnifiedSubject, semaphore as number);
 
 function experimentAsyncIterateIdThenReceiveInMethodReducer(state: ExperimentState, _: Action): ExperimentState {
   return {

@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Mode } from '../../model/concept';
+import { Concepts, Mode } from '../../model/concept';
 import { Action, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { axiumBadActionType } from './qualities/badAction.quality';
@@ -25,7 +25,7 @@ export const isActionable = (axiumState: AxiumState, action: Action): boolean =>
 };
 
 export const permissiveMode: Mode = (
-  [action, concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
+  [action, concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
 ) => {
   const axiumState = concepts[0].state as AxiumState;
   if (isActionable(axiumState, action)) {
@@ -62,7 +62,7 @@ export const permissiveMode: Mode = (
 // Note that Methods are altered during this Mode if the Axium is created in a Synchronous Context
 //  Thus the Reducer needs to Run before the Method
 export const blockingMode: Mode = (
-  [action, concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
+  [action, concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
 ) => {
   const axiumState = concepts[0].state as AxiumState;
   if (isActionable(axiumState, action)) {

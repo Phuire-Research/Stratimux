@@ -37,6 +37,7 @@ export type AxiumState = {
   // Would be unique identifier on a network
   name: string;
   open: boolean;
+  conceptCounter: number;
   logging: boolean;
   dialog: string;
   storeDialog: boolean;
@@ -49,6 +50,7 @@ export type AxiumState = {
   defaultModeIndex: number;
   modeNames: string[]
   methodSubscribers: NamedSubscription[];
+  principleSubscribers: NamedSubscription[];
   generalSubscribers: NamedSubscription[];
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
@@ -66,6 +68,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
   return {
     name,
     open: false,
+    conceptCounter: 0,
     logging: logging ? logging : false,
     dialog: '',
     storeDialog: storeDialog ? storeDialog : false,
@@ -78,6 +81,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     defaultModeIndex: 1,
     modeNames: [axiumName, axiumName],
     methodSubscribers: [] as NamedSubscription[],
+    principleSubscribers: [] as NamedSubscription[],
     generalSubscribers: [] as NamedSubscription[],
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),

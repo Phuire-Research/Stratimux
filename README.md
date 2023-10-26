@@ -120,7 +120,7 @@ const plan = axium.stage(
       }
     }
   ]);
-const sub = axium.subscribe((concepts: Concept[]) => {
+const sub = axium.subscribe((concepts: Concepts) => {
   const state = selectState<OwnershipState>(concepts, ownershipName);
   const _axiumState = concepts[0].state as AxiumState;
   if (state.initialized && _axiumState.lastStrategy === setOwnerShipModeTopic) {
@@ -165,7 +165,7 @@ Where the main difference between that of a traditional paragraph and the compos
 ```
 Action -> Mode -> Method --> Action.Strategy ? Halt : -> Next Action --> Mode
                |                                                      |
-               -> Reducer -> Concept[] -------------------------------|
+               -> Reducer -> Concepts -------------------------------|
                                        |                              |
                     Construct Emission -> Principle -> Action ------->|
                        *Mode Can Block |*> External -> Action ------->|
@@ -173,7 +173,7 @@ Action -> Mode -> Method --> Action.Strategy ? Halt : -> Next Action --> Mode
 ```
 To satisfy the requirements of a Unified Turing Machine, the axium is the entire recursive functionality that contains a set of concepts. That can transform its functionality via its mode, that actualizes the loaded concept qualities from the dispatched action. If the action has an ActionStrategy attached, then that the method emits the next action based on some decision. While the reducer informs of any new state changes to be supplied back into the concept stream and the subscribers of that change.
 
-In addition, principles here act as a containing observer that allows for utilization of preexisting constructs. Which are applications/framework/libraries that cannot be decomposed to the sum of their parts and would have to indirectly interact with the action stream. To maintain some relevant functionality within the axium. The principles are subscribed to the inner concept[] stream. And can supply or emit values to and from that construct, such as interface with an application. Or even that of outside observations such as an API, or any external process.
+In addition, principles here act as a containing observer that allows for utilization of preexisting constructs. Which are applications/framework/libraries that cannot be decomposed to the sum of their parts and would have to indirectly interact with the action stream. To maintain some relevant functionality within the axium. The principles are subscribed to the inner concepts stream. And can supply or emit values to and from that construct, such as interface with an application. Or even that of outside observations such as an API, or any external process.
 
 ## STRX was Designed Specifically to Mirror the Functionality of Neural Networks to Decompose their Black Box Universal Functions.
 ![Fourier Universal Function, Credit to Emergent Garden @Youtube](https://github.com/Phuire-Research/STRX/blob/main/fourierUniversalFunction-CC-Emergent-Garden.png?raw=true)

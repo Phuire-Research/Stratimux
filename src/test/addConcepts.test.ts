@@ -21,6 +21,7 @@ test('Axium add Concepts Strategy Test', (done) => {
     },
     (concepts, dispatch) => {
       let exists = false;
+      console.log('CHECK CONCEPTS', concepts);
       if (concepts[1].name === counterName) {
         exists = true;
         dispatch(strategyBegin(countingStrategy()), {

@@ -6,6 +6,7 @@ import {
   removeConceptsViaQueThenUnblockTopic
 } from '../concepts/axium/strategies/removeConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
+import { forEachConcept } from '../model/concept';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], true, true);
@@ -21,14 +22,13 @@ test('Axium remove Concepts Strategy Test', (done) => {
     },
     (concepts) => {
       const axiumState = concepts[0].state as AxiumState;
-      // console.log(concepts);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;
-        concepts.forEach(concept => {
+        forEachConcept(concepts, (concept => {
           if (concept.name === counterName) {
             exists = true;
           }
-        });
+        }));
         expect(exists).toBe(false);
         setTimeout(() => {done();}, 500);
         plan.conclude();

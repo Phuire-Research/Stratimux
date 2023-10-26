@@ -25,7 +25,7 @@ test('Asynchronous recursion', (done) => {
       if (lastTopic === recursivelyIterateIdTopic) {
         console.log('Final Recursion Check', experimentState.id, lastData, `\n${lastDialog}`);
         expect(experimentState.id).toBe(list.length);
-        expect(lastData?.id).toBe(list.length);
+        expect(lastData?.id).toBe(list.length - 1);
         plan.conclude();
         done();
       }

@@ -1,7 +1,7 @@
 import { Subscriber } from 'rxjs';
 import { Action, primeAction } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
-import { Concept } from '../../model/concept';
+import { Concept, Concepts } from '../../model/concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { selectState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
@@ -10,8 +10,9 @@ import { axiumSelectOpen } from '../axium/axium.selector';
 
 export const experimentActionQuePrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
-  _concepts: Concept[],
-  concepts$: UnifiedSubject
+  _concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ) => {
   let readyToGo = false;
   const plan = concepts$.stage('ownership Principle Plan', [

@@ -35,11 +35,11 @@ export type AxiumState {
   modeNames: string[]
   methodSubscribers: NamedSubscribers[];
   generalSubscribers: NamedSubscribers[];
-  action$?: Subject<Action>;
-  concepts$?: BehaviorSubject<Concept[]>;
+  action$: Subject<Action>;
+  concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
-  subConcepts$: Subject<Concept[]>;
+  subConcepts$: UnifiedSubject;
 }
 ```
 * name - This should be set to a unique network identifier, and/or the concept of your system.
@@ -57,7 +57,7 @@ export type AxiumState {
 * methodSubscribers - Accumulates all method subscriptions for their manipulation at run time.
 * generalSubscribers - Same as method subscribers, but a catch all including that of principles and their internal subscriptions that would ordinarily leave principles as hot and active in memory if not concluded upon removal or close.
 * action$ - Is the internal action stream.
-* concepts$ - Is the internal Concept[] stream that methods and principles have access to.
+* concepts$ - Is the internal Concepts stream that methods and principles have access to.
 * addConceptQue - The current pattern to allow for principles to effect the concepts within the application. Rather than a direct subscription to the action$, they listen to state properties to control what actions they emit into the stream. In this case a set of concepts to be loaded into the axium.
 * removeConceptQue - The inverse of the above to remove concepts.
 * subConcepts - This is the outer subscription that other axiums or applications may Have access to. While in blocking mode, these subscriptions are not updated.
@@ -69,7 +69,7 @@ export type AxiumState {
 * Method - Is created from a quality at run time and is the strategy pattern's method that allows for the complete ActionStrategy work flow. If in Redux, this would be referred to as an effect, but instead here is the primary point of decision making that handles the ActionStrategy pattern. Otherwise we utilize the principle for what would ordinarily be considered functional side effects.
 * Reducer - Transforms the state after the method runs and is placed on the next life cycle of the application, if in blocking mode however, this relationship is reversed to facilitate synchronous blocking changes to the axium.
 * Mode - Is the specific point of recursion that defines the axium's functionality. This is where the semaphores make their selection of a qualities methods and reducers at run time.
-* Principle - This is a specific observable that may be subscribe to some outside source of information. Otherwise is also supplied the inner Concept[] stream. And can make decisions as to what actions to emit back into the action stream. These subscriptions are allocated within the GeneralSubscribers.
+* Principle - This is a specific observable that may be subscribe to some outside source of information. Otherwise is also supplied the inner Concepts stream. And can make decisions as to what actions to emit back into the action stream. These subscriptions are allocated within the GeneralSubscribers.
 
 ## Axium Qualities for Internal Use
 Please avoid using these qualities, but are providing explanations to understand the inner workings of the axium.
@@ -100,8 +100,8 @@ Please avoid using these qualities, but are providing explanations to understand
 
 ## Axium Strategies Concept Set Transformation
 ```typescript
-function addConceptsToAddQueThenBlockStrategy(concepts: Concept[], newConcepts: Concept[]);
-function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]);
+function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConcepts: Concept[]);
+function addConceptsToRemovalQueThenBlockStrategy(concepts: Concepts, targetConcepts: Concept[]);
 ```
 Note these strategies can be broken into two parts responsibly, one to be ran via method and the other is run from subscribing principle to some que.
 * addConceptsToAddQueThenBlockStrategy - This will add newConcepts to the addConceptQue to be run the stage of the overall strategy.

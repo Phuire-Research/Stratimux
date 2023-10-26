@@ -1,5 +1,5 @@
 import { Action } from './action';
-import { Concept } from './concept';
+import { Concept, Concepts } from './concept';
 
 // Dumb association, as we would be setting this value via a generated value
 // Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
@@ -11,11 +11,13 @@ export type KeyedSelector = {
   stateKeys: string
 };
 
-export function selectState<T>(concepts: Concept[], name: string): T {
+export function selectState<T>(concepts: Concepts, name: string): T {
   let concept;
-  for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].name === name) {
-      concept = concepts[i];
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    if (concepts[index].name === name) {
+      concept = concepts[index];
       break;
     }
   }
@@ -31,15 +33,17 @@ export function selectPayload<T>(action: Action): T {
 
 // Note: The Concept Key within the selector has to be set Explicitly for now
 export function selectSlice<T>(
-  concepts: Concept[],
+  concepts: Concepts,
   selector: KeyedSelector): T | undefined {
   let concept: Concept | undefined;
   const conceptKey = selector.conceptName;
-  for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].name === conceptKey) {
-      concept = concepts[i];
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    if (concepts[index].name === conceptKey) {
+      concept = concepts[index];
       break;
-    } else if (i === concepts.length - 1) {
+    } else if (index === conceptKeys.length - 1) {
       return undefined;
     }
   }
@@ -76,24 +80,24 @@ export function selectSlice<T>(
   return target[finalKey] as T;
 }
 
-export function selectConcept(concepts: Concept[], name: string): Concept {
+export function selectConcept(concepts: Concepts, name: string): Concept {
   let concept;
-  for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].name === name) {
-      concept = concepts[i];
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    if (concepts[index].name === name) {
+      concept = concepts[index];
       break;
     }
   }
   return concept as Concept;
 }
 
-export function selectUnifiedState<T>(concepts: Concept[], name: string): T {
-  let concept;
-  for (let i = 0; i < concepts.length; i++) {
-    if (concepts[i].name.split(name).length > 1) {
-      concept = concepts[i];
-      break;
-    }
-  }
-  return concept?.state as T;
+/**
+ * Allows for the Unification of Concepts and a form of Data Oriented Functional Inheritance.
+ * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.
+ * @outside_selection Use selectState targeting that Unified Concept Name
+ */
+export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T {
+  return concepts[semaphore].state as T;
 }
