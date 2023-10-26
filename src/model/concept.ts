@@ -196,7 +196,7 @@ function unify(base: Concept, target: Concept): Concept {
  * Will document the usage of such after UI concept release.
  */
 export function unifyConcepts(
-  concepts: Concepts,
+  concepts: Concept[],
   emergentConcept: Concept
 ): Concept {
   let newConcept = createConcept('', {});
