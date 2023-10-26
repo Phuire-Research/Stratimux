@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { Concept } from './concept';
+import { Concepts } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, selectSlice } from './selector';
 import { Action, ActionType } from './action';
@@ -41,7 +41,7 @@ export type dispatchOptions = {
 
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
 export type Staging = (
-  concepts: Concept[],
+  concepts: Concepts,
   dispatch: (action: Action, options: dispatchOptions) => void
 ) => void;
 export type StageDelimiter = {
@@ -51,7 +51,7 @@ export type StageDelimiter = {
   runOnceMap: Map<string, boolean>
 }
 
-export const stageWaitForOpenThenIterate = (action: Action): Staging => (concepts: Concept[], dispatch: Dispatcher) => {
+export const stageWaitForOpenThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: axiumSelectOpen,
@@ -61,7 +61,7 @@ export const stageWaitForOpenThenIterate = (action: Action): Staging => (concept
   });
 };
 
-export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (concepts: Concept[], dispatch: Dispatcher) => {
+export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: ownershipSelectInitialized,
@@ -72,7 +72,7 @@ export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (co
 };
 
 const handleRun =
-  (value: Concept[], stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
+  (value: Concepts, stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
     : [StageDelimiter, boolean] => {
     if (options?.on) {
       if (selectSlice(value, options?.on.selector) === options?.on.expected) {
@@ -188,7 +188,7 @@ const handleStageDelimiter =
     ];
   };
 
-export class UnifiedSubject extends Subject<Concept[]> {
+export class UnifiedSubject extends Subject<Concepts> {
   private planId = 0;
   private currentStages: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
@@ -212,7 +212,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
   protected _dispatch(
     axiumState: AxiumState,
     key: number, plan: Plan,
-    value: Concept[],
+    value: Concepts,
     action: Action,
     options: dispatchOptions): void {
     let stageDelimiter = this.stageDelimiters.get(key);
@@ -278,12 +278,12 @@ export class UnifiedSubject extends Subject<Concept[]> {
     }
   }
 
-  next(value: Concept[]) {
-    const concepts = [
+  next(value: Concepts) {
+    const concepts = {
       ...value
-    ];
+    };
     if (!this.closed) {
-      // Need a Stage Observer that would merely deconstruct to {concepts: Concept[], dispatch: Dispatcher}
+      // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
       const axiumState = value[0].state as AxiumState;
       this.currentStages.forEach((plan, key) => {
@@ -292,7 +292,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
         };
         const index = plan.stage;
         if (index < plan.stages.length) {
-          plan.stages[index](value, dispatcher);
+          plan.stages[index](concepts, dispatcher);
         }
       });
       const {observers} = this;

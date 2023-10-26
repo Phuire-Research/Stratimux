@@ -1,5 +1,5 @@
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { axiumOpen, axiumOpenType } from '../qualities/open.quality';
 import { axiumInitializePrinciples, axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
@@ -7,7 +7,7 @@ import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDe
 import { axiumName } from '../axium.concept';
 
 export const initializeTopic = 'Axium Initialization Strategy';
-export function initializationStrategy(concepts: Concept[]): ActionStrategy {
+export function initializationStrategy(concepts: Concepts): ActionStrategy {
   const initSemaphore = getSemaphore(concepts, axiumName, axiumInitializePrinciplesType);
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);

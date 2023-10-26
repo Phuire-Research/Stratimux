@@ -1,19 +1,19 @@
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concept } from './concept';
+import { Concept, Concepts } from './concept';
 import { Action, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
 
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
-  concepts: Concept[],
+  concepts: Concepts,
   concept$: UnifiedSubject,
   semaphore: number,
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
-  concepts: Concept[],
+  concepts: Concepts,
   concepts$: UnifiedSubject,
   semaphore: number,
 ): Observable<Action> {
@@ -22,7 +22,7 @@ export function createPrinciple$(
   });
 }
 
-export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concept[], name: string, subscription: Subscription) {
+export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concepts, name: string, subscription: Subscription) {
   const primedRegisterSubscriber = primeAction(concepts, axiumRegisterSubscriber({ subscription, name }));
   observer.next(primedRegisterSubscriber);
 }

@@ -1,5 +1,5 @@
 import { Observable, Subject, Subscriber, catchError } from 'rxjs';
-import { Concept, Mode } from '../../model/concept';
+import { Concept, Concepts, Mode, forEachConcept } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$, registerPrincipleSubscription } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
 import { AxiumState, axiumName } from './axium.concept';
@@ -12,8 +12,9 @@ import { blockingMethodSubscription } from '../../model/axium';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
-  concepts: Concept[],
-  concepts$: UnifiedSubject
+  concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ) => {
   let allowAdd = true;
   let allowRemove = true;
@@ -25,7 +26,13 @@ export const axiumPrinciple: PrincipleFunction = (
     if (axiumState.addConceptQue.length !== 0 && allowAdd) {
       allowAdd = false;
       axiumState.generation += 1;
+      const newConcepts: Concepts = {};
+      forEachConcept(concepts, (concept, s) => {
+        newConcepts[Number(s)] = concept;
+      });
+
       axiumState.addConceptQue.forEach((concept, _index) => {
+        concept.semaphore = axiumState.conceptCounter;
         if (concept.mode !== undefined) {
           const names = axiumState.modeNames;
           const modes = concepts[0].mode as Mode[];
@@ -33,29 +40,27 @@ export const axiumPrinciple: PrincipleFunction = (
             modes.push(mode);
             names.push(concept.name);
           });
-          concept.principles?.forEach(principle => {
-            const observable = createPrinciple$(principle, concepts, axiumState.concepts$, _concepts.length + _index);
+        }
+        if (concept.principles !== undefined) {
+          concept.principles.forEach(principle => {
+            const observable = createPrinciple$(principle, concepts, axiumState.concepts$, concept.semaphore);
             axiumState.principleSubscribers.push({
               name: concept.name,
               subscription: observable.subscribe((action: Action) => axiumState.action$.next(action)) as Subscriber<Action>
             });
           });
         }
+        newConcepts[concept.semaphore] = concept;
+        axiumState.conceptCounter += 1;
       });
 
-      const newConcepts = [
-        ...concepts,
-        ...axiumState.addConceptQue
-      ] as Concept[];
       const newAxiumState = newConcepts[0].state as AxiumState;
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
       axiumState.concepts$?.next(newConcepts);
 
-      const action$ = axiumState.action$ as Subject<Action>;
-
       observer.next(strategyBegin(
-        addConceptsFromQueThenUnblockStrategy(action$, newConcepts)
+        addConceptsFromQueThenUnblockStrategy(newConcepts)
       ));
     }
     if (axiumState.removeConceptQue.length === 0) {
@@ -63,17 +68,17 @@ export const axiumPrinciple: PrincipleFunction = (
     }
     if (axiumState.removeConceptQue.length > 0 && allowRemove) {
       allowRemove = false;
-      const newConcepts = [] as Concept[];
+      const newConcepts: Concepts = {};
       axiumState.generation += 1;
       const newModes: Mode[] = [blockingMode, permissiveMode];
       const newModeNames: string[] = [axiumName, axiumName];
-      concepts.forEach(concept => {
+      forEachConcept(concepts, ((concept, s) => {
         axiumState.removeConceptQue.forEach(target => {
           if (concept.name !== target.name) {
-            newConcepts.push(concept);
+            newConcepts[s as number] = (concept);
           }
         });
-      });
+      }));
       const newAxiumState = newConcepts[0].state as AxiumState;
       newAxiumState.modeNames.forEach((modeName, modeIndex) => {
         let shouldAdd = false;
@@ -101,10 +106,10 @@ export const axiumPrinciple: PrincipleFunction = (
       });
       newAxiumState.methodSubscribers = [];
 
-      newConcepts.forEach((concept, semaphore) => {
+      forEachConcept(newConcepts, (concept, s) => {
         concept.qualities.forEach(quality => {
           if (quality.methodCreator) {
-            const [method, subject] = quality.methodCreator(axiumState.concepts$, semaphore);
+            const [method, subject] = quality.methodCreator(axiumState.concepts$, s);
             quality.method = method;
             quality.subject = subject;
             quality.method.pipe(

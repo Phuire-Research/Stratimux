@@ -63,14 +63,16 @@ export type Concept = {
 ``` typescript
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
-  concepts: Concept[],
-  concept$: Subject<Concept[]>,
+  concepts: Concepts,
+  concept$: UnifiedSubject,
+  semaphore: number
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
-  concepts: Concept[],
-  concepts$: Subject<Concept[]>,
+  concepts: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
 ): Observable<Action>;
 ```
 Concept's principle, governs a specific set of instructions that would allow for the functionality of other libraries not designed specifically for this system. Otherwise these act as action emitters of some value being watched off premise or subscribed to within the axium.
@@ -85,13 +87,15 @@ As this functionality lacks the addition of some abstraction to hand hold the us
 
 Later we may create specific types of principles to handle the nuances of repeating the same functionality over and over again. But likewise that is not the scope of this release.
 
+*Note the semaphore is specifically in utilization with selectUnifiedState to select your Concept's state regardless of its current state of unification.*
+
 ## Mode - The point of Recursion
 ```typescript
 export type Mode = ([action, concept, action$, concepts$]: [
   Action,
-  Concept[],
+  Concepts,
   Subject<Action>,
-  BehaviorSubject<Concept[]>,
+  UnifiedSubject,
 ]) => void;
 ```
 This is similar to the principle function that is lacking some hand holding capacity. And if one is creating new modes to govern the flow of actions within the axium. One should be mindful of the implementation of permissiveMode, blockingMode, and ownershipMode. And should be avoided, for the sake of enhancement, is allowed for the one's own explorations with the concept.

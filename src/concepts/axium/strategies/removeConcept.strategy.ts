@@ -1,5 +1,5 @@
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { Concept, Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { axiumRemoveConceptsViaQue, axiumRemoveConceptsViaQueType } from '../qualities/removeConceptsViaQue.quality';
 import { axiumAppendConceptsToRemoveQue, axiumAppendConceptsToRemoveQueType } from '../qualities/appendConceptsToRemoveQue.quality';
@@ -9,7 +9,7 @@ import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDe
 import { axiumName } from '../axium.concept';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
-export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], targetConcepts: Concept[]) {
+export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concepts, targetConcepts: Concept[]) {
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumName, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumName, axiumAppendConceptsToRemoveQueType);
 
@@ -31,7 +31,7 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concept[], ta
 }
 // Step Two
 export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que then set Axium Mode to Default';
-export function removeConceptsViaQueThenUnblockStrategy(concepts: Concept[]): ActionStrategy {
+export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): ActionStrategy {
   const removeConceptsViaQueSemaphore = getSemaphore(concepts, axiumName, axiumRemoveConceptsViaQueType);
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);

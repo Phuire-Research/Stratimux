@@ -4,9 +4,8 @@ import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
-import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
-import { ActionController, createActionController$ } from './actionController';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -16,7 +15,7 @@ export type Principle = Observable<Action>;
 
 export type Mode = ([action, concept, action$, concepts$]: [
   Action,
-  Concept[],
+  Concepts,
   Subject<Action>,
   UnifiedSubject,
 ]) => void;
@@ -39,6 +38,7 @@ export type Concept = {
   unified: string[];
   state: Record<string, unknown>;
   qualities: Quality[];
+  semaphore: number;
   principles?: PrincipleFunction[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
@@ -69,6 +69,7 @@ export function createConcept(
     unified: [],
     state,
     qualities: qualities ? qualities : [],
+    semaphore: -1,
     principles,
     mode,
     meta
@@ -195,23 +196,17 @@ function unify(base: Concept, target: Concept): Concept {
  * Will document the usage of such after UI concept release.
  */
 export function unifyConcepts(
-  concepts: Concept[],
+  concepts: Concepts,
   emergentConcept: Concept
 ): Concept {
   let newConcept = createConcept('', {});
-  concepts.forEach(concept => {
+  forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
-  });
+  }));
   newConcept = unify(newConcept, emergentConcept);
   newConcept.name = emergentConcept.name;
   return filterSimilarQualities(newConcept);
 }
-
-/**
- * Naming pattern for unified concepts within STRX
- * unifiedName: base-target
- * @IMPORTANT concept folder must carry the same naming convention
- */
 
 export function createQuality(
   actionType: ActionType,
@@ -252,21 +247,25 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   return [defaultMethod, defaultSubject];
 };
 
-export const isConceptLoaded = (concepts: Concept[], conceptName: string): boolean => {
-  for (const concept of concepts) {
-    if (concept.name === conceptName) {
+export const isConceptLoaded = (concepts: Concepts, conceptName: string): boolean => {
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    if (concepts[index].name === conceptName) {
       return true;
     }
   }
   return false;
 };
 
-export const areConceptsLoaded = (concepts: Concept[], conceptNames: string[]): boolean => {
+export const areConceptsLoaded = (concepts: Concepts, conceptNames: string[]): boolean => {
   let allExists = true;
+  const conceptKeys = Object.keys(concepts);
   for (const name of conceptNames) {
     let found = false;
-    for (const concept of concepts) {
-      if (name === concept.name) {
+    for (const i of conceptKeys) {
+      const index = Number(i);
+      if (name === concepts[index].name) {
         found = true;
         break;
       }
@@ -277,4 +276,12 @@ export const areConceptsLoaded = (concepts: Concept[], conceptNames: string[]): 
     }
   }
   return allExists;
+};
+
+export const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore?: number) => void) => {
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    each(concepts[index], index);
+  }
 };

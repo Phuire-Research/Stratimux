@@ -1,5 +1,5 @@
 import { Subject, Subscriber } from 'rxjs';
-import { Concept, defaultMethodCreator } from '../../../model/concept';
+import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
@@ -7,7 +7,7 @@ import { defaultMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
 export type SetDefaultModePayload = {
-    concepts: Concept[]
+    concepts: Concepts
 }
 export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
 export const axiumSetDefaultMode = prepareActionWithPayloadCreator<SetDefaultModePayload>(axiumSetDefaultModeType);
@@ -18,7 +18,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
   methodSubscribers = [];
   const payload = selectPayload<SetDefaultModePayload>(_action);
   const concepts = payload.concepts;
-  concepts.forEach(concept => {
+  forEachConcept(concepts, (concept => {
     concept.qualities.forEach(quality => {
       if (quality.method) {
         const sub = quality.method.subscribe(action => {
@@ -31,7 +31,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
         });
       }
     });
-  });
+  }));
 
   return {
     ...state,

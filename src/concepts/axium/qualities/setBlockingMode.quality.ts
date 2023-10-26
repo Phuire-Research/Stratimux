@@ -1,5 +1,5 @@
-import { Observable, Subject, Subscriber, catchError } from 'rxjs';
-import { Concept, defaultMethodCreator } from '../../../model/concept';
+import { Subject, Subscriber } from 'rxjs';
+import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
@@ -7,7 +7,7 @@ import { blockingMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
 export type SetBlockingModePayload = {
-    concepts: Concept[]
+    concepts: Concepts
 }
 export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
 export const axiumSetBlockingMode = prepareActionWithPayloadCreator<SetBlockingModePayload>(axiumSetBlockingModeType);
@@ -19,7 +19,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
 
   const payload = selectPayload<SetBlockingModePayload>(_action);
   const concepts = payload.concepts;
-  concepts.forEach(concept => {
+  forEachConcept(concepts, (concept => {
     concept.qualities.forEach(quality => {
       if (quality.method) {
         const sub = quality.method.subscribe(action => {
@@ -32,7 +32,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
         });
       }
     });
-  });
+  }));
 
   return {
     ...state,

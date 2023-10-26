@@ -1,5 +1,5 @@
 import { Subject, Subscriber } from 'rxjs';
-import { Concept, defaultMethodCreator  } from '../../../model/concept';
+import { Concept, Concepts, defaultMethodCreator, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -8,7 +8,7 @@ import { UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 
 export type InitializePrinciplesPayload = {
-    concepts: Concept[];
+    concepts: Concepts;
 }
 export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set new Subscribers to General Subscribers list';
 export const axiumInitializePrinciples =
@@ -17,23 +17,26 @@ export const axiumInitializePrinciples =
 export function initializePrinciplesReducer(state: AxiumState, _action: Action): AxiumState {
   const payload = selectPayload<InitializePrinciplesPayload>(_action);
   const concepts = payload.concepts;
+  let conceptCounter = state.conceptCounter;
   const action$ = state.action$ as Subject<Action>;
   const concepts$ = state.concepts$ as UnifiedSubject;
   const principleSubscribers = state.generalSubscribers;
-  concepts.forEach((concept: Concept, semaphore) => {
+  forEachConcept(concepts ,((concept: Concept, semaphore) => {
     if (concept.principles) {
       concept.principles.forEach(principle => {
-        const observable = createPrinciple$(principle, concepts, concepts$, semaphore);
+        const observable = createPrinciple$(principle, concepts, concepts$, semaphore as number);
         principleSubscribers.push({
           name: concept.name,
           subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
         });
       });
+      conceptCounter += 1;
     }
-  });
+  }));
   return {
     ...state,
-    principleSubscribers
+    principleSubscribers,
+    conceptCounter,
   };
 }
 

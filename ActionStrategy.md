@@ -135,31 +135,31 @@ You still need to create a function of type MethodCreator to use these Helpers. 
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {}
 export const createMethodWithState =
-  (method: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number): [Method, Subject<Action>] => {}
+  (method: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number): [Method, Subject<Action>] => {}
 export const createAsyncMethod =
   (asyncMethod: (controller: ActionController, action: Action) => void): [Method, Subject<Action>] => {}
 export const createAsyncMethodWithState =
-  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) => void, concepts$: UnifiedSubject, semaphore: number)
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) => void, concepts$: UnifiedSubject, semaphore: number)
     : [Method, Subject<Action>] => {}
 export const createMethodDebounce =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
 export const createMethodDebounceWithState =
-  (methodWithState: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
+  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodDebounce =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
 export const createAsyncMethodDebounceWithState =
-  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) =>
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
     void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 export const createMethodThrottle =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
 export const createMethodThrottleWithState =
-  (methodWithState: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
+  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodThrottle =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
 export const createAsyncMethodThrottleWithState =
-  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) =>
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
     void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 
 ```

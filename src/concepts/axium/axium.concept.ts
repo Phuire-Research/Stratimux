@@ -37,6 +37,7 @@ export type AxiumState = {
   // Would be unique identifier on a network
   name: string;
   open: boolean;
+  conceptCounter: number;
   logging: boolean;
   dialog: string;
   storeDialog: boolean;
@@ -67,6 +68,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
   return {
     name,
     open: false,
+    conceptCounter: 0,
     logging: logging ? logging : false,
     dialog: '',
     storeDialog: storeDialog ? storeDialog : false,

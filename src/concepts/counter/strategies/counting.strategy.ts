@@ -1,5 +1,5 @@
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept} from '../../../model/concept';
+import { Concept, Concepts} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { counterAdd, counterAddType } from '../qualities/add.quality';
 import { counterSubtract, counterSubtractType } from '../qualities/subtract.quality';
@@ -57,7 +57,7 @@ export function countingStrategy(): ActionStrategy {
 }
 
 export const primedCountingTopic = 'Counting Strategy with Primed Actions';
-export function primedCountingStrategy(concepts: Concept[]): ActionStrategy {
+export function primedCountingStrategy(concepts: Concepts): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
   const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
   const stepFour = createActionNode(counterAdd(), {

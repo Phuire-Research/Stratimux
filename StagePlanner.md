@@ -46,10 +46,10 @@ export type dispatchOptions = {
 ```typescript
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
 export type Staging = (
-  concepts: Concept[],
+  concepts: Concepts,
   dispatch: (action: Action, options: dispatchOptions) => void
 ) => void;
-export class UnifiedSubject extends Subject<Concept[]> {
+export class UnifiedSubject extends Subject<Concepts> {
   stage(title: string, stages: Staging[]) {}
 }
 ```

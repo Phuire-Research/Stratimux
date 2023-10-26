@@ -1,4 +1,4 @@
-import { Concept } from './concept';
+import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -26,11 +26,13 @@ export type Action = {
 
 const createPayload = <T>(payload: T) => payload;
 
-export function primeAction(concepts: Concept[], action: Action): Action {
+export function primeAction(concepts: Concepts, action: Action): Action {
   const expired = action.expiration < Date.now();
   if (!expired) {
-    for (const concept of concepts) {
-      const semaphore = getSemaphore(concepts, concept.name, action.type);
+    const conceptKeys = Object.keys(concepts);
+    for (const i of conceptKeys) {
+      const index = Number(i);
+      const semaphore = getSemaphore(concepts, concepts[index].name, action.type);
       if (semaphore[2] !== -1 && action.expiration) {
         let axium;
         if (action.axium) {
@@ -68,7 +70,7 @@ export function primeAction(concepts: Concept[], action: Action): Action {
   return badAction;
 }
 
-export function getSemaphore(concepts: Concept[], conceptName: string, actionType: ActionType): [number, number, number, number] {
+export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
   const axiumState = concepts[0].state as AxiumState;
   const cachedSemaphores = axiumState.cachedSemaphores;
   const conceptMap = cachedSemaphores.get(conceptName);
@@ -83,16 +85,26 @@ export function getSemaphore(concepts: Concept[], conceptName: string, actionTyp
   return [0, 0, -1, special];
 }
 
-export function createCacheSemaphores(concepts: Concept[]): Map<string, Map<string, [number, number, number, number]>> {
+// For proper compilation
+const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore?: number) => void) => {
+  const conceptKeys = Object.keys(concepts);
+  for (const i of conceptKeys) {
+    const index = Number(i);
+    each(concepts[index], concepts[index].semaphore);
+  }
+};
+
+export function createCacheSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
   const generation = (concepts[0].state as AxiumState).generation;
   const newCachedSemaphores = new Map<string, Map<string, [number, number, number, number]>>();
-  concepts.forEach((concept, ci) => {
+
+  forEachConcept(concepts, ((concept, ci) => {
     const qualityMap = new Map<string, [number, number, number, number]>();
     concept.qualities.forEach((quality, qi) => {
-      qualityMap.set(quality.actionType, [ci, qi, generation, 0]);
+      qualityMap.set(quality.actionType, [ci as number, qi, generation, 0]);
     });
     newCachedSemaphores.set(concept.name, qualityMap);
-  });
+  }));
   return newCachedSemaphores;
 }
 

@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Action, createAction } from '../../model/action';
-import { Concept } from '../../model/concept';
+import { Concept, Concepts } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
@@ -11,7 +11,7 @@ import { AxiumState } from '../axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
 
 export const ownershipMode: Mode = (
-  [_action, _concepts, action$, concepts$] : [Action, Concept[], Subject<Action>, UnifiedSubject]
+  [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
 ) => {
   let action = _action;
   let concepts = _concepts;

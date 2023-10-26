@@ -4,7 +4,7 @@ import { createExperimentConcept, experimentName } from '../concepts/experiment/
 import { PrincipleFunction } from '../model/principle';
 import { Action, ActionType, prepareActionCreator } from '../model/action';
 import { Subscriber } from 'rxjs';
-import { Concept, createQuality } from '../model/concept';
+import { Concepts, createQuality } from '../model/concept';
 import { UnifiedSubject } from '../model/stagePlanner';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
@@ -25,7 +25,7 @@ function experimentMockToTrueReducer(state: ExperimentState, action: Action): Ex
 const experimentMockToTrueQuality = createQuality(experimentMockToTrueType, experimentMockToTrueReducer);
 
 test('Axium Principle Stage', (done) => {
-  const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concept[], concept$: UnifiedSubject) => {
+  const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concepts, concept$: UnifiedSubject) => {
     const plan = concept$.stage('Experiment Principle', [
       (___, dispatch) => {
         dispatch(experimentMockToTrue(), {
