@@ -52,7 +52,6 @@ export {
   isConceptLoaded,
   areConceptsLoaded,
   unifyConcepts,
-  unifyConceptNames
 } from './model/concept';
 export type {
   Concept,

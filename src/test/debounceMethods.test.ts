@@ -2,14 +2,25 @@ import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concept
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
-import { experimentDebounceAsyncIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
+import {
+  experimentDebounceAsyncIterateIdThenReceiveInMethodQuality
+} from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
 import { asyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
-import { DebounceIterateIdThenReceiveInMethodPayload, experimentDebounceIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
+import {
+  DebounceIterateIdThenReceiveInMethodPayload,
+  experimentDebounceIterateIdThenReceiveInMethodQuality
+} from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
 import { debounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
 import { experimentAsyncDebounceAddOneStrategy } from '../concepts/experiment/strategies/asyncDebounceAddOne.strategy';
 import { experimentDebounceAddOneStrategy } from '../concepts/experiment/strategies/debounceAddOne.strategy';
-import { debounceAsyncIterateIdThenAddToData, debounceAsyncIterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/debounceAsyncIterateIdThenAddToData.strategy';
-import { debounceIterateIdThenAddToData, debounceIterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/debounceIterateIdThenAddToData.strategy';
+import {
+  debounceAsyncIterateIdThenAddToData,
+  debounceAsyncIterateIdThenAddToDataTopic
+} from '../concepts/experiment/strategies/debounceAsyncIterateIdThenAddToData.strategy';
+import {
+  debounceIterateIdThenAddToData,
+  debounceIterateIdThenAddToDataTopic
+} from '../concepts/experiment/strategies/debounceIterateIdThenAddToData.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';

@@ -36,7 +36,8 @@ export type Quality = {
 
 export type Concept = {
   name: string;
-  state: unknown;
+  unified: string[];
+  state: Record<string, unknown>;
   qualities: Quality[];
   principles?: PrincipleFunction[];
   mode?: Mode[];
@@ -45,14 +46,25 @@ export type Concept = {
 
 export function createConcept(
   name: string,
-  state: unknown,
+  state: Record<string, unknown>,
   qualities?: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
   meta?: Record<string,unknown>
 ): Concept {
+  if (mode) {
+    mode.forEach((m, i) => {
+      m.toString = () => `MODE: ${name} ${i}`;
+    });
+  }
+  if (principles) {
+    principles.forEach((p, i) => {
+      p.toString = () => `PRINCIPLE: ${name} ${i}`;
+    });
+  }
   return {
     name,
+    unified: [],
     state,
     qualities: qualities ? qualities : [],
     principles,
@@ -61,50 +73,136 @@ export function createConcept(
   };
 }
 
-// Will document usage later
-export function unifyConcepts(
-  baseConcept: Concept,
-  targetConcept: Concept,
-  unifiedName: string
-): Concept {
-  const baseConceptState = baseConcept.state as object;
-  const targetConceptState = targetConcept.state as object;
-  let baseConceptPrinciples: PrincipleFunction[] = [];
-  if (baseConcept.principles) {
-    baseConceptPrinciples = baseConcept.principles;
+/**
+ * This will remove any duplicate qualities, principles, and modes.
+ * Note that for now the check for mode and principle are based on concept name and loaded index;
+ */
+function filterSimilarQualities(concept: Concept) {
+  const newQualities: Quality[] = [];
+  const newUnified: string[] = [];
+  const newPrinciples: PrincipleFunction[] = [];
+  const newMode: Mode[] = [];
+  for (let i = 0; i < concept.qualities.length; i++) {
+    let found = false;
+    for (let j = 1; j < concept.qualities.length; j++) {
+      if (concept.qualities[i].actionType === concept.qualities[j].actionType) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      newQualities.push(concept.qualities[i]);
+    }
   }
-  let targetConceptPrinciples: PrincipleFunction[] = [];
-  if (targetConcept.principles) {
-    targetConceptPrinciples = targetConcept.principles;
+  concept.qualities = newQualities;
+  for (let i = 0; i < concept.unified.length; i++) {
+    let found = false;
+    for (let j = 1; j < concept.unified.length; j++) {
+      if (concept.unified[i] === concept.unified[j]) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      newUnified.push(concept.unified[i]);
+    }
   }
-  let baseConceptMode: Mode[] = [];
-  if (baseConcept.mode) {
-    baseConceptMode = baseConcept.mode;
+  concept.unified = newUnified;
+  if (concept.principles) {
+    for (let i = 0; i < concept.principles.length; i++) {
+      let found = false;
+      for (let j = 1; j < concept.principles.length; j++) {
+        if (concept.principles[i].toString() === concept.principles[j].toString()) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        newPrinciples.push(concept.principles[i]);
+      }
+    }
+    concept.principles = newPrinciples;
   }
-  let targetConceptMode: Mode[] = [];
-  if (targetConcept.mode) {
-    targetConceptMode = targetConcept.mode;
+  if (concept.mode) {
+    for (let i = 0; i < concept.mode.length; i++) {
+      let found = false;
+      for (let j = 1; j < concept.mode.length; j++) {
+        if (concept.mode[i].toString() === concept.mode[j].toString()) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        newMode.push(concept.mode[i]);
+      }
+    }
+    concept.mode = newMode;
   }
-  let baseConceptMeta: Record<string,unknown> = {};
-  if (baseConcept.meta) {
-    baseConceptMeta = baseConcept.meta;
-  }
-  let targetConceptMeta: Record<string,unknown> = {};
-  if (targetConcept.meta) {
-    targetConceptMeta = targetConcept.meta;
-  }
+  return concept;
+}
 
-  return {
-    name: unifiedName,
-    qualities: [...baseConcept.qualities, ...targetConcept.qualities],
-    state: {
-      ...baseConceptState,
-      ...targetConceptState,
-    },
-    principles: [...baseConceptPrinciples, ...targetConceptPrinciples],
-    mode: [...baseConceptMode, ...targetConceptMode],
-    meta: {...baseConceptMeta, ...targetConceptMeta}
+function unify(base: Concept, target: Concept): Concept {
+  base.unified.push(target.name);
+  base.state = {
+    ...base.state,
+    ...target.state,
   };
+  base.qualities = [
+    ...base.qualities,
+    ...target.qualities,
+  ];
+  if (target.principles) {
+    if (base.principles) {
+      base.principles = [
+        ...base.principles,
+        ...target.principles
+      ];
+    } else {
+      base.principles = [
+        ...target.principles
+      ];
+    }
+  }
+  if (target.mode) {
+    if (base.mode) {
+      base.mode = [
+        ...base.mode,
+        ...target.mode
+      ];
+    } else {
+      base.mode = [
+        ...target.mode
+      ];
+    }
+  }
+  if (target.meta) {
+    if (base.meta) {
+      base.meta = {
+        ...base.meta,
+        ...target.meta
+      };
+    } else {
+      base.meta = {
+        ...target.mode
+      };
+    }
+  }
+  return base;
+}
+/**
+ * Will document the usage of such after UI concept release.
+ */
+export function unifyConcepts(
+  concepts: Concept[],
+  emergentConcept: Concept
+): Concept {
+  let newConcept = createConcept('', {});
+  concepts.forEach(concept => {
+    newConcept = unify(newConcept, concept);
+  });
+  newConcept = unify(newConcept, emergentConcept);
+  newConcept.name = emergentConcept.name;
+  return filterSimilarQualities(newConcept);
 }
 
 /**
@@ -112,9 +210,6 @@ export function unifyConcepts(
  * unifiedName: base-target
  * @IMPORTANT concept folder must carry the same naming convention
  */
-export function unifyConceptNames(base: string, target: string) {
-  return base + '-' + target;
-}
 
 export function createQuality(
   actionType: ActionType,
