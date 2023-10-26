@@ -87,7 +87,7 @@ As this functionality lacks the addition of some abstraction to hand hold the us
 
 Later we may create specific types of principles to handle the nuances of repeating the same functionality over and over again. But likewise that is not the scope of this release.
 
-*Note the semaphore is specifically in utilization with selectUnifiedState to select your Concept's state regardless of its current state of unification.*
+*Note the semaphore is specifically in utilization with "selectUnifiedState(concepts, semaphore)" to select your Concept's state regardless of its current state of unification.*
 
 ## Mode - The point of Recursion
 ```typescript
