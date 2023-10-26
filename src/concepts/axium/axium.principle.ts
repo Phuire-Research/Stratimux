@@ -1,6 +1,6 @@
-import { Subject, Subscriber } from 'rxjs';
+import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { Concept, Mode } from '../../model/concept';
-import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
+import { PrincipleFunction, createPrinciple$, registerPrincipleSubscription } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
 import { AxiumState, axiumName } from './axium.concept';
 import { strategyBegin } from '../../model/actionStrategy';
@@ -8,6 +8,7 @@ import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.s
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
 import { UnifiedSubject } from '../../model/stagePlanner';
+import { blockingMethodSubscription } from '../../model/axium';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -31,6 +32,13 @@ export const axiumPrinciple: PrincipleFunction = (
           concept.mode.forEach((mode: Mode) => {
             modes.push(mode);
             names.push(concept.name);
+          });
+          concept.principles?.forEach(principle => {
+            const observable = createPrinciple$(principle, concepts, axiumState.concepts$, _concepts.length + _index);
+            axiumState.principleSubscribers.push({
+              name: concept.name,
+              subscription: observable.subscribe((action: Action) => axiumState.action$.next(action)) as Subscriber<Action>
+            });
           });
         }
       });
@@ -88,6 +96,36 @@ export const axiumPrinciple: PrincipleFunction = (
       newAxiumState.modeNames = newModeNames;
 
       newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
+      newAxiumState.methodSubscribers.forEach(named => {
+        named.subscription.unsubscribe();
+      });
+      newAxiumState.methodSubscribers = [];
+
+      newConcepts.forEach((concept, semaphore) => {
+        concept.qualities.forEach(quality => {
+          if (quality.methodCreator) {
+            const [method, subject] = quality.methodCreator(axiumState.concepts$, semaphore);
+            quality.method = method;
+            quality.subject = subject;
+            quality.method.pipe(
+              catchError((err: unknown, caught: Observable<Action>) => {
+                if (axiumState.logging) {
+                  console.error('METHOD ERROR', err);
+                }
+                return caught;
+              }));
+            const methodSub = quality.method.subscribe((action: Action) => {
+              console.log('HIT');
+              blockingMethodSubscription(axiumState.action$, action);
+            }) as Subscriber<Action>;
+            const _axiumState = newConcepts[0].state as AxiumState;
+            _axiumState.methodSubscribers.push({
+              name: concept.name,
+              subscription: methodSub,
+            });
+          }
+        });
+      });
       axiumState.concepts$.next(newConcepts);
 
       observer.next(strategyBegin(

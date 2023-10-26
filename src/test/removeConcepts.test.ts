@@ -21,7 +21,6 @@ test('Axium remove Concepts Strategy Test', (done) => {
     },
     (concepts) => {
       const axiumState = concepts[0].state as AxiumState;
-      // console.log(concepts);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;
         concepts.forEach(concept => {

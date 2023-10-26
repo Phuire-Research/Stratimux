@@ -72,10 +72,10 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   const concepts: Concept[] = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
-  concepts.forEach((concept, _index) => {
+  concepts.forEach((concept, semaphore) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        const [method, subject] = quality.methodCreator(axiumState.concepts$);
+        const [method, subject] = quality.methodCreator(axiumState.concepts$, semaphore);
         quality.method = method;
         quality.subject = subject;
         quality.method.pipe(
@@ -95,7 +95,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
         });
       }
     });
-    if (_index !== 0 && concept.mode !== undefined) {
+    if (semaphore !== 0 && concept.mode !== undefined) {
       axiumState = concepts[0].state as AxiumState;
       const names = axiumState.modeNames;
       const modes = concepts[0].mode as Mode[];

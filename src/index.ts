@@ -27,16 +27,16 @@ export {
 export {
   createMethod,
   createAsyncMethod,
-  createMethodWithConcepts,
-  createAsyncMethodWithConcepts,
+  createMethodWithState,
+  createAsyncMethodWithState,
   createMethodDebounce,
   createAsyncMethodDebounce,
-  createMethodDebounceWithConcepts,
-  createAsyncMethodDebounceWithConcepts,
+  createMethodDebounceWithState,
+  createAsyncMethodDebounceWithState,
   createMethodThrottle,
-  createMethodThrottleWithConcepts,
+  createMethodThrottleWithState,
   createAsyncMethodThrottle,
-  createAsyncMethodThrottleWithConcepts
+  createAsyncMethodThrottleWithState
 } from './model/method';
 export {
   debounceAction,

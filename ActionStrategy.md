@@ -129,50 +129,51 @@ SomethingFactory<AnotherFactor<Factory>>
 This was a purposeful design choice, if you find yourself doing such. Known this system is already complicated enough.
 
 ## Helper Functions for Standard Method Creators
-*You still need to create a function of type MethodCreator to use these Helpers. :MethodCreator = () =>  methodCreator*
+You still need to create a function of type MethodCreator to use these Helpers. :MethodCreator = () =>  methodCreator
+*Update Note 0.0.48 - Updated helpers methods to receive their governing concepts state, this is due to how the act of Unifying Concepts works within STRX. As without this approach we cannot Unify multiple "counters," to your loaded concepts. This allows for that unified state to be made consistent via the "Universal Spacial Quality" of semaphores within this system.*
 ```typescript
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {}
-export const createMethodWithConcepts =
-  (method: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject): [Method, Subject<Action>] => {}
+export const createMethodWithState =
+  (method: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number): [Method, Subject<Action>] => {}
 export const createAsyncMethod =
   (asyncMethod: (controller: ActionController, action: Action) => void): [Method, Subject<Action>] => {}
-export const createAsyncMethodWithConcepts =
-  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concept[]) => void, concepts$: UnifiedSubject)
+export const createAsyncMethodWithState =
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) => void, concepts$: UnifiedSubject, semaphore: number)
     : [Method, Subject<Action>] => {}
 export const createMethodDebounce =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
-export const createMethodDebounceWithConcepts =
-  (methodWithConcepts: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, duration: number)
+export const createMethodDebounceWithState =
+  (methodWithState: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodDebounce =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
-export const createAsyncMethodDebounceWithConcepts =
-  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concept[]) =>
-    void, concepts$: UnifiedSubject, duration: number): [Method, Subject<Action>] => {}
+export const createAsyncMethodDebounceWithState =
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) =>
+    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 export const createMethodThrottle =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
-export const createMethodThrottleWithConcepts =
-  (methodWithConcepts: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, duration: number)
+export const createMethodThrottleWithState =
+  (methodWithState: (action: Action, concepts: Concept[]) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodThrottle =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
-export const createAsyncMethodThrottleWithConcepts =
-  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concept[]) =>
-    void, concepts$: UnifiedSubject, duration: number): [Method, Subject<Action>] => {}
+export const createAsyncMethodThrottleWithState =
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concept[]) =>
+    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 
 ```
 * createMethod - Your standard method, be sure to handle the action.strategy via one of the strategy decision functions, in addition to passing the action if there is no attached strategy.
-* createMethodWithConcepts - This will allow your method to have the most recent concepts to be accessed via the asyncMethod function.
+* createMethodWithState - This will allow your method to have the most recent state to be accessed via the asyncMethod function.
 * createAsyncMethod - Handled differently than the rest, you will have to use the passed controller to fire your actions back into the action stream.
-* createAsyncMethodWithConcepts - Will also have access to the most recent concepts.
+* createAsyncMethodWithState - Will also have access to the most recent state of that action's governing concept.
 
 *Note if you are implementing your own debounceAction, pay attention to how these method helpers work. They are handling a passed conclude from debounceAction within their map/switchMap. This allows for ownership tickets to be cleared if loaded.*
 * createMethodDebounce - Will fire after the set duration with the most recent action, and filter previous actions within the duration to be set to the conclude action.
-* createMethodDebounceWithConcepts - Will filter actions within the duration while providing access to the most recent concepts. 
+* createMethodDebounceWithState - Will filter actions within the duration while providing access to the most state of that action's concept. 
 * createAsyncMethodDebounce - Will not disengage the initial ActionController, but will allow debounced actions to pass through when filtered as conclude actions. And will fire the most recent action upon its own conditions are met asynchronously after the set duration.
-* createAsyncMethodDebounceWithConcepts - Filters and then first the first action once conditions are met, and provides access to the most recent concepts.
+* createAsyncMethodDebounceWithState - Filters and then first the first action once conditions are met, and provides access to the most recent state of that action's governing concept.
 * createMethodThrottle - Will fire the first action then filter the following actions as axiumConclude
-* createMethodThrottleWithConcepts- Fires the first action, alongside the most recent concepts, then filters rest as conclude.
+* createMethodThrottleWithState- Fires the first action, alongside the most recent state, then filters rest as conclude.
 * createAsyncMethodThrottle - Asynchronously fires the first action, will filtering the rest for the set duration as conclude.
-* createAsyncMethodThrottleWithConcepts - Fires the first action asynchronously with the most recent concepts, and filters action during the duration as conclude to remove stale tickers from ownership if loaded.
+* createAsyncMethodThrottleWithState - Fires the first action asynchronously with the most recent state, and filters action during the duration as conclude to remove stale tickers from ownership if loaded.

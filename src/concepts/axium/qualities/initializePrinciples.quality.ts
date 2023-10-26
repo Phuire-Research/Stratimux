@@ -14,17 +14,17 @@ export const axiumInitializePrinciplesType: ActionType = 'initialize Principles 
 export const axiumInitializePrinciples =
   prepareActionWithPayloadCreator<InitializePrinciplesPayload>(axiumInitializePrinciplesType);
 
-export function initializePrinciplesReducer(state: AxiumState, _action: Action) {
+export function initializePrinciplesReducer(state: AxiumState, _action: Action): AxiumState {
   const payload = selectPayload<InitializePrinciplesPayload>(_action);
   const concepts = payload.concepts;
   const action$ = state.action$ as Subject<Action>;
-  const subConcepts$ = state.concepts$ as UnifiedSubject;
-  const subscribers = state.generalSubscribers;
-  concepts.forEach((concept: Concept) => {
+  const concepts$ = state.concepts$ as UnifiedSubject;
+  const principleSubscribers = state.generalSubscribers;
+  concepts.forEach((concept: Concept, semaphore) => {
     if (concept.principles) {
       concept.principles.forEach(principle => {
-        const observable = createPrinciple$(principle, concepts, subConcepts$);
-        subscribers.push({
+        const observable = createPrinciple$(principle, concepts, concepts$, semaphore);
+        principleSubscribers.push({
           name: concept.name,
           subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
         });
@@ -33,7 +33,7 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action) 
   });
   return {
     ...state,
-    subscribers
+    principleSubscribers
   };
 }
 

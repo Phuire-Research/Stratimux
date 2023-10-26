@@ -3,7 +3,7 @@ import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState, experimentName } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodThrottleWithConcepts } from '../../../model/method';
+import { createAsyncMethodThrottleWithState } from '../../../model/method';
 import { selectPayload, selectState } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
@@ -12,22 +12,21 @@ export type ThrottleAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentThrottleAsyncIterateIdThenReceiveInMethodType
-  = 'Action Debounce Experiment asynchronously iterate ID then receive in Method via Concept select';
+  = 'Action Debounce Experiment asynchronously iterate ID then receive in Method via State';
 export const experimentThrottleAsyncIterateIdThenReceiveInMethod
   = prepareActionWithPayloadCreator<ThrottleAsyncIterateIdThenReceiveInMethodPayload>(
     experimentThrottleAsyncIterateIdThenReceiveInMethodType
   );
 
-const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
-  createAsyncMethodThrottleWithConcepts((controller, action, concepts) => {
+const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+  createAsyncMethodThrottleWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<ThrottleAsyncIterateIdThenReceiveInMethodPayload>(action);
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (action.strategy) {
         const data = strategyData_unifyData<ExperimentState & ThrottleAsyncIterateIdThenReceiveInMethodPayload>(
           action.strategy,
           {
-            id: experimentState.id,
+            id: state.id,
             setId: payload.setId
           }
         );
@@ -36,7 +35,7 @@ const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator 
       }
       controller.fire(action);
     }, 50);
-  }, concepts$ as UnifiedSubject, 500);
+  }, concepts$ as UnifiedSubject, semaphore as number, 500);
 
 function experimentThrottleAsyncIterateIdThenReceiveInMethodReducer(state: ExperimentState, _: Action): ExperimentState {
   return {

@@ -106,7 +106,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
       if (lastStrategy === throttleAsyncIterateIdThenAddToDataTopic) {
         if (data) {
           console.log('Strategy Data: ', data, 'Experiment State ID: ', experimentState.id);
-          expect(data.id).toBe(3);
+          expect(data.id).toBe(0);
           expect(data.setId).toBe(0);
           expect(experimentState.id).toBe(3);
           plan.conclude();
@@ -118,7 +118,9 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
     const secondPlan = axium.stage('Action Throttle Async Iterate id with Concepts', [
       (concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        dispatch(strategyBegin(throttleAsyncIterateIdThenAddToData(experimentState.id)), {
+        const strategy = throttleAsyncIterateIdThenAddToData(experimentState.id);
+        strategy.topic += 2;
+        dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       },
@@ -127,7 +129,9 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
         const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(throttleAsyncIterateIdThenAddToData(experimentState.id)), {
+        const strategy = throttleAsyncIterateIdThenAddToData(experimentState.id);
+        strategy.topic += 2;
+        dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       },
@@ -136,7 +140,9 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
         const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(throttleAsyncIterateIdThenAddToData(experimentState.id)), {
+        const strategy = throttleAsyncIterateIdThenAddToData(experimentState.id);
+        strategy.topic += 2;
+        dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       },
@@ -144,11 +150,11 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         const data = selectSlice<ExperimentState & ThrottleIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
-        console.log('Last Async Action Throttle: ', experimentState.id, lastStrategy, data);
-        if (lastStrategy === throttleAsyncIterateIdThenAddToDataTopic) {
-          if (data && data.id === 6) {
+        console.log('2 Last Async Action Throttle: ', experimentState.id, lastStrategy, data);
+        if (lastStrategy === throttleAsyncIterateIdThenAddToDataTopic + 2) {
+          if (data) {
             console.log('Strategy Data: ', data, 'Experiment State ID: ', experimentState.id);
-            expect(data.id).toBe(6);
+            expect(data.id).toBe(3);
             expect(data.setId).toBe(3);
             expect(experimentState.id).toBe(6);
             secondPlan.conclude();

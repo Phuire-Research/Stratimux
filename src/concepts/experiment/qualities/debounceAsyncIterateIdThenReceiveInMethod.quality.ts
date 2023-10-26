@@ -1,10 +1,10 @@
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodDebounceWithConcepts } from '../../../model/method';
-import { selectPayload, selectState } from '../../../model/selector';
+import { createAsyncMethodDebounceWithState } from '../../../model/method';
+import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
@@ -12,22 +12,21 @@ export type DebounceAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentDebounceAsyncIterateIdThenReceiveInMethodType
-  = 'Debounce Experiment asynchronously iterate ID then receive in Method via Concept select';
+  = 'Debounce Experiment asynchronously iterate ID then receive in Method via State';
 export const experimentDebounceAsyncIterateIdThenReceiveInMethod
   = prepareActionWithPayloadCreator<DebounceAsyncIterateIdThenReceiveInMethodPayload>(
     experimentDebounceAsyncIterateIdThenReceiveInMethodType
   );
 
-const experimentDebounceAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
-  createAsyncMethodDebounceWithConcepts((controller, action, concepts) => {
+const experimentDebounceAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+  createAsyncMethodDebounceWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<DebounceAsyncIterateIdThenReceiveInMethodPayload>(action);
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (action.strategy) {
         const data = strategyData_unifyData<ExperimentState & DebounceAsyncIterateIdThenReceiveInMethodPayload>(
           action.strategy,
           {
-            id: experimentState.id,
+            id: state.id,
             setId: payload.setId
           }
         );
@@ -36,7 +35,7 @@ const experimentDebounceAsyncIterateIdThenReceiveInMethodCreator: MethodCreator 
       }
       controller.fire(action);
     }, 50);
-  }, concepts$ as UnifiedSubject, 500);
+  }, concepts$ as UnifiedSubject, semaphore as number, 500);
 
 function experimentDebounceAsyncIterateIdThenReceiveInMethodReducer(state: ExperimentState, _: Action): ExperimentState {
   return {

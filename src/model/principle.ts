@@ -8,15 +8,17 @@ export type PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concept[],
   concept$: UnifiedSubject,
+  semaphore: number,
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concept[],
   concepts$: UnifiedSubject,
+  semaphore: number,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
-    principleFunc(obs, concepts, concepts$);
+    principleFunc(obs, concepts, concepts$, semaphore);
   });
 }
 

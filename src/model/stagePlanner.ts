@@ -279,13 +279,16 @@ export class UnifiedSubject extends Subject<Concept[]> {
   }
 
   next(value: Concept[]) {
+    const concepts = [
+      ...value
+    ];
     if (!this.closed) {
       // Need a Stage Observer that would merely deconstruct to {concepts: Concept[], dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
       const axiumState = value[0].state as AxiumState;
       this.currentStages.forEach((plan, key) => {
         const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
-          this._dispatch(axiumState, key, plan, value, action, options);
+          this._dispatch(axiumState, key, plan, concepts, action, options);
         };
         const index = plan.stage;
         if (index < plan.stages.length) {
@@ -297,7 +300,7 @@ export class UnifiedSubject extends Subject<Concept[]> {
       const len = observers.length;
       for (let i = 0; i < len; i++) {
         if (observers[i]) {
-          observers[i].next(value);
+          observers[i].next(concepts);
         }
       }
     }

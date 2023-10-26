@@ -1,27 +1,25 @@
-import { MethodCreator, defaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
-import { createMethodWithConcepts } from '../../../model/method';
-import { selectState } from '../../../model/selector';
+import { createMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
-export const experimentIterateIdThenReceiveInMethodType = 'Experiment iterate ID then receive in Method via Concept select';
+export const experimentIterateIdThenReceiveInMethodType = 'Experiment iterate ID then receive in Method via State';
 
 export const experimentIterateIdThenReceiveInMethod = prepareActionCreator(experimentIterateIdThenReceiveInMethodType);
 
-const experimentIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject) =>
-  createMethodWithConcepts((action, concepts) => {
-    const experimentState = selectState<ExperimentState>(concepts, experimentName);
+const experimentIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+  createMethodWithState<ExperimentState>((action, state) => {
     if (action.strategy) {
-      const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: experimentState.id});
+      const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
       const strategy = strategySuccess(action.strategy, data);
       return strategy;
     }
     return action;
-  }, concepts$ as UnifiedSubject);
+  }, concepts$ as UnifiedSubject, semaphore as number);
 
 function experimentIterateIdThenReceiveInMethodReducer(state: ExperimentState, _: Action): ExperimentState {
   return {

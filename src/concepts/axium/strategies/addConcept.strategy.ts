@@ -59,7 +59,9 @@ export function addConceptsFromQueThenUnblockStrategy(action$: Subject<Action>, 
     },
     failureNode: null,
   });
-  const stepOne = createActionNode(axiumAddConceptFromQue(),{
+  const stepOne = createActionNode(axiumAddConceptFromQue({
+    conceptsLength: conceptualSet.length,
+  }),{
     semaphore: addConceptsFromQueSemaphore,
     successNode: stepTwo,
     successNotes: {

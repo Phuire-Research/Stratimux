@@ -21,7 +21,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-export type MethodCreator = (concept$?: UnifiedSubject) => [Method, Subject<Action>];
+export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
 export type Quality = {
   actionType: ActionType;
@@ -43,6 +43,8 @@ export type Concept = {
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
+
+export type Concepts = Record<number, Concept>;
 
 export function createConcept(
   name: string,

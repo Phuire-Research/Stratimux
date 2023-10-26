@@ -1,6 +1,6 @@
-import { defaultMethodCreator } from '../../../model/concept';
+import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { NamedSubscription } from '../axium.concept';
-import { Action, ActionType, prepareActionCreator, } from '../../../model/action';
+import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { NamedStagePlanner } from '../../../model/stagePlanner';
@@ -9,15 +9,15 @@ export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Ax
 export const axiumRemoveConceptsViaQue = prepareActionCreator(axiumRemoveConceptsViaQueType);
 
 export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
-  const methodSubscribers = state.methodSubscribers;
-  const newMethodSubscribers = [] as NamedSubscription[];
+  const principleSubscribers = state.methodSubscribers;
+  const newPrincipleSubscribers = [] as NamedSubscription[];
   const generalSubscribers = state.methodSubscribers;
   const newGeneralSubscribers = [] as NamedSubscription[];
   const stagePlanners = state.stagePlanners;
   const newStagePlanners = [] as NamedStagePlanner[];
   const removeConceptQue = state.removeConceptQue;
 
-  methodSubscribers.forEach(named => {
+  principleSubscribers.forEach(named => {
     let exists = false;
     removeConceptQue.forEach(concept => {
       if (concept.name === named.name) {
@@ -25,7 +25,7 @@ export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) 
       }
     });
     if (!exists) {
-      newMethodSubscribers.push(named);
+      newPrincipleSubscribers.push(named);
     } else {
       named.subscription.unsubscribe();
     }
@@ -61,8 +61,6 @@ export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) 
 
   return {
     ...state,
-    // generation: state.generation + 1,
-    methodSubscribers: newMethodSubscribers,
     generalSubscribers: newGeneralSubscribers,
     stagePlanners: newStagePlanners,
     removeConceptQue: []

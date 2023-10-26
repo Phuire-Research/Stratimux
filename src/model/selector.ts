@@ -96,33 +96,33 @@ export function selectConcept(concepts: Concept[], name: string): Concept {
  * As for the case of foreign selection, that should be done via the unified name.
  * Punting the worry for pure numerical selection to a compilation step.
  */
-// export function selectUnifiedState<T>(concepts: Concept[], semaphore: number): T {
-//   return concepts[semaphore].state as T;
+export function selectUnifiedState<T>(concepts: Concept[], semaphore: number): T {
+  return concepts[semaphore].state as T;
+}
+
+// export function selectUnifiedState<T>(concepts: Concept[], name: string): T {
+//   let concept;
+//   let found = false;
+//   for (let i = 0; i < concepts.length; i++) {
+//     const unified = concepts[i].unified;
+//     if (concepts[i].name === name) {
+//       concept = concepts[i];
+//       break;
+//     }
+//     for (let j = 0; j < unified.length; j++) {
+//       if (unified[j] === name) {
+//         concept = concepts[i];
+//         found = true;
+//         break;
+//       }
+//     }
+//     if (found) {
+//       break;
+//     }
+//   }
+//   return concept?.state as T;
 // }
 
-export function selectUnifiedState<T>(concepts: Concept[], name: string): T {
-  let concept;
-  let found = false;
-  for (let i = 0; i < concepts.length; i++) {
-    const unified = concepts[i].unified;
-    if (concepts[i].name === name) {
-      concept = concepts[i];
-      break;
-    }
-    for (let j = 0; j < unified.length; j++) {
-      if (unified[j] === name) {
-        concept = concepts[i];
-        found = true;
-        break;
-      }
-    }
-    if (found) {
-      break;
-    }
-  }
-  return concept?.state as T;
-}
-
-export function selectUnifiedSlice<T>(concept: Concept): T {
-  return concept.state as T;
-}
+// export function selectUnifiedSlice<T>(concept: Concept): T {
+//   return concept.state as T;
+// }
