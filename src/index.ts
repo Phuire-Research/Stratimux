@@ -52,9 +52,11 @@ export {
   isConceptLoaded,
   areConceptsLoaded,
   unifyConcepts,
+  forEachConcept
 } from './model/concept';
 export type {
   Concept,
+  Concepts,
   Quality,
   Reducer,
   Method,
