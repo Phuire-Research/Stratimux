@@ -56,6 +56,7 @@ export {
 } from './model/concept';
 export type {
   Concept,
+  Concepts,
   Quality,
   Reducer,
   Method,
