@@ -87,7 +87,7 @@ function filterSimilarQualities(concept: Concept) {
   const newMode: Mode[] = [];
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;
-    for (let j = 1; j < concept.qualities.length; j++) {
+    for (let j = i + 1; j < concept.qualities.length; j++) {
       if (concept.qualities[i].actionType === concept.qualities[j].actionType) {
         found = true;
         break;
@@ -100,7 +100,7 @@ function filterSimilarQualities(concept: Concept) {
   concept.qualities = newQualities;
   for (let i = 0; i < concept.unified.length; i++) {
     let found = false;
-    for (let j = 1; j < concept.unified.length; j++) {
+    for (let j = i + 1; j < concept.unified.length; j++) {
       if (concept.unified[i] === concept.unified[j]) {
         found = true;
         break;
@@ -114,7 +114,7 @@ function filterSimilarQualities(concept: Concept) {
   if (concept.principles) {
     for (let i = 0; i < concept.principles.length; i++) {
       let found = false;
-      for (let j = 1; j < concept.principles.length; j++) {
+      for (let j = i + 1; j < concept.principles.length; j++) {
         if (concept.principles[i].toString() === concept.principles[j].toString()) {
           found = true;
           break;
@@ -129,7 +129,7 @@ function filterSimilarQualities(concept: Concept) {
   if (concept.mode) {
     for (let i = 0; i < concept.mode.length; i++) {
       let found = false;
-      for (let j = 1; j < concept.mode.length; j++) {
+      for (let j = i + 1; j < concept.mode.length; j++) {
         if (concept.mode[i].toString() === concept.mode[j].toString()) {
           found = true;
           break;
