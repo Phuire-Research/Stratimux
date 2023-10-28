@@ -1,5 +1,5 @@
 {
-  "name": "@phuire/strx",
+  "name": "@phuire/stratimux",
   "version": "0.0.54",
   "description": "Unified Turing Machine",
   "main": "dist/index.js",
