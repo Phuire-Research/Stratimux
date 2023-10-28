@@ -19,7 +19,7 @@ The difficulty of constructs. Is that you cannot readily decompose their qualiti
 
 As in the scope of some rapid rise of generative information. This simplicity of concepts is the most fundamental mechanism to explain new information and discovery in any age. Insisting upon constructs, obfuscates concepts, and summarily the total bounds of what can be created. Would be similar to striking entire sets of numbers from equations is the most blunted example to the difference in approach.
 
-## STRX Quality contains all Functionality that Pertain to an Action.
+## Stratimux Quality contains all Functionality that Pertain to an Action.
 ```typescript
 export type Quality = {
   actionType: ActionType;
