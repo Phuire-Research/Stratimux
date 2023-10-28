@@ -6,6 +6,6 @@ This is a large reason why I had pulled the approach and proof of concept of the
 So while this approach can be considered as a holy grail to some. Be mindful of India Jones and what cup the grail turned out to be.
 
 ## Statements
-* [Mechanistic Interpretability](https://github.com/Phuire-Research/STRX/blob/main/StatementMI.md)
-* [The Human Ability to Halt](https://github.com/Phuire-Research/STRX/blob/main/StatementHH.md)
-* [Release Disclosure](https://github.com/Phuire-Research/STRX/blob/main/ReleaseDisclosure.md)
+* [Mechanistic Interpretability](https://github.com/Phuire-Research/Stratimux/blob/main/StatementMI.md)
+* [The Human Ability to Halt](https://github.com/Phuire-Research/Stratimux/blob/main/StatementHH.md)
+* [Release Disclosure](https://github.com/Phuire-Research/Stratimux/blob/main/ReleaseDisclosure.md)

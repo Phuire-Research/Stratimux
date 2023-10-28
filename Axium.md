@@ -44,7 +44,7 @@ export type AxiumState {
 ```
 * name - This should be set to a unique network identifier, and/or the concept of your system.
 * open - This is utilized by principles and external subscribers to denote when they should initialize their functionality. 
-* logging - controls whether the STRX dialog paragraphs are emitted upon strategy completion. In addition to other debugging procedures.
+* logging - controls whether the Stratimux dialog paragraphs are emitted upon strategy completion. In addition to other debugging procedures.
 * dialog - Is the internal representation of the strategies that the axium has ran.
 * storeDialog - This is set to false by default to save on memory, but if true will store each dialog, and allows such to be subscribed to.
 * lastStrategy - Informs specifically the of the last ActionStrategy topic to have ran through the system. This is used via testing or the deployment of addition strategies upon completion.
@@ -56,7 +56,7 @@ export type AxiumState {
 * modeNames - Is the paring of a name that correspond to mode and their respective index that allow for the mode to altered at run time without string comparison.
 * methodSubscribers - Accumulates all method subscriptions for their manipulation at run time.
 * generalSubscribers - Same as method subscribers, but a catch all including that of principles and their internal subscriptions that would ordinarily leave principles as hot and active in memory if not concluded upon removal or close.
-* action$ - Is the internal action stream.
+* action$ - Is the internal action stream.  
 * concepts$ - Is the internal Concepts stream that methods and principles have access to.
 * addConceptQue - The current pattern to allow for principles to effect the concepts within the application. Rather than a direct subscription to the action$, they listen to state properties to control what actions they emit into the stream. In this case a set of concepts to be loaded into the axium.
 * removeConceptQue - The inverse of the above to remove concepts.
@@ -74,7 +74,7 @@ export type AxiumState {
 ## Axium Qualities for Internal Use
 Please avoid using these qualities, but are providing explanations to understand the inner workings of the axium.
 * addConceptsFromQue - This will be ran from the internal axium principle and take all concepts added to said que to include within the axium and increment the current generation.
-* appendActionListToDialog - Takes the final output of a strategy and appends such into a STRX dialog if storeDialog is set to True.
+* appendActionListToDialog - Takes the final output of a strategy and appends such into a Stratimux dialog if storeDialog is set to True.
 * badAction - If logging is set to true, this will log any BadAction via its payload of the invalidated action that is created from the primeAction() helper function.
 * conclude - This is a pure action that has no reducer or method. And will only be issued upon the conclusion of an ActionStrategy. If ownership is part of the concept load. This allows for the conclude to clear the final action's locks via its OwnershipLedger Entries.
 * initializePrinciples - Is a delayed action to allow for the internal set up of the axium at run time.
@@ -92,11 +92,11 @@ Please avoid using these qualities, but are providing explanations to understand
 * close - This will will cancel all internal subscriptions that the axium has access to. As well as all Steams will be completed. The external close() function that the createAxium supplies, dispatches this action. Or can be ran specially via an internal principle towards its governing axium or that of another axium that it is subscribed to.
 * setMode - If your concept requires a specific modification to the functionality of the stream. This will set the mode index to that stream. Specifically this shouldn't have to be used. But is left to the developer if they run into such a case.
 * setDefaultModeIndex - Should be used if your mode is to be considered the default mode of your application. For utilization within a strategy after setMode. Be sure to a run time search for your concept name and mode, after your concept is added via the addConcept strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the last go To for your applications functionality.
-* clearDialog - Clears the currently stored STRX dialog, may be used within a strategy.
+* clearDialog - Clears the currently stored Stratimux dialog, may be used within a strategy.
 * clearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
 * clearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
 * clearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.stage(). Via their topic as payload and clears such.
-* kick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of STRX's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
+* kick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of Stratimux's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
 
 ## Axium Strategies Concept Set Transformation
 ```typescript

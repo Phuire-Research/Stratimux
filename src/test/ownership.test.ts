@@ -90,7 +90,7 @@ test('Ownership Test', (done) => {
             //    Then be sure to enabled the final done check in "If #3".
             //    Then enabling the axiumLog dispatch will allow the test to conclude.
             //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
-            //      This proves STRX as a Unified Turing Machine and this configuration Halting Complete.
+            //      This proves Stratimux as a Unified Turing Machine and this configuration Halting Complete.
             dispatch(axiumLog(), {
               runOnce: true
             });

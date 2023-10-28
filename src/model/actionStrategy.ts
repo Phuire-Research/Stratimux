@@ -78,7 +78,7 @@ export function createActionNode(action: Action, options: ActionNodeOptions): Ac
 }
 
 /**
- * Will decorate the final STRX sentence
+ * Will decorate the final Stratimux sentence
  * @preposition - Would append your string.
  * @denoter - Would include some string ending in punctuation.
  */

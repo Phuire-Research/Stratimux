@@ -57,7 +57,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         dispatch(counterSubtract(), {
           // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
           // throttle: 500
-          // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
+          // This demonstrates the fault resistance of the Stage paradigm, despite Stratimux's recursive functionality.
         });
         // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.
         dispatch(counterAdd(), {});

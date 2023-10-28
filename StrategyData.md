@@ -35,7 +35,7 @@ export enum failureConditions {
   axiumBadGeneration = 'axiumBadGeneration'
 }
 ```
-Note with the above, due to there being by default 3 different types of failure within an ActionStrategy within STRX. That being "Expiration," "Blocked," and "Bad Generation."  Expiration, which we treat as an absolute failure with no recovery, **unless** that action has already been dispatched to its method and is being controlled by an ActionController in an asynchronous context.
+Note with the above, due to there being by default 3 different types of failure within an ActionStrategy within Stratimux. That being "Expiration," "Blocked," and "Bad Generation."  Expiration, which we treat as an absolute failure with no recovery, **unless** that action has already been dispatched to its method and is being controlled by an ActionController in an asynchronous context.
 
 If a expired action must be recovered for your planning, please use a subscription or plan to pay attention to the badActions list on the "Axium." From there you can determine either you action's type or strategy topic to reissue such if it expired. Blocked signifies that the "Ownership" concept is currently loaded at the target transformation is temporarily being blocked. These actions will still exist on the ownership pendingAction list, but may still expire as a badAction appending "ownershipExpired" to your strategies data.
 
@@ -45,8 +45,8 @@ We have likewise introduced additional data handling functions. Specially here w
 
 As the fundamental difficulty of higher order logic, is having to take into account complex state arrangements to make decisions. And the in depth the strategy, or the more successive actions used in unison, the higher chance there will be some failure. Therefore this is higher order logic via the exponential factor of decision making that must be taken into account per ActionStrategy.
 
-The advantage that STRX has over these classical game Ai systems. Is we know in advance some "Universal Concepts," that would inform the failure mode. That being you cannot have two sets of feet standing in the same position, would be "Spatial Ownership." Or in the case of computer systems, is whether you are modifying some file that is already open by another program.
+The advantage that Stratimux has over these classical game Ai systems. Is we know in advance some "Universal Concepts," that would inform the failure mode. That being you cannot have two sets of feet standing in the same position, would be "Spatial Ownership." Or in the case of computer systems, is whether you are modifying some file that is already open by another program.
 
-The other would be "Time," or expiration paradigm within STRX that limits of lifetimes of Strategies within this System. As the createActionController function assigns a timer to the life time of that specific ActionController. That is cleared upon success or will fire the next FailureNode or conclusion if present, while appending "controllerExpired" to the data property.
+The other would be "Time," or expiration paradigm within Stratimux that limits of lifetimes of Strategies within this System. As the createActionController function assigns a timer to the life time of that specific ActionController. That is cleared upon success or will fire the next FailureNode or conclusion if present, while appending "controllerExpired" to the data property.
 
 *There is much more to be expanded in addition to working examples. Internally this is being used to prototype a "UserInterface" concept and will release those examples once that concept is worthy of being in a mvp state.*

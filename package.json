@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "directory": "https://github.com/Phuire-Research/STRX.git"
+    "directory": "https://github.com/Phuire-Research/Stratimux.git"
   },
   "scripts": {
     "build": "rimraf ./dist && tsup src/index.ts --format cjs,esm --dts",

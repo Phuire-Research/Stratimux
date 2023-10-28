@@ -55,7 +55,7 @@ export class UnifiedSubject extends Subject<Concepts> {
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - The interface that you will be interacting with when setting up your stages, noting placement of concepts and the dispatch function.
-* UnifiedSubject - This is a specialized subject for utilized within STRX to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
+* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
 
 ## Example
 ```typescript
@@ -109,7 +109,7 @@ const plan = axium.stage('Stage DispatchOptions Test',
       dispatch(counterSubtract(), {
         // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
         // throttle: 500
-        // This demonstrates the fault resistance of the Stage paradigm, despite STRX's recursive functionality.
+        // This demonstrates the fault resistance of the Stage paradigm, despite Stratimux's recursive functionality.
       });
       // This dispatch will be invalidated and never dispatched due to the effect of action overflow of the above.
       dispatch(counterAdd(), {});
@@ -122,14 +122,14 @@ const plan = axium.stage('Stage DispatchOptions Test',
 ```
 To prevent action overflow, each stage is paying attention to consecutive actions of the same type. Noting that this can likewise be overwhelmed via a throttle set to 0. If throttle 0 is utilized, the current stage should change.
 
-Keep in mind behind the scenes during a STRX runtime, there will be multiple strategies running concurrently. Observe the runCount specified in this example. Please look to the STRX's tests folder.
+Keep in mind behind the scenes during a Stratimux runtime, there will be multiple strategies running concurrently. Observe the runCount specified in this example. Please look to the Stratimux's tests folder.
 
 To save on potential memory bloat we are only keeping track of the most recent valid 5 actions per stage to prevent action overflow. This may change in the future pending some stage that requires a larger bandwidth of actions. Likewise the amount of actions in each stage should be limited regardless.
 
 Lastly, in an action overflow state, sequentially the overflow will call the same dispatch before calling the next dispatch even if within the same stage. Pay attention to the example above and the final console.log() output.
 
 ## Stage Planner within your Principle
-STRX is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
+Stratimux is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
 ```typescript
 const plan = concept$.stage('Principle Stage Example', [
   (___, dispatch) => {
