@@ -16,6 +16,7 @@ export type ActionType = string;
 export type Action = {
     type: ActionType;
     semaphore: [number, number, number, number];
+    conceptSemaphore?: number;
     payload?: unknown;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
@@ -28,29 +29,37 @@ const createPayload = <T>(payload: T) => payload;
 
 export function primeAction(concepts: Concepts, action: Action): Action {
   const expired = action.expiration < Date.now();
+  let semaphore: [number, number, number, number] = [-1, -1, -1, -1];
   if (!expired) {
-    const conceptKeys = Object.keys(concepts);
-    for (const i of conceptKeys) {
-      const index = Number(i);
-      const semaphore = getSemaphore(concepts, concepts[index].name, action.type);
-      if (semaphore[2] !== -1 && action.expiration) {
-        let axium;
-        if (action.axium) {
-          axium = action.axium;
-        } else {
-          axium = (concepts[0].state as AxiumState).name;
+    if (action.conceptSemaphore) {
+      semaphore = getSemaphore(concepts, concepts[action.conceptSemaphore].name, action.type);
+    } else {
+      const conceptKeys = Object.keys(concepts);
+      for (const i of conceptKeys) {
+        const index = Number(i);
+        semaphore = getSemaphore(concepts, concepts[index].name, action.type);
+        if (semaphore[2] !== -1 && action.expiration) {
+          break;
         }
-        const newAction = {
-          ...action,
-          semaphore: semaphore,
-          axium,
-        };
-        if (newAction.strategy) {
-          newAction.strategy.currentNode.action = newAction;
-        }
-        return newAction;
       }
     }
+  }
+  if (semaphore[2] !== -1 && action.expiration) {
+    let axium;
+    if (action.axium) {
+      axium = action.axium;
+    } else {
+      axium = (concepts[0].state as AxiumState).name;
+    }
+    const newAction = {
+      ...action,
+      semaphore: semaphore,
+      axium,
+    };
+    if (newAction.strategy) {
+      newAction.strategy.currentNode.action = newAction;
+    }
+    return newAction;
   }
   const badAction: Action = {
     type: axiumBadActionType,
@@ -137,7 +146,8 @@ export function createAction(
   payload?: unknown,
   keyedSelectors?: KeyedSelector[],
   agreement?: number,
-  _semaphore?: [number, number, number, number]
+  _semaphore?: [number, number, number, number],
+  conceptSemaphore?: number
 ): Action {
   const special = getSpecialSemaphore(type);
   const semaphore = _semaphore !== undefined ? _semaphore : [0, 0, -1, special] as [number, number, number, number];
@@ -153,21 +163,23 @@ export function createAction(
 
 export function prepareActionCreator(actionType: ActionType) {
   return (
+    conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    _semaphore?: [number, number, number, number]
+    qualitySemaphore?: [number, number, number, number]
   ) => {
-    return createAction(actionType, undefined, keyedSelectors, agreement, _semaphore);
+    return createAction(actionType, undefined, keyedSelectors, agreement, qualitySemaphore, conceptSemaphore);
   };
 }
 export function prepareActionWithPayloadCreator<T>(actionType: ActionType) {
   return (
     payload: T,
+    conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    _semaphore?: [number, number, number, number]
+    semaphore?: [number, number, number, number]
   ) => {
-    return createAction(actionType, payload, keyedSelectors, agreement, _semaphore);
+    return createAction(actionType, payload, keyedSelectors, agreement, semaphore, conceptSemaphore);
   };
 }
 

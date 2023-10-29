@@ -47,7 +47,7 @@ test('Ownership Test', (done) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-        dispatch(counterSetCount({newCount: 1000}, undefined, 7000), { iterateStage: true});
+        dispatch(counterSetCount({newCount: 1000}, undefined, undefined, 7000), { iterateStage: true});
       },
       (cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
