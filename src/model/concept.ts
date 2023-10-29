@@ -205,6 +205,16 @@ export function unifyConcepts(
   }));
   newConcept = unify(newConcept, emergentConcept);
   newConcept.name = emergentConcept.name;
+  if (newConcept.mode) {
+    newConcept.mode.forEach((m, i) => {
+      m.toString = () => `MODE: ${newConcept.name} ${i}`;
+    });
+  }
+  if (newConcept.principles) {
+    newConcept.principles.forEach((p, i) => {
+      p.toString = () => `PRINCIPLE: ${newConcept.name} ${i}`;
+    });
+  }
   return filterSimilarQualities(newConcept);
 }
 
