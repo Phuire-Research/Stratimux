@@ -193,7 +193,8 @@ function unify(base: Concept, target: Concept): Concept {
   return base;
 }
 /**
- * Will document the usage of such after UI concept release.
+ * This will unify concepts while prioritizing qualities later in the provided concepts list via recomposition.
+ *  Then finally unify the emergent concept with final priority.
  */
 export function unifyConcepts(
   concepts: Concept[],

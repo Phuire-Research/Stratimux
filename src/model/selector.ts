@@ -98,6 +98,13 @@ export function selectConcept(concepts: Concepts, name: string): Concept {
  * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.
  * @outside_selection Use selectState targeting that Unified Concept Name
  */
-export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T {
-  return concepts[semaphore].state as T;
+
+// Either returns the current concept's unified state, or informs that the concept has been removed and the principles needs shutdown
+export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T | undefined {
+  const exists = Object.keys(concepts).includes(`${semaphore}`);
+  if (exists) {
+    return concepts[semaphore].state as T;
+  } else {
+    return undefined;
+  }
 }

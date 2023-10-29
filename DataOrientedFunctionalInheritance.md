@@ -39,8 +39,13 @@ As everything is just data. And data is merely the most important qualities that
 
 # Accessing your Unified State and Functionality
 ```typescript
-export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T {
-  return concepts[semaphore].state as T;
+export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T | undefined {
+  const exists = Object.keys(concepts).includes(`${semaphore}`);
+  if (exists) {
+    return concepts[semaphore].state as T;
+  } else {
+    return undefined;
+  }
 }
 ```
 This directly relays to the functionality within your "Methods" and "Principles." As by default your Reducer is already based its state upon each successive call. What is orienting the state of your concepts is the same universal concept of spacial location that actions use to call their qualities within Stratimux. This "selectUnifiedState," merely accesses the concept as it is loaded into the Axium. And is handled automatically within the provided helper method functions. Thus the only true place where this would need to be implemented by the developer is the principles themselves, which also are supplied the current location by semaphore in that creation function.
@@ -48,3 +53,5 @@ This directly relays to the functionality within your "Methods" and "Principles.
 Therefore this allows for each of your concepts to have their own counter functionality, but this likewise limits the implementation of Unified Concepts. That these concepts are only functional via their principles due to the guarantee of a supplied concept semaphore. As such, when creating actions or strategies for a "Unified Concept." Be sure to supply this value to the necessary action creator or action node.
 
 The benefit of this approach. Is that we can determine responsible concepts that only function only via its internal specification, including being responsible for its spatial location within any loaded Axium. Allows for these responsible concepts to be "Unified" without worry of interacting with "Concepts" that may use some functionality it others would depend upon. Therefore the "Axium" can be seen in current terms as a "Composition of Applications" that have a shared interface that is the "Axium" itself.
+
+If the select function returns undefined. It means that the "Unified Concept," has been removed from the Axium. Therefore this denotes when a "Principle" should then disengage any active functionality contained. This further allows for Principles to be fully composable "Applications." And in the scope of "Observers," prevents the possibility of a hot observable with no subscribers.
