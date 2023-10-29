@@ -21,6 +21,7 @@ The inspiration for Stratimux was that of Redux and its origin via the FLUX desi
 * [Action Controller](https://github.com/Phuire-Research/Stratimux/blob/main/ActionController.md) - Allows methods to be performed asynchronously.
 * [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - Streamlines the complex nature of the ActionStrategy as it relates to itself and other axiums. This is what allows Stratimux to be a graph computation paradigm.
 * [Strategy Data](https://github.com/Phuire-Research/Stratimux/blob/main/StrategyData.md) - Allows for the ActionStrategy pattern to act as a "Universal Transformer." Likewise decorates strategies with the necessary information to inform "ActionNodes," of possible failure conditions.
+* [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Proving the "Unification of Concepts," as a method of "Functional Inheritance."
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## The Halting Problem

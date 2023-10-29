@@ -16,6 +16,7 @@ import { KeyedSelector } from './selector';
  * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
  * @param payload - `optional` Will set the payload of the action.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
+ * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
@@ -29,6 +30,7 @@ export interface ActionNode {
   action?: Action;
   actionType: ActionType;
   payload?: unknown;
+  conceptSemaphore?: number;
   keyedSelectors?: KeyedSelector[];
   semaphore?: [number, number, number, number];
   agreement?: number;
@@ -43,6 +45,7 @@ export interface ActionNode {
 
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
+  conceptSemaphore?: number;
   semaphore?: [number, number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
@@ -200,6 +203,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
       nextNode.keyedSelectors,
       nextNode.agreement,
       nextNode.semaphore,
+      nextNode.conceptSemaphore
     );
     nextNode.action = nextAction;
     nextNode.lastActionNode = strategy.currentNode;
@@ -268,7 +272,8 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
       nextNode.payload,
       nextNode.keyedSelectors,
       nextNode.agreement,
-      nextNode.semaphore
+      nextNode.semaphore,
+      nextNode.conceptSemaphore
     );
     nextNode.action = nextAction;
     nextNode.lastActionNode = strategy.currentNode;
@@ -348,7 +353,8 @@ export const strategyDecide = (
         nextNode.payload,
         nextNode.keyedSelectors,
         nextNode.agreement,
-        nextNode.semaphore
+        nextNode.semaphore,
+        nextNode.conceptSemaphore
       );
       nextNode.action = nextAction;
       nextNode.lastActionNode = strategy.currentNode;
