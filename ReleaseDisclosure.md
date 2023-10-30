@@ -5,7 +5,7 @@ If intelligence is defined by tool use. Then what you do with a tool is an actio
 
 Therefore a concept of a person can be defined by the actions they can utilize based on the concept of what tools are available. Same goes for Ai.
 
-Therefore having a Graph Computation Framework oriented around Actions and Concepts in plain text. Is a hand written intelligence without the need for an Ai. Good think GPLv3 basically acts a definite shield towards a programming paradigm that out scales data entry of classic by default. As at the end of the day this is just a new turing machine and the goal is safety. It is counter intuitive restrict the release of safe provably terminating algorithms as a solved state.
+Therefore having a Graph Computation Framework oriented around Actions and Concepts in plain text. Is a hand written intelligence without the need for an Ai. Good think GPLv3 basically acts a definite shield towards a programming paradigm that out scales data entry of classic by default. As at the end of the day this is just a new turing machine and the goal is safety. It is counter intuitive restrict the release of safe provably terminating algorithms in a solved state.
 
 Sure it taints the ability to ever truly patent something within this new Unified Turing Machine. But if you are going for competition, versus regulatory capture. Then it only behooves, especially if you find yourself in a difficult to defend position in the marketplace.
 
