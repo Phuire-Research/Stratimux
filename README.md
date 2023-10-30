@@ -4,6 +4,8 @@
 **Features:**
 * Universal Transformer
 * Autonomous Baseline Intelligence (ABI)
+* Halting Complete
+* Concept Libraries
 * Action Oriented
 * Single Lock Graph Framework
 * Composable Strategies
