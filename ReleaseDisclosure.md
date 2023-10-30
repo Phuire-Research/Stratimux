@@ -7,7 +7,7 @@ Therefore a concept of a person can be defined by the actions they can utilize b
 
 Therefore having a Graph Computation Framework oriented around Actions and Concepts in plain text. Is a hand written intelligence without the need for an Ai. Good think GPLv3 basically acts a definite shield towards a programming paradigm that out scales data entry of classic by default. As at the end of the day this is just a new turing machine and the goal is safety. It is counter intuitive restrict the release of safe provably terminating algorithms in a solved state.
 
-Sure it taints the ability to ever truly patent something within this new Unified Turing Machine. But if you are going for competition, versus regulatory capture. Then it only behooves, especially if you find yourself in a difficult to defend position in the marketplace.
+Sure it taints the ability to ever truly patent something within this new Unified Turing Machine. The purpose of this work is to provide an additional avenue for entrepreneurship that isn't just algorithmic, but applied. Then it only behooves, especially if you find yourself in a difficult to defend position in the marketplace.
 
 The nice thing about GPLv3 however it is also allows for a SaaS loophole. Where functionality can be utilized as a trade secret. Since my goal is a Scientific Platform organized around open testing and experimentation. Then it only benefits for the creation of Unified Conceptual Science via the open demonstration of logical programming as to relays to each field.
 
