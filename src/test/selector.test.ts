@@ -12,8 +12,8 @@ test('Axium Selector Test', (done) => {
   const axium = createAxium('axiumSelectorTest', [counter], true, true);
   const sub = axium.subscribe((concepts: Concepts) => {
     const state = selectState<Counter>(concepts, counterName);
-    console.log('CHECK COUNT', state.count);
-    expect(state.count).toBe(10);
+    console.log('CHECK COUNT', state?.count);
+    expect(state?.count).toBe(10);
     done();
   });
 });

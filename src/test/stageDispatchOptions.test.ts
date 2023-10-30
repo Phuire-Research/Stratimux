@@ -14,11 +14,11 @@ test('Axium Stage Dispatch Options Test', (done) => {
     if (axiumState.badPlans.length > 0) {
       const badPlan = axiumState.badPlans[0];
       const counter = selectState<Counter>(concepts, counterName);
-      console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter.count);
+      console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter?.count);
       plan.conclude();
       sub.unsubscribe();
       expect(badPlan.stageFailed).toBe(2);
-      expect(counter.count).toBe(2);
+      expect(counter?.count).toBe(2);
       setTimeout(() => {done();}, 500);
     }
   });

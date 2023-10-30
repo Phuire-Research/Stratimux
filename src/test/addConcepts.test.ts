@@ -5,6 +5,8 @@ import { Counter, createCounterConcept, countingStrategy, counterName } from '..
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
+import { forEachConcept } from '../model/concept';
+import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], true, true);
@@ -22,21 +24,24 @@ test('Axium add Concepts Strategy Test', (done) => {
     (concepts, dispatch) => {
       let exists = false;
       console.log('CHECK CONCEPTS', concepts);
-      if (concepts[1].name === counterName) {
-        exists = true;
-        dispatch(strategyBegin(countingStrategy()), {
-          iterateStage: true
-        });
-      }
-      expect(exists).toBe(true);
+      forEachConcept(concepts, (concept) => {
+        if (concept.name === counterName) {
+          exists = true;
+          dispatch(strategyBegin(countingStrategy()), {
+            iterateStage: true
+          });
+          expect(exists).toBe(true);
+        }
+      });
     },
     (concepts) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.lastStrategy === countingTopic) {
         const counter = selectState<Counter>(concepts, counterName);
-        expect(counter.count).toBe(1);
+        expect(counter?.count).toBe(1);
         setTimeout(() => {done();}, 500);
         plan.conclude();
+        axium.close();
       }
     }
   ]);

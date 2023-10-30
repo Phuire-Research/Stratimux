@@ -17,6 +17,7 @@ import { axiumClose } from '../concepts/axium/qualities/close.quality';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
+import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
@@ -141,7 +142,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
     strategyBegin(initializationStrategy(concepts)),
   );
   const close = (exit?: boolean) => {
-    action$.next(axiumClose({
+    action$.next(axiumPreClose({
       exit: exit ? exit : false
     }));
   };

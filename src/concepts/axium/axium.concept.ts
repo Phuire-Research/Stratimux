@@ -1,7 +1,7 @@
 import { Subject, Subscription } from 'rxjs';
 import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
-import { axiumPrinciple } from './axium.principle';
+import { axiumClosePrinciple, axiumPrinciple } from './axium.principle';
 import { blockingMode, permissiveMode } from './axium.mode';
 import { openQuality } from './qualities/open.quality';
 import { badActionQuality } from './qualities/badAction.quality';
@@ -27,6 +27,7 @@ import { clearBadStrategyTopicFromBadActionListQuality } from './qualities/clear
 import { clearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
 import { registerStagePlannerQuality } from './qualities/registerStagePlanner.quality';
 import { kickQuality } from './qualities/kick.quality';
+import { preCloseQuality } from './qualities/preClose.quality';
 
 export type NamedSubscription = {
   name: string;
@@ -37,6 +38,8 @@ export type AxiumState = {
   // Would be unique identifier on a network
   name: string;
   open: boolean;
+  prepareClose: boolean;
+  exit: boolean;
   conceptCounter: number;
   logging: boolean;
   dialog: string;
@@ -68,6 +71,8 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
   return {
     name,
     open: false,
+    prepareClose: false,
+    exit: false,
     conceptCounter: 0,
     logging: logging ? logging : false,
     dialog: '',
@@ -103,6 +108,7 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       openQuality,
       badActionQuality,
       closeQuality,
+      preCloseQuality,
       appendActionListToDialogQuality,
       clearDialogQuality,
       logQuality,
@@ -121,7 +127,7 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       clearBadStrategyTopicFromBadActionListQuality,
       clearBadPlanFromBadPlanListQuality
     ],
-    [axiumPrinciple],
+    [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]
   );
 };

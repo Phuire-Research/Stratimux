@@ -32,9 +32,10 @@ test('Async Method Test', (done) => {
     },
     (concepts, _) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (experimentState.mock) {
+      if (experimentState?.mock) {
         expect(experimentState.mock).toBe(true);
         plan.conclude();
+        axium.close();
         done();
       }
     }
@@ -51,15 +52,18 @@ test('Async Method with State Test', (done) => {
       });
     },
     (concepts, _) => {
-      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (lastStrategy === timedMockToTrueWithStateTopic) {
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        if (data) {
-          expect(data.mock).toBe(false);
-          expect(experimentState.mock).toBe(true);
-          plan.conclude();
-          done();
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        if (lastStrategy === timedMockToTrueWithStateTopic) {
+          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          if (data) {
+            expect(data.mock).toBe(false);
+            expect(experimentState.mock).toBe(true);
+            plan.conclude();
+            axium.close();
+            done();
+          }
         }
       }
     }
@@ -76,16 +80,19 @@ test('Method Test with State id comparison', (done) => {
       });
     },
     (concepts, _) => {
-      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (lastStrategy === iterateIdThenAddToDataTopic) {
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        if (data) {
-          console.log('Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
-          expect(data.id).toBe(0);
-          expect(experimentState.id).toBe(1);
-          plan.conclude();
-          done();
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        if (lastStrategy === iterateIdThenAddToDataTopic) {
+          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          if (data) {
+            console.log('Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
+            expect(data.id).toBe(0);
+            expect(experimentState.id).toBe(1);
+            plan.conclude();
+            axium.close();
+            done();
+          }
         }
       }
     }
@@ -104,14 +111,17 @@ test('Async Method Test with State id comparison', (done) => {
     (concepts, _) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (lastStrategy === asyncIterateIdThenAddToDataTopic) {
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        if (data) {
-          console.log('Async Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
-          expect(data.id).toBe(0);
-          expect(experimentState.id).toBe(1);
-          plan.conclude();
-          done();
+      if (experimentState) {
+        if (lastStrategy === asyncIterateIdThenAddToDataTopic) {
+          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          if (data) {
+            console.log('Async Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
+            expect(data.id).toBe(0);
+            expect(experimentState.id).toBe(1);
+            plan.conclude();
+            axium.close();
+            done();
+          }
         }
       }
     }

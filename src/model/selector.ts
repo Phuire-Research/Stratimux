@@ -11,7 +11,7 @@ export type KeyedSelector = {
   stateKeys: string
 };
 
-export function selectState<T>(concepts: Concepts, name: string): T {
+export function selectState<T>(concepts: Concepts, name: string): T | undefined {
   let concept;
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
@@ -21,7 +21,7 @@ export function selectState<T>(concepts: Concepts, name: string): T {
       break;
     }
   }
-  return concept?.state as T;
+  return concept?.state as T | undefined;
 }
 
 /**

@@ -9,6 +9,10 @@ import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConc
 import { blockingMode, permissiveMode } from './axium.mode';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { blockingMethodSubscription } from '../../model/axium';
+import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
+import { axiumSelectOpen } from './axium.selector';
+import { selectUnifiedState } from '../../model/selector';
+import { axiumClose } from './qualities/close.quality';
 
 export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
@@ -139,4 +143,29 @@ export const axiumPrinciple: PrincipleFunction = (
     }
   });
   registerPrincipleSubscription(observer, concepts, axiumName, subscription);
+};
+
+export const axiumClosePrinciple: PrincipleFunction = (
+  _: Subscriber<Action>,
+  __: Concepts,
+  concepts$: UnifiedSubject,
+  semaphore: number
+) => {
+  let init = false;
+  const plan = concepts$.stage('Plan Axium Close', [
+    (concepts, dispatch) => {
+      const state = selectUnifiedState<AxiumState>(concepts, semaphore);
+      if (!init && state?.prepareClose) {
+        init = true;
+        concepts$.next({0: concepts[0]});
+        dispatch(axiumClose({exit: state.exit}), {
+          iterateStage: true
+        });
+        plan.conclude();
+      }
+    },
+    () => {
+      //
+    }
+  ]);
 };
