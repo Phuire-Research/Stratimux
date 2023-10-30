@@ -32,6 +32,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
         expect(exists).toBe(false);
         setTimeout(() => {done();}, 500);
         plan.conclude();
+        axium.close();
       }
     }
   ]);

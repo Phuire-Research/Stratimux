@@ -18,16 +18,19 @@ test('Asynchronous recursion', (done) => {
     },
     (concepts, _) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
-      const lastData = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-      const lastDialog = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyDialog);
-      console.log('Check Recursion: ', experimentState.id);
-      if (lastTopic === recursivelyIterateIdTopic) {
-        console.log('Final Recursion Check', experimentState.id, lastData, `\n${lastDialog}`);
-        expect(experimentState.id).toBe(list.length);
-        expect(lastData?.id).toBe(list.length - 1);
-        plan.conclude();
-        done();
+      if (experimentState) {
+        const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
+        const lastData = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        const lastDialog = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyDialog);
+        console.log('Check Recursion: ', experimentState.id);
+        if (lastTopic === recursivelyIterateIdTopic) {
+          console.log('Final Recursion Check', experimentState.id, lastData, `\n${lastDialog}`);
+          expect(experimentState.id).toBe(list.length);
+          expect(lastData?.id).toBe(list.length - 1);
+          plan.conclude();
+          axium.close();
+          done();
+        }
       }
     }
   ]);

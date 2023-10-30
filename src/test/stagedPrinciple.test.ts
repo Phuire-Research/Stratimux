@@ -7,6 +7,7 @@ import { Subscriber } from 'rxjs';
 import { Concepts, createQuality } from '../model/concept';
 import { UnifiedSubject } from '../model/stagePlanner';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 
 type ExperimentState = {
   mock: boolean;
@@ -36,13 +37,19 @@ test('Axium Principle Stage', (done) => {
           },
         });
       },
-      (concepts) => {
+      (concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        if (experimentState.mock) {
+        if (experimentState?.mock) {
           expect(experimentState.mock).toBe(true);
           setTimeout(() => done(), 1000);
+          dispatch(axiumPreClose({exit: false}), {
+            iterateStage: true
+          });
           plan.conclude();
         }
+      },
+      () => {
+        //
       }
     ]);
   };

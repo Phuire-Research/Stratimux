@@ -19,13 +19,17 @@ test('Concepts exists', (done) => {
 
 test('Concepts exists', (done) => {
   const axium = createAxium('Mock Axium', [createCounterConcept(), createChainConcept()]);
-  axium.stage('Check Concepts', [
+  const stage = axium.stage('Check Concepts', [
     (concepts, __) => {
       if (areConceptsLoaded(concepts, [counterName, chainName])) {
         expect(true).toBe(true);
+        stage.conclude();
+        axium.close();
         done();
       } else {
         expect(false).toBe(true);
+        stage.conclude();
+        axium.close();
         done();
       }
     },

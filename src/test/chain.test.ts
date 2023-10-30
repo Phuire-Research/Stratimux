@@ -34,8 +34,9 @@ test('Axium Test', (done) => {
     }
     else if (count === 7) {
       const counter = selectState<Counter>(concepts, counterName);
-      expect(counter.count).toBe(2);
+      expect(counter?.count).toBe(2);
       setTimeout(() => {done();}, 500);
+      axium.close();
       sub.unsubscribe();
     }
   });

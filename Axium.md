@@ -79,6 +79,7 @@ Please avoid using these qualities, but are providing explanations to understand
 * conclude - This is a pure action that has no reducer or method. And will only be issued upon the conclusion of an ActionStrategy. If ownership is part of the concept load. This allows for the conclude to clear the final action's locks via its OwnershipLedger Entries.
 * initializePrinciples - Is a delayed action to allow for the internal set up of the axium at run time.
 * open - Similar to conclude, notifies principles when the axium is open to their emissions. Part of the initialization, addConcept, and removeConcept strategies.
+* close - This will will cancel all internal subscriptions that the axium has access to. As well as all Steams will be completed. The external close() function that the createAxium supplies, dispatches this action. Or can be ran specially via an internal principle towards its governing axium or that of another axium that it is subscribed to.
 * removeConceptsViaQue - This will run via the internal axium principle. Whenever there is an addition to this remove que.
 
 ## Use With Care
@@ -89,7 +90,7 @@ Please avoid using these qualities, but are providing explanations to understand
 ## Useful Axium Qualities
 * open - Sets axium open property by default to True if no payload is supplied. Must be used after setBlockingMode in a strategy to reenable functionality of principles and external subscribers.
 * log - Merely Logs the action, is useful for debugging ActionStrategies as it logs attached Strategy, its current ActionList, and any addition action qualities.
-* close - This will will cancel all internal subscriptions that the axium has access to. As well as all Steams will be completed. The external close() function that the createAxium supplies, dispatches this action. Or can be ran specially via an internal principle towards its governing axium or that of another axium that it is subscribed to.
+* preClose - Will prompt the axium to close and disengage all active subscriptions, while notifying subscribers that their concept has been removed.
 * setMode - If your concept requires a specific modification to the functionality of the stream. This will set the mode index to that stream. Specifically this shouldn't have to be used. But is left to the developer if they run into such a case.
 * setDefaultModeIndex - Should be used if your mode is to be considered the default mode of your application. For utilization within a strategy after setMode. Be sure to a run time search for your concept name and mode, after your concept is added via the addConcept strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the last go To for your applications functionality.
 * clearDialog - Clears the currently stored Stratimux dialog, may be used within a strategy.

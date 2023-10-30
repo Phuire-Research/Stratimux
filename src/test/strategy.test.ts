@@ -17,9 +17,10 @@ test('Axium Counting Strategy Test', (done) => {
         const axiumState = concepts[0].state as AxiumState;
         if (axiumState.lastStrategy === countingTopic) {
           const counter = selectState<Counter>(concepts, counterName);
-          expect(counter.count).toBe(1);
+          expect(counter?.count).toBe(1);
           setTimeout(() => {done();}, 500);
           plan.conclude();
+          axium.close();
         }
       }
     ]);

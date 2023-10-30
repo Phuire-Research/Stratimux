@@ -4,7 +4,7 @@ import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
-import { selectState } from '../../model/selector';
+import { selectState, selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { UnifiedSubject  } from '../../model/stagePlanner';
@@ -41,8 +41,8 @@ export const ownershipPrinciple: PrincipleFunction = (
     },
     (cpts, _) => {
       let concepts = cpts;
-      let ownershipState = selectState<OwnershipState>(concepts, ownershipName);
-      if (ownershipState.initialized) {
+      let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
+      if (ownershipState?.initialized) {
         // This will be the point of dispatch of Qued Actions
         let newAction;
         if (ownershipState.pendingActions.length > 0) {
@@ -56,7 +56,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             }
           }
           if (newAction) {
-            ownershipState = selectState<OwnershipState>(concepts, ownershipName);
+            ownershipState = selectUnifiedState(concepts, semaphore) as OwnershipState;
             const newPendingActions = [];
             for (const pending of ownershipState.pendingActions) {
               if (!areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
@@ -92,7 +92,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             }
           }
         }
-      } else if (!initDispatch && !ownershipState.initialized && ownershipState.isResponsibleForMode) {
+      } else if (!initDispatch && !ownershipState?.initialized && ownershipState?.isResponsibleForMode) {
         initDispatch = true;
         observer.next(
           strategyBegin(
@@ -122,8 +122,8 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
     },
     (cpts, __) => {
       const concepts = cpts;
-      const ownershipState = selectState<OwnershipState>(concepts, ownershipName);
-      if (ownershipState.initialized) {
+      const ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
+      if (ownershipState?.initialized) {
         let modified = false;
         const newLedger = createOwnershipLedger();
         for (const [key, line] of ownershipState.ownershipLedger.entries()) {
