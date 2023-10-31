@@ -58,9 +58,10 @@ export type AxiumState = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
   concepts$: UnifiedSubject;
+  innerConcepts$: UnifiedSubject;
+  subConcepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
-  subConcepts$: UnifiedSubject;
   badPlans: Plan[];
   badActions: Action[];
 }
@@ -91,9 +92,10 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     concepts$: new UnifiedSubject(),
+    innerConcepts$: new UnifiedSubject(),
+    subConcepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
-    subConcepts$: new UnifiedSubject(),
     badPlans: [],
     badActions: []
   };
