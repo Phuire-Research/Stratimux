@@ -23,6 +23,7 @@ The design decision here allows us to forgo the need for dependency injection. A
 export type AxiumState {
   name: string;
   open: boolean;
+  exit: boolean;
   logging: boolean;
   dialog: string;
   storeDialog: boolean;
@@ -37,13 +38,15 @@ export type AxiumState {
   generalSubscribers: NamedSubscribers[];
   action$: Subject<Action>;
   concepts$: UnifiedSubject;
+  innerConcepts$: UnifiedSubject;
+  subConcepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
-  subConcepts$: UnifiedSubject;
 }
 ```
 * name - This should be set to a unique network identifier, and/or the concept of your system.
 * open - This is utilized by principles and external subscribers to denote when they should initialize their functionality. 
+* exit - Controls whether close will have the process exit.
 * logging - controls whether the Stratimux dialog paragraphs are emitted upon strategy completion. In addition to other debugging procedures.
 * dialog - Is the internal representation of the strategies that the axium has ran.
 * storeDialog - This is set to false by default to save on memory, but if true will store each dialog, and allows such to be subscribed to.
@@ -57,10 +60,11 @@ export type AxiumState {
 * methodSubscribers - Accumulates all method subscriptions for their manipulation at run time.
 * generalSubscribers - Same as method subscribers, but a catch all including that of principles and their internal subscriptions that would ordinarily leave principles as hot and active in memory if not concluded upon removal or close.
 * action$ - Is the internal action stream.  
-* concepts$ - Is the internal Concepts stream that methods and principles have access to.
+* concepts$ - Is the internal Concepts stream that methods and principles have access to, will not be notified in blocking mode.
+* innerConcepts$ - Internal Concepts stream that only the Axium principles have access to.
+* subConcepts$ - This is the outer subscription that other axiums or applications may have access to. While in blocking mode, these subscriptions are not updated.
 * addConceptQue - The current pattern to allow for principles to effect the concepts within the application. Rather than a direct subscription to the action$, they listen to state properties to control what actions they emit into the stream. In this case a set of concepts to be loaded into the axium.
 * removeConceptQue - The inverse of the above to remove concepts.
-* subConcepts - This is the outer subscription that other axiums or applications may Have access to. While in blocking mode, these subscriptions are not updated.
 
 ## The Anatomy of an Axium
 * Action - Is a dumb object that is supplied some data as payload or performs some transformation of state based on its semaphore which is inferred via its type. Is the messaging protocol of an axium.
