@@ -12,6 +12,7 @@ import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
+  axiumName,
 } from '../concepts/axium/axium.concept';
 import { axiumClose } from '../concepts/axium/qualities/close.quality';
 import {
@@ -113,7 +114,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   }));
   axiumState.action$
     .pipe(
-      withLatestFrom(axiumState.concepts$),
+      withLatestFrom(axiumState.innerConcepts$),
       // This will be where the Ownership Principle will be Loaded
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
@@ -137,6 +138,13 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   axiumState = concepts[0].state as AxiumState;
   const action$ = axiumState.action$;
   const subConcepts$ = axiumState.subConcepts$;
+  const concepts$Sub = axiumState.concepts$.subscribe(_concepts => {
+    axiumState.innerConcepts$.next(_concepts);
+  });
+  axiumState.generalSubscribers.push({
+    name: axiumName,
+    subscription: concepts$Sub
+  });
   axiumState.concepts$.next(concepts);
   axiumState.action$.next(
     strategyBegin(initializationStrategy(concepts)),

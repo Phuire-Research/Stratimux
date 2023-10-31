@@ -12,7 +12,7 @@ export type SetDefaultModePayload = {
 export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
 export const axiumSetDefaultMode = prepareActionWithPayloadCreator<SetDefaultModePayload>(axiumSetDefaultModeType);
 
-export function setDefaultModeReducer(state: AxiumState, _action: Action) {
+export function setDefaultModeReducer(state: AxiumState, _action: Action): AxiumState {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
@@ -37,7 +37,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action) {
     ...state,
     modeIndex: state.defaultModeIndex,
     methodSubscribers,
-  } as AxiumState;
+  };
 }
 
 export const setDefaultModeQuality = createQuality(

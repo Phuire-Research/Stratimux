@@ -12,7 +12,7 @@ export type SetBlockingModePayload = {
 export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
 export const axiumSetBlockingMode = prepareActionWithPayloadCreator<SetBlockingModePayload>(axiumSetBlockingModeType);
 
-export function setBlockingModeReducer(state: AxiumState, _action: Action) {
+export function setBlockingModeReducer(state: AxiumState, _action: Action): AxiumState {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
@@ -36,7 +36,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action) {
 
   return {
     ...state,
-    modeIndex: [0],
+    modeIndex: 0,
     methodSubscribers,
     open: false,
   };

@@ -2,7 +2,7 @@ import { Subject, Subscriber } from 'rxjs';
 import { Concept, Concepts, defaultMethodCreator, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
-import { AxiumState } from '../axium.concept';
+import { AxiumState, axiumName } from '../axium.concept';
 import { createQuality } from '../../../model/concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
@@ -22,7 +22,16 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action):
   const concepts$ = state.concepts$ as UnifiedSubject;
   const principleSubscribers = state.generalSubscribers;
   forEachConcept(concepts ,((concept: Concept, semaphore) => {
-    if (concept.principles) {
+    if (concept.name === axiumName && concept.principles) {
+      concept.principles.forEach(principle => {
+        const observable = createPrinciple$(principle, concepts, state.innerConcepts$, semaphore as number);
+        principleSubscribers.push({
+          name: concept.name,
+          subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
+        });
+      });
+      conceptCounter += 1;
+    } else if (concept.principles) {
       concept.principles.forEach(principle => {
         const observable = createPrinciple$(principle, concepts, concepts$, semaphore as number);
         principleSubscribers.push({

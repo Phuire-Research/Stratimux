@@ -70,7 +70,7 @@ export const blockingMode: Mode = (
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
       const state = concepts[action.semaphore[0]].state;
       concepts[action.semaphore[0]].state = reduce(state, action);
-      concepts$.next(concepts);
+      axiumState.innerConcepts$.next(concepts);
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
