@@ -7,7 +7,7 @@ import {
 } from 'rxjs';
 import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, Concepts, Method, Mode, forEachConcept } from './concept';
+import { Concept, Concepts, Method, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -89,8 +89,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
             }
             return caught;
           }));
-        quality.toString = () =>
-          (`Type: ${quality.actionType} Reducer: ${quality.reducer.toString()} Method: ${quality.method?.toString()}`);
+        quality.toString = qualityToString(quality);
         const methodSub = quality.method.subscribe((action: Action) => {
           blockingMethodSubscription(axiumState.action$, action);
         }) as Subscriber<Action>;

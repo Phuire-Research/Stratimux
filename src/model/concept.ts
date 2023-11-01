@@ -301,14 +301,30 @@ export const forEachConcept = (concepts: Concepts, each: (concept: Concept, sema
   }
 };
 
+const stateToString = (state: Record<string, unknown>): string => {
+  let final = '{\n';
+  const keys = Object.keys(state);
+  for (const key of keys) {
+    let input = '';
+    try {
+      input += `${key}: ${JSON.stringify(state[key])},\n`;
+    } catch (err) {
+      input = `${key}: CIRCULAR,\n`;
+    }
+    final += input;
+  }
+  final += '}';
+  return final;
+};
+
 export const conceptToString = (concept: Concept): string => {
   let output = '';
   output += `{\nname: ${concept.name},`;
   if (concept.unified.length > 0) {
     output += `\nunified: ${concept.unified},`;
   }
-  output += `\nquality: ${concept.qualities.toString()},`;
-  output += `\nstate: ${JSON.stringify(concept.state)}, `;
+  output += `\nqualities: [ ${concept.qualities.toString()}\n],`;
+  output += `\nstate: ${stateToString(concept.state)}, `;
   if (concept.principles) {
     output += `\nprinciples: [ ${concept.principles.map(p => p.toString()).join(',')} ]`;
   }
@@ -324,6 +340,17 @@ export const conceptToString = (concept: Concept): string => {
 
 export const conceptsToString = (concepts: Concepts): string => {
   const conceptStringArray: string[] = [];
-  forEachConcept(concepts, conceptToString);
-  return conceptStringArray.join(',\n');
+  forEachConcept(concepts, (concept) => {
+    conceptStringArray.push(conceptToString(concept));
+  });
+  conceptStringArray.push(']');
+  return '[\n' + conceptStringArray.join(',\n');
+};
+
+export const qualityToString = (quality: Quality) => () => {
+  const actionType = quality.actionType;
+  const r = quality.reducer.toString();
+  const reducer = r === 'Default Reducer' ? r : 'Reducer';
+  const method = quality.method?.toString();
+  return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
