@@ -52,7 +52,9 @@ export {
   isConceptLoaded,
   areConceptsLoaded,
   unifyConcepts,
-  forEachConcept
+  forEachConcept,
+  conceptToString,
+  conceptsToString
 } from './model/concept';
 export type {
   Concept,

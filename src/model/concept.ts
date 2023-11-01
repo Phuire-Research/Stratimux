@@ -25,6 +25,7 @@ export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [
 export type Quality = {
   actionType: ActionType;
   reducer: Reducer;
+  toString: () => string;
   methodCreator?: MethodCreator;
   method?: Method;
   subject?: Subject<Action>;
@@ -241,6 +242,7 @@ export function createQuality(
 export function defaultReducer(state: unknown, _: Action) {
   return state;
 }
+defaultReducer.toString = () => ('Default Reducer');
 
 export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();
@@ -255,6 +257,8 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
       };
     }),
   );
+
+  defaultMethod.toString = () => ('Default Method');
   return [defaultMethod, defaultSubject];
 };
 
@@ -295,4 +299,58 @@ export const forEachConcept = (concepts: Concepts, each: (concept: Concept, sema
     const index = Number(i);
     each(concepts[index], index);
   }
+};
+
+const stateToString = (state: Record<string, unknown>): string => {
+  let final = '{\n';
+  const keys = Object.keys(state);
+  for (const key of keys) {
+    let input = '';
+    try {
+      input += `${key}: ${JSON.stringify(state[key])},\n`;
+    } catch (err) {
+      input = `${key}: CIRCULAR,\n`;
+    }
+    final += input;
+  }
+  final += '}';
+  return final;
+};
+
+export const conceptToString = (concept: Concept): string => {
+  let output = '';
+  output += `{\nname: ${concept.name},`;
+  if (concept.unified.length > 0) {
+    output += `\nunified: ${concept.unified},`;
+  }
+  output += `\nqualities: [ ${concept.qualities.toString()}\n],`;
+  output += `\nstate: ${stateToString(concept.state)}, `;
+  if (concept.principles) {
+    output += `\nprinciples: [ ${concept.principles.map(p => p.toString()).join(',')} ]`;
+  }
+  if (concept.mode) {
+    output += `\nmode: [ ${concept.mode.map(m => m.toString()).join(',')} ]`;
+  }
+  if (concept.meta) {
+    output += `\nmeta: ${JSON.stringify(concept.meta)}`;
+  }
+  output += '\n}';
+  return output;
+};
+
+export const conceptsToString = (concepts: Concepts): string => {
+  const conceptStringArray: string[] = [];
+  forEachConcept(concepts, (concept) => {
+    conceptStringArray.push(conceptToString(concept));
+  });
+  conceptStringArray.push(']');
+  return '[\n' + conceptStringArray.join(',\n');
+};
+
+export const qualityToString = (quality: Quality) => () => {
+  const actionType = quality.actionType;
+  const r = quality.reducer.toString();
+  const reducer = r === 'Default Reducer' ? r : 'Reducer';
+  const method = quality.method?.toString();
+  return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
