@@ -22,6 +22,8 @@ function addConceptsFromQueReducer(state: AxiumState, action: Action) {
             }
             return caught;
           }));
+        quality.toString = () =>
+          (`Type: ${quality.actionType} Reducer: ${quality.reducer.toString()} Method: ${quality.method?.toString()}`);
         const methodSub = quality.method.subscribe((act: Action) => {
           const action$ = state.action$ as Subject<Action>;
           blockingMethodSubscription(action$, act);

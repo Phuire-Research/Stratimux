@@ -19,7 +19,7 @@ type Action = {
     expiration: number;
     axium?: string;
 };
-type Method = Observable<Action>;
+type Method = Observable<Action> & {toString: () => string};
 
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {
@@ -37,6 +37,7 @@ export const createMethod =
         };
       }),
     );
+    defaultMethod.toString = () => ('Method');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodWithState =
@@ -61,6 +62,7 @@ export const createMethodWithState =
         };
       }),
     );
+    defaultMethod.toString = () => ('Method with State');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethod =
@@ -71,6 +73,7 @@ export const createAsyncMethod =
         asyncMethod(controller, action);
       })),
     );
+    defaultMethod.toString = () => ('Async Method');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethodWithState =
@@ -88,6 +91,7 @@ export const createAsyncMethodWithState =
         asyncMethodWithState(controller, action, state);
       })),
     );
+    defaultMethod.toString = () => ('Async Method with State');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodDebounce =
@@ -112,6 +116,7 @@ export const createMethodDebounce =
         }
       }),
     );
+    defaultMethod.toString = () => ('Debounce Method');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodDebounceWithState =
@@ -139,6 +144,7 @@ export const createMethodDebounceWithState =
         }
       }),
     );
+    defaultMethod.toString = () => ('Debounce Method with State');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethodDebounce =
@@ -152,6 +158,7 @@ export const createAsyncMethodDebounce =
         });
       }),
     );
+    defaultMethod.toString = () => ('Async Debounce Method');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethodDebounceWithState =
@@ -168,6 +175,7 @@ export const createAsyncMethodDebounceWithState =
         });
       })
     );
+    defaultMethod.toString = () => ('Async Debounce Method with State');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodThrottle =
@@ -192,6 +200,7 @@ export const createMethodThrottle =
         }
       }),
     );
+    defaultMethod.toString = () => ('Throttle Method');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodThrottleWithState =
@@ -219,6 +228,7 @@ export const createMethodThrottleWithState =
         }
       }),
     );
+    defaultMethod.toString = () => ('Throttle Method with State');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethodThrottle =
@@ -232,6 +242,7 @@ export const createAsyncMethodThrottle =
         });
       }),
     );
+    defaultMethod.toString = () => ('Async Throttle Method');
     return [defaultMethod, defaultSubject];
   };
 export const createAsyncMethodThrottleWithState =
@@ -248,5 +259,6 @@ export const createAsyncMethodThrottleWithState =
         });
       })
     );
+    defaultMethod.toString = () => ('Async Throttle Method with State');
     return [defaultMethod, defaultSubject];
   };

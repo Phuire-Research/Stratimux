@@ -7,14 +7,13 @@ import {
 } from 'rxjs';
 import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, Concepts, Mode, forEachConcept } from './concept';
+import { Concept, Concepts, Method, Mode, forEachConcept } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
   axiumName,
 } from '../concepts/axium/axium.concept';
-import { axiumClose } from '../concepts/axium/qualities/close.quality';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
@@ -82,9 +81,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   forEachConcept(concepts, ((concept, semaphore) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        const [method, subject] = quality.methodCreator(axiumState.concepts$, semaphore);
-        quality.method = method;
-        quality.subject = subject;
+        [quality.method, quality.subject] = quality.methodCreator(axiumState.concepts$, semaphore);
         quality.method.pipe(
           catchError((err: unknown, caught: Observable<Action>) => {
             if (axiumState.logging) {
@@ -92,6 +89,8 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
             }
             return caught;
           }));
+        quality.toString = () =>
+          (`Type: ${quality.actionType} Reducer: ${quality.reducer.toString()} Method: ${quality.method?.toString()}`);
         const methodSub = quality.method.subscribe((action: Action) => {
           blockingMethodSubscription(axiumState.action$, action);
         }) as Subscriber<Action>;
