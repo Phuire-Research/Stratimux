@@ -301,26 +301,29 @@ export const forEachConcept = (concepts: Concepts, each: (concept: Concept, sema
   }
 };
 
+export const conceptToString = (concept: Concept): string => {
+  let output = '';
+  output += `{\nname: ${concept.name},`;
+  if (concept.unified.length > 0) {
+    output += `\nunified: ${concept.unified},`;
+  }
+  output += `\nquality: ${concept.qualities.toString()},`;
+  output += `\nstate: ${JSON.stringify(concept.state)}, `;
+  if (concept.principles) {
+    output += `\nprinciples: [ ${concept.principles.map(p => p.toString()).join(',')} ]`;
+  }
+  if (concept.mode) {
+    output += `\nmode: [ ${concept.mode.map(m => m.toString()).join(',')} ]`;
+  }
+  if (concept.meta) {
+    output += `\nmeta: ${JSON.stringify(concept.meta)}`;
+  }
+  output += '\n}';
+  return output;
+};
+
 export const conceptsToString = (concepts: Concepts): string => {
   const conceptStringArray: string[] = [];
-  forEachConcept(concepts, (concept) => {
-    let output = '';
-    output += `{\nname: ${concept.name},`;
-    if (concept.unified.length > 0) {
-      output += `\nunified: ${concept.unified},`;
-    }
-    output += `\nquality: ${concept.qualities.toString()},`;
-    output += `\nstate: ${JSON.stringify(concept.state)}, `;
-    if (concept.principles) {
-      output += `\nprinciples: [ ${concept.principles.map(p => p.toString()).join(',')} ]`;
-    }
-    if (concept.mode) {
-      output += `\nmode: [ ${concept.mode.map(m => m.toString()).join(',')} ]`;
-    }
-    if (concept.meta) {
-      output += `\nmeta: ${JSON.stringify(concept.meta)}`;
-    }
-    output += '\n}';
-  });
+  forEachConcept(concepts, conceptToString);
   return conceptStringArray.join(',\n');
 };
