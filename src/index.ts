@@ -1,6 +1,8 @@
 export { createAxium } from './model/axium';
 export type {
   ActionNode,
+  ActionNotes,
+  ActionNodeOptions,
   ActionStrategy,
   ActionStrategyParameters,
 } from './model/actionStrategy';
