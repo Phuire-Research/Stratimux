@@ -172,7 +172,7 @@ Stratimux is the graph computational framework release of a new unified turing m
 
 The pattern itself is a unified set of logical explanations of doing as a composable series of functions. Unified to the mechanism of that doing via code implementations of that logical explanation. We organize using concepts as it relays to a historic pursuit of unifying all fields of science in unified with a logical verbose explanation. And is the comparable comparison to a graph of machine learning universal functions. That is represented by a generated neural network, that each layer aggregates to greater universal function via weighted sum, and creates a sequence of greater universal functions.
 
-The direct comparison of Stratimux to an LLM, during runtime these actions are outputted to an actionList that is later composed as a Stratimux sentence. And each action itself is a composition of functions to accomplish a transformation of data, similar to the weighted sum, but excludes unused nodes/qualities from each successive recursion.
+The direct comparison of Stratimux to an LLM, during runtime these actions are outputted to an actionList that is later composed as a Stratimux sentence. And each action itself is a composition of functions that accomplish a transformation of data, similar to the weighted sum of LLMs, but excludes unused nodes/qualities from each successive recursion.
 
 ### The anatomy of a Stratimux sentence
 ```
