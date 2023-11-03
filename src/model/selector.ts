@@ -3,12 +3,70 @@ import { Concept, Concepts } from './concept';
 
 // Dumb association, as we would be setting this value via a generated value
 // Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
-//  Will not worry about such until we are working in a Massively Parallel Environment
+//  Will not worry about such until we are working in a Massively Parallel Environment.
 //  But this is where we would effect such and likewise the Consumer Function would have to be Updated
-// TO-DO: Have state keys be represented as an array of strings
+// TO-DO: Have state keys be represented as an array of strings.
 export type KeyedSelector = {
   conceptName: string,
   stateKeys: string
+};
+
+/**
+ * For usage outside of the Axium, or when subscribed to other Axium'sl
+ */
+export const createConceptKeyedSelector =
+  (concepts: Concepts, conceptName: string, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
+    let exists = false;
+    const indexes = Object.keys(concepts).map(key => Number(key));
+    for (const index of indexes) {
+      if (concepts[index].name === conceptName) {
+        exists = true;
+        break;
+      }
+    }
+    if (exists) {
+      const newSelector = {...keyedSelector};
+      keyedSelector.conceptName = conceptName;
+      return newSelector;
+    } else {
+      return undefined;
+    }
+  };
+
+/**
+ * This will update a concepts KeyedSelector to its currently unified concept.
+ * @Note Use this in place of createUnifiedSelector if you find yourself needing to lock deep values.
+ */
+export const updateUnifiedKeyedSelector = (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector) => {
+  if (concepts[semaphore]) {
+    const newSelector = {...keyedSelector};
+    keyedSelector.conceptName = concepts[semaphore].name;
+    return newSelector;
+  } else {
+    return undefined;
+  }
+};
+
+/**
+ * Will create a new KeyedSelector during runtime, for usage within your principles.
+ * @Note Will want to expand this later, so that we can select into objects and arrays.
+ *  This would allow us to lock parts of such in later revisions, not an immediate concern.
+ */
+export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
+  concepts: Concepts,
+  semaphore: number,
+  key: keyof T
+): KeyedSelector | undefined => {
+  const concept = concepts[semaphore];
+  if (concept) {
+    const name = concept.name;
+    return {
+      conceptName: name,
+      stateKeys: key as string,
+    };
+  } else {
+    return undefined;
+  }
 };
 
 export function selectState<T>(concepts: Concepts, name: string): T | undefined {

@@ -69,7 +69,16 @@ export type {
   MethodCreator,
 } from './model/concept';
 export type { KeyedSelector } from './model/selector';
-export { selectState, selectConcept, selectSlice, selectPayload, selectUnifiedState } from './model/selector';
+export {
+  selectState,
+  selectConcept,
+  selectSlice,
+  selectPayload,
+  selectUnifiedState,
+  updateUnifiedKeyedSelector,
+  createConceptKeyedSelector,
+  createUnifiedKeyedSelector
+} from './model/selector';
 export { PrincipleFunction } from './model/principle';
 export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
 export { createActionController$ } from './model/actionController';
