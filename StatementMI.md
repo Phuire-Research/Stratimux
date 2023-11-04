@@ -39,7 +39,7 @@ For example: "!@>*Uq!12|" cause doom "^%^213e" "!@o#Y12&%."
 
 The solution here, would be using a comparable surrogate ABI. That is not a block box and cannot have the same "mutation" hidden with a graph of universal functions. That runs the chance of being shared by the aligning AI due to black box functionality.
 
-This merely demonstrates that a data first approach is far more practical. That the ABI itself would also be training data and alignment a method of provable alignment. And if you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw transparent alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
+This merely demonstrates that a data first approach is far more practical. That the ABI itself would also be quality data, and represents a direct method of training provable alignment. And if you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw transparent alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
 
 
 ## Statements
