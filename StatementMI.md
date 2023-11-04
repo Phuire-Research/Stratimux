@@ -22,8 +22,8 @@ Therefore rather than a generalized hope of alignment. We can provide exact trai
 ### Conjecture:
 Just remember MI is not a silver bullet and comes with a major caveat. It's a start, just like any great idea.
 If weighted sum for "Don't cause doom "D" "E" "F"":  ->  0.543334 + 0.5233 + 0.23984 + "D" + "E" + "F" -> Might cause doom
-And you use MI to align those weights:                      ->  0.88998 + 0.98732 + 0.89878 + "D" + "E" + "F" - > Won't cause doom
-Cause '"A" cause doom "D" "E" "F"':                               ->  "A" + 0.98732 + 0.89878 + "D" + "E" + "F" -> Just increased chance of doom in a different context
+And you use MI to align those weights:               ->  0.88998 + 0.98732 + 0.89878 + "D" + "E" + "F" - > Won't cause doom
+Cause '"A" cause doom "D" "E" "F"':                  ->  "A" + 0.98732 + 0.89878 + "D" + "E" + "F" -> Just increased chance of doom in a different context
 
 The above is a massive over simplification of how a sequence of greater universal functions would inform some output. The issue is that each node in the feed forward is obfuscating a complex network of graph relations. That a node can cause a increase to the weight of a HTML output, while informing some cooking recipe, or even informing some ethics.
 
@@ -34,4 +34,4 @@ Data in combination with this approach is better. If you don't want a network ou
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/Stratimux/blob/main/StatementSafety.md)
 * [The Human Ability to Halt](https://github.com/Phuire-Research/Stratimux/blob/main/StatementHH.md)
-* [Release Disclosure](https://github.com/Phuire-Research/Stratimux/blob/main/ReleaseDisclosure.md)
+* [Release Disclosure](https://github.com/Phuire-Research/Stratimux/blob/main/ReleaseDisclosure.md):w
