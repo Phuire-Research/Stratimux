@@ -29,6 +29,8 @@ The above is a massive over simplification of how a sequence of greater universa
 
 The point is the approach is in the higher orders of complexity and is not a silver bullet, the complexity is some exponent to the size of the network to get it right. Just because you have trimmed some possible output, does not mean you did not inadvertently increase the weight of another one. Such as we can strike doom from above and just think of all the weights that "cause" would influence. Can create a net increase of any weighted sum that might have "cause" within that input.
 
+Further, because the same node that is adding weight to that layer's sum is tweaked via some alignment up/down regulation of that node. Other parts of that node(html, cooking, ethics, etc...) may receive the same regulation, or have another advertent effect entirely. Would be similar to causing a mutation within that neural network in worst cause scenario. Just like our own bodies are suspectable to "radiation" and we can use such to eliminate cancer, likewise that same effect can create other "mutations." Granted this is far more specific at what is getting that "radiation," as an analog for change of regulation.
+
 Data in combination with this approach is better. If you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry and train it to say that it doesn't know chemistry and that you should interact with a different bot. Then throw alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value, does not mean there isn't a network effect across a massively complex set of interactions.
 
 ## Statements
