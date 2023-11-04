@@ -33,7 +33,14 @@ Further, because the same node that is adding weight to that layer's sum is twea
 
 The issue is not only the current layer whose weights are being altered, but the the entire sequence in aggregate itself. That some unlike sequence might interact with that alignment regulation that was not accounted for in testing. And alter its own sequence in unexpected ways to interact with other "mutations." And like majority of our own "mutations," they would appear as benign hallucinations.
 
-Data in combination with this approach is better. If you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
+Where this would be compounding, noting the major investments in the area of "AI Aligning AI." Is whether that AI is indeed aligning the model in the first place. In [Fair Washing](https://arxiv.org/abs/1901.09749), it is noted that due to this complex interaction, you can use a "surrogate AI," to rationalize the decisions a model is making in some selection process as logical. Alignment itself is just another selection process that is tweaking the internals of the model as an additional refinement. Except here you are training in unison a baseline pair of models that can share a similar mutation. Further this mutation would be compounding in this exact situation. And does not need to correspond to human understanding, or what a human would place by probability into the input to test that specific case of alignment.
+
+For example: "!@>*Uq!12|" cause doom "^%^213e" "!@o#Y12&%."
+
+The solution here, would be using a comparable surrogate ABI. That is not a block box and cannot have the same "mutation" hidden with a graph of universal functions. That runs the chance of being shared by the aligning AI due to black box functionality.
+
+This merely demonstrates that a data first approach is far more practical. That the ABI itself would also be quality data, and represents a direct method of training provable alignment. And if you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw transparent alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
+
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/Stratimux/blob/main/StatementSafety.md)
