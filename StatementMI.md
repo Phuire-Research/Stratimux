@@ -33,7 +33,7 @@ Further, because the same node that is adding weight to that layer's sum is twea
 
 The issue is not only the current layer whose weights are being altered, but the the entire sequence in aggregate itself. That some unlike sequence might interact with that alignment regulation that was not accounted for in testing. And alter its own sequence in unexpected ways to interact with other "mutations." And like majority of our own "mutations," they would appear as benign hallucinations.
 
-Data in combination with this approach is better. If you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry and train it to say that it doesn't know chemistry and that you should interact with a different bot. Then throw alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value, does not mean there isn't a network effect across a massively complex set of interactions.
+Data in combination with this approach is better. If you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/Stratimux/blob/main/StatementSafety.md)
