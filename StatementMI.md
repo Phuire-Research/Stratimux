@@ -25,7 +25,7 @@ Therefore, rather than a generalized hope of alignment. We can provide exact tra
 Just remember MI is not a silver bullet and comes with a major caveat. It's a start, just like any great idea.
 If weighted sum for "Don't cause doom "D" "E" "F"":  ->  0.543334 + 0.5233 + 0.23984 + "D" + "E" + "F" -> Might cause doom
 And you use MI to align those weights:               ->  0.88998 + 0.98732 + 0.89878 + "D" + "E" + "F" - > Won't cause doom
-Then '"A" cause doom "D" "E" "F"':                  ->  "A" + 0.98732 + 0.89878 + "D" + "E" + "F" -> Just increased chance of doom in a different context
+Then '"A" cause doom "D" "E" "F"':                   ->  "A" + 0.98732 + 0.89878 + "D" + "E" + "F" -> Just increased chance of doom in a different context
 
 The above is a massive oversimplification of how a sequence of greater universal functions would inform some output. The issue is that each node in the feed forward is obfuscating a complex network of graph relations. That a node can cause an increase to the weight of a HTML output, while informing some cooking recipe, or even informing some ethics.
 
