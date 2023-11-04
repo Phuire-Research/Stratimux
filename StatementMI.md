@@ -19,6 +19,18 @@ This is a fundamental flaw in current Neural Networks. And what Stratimux demons
 
 Therefore rather than a generalized hope of alignment. We can provide exact training data to a Neural Network that demonstrates the specifications of "ethical"/any graph based algorithms that can be deployed in production atomically. Without fear of unintended side effects due to the alignment of layers of weighted sums. Where the Ai acts as supervisor of atomically deployed functionality, versus the mechanism of automation itself. That an AGI would utilize the most efficient compression algorithm as a tool as a sign of intelligence, versus relying on its own internal structure to perform that exact calculation.
 
+### Conjecture:
+Just remember MI is not a silver bullet and comes with a major caveat. It's a start, just like any great idea.
+If weighted sum for "Don't cause doom "D" "E" "F"":  ->  0.543334 + 0.5233 + 0.23984 + "D" + "E" + "F" -> Might cause doom
+And you use MI to align those weights:                      ->  0.88998 + 0.98732 + 0.89878 + "D" + "E" + "F" - > Won't cause doom
+Cause '"A" cause doom "D" "E" "F"':                               ->  "A" + 0.98732 + 0.89878 + "D" + "E" + "F" -> Just increased chance of doom in a different context
+
+The above is a massive over simplification of how a sequence of greater universal functions would inform some output. The issue is that each node in the feed forward is obfuscating a complex network of graph relations. That a node can cause a increase to the weight of a HTML output, while informing some cooking recipe, or even informing some ethics.
+
+The point is the approach is in the higher orders of complexity and is not a silver bullet, the complexity is some exponent to the size of the network to get it right. Just because you have trimmed some possible output, does not mean you did not inadvertently increase the weight of another one. Such as we can strike doom from above and just think of all the weights that "cause" would influence. Creating a net increase of any weighted sum that might have "cause" within that input.
+
+Data in combination with this approach is better. If you don't want a network outputting dangerous chemical combinations. Don't give it any data related to chemistry and train it to say that it doesn't know chemistry and that you should interact with a different bot. Then throw alignment on top of that if you are really concerned, but remember that just because you managed to tweak some value, does not mean there isn't a network effect across a massively complex set of interactions.
+
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/Stratimux/blob/main/StatementSafety.md)
 * [The Human Ability to Halt](https://github.com/Phuire-Research/Stratimux/blob/main/StatementHH.md)
