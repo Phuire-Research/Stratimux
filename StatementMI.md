@@ -35,7 +35,7 @@ The issue is not only the current layer whose weights are being altered, but the
 
 Where this would be compounding, noting the major investments in the area of "AI Aligning AI." Is whether that AI is indeed aligning the model in the first place. In [Fair Washing](https://arxiv.org/abs/1901.09749), it is noted that due to this complex interaction, you can use a "surrogate AI," to rationalize the decisions a model is making in some selection process as logical. Alignment itself is just another selection process that is tweaking the internals of the model as an additional refinement. Except here you are training in unison a baseline pair of models that can share a similar mutation. Further this mutation would be compounding in this exact situation. And does not need to correspond to human understanding, or what a human would place by probability into the input to test that specific case of alignment.
 
-For example: "!@>*Uq!12| cause doom ^%^213e !@o#Y12&%."
+For example: "!@>*Uq!12|" cause doom "^%^213e" "!@o#Y12&%."
 
 The solution here, would be using a comparable surrogate ABI. That is not a block box and cannot have the same "mutation" hidden with a graph of universal functions. That runs the chance of being shared by the aligning AI due to black box functionality.
 
