@@ -239,13 +239,12 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
     initialNode: stepOne
   });
 };
-
 ```
 This will return an actionNode that will omit itself from the actionList, while still allowing for the ease of composition that ActionStrategyStitches afford.
 
-As will this still allows for your ActionStrategyStitches to be used independently.
+As will this still allows for your ActionStrategyStitches to be used independently or as arguments for a composing strategy.
 ```typescript
-// Within some stage
+// Independent usage
 (_, dispatch) => {
   const [
     _
@@ -253,6 +252,13 @@ As will this still allows for your ActionStrategyStitches to be used independent
   ] = yourStrategyStitch();
 
   dispatch(strategyBegin(yourStrategy), {
+    iterateStage: true
+  });
+}
+// Composing strategy
+(_, dispatch) => {
+  const strategy = yourComposingStrategy(yourStrategyStitch);
+  dispatch(strategyBegin(strategy), {
     iterateStage: true
   });
 }
