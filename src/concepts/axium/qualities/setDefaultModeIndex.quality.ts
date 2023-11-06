@@ -16,7 +16,7 @@ export function setDefaultModeIndexReducer(state: AxiumState, action: Action) {
     defaultModeIndex: payload.index,
   } as AxiumState;
 }
-export const setDefaultModeIndexQuality = createQuality(
+export const axiumSetDefaultModeIndexQuality = createQuality(
   axiumSetDefaultModeIndexType,
   setDefaultModeIndexReducer,
   defaultMethodCreator

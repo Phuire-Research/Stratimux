@@ -42,7 +42,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action): Axiu
   };
 }
 
-export const setBlockingModeQuality = createQuality(
+export const axiumSetBlockingModeQuality = createQuality(
   axiumSetBlockingModeType,
   setBlockingModeReducer,
   defaultMethodCreator

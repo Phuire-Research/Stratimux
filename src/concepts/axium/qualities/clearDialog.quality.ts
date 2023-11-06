@@ -12,7 +12,7 @@ export function clearDialogReducer(state: AxiumState, action: Action) {
   };
 }
 
-export const clearDialogQuality = createQuality(
+export const axiumClearDialogQuality = createQuality(
   axiumClearDialogType,
   clearDialogReducer,
   defaultMethodCreator,

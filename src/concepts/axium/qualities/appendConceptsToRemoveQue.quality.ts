@@ -24,7 +24,7 @@ export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Acti
   };
 }
 
-export const appendConceptsToRemoveQueQuality = createQuality(
+export const axiumAppendConceptsToRemoveQueQuality = createQuality(
   axiumAppendConceptsToRemoveQueType,
   appendConceptsToRemoveQueReducer,
   defaultMethodCreator

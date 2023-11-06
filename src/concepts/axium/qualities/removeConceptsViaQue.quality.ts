@@ -8,7 +8,7 @@ import { NamedStagePlanner } from '../../../model/stagePlanner';
 export const axiumRemoveConceptsViaQueType: ActionType = 'remove Concepts via Axium\'s Removal Concept Que';
 export const axiumRemoveConceptsViaQue = prepareActionCreator(axiumRemoveConceptsViaQueType);
 
-export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
+function removeConceptsViaQueReducer(state: AxiumState, _action: Action) {
   const principleSubscribers = state.methodSubscribers;
   const newPrincipleSubscribers = [] as NamedSubscription[];
   const generalSubscribers = state.methodSubscribers;
@@ -67,7 +67,7 @@ export function removeConceptsViaQueReducer(state: AxiumState, _action: Action) 
   };
 }
 
-export const removeConceptsViaQueQuality = createQuality(
+export const axiumRemoveConceptsViaQueQuality = createQuality(
   axiumRemoveConceptsViaQueType,
   removeConceptsViaQueReducer,
   defaultMethodCreator

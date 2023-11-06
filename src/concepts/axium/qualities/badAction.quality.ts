@@ -20,7 +20,7 @@ export function badActionReducer(state: AxiumState, action: Action) {
   };
 }
 
-export const badActionQuality = createQuality(
+export const axiumBadActionQuality = createQuality(
   axiumBadActionType,
   badActionReducer
 );

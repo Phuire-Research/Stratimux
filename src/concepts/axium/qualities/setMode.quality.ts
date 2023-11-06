@@ -32,7 +32,7 @@ export function setModeReducer(state: AxiumState, _action: Action) {
   };
 }
 
-export const setModeQuality = createQuality(
+export const axiumSetModeQuality = createQuality(
   axiumSetModeType,
   setModeReducer,
   axiumSetModeMethodCreator

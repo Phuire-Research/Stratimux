@@ -5,10 +5,13 @@ export type {
   ActionNodeOptions,
   ActionStrategy,
   ActionStrategyParameters,
+  ActionStrategyStitch,
+  ActionStrategyCreator
 } from './model/actionStrategy';
 export {
   createStrategy,
   createActionNode,
+  createActionNodeFromStrategy,
   strategyBegin,
   strategySuccess,
   strategyFailed,
@@ -45,7 +48,14 @@ export {
   throttleAction
 } from './model/actionOperators';
 export type { Action, ActionType } from './model/action';
-export { primeAction, createAction, getSemaphore, prepareActionCreator, prepareActionWithPayloadCreator } from './model/action';
+export {
+  primeAction,
+  createAction,
+  getSemaphore,
+  prepareActionCreator,
+  prepareActionWithPayloadCreator,
+  refreshAction
+} from './model/action';
 export {
   createConcept,
   createQuality,
@@ -95,6 +105,7 @@ export { axiumKick, axiumKickType } from './concepts/axium/qualities/kick.qualit
 export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
+export { axiumStitch, axiumStitchType, axium_createStitchNode } from './concepts/axium/qualities/stitch.quality';
 export {axiumPreClose, axiumPreCloseType, PreClosePayload } from './concepts/axium/qualities/preClose.quality';
 export { axiumBadAction, axiumBadActionType } from './concepts/axium/qualities/badAction.quality';
 export { axiumSetMode, axiumSetModeType, SetModePayload } from './concepts/axium/qualities/setMode.quality';

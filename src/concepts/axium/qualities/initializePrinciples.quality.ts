@@ -49,7 +49,7 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action):
   };
 }
 
-export const initializePrinciplesQuality = createQuality(
+export const axiumInitializePrinciplesQuality = createQuality(
   axiumInitializePrinciplesType,
   initializePrinciplesReducer,
   defaultMethodCreator

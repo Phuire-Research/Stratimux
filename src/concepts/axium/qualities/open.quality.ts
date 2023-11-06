@@ -15,7 +15,7 @@ export function openReducer(state: AxiumState, action: Action): AxiumState {
     open: payload,
   };
 }
-export const openQuality = createQuality(
+export const axiumOpenQuality = createQuality(
   axiumOpenType,
   openReducer,
   defaultMethodCreator

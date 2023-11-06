@@ -16,7 +16,7 @@ function clearBadPlanFromBadPlanListReducer(state: AxiumState, action: Action): 
   };
 }
 
-export const clearBadPlanFromBadPlanListQuality = createQuality(
+export const axiumClearBadPlanFromBadPlanListQuality = createQuality(
   axiumClearBadPlanFromBadPlanListType,
   clearBadPlanFromBadPlanListReducer,
   defaultMethodCreator,
