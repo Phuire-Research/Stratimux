@@ -40,7 +40,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action): Axium
   };
 }
 
-export const setDefaultModeQuality = createQuality(
+export const axiumSetDefaultModeQuality = createQuality(
   axiumSetDefaultModeType,
   setDefaultModeReducer,
   defaultMethodCreator

@@ -53,6 +53,7 @@ export interface ActionNodeOptions {
   failureNotes?: ActionNotes;
   lastActionNode?: ActionNode;
 }
+
 ```
 * action - Is an union data pattern to bind the functionality of the ActionNode, ActionStrategy, and Action. This allows for each part to be responsible for itself and to allow for additional functionality at runtime.
 * actionType - Is merely the type of action to be created at runtime, these should be verbose as to their intended effect as it informs the Stratimux sentence structure's body.
@@ -65,7 +66,6 @@ export interface ActionNodeOptions {
 * failureNode - Is the default failure mode of each action. And will be called if ownership is loaded in an axium. If null the ActionStrategy will conclude which will free the current lock supplied. Otherwise it will be added to the pendingActions que. 
 * preposition - Coincides with the Stratimux sentence structure. And is the logical linking between the previous sentences and the current ActionType.
 * denoter - Also enhances the Stratimux sentence as either a punctuation mark or additional description of the ActionType's intended effect.
-
 *NOTE: Just like all optional fields, except action, these are designed to be set at runtime if dynamic or can be prefilled if the values are known prior.*
 For Example if we are using the denoter to inform the Stratimux sentence of the explicit value an action has performed. Via the method or principle that can call the action's next ActionNode. Likewise is True for the preposition, that can source its selection Based on the strategy's LastActionNode Value as an Example.
 
@@ -101,6 +101,7 @@ export interface ActionStrategy {
 ```typescript
 function createStrategy(params: ActionStrategyParameters): ActionStrategy;
 function createActionNode(action: Action, options: ActionNodeOptions): ActionNode;
+function createActionNodeFromStrategy(strategy: ActionStrategy): ActionNode; 
 function strategyBegin(strategy: ActionStrategy, data?: unknown): Action;
 function strategySuccess(strategy: ActionStrategy, data?: unknown): Action;
 function strategyFailed(strategy: ActionStrategy, data?: unknown): Action;
@@ -112,6 +113,7 @@ function strategyBackTrack(_strategy: ActionStrategy): Action => {}
 ```
 * createStrategy - Creates a new strategy and returns such to be activated by the strategyBegin consumer function. Data of strategy may be set explicitly.
 * createActionNode - Used in conjunction with createStrategy, keep in mind that ActionNodes must be defined in reversed order. As sequentially the only means to add each to either the Success/Failure/Decision nodes is if they are predefined. Creates a new ActionNode that decomposes the supplied Action, this ensures type safety with the action's payload. ActionNodeOptions assigns which ActionNodes will be next within the final ActionStrategy.
+* createActionNodeFromStrategy - This allows for the composition of strategies beyond "strategySequence," and "strategyPunt." Note that the return ActionNode will be freshly recomposed based on the passed strategy's currentNode and will lose the current ActionList. But such may be extracted manually to be added to your current strategy.
 * strategyBegin - Returns the initial action of the strategy, updates the ActionList, and creates a union binding between the ActionStrategy and newly created action.
 * strategySuccess - Initializes the successNode action, otherwise if null will conclude the Strategy by returning the conclude action. If ActionNode or Strategy's currentNode does not set its preposition, will set such to "Success with"
 * strategyFailed - Same as the above, but if the preposition is not set, will set such to "Failed With". And is the default ActionNode called if a lock is dictated while ownership is loaded.
@@ -177,3 +179,88 @@ export const createAsyncMethodThrottleWithState =
 * createMethodThrottleWithState- Fires the first action, alongside the most recent state, then filters rest as conclude.
 * createAsyncMethodThrottle - Asynchronously fires the first action, will filtering the rest for the set duration as conclude.
 * createAsyncMethodThrottleWithState - Fires the first action asynchronously with the most recent state, and filters action during the duration as conclude to remove stale tickers from ownership if loaded.
+
+## "Creator Functions"
+Note here this is merely a guideline to inform the creation of your strategies.
+```typescript
+/**
+ * Standard creator function
+ * Use this as an argument, as we lose type checking of your functions arguments,
+ * due to the current implementation of Typescript argument generics.
+ */
+export type ActionStrategyCreator = (...arg0: unknown[]) => ActionStrategy;
+
+/**
+ * Advanced creator function
+ * Use this as an argument, this should be a "Curried Function" with your arguments carried over.
+ * */
+export type ActionStrategyStitch = () => [ActionNode, ActionStrategy];
+```
+* ActionStrategyCreator - This should be the format of your ActionStrategy creators. This is provided to allow for your concepts, qualities, or otherwise; to be able to accept your strategy creators as functional arguments. As the composition of ActionStrategies forms a greater graph. Each strategy should only be as concise as it needs to be.
+* ActionStrategyStitch - *Advanced Usage* This allows for both the head and tail of your strategies to be formalized as part of another strategy. This is an advanced from of "Higher Order Functional Composition." Where your strategies can be effectively woven into the middle of a strategy, versus being at the head or tail of another. There is one covet to this, your "Stitches" must have atleast two ActionNodes.
+
+*ActionStrategy Stitch*
+```typescript
+function axium_createStitchNode(options?: ActionNodeOptions): ActionNode;
+
+export const yourStrategyStitch: ActionStrategyStitch = () => {
+  const stepStitch = axium_createStitchNode();
+  const stepOne = createActionNode(someAction, {
+    successNode: stepStitch,
+    failureNode: null
+  })
+  return [stepStitch, createStrategy({
+    topic: 'Your strategy\'s topic',
+    initialNode: stepOne
+  })];
+};
+
+export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrategy => {
+  const stepFinal = createActionNode(someAction, {
+    successNode: null,
+    failureNode: null
+  })
+
+  const [
+    stitchEnd,
+    stitchStrategy
+  ] = yourStrategyStitch();
+  stitchEnd.successNode = stepFinal;
+  // Note we are not providing options to preserve the structure of your stitched strategy.
+  const stitchHead = createActionNodeFromStrategy(stitchStrategy);
+
+  const stepOne = createActionNode(someAction, {
+    successNode: stitchHead,
+    failureNode: null
+  });
+
+  return createStrategy({
+    topic: 'your composing strategy\'s topic',
+    initialNode: stepOne
+  });
+};
+```
+This will return an actionNode that will omit itself from the actionList, while still allowing for the ease of composition that ActionStrategyStitches afford.
+
+As will this still allows for your ActionStrategyStitches to be used independently or as arguments for a composing strategy.
+```typescript
+// Independent usage
+(_, dispatch) => {
+  const [
+    _
+    yourStrategy
+  ] = yourStrategyStitch();
+
+  dispatch(strategyBegin(yourStrategy), {
+    iterateStage: true
+  });
+}
+// Composing strategy
+(_, dispatch) => {
+  const strategy = yourComposingStrategy(yourStrategyStitch);
+  dispatch(strategyBegin(strategy), {
+    iterateStage: true
+  });
+}
+```
+If you are using this approach to compose strategies into greater graphs of functionality. Each strategy should be composed with a final goal in mind that is returned as the tail. As we are composing strategies first with the sequence necessary to accomplish some objective. Then providing different failureNodes and/or decisionNodes to afford for error correcting, to obtain that final goal. Therefore each strategy when composed in this manner, will still only return a head and tail. The difference within that strategy, is how it gets to that tail, or if it is allowed to get there at all.

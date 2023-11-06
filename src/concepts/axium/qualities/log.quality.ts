@@ -18,7 +18,7 @@ export const createLogMethodCreator: MethodCreator = () => createMethod((action)
   }
 });
 
-export const logQuality = createQuality(
+export const axiumLogQuality = createQuality(
   axiumLogType,
   defaultReducer,
   createLogMethodCreator,

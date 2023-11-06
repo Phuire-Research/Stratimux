@@ -32,7 +32,7 @@ export function closeReducer(state: AxiumState, _action: Action): AxiumState {
   };
 }
 
-export const closeQuality = createQuality(
+export const axiumCloseQuality = createQuality(
   axiumCloseType,
   closeReducer
 );

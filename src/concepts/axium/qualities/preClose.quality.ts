@@ -20,7 +20,7 @@ export function closeReducer(state: AxiumState, _action: Action): AxiumState {
   };
 }
 
-export const preCloseQuality = createQuality(
+export const axiumPreCloseQuality = createQuality(
   axiumPreCloseType,
   closeReducer
 );

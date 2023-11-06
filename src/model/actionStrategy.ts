@@ -4,12 +4,7 @@ import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
 
 /**
- * ActionNode
- * Control Structure used by ActionStrategy
- *
- * `NOTE` When creating Actions for action. There is no need to pass payload, or strategy parameters,
- *  as ActionStrategy takes care of that behind the scenes.
- *
+ * ActionNode - Control Structure used by ActionStrategy
  * @param action - Action to be dispatched.
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
  * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
@@ -23,9 +18,8 @@ import { KeyedSelector } from './selector';
  * @param denoter - `optional` String that denotes the end of the ActionList sentence.
  *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
  * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
- *  @Output Via Axium set Mode to Ownership Mode.
+ * @Output Via Axium set Mode to Ownership Mode.
  */
-
 export interface ActionNode {
   action?: Action;
   actionType: ActionType;
@@ -42,7 +36,21 @@ export interface ActionNode {
   failureNotes?: ActionNotes;
   lastActionNode?: ActionNode;
 }
-
+/**
+ * Options list
+ * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
+ * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
+ * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
+ * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
+ * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
+ * @param denoter - `optional` String that denotes the end of the ActionList sentence.
+ *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
+ * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
+ * @Output Via Axium set Mode to Ownership Mode.
+ */
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
   conceptSemaphore?: number;
@@ -56,6 +64,16 @@ export interface ActionNodeOptions {
   failureNotes?: ActionNotes;
   lastActionNode?: ActionNode;
 }
+
+/**
+ * Use this as an argument, this should be a "Curried Function" with your arguments carried over.
+ * */
+export type ActionStrategyStitch = () => [ActionNode, ActionStrategy];
+/**
+ * Use this as an argument, as we lose type checking of your functions arguments,
+ * due to the current implementation of Typescript argument generics.
+ */
+export type ActionStrategyCreator = (...arg0: unknown[]) => ActionStrategy;
 
 /**
  * Decomposes an action into an ActionNode to be later Recomposed.
@@ -79,6 +97,37 @@ export function createActionNode(action: Action, options: ActionNodeOptions): Ac
     lastActionNode: options.lastActionNode
   };
 }
+
+/**
+ * Note that this will be a new ActionNode and not the original created within the provided strategy.
+ * @param strategy Will return a recomposed ActionNode of the provided strategy.
+ * @returns ActionNode
+ */
+export const createActionNodeFromStrategy = (strategy: ActionStrategy): ActionNode => {
+  const currentNode = strategy.currentNode;
+  let action;
+  if (currentNode.action) {
+    action = {...currentNode.action};
+  } else {
+    action = createAction(
+      currentNode.actionType,
+      currentNode.payload,
+      currentNode.keyedSelectors,
+      currentNode.agreement,
+      currentNode.semaphore,
+      currentNode.conceptSemaphore
+    );
+  }
+  return createActionNode(action, {
+    successNode: currentNode.successNode,
+    successNotes: currentNode.successNotes,
+    failureNode: currentNode.failureNode,
+    failureNotes: currentNode.failureNotes,
+    decisionNodes: currentNode.decisionNodes,
+    decisionNotes: currentNode.decisionNotes,
+    lastActionNode: currentNode.lastActionNode
+  });
+};
 
 /**
  * Will decorate the final Stratimux sentence

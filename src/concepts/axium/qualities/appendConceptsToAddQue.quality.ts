@@ -22,7 +22,7 @@ export function appendConceptsToAddQueReducer(state: AxiumState, action: Action)
   };
 }
 
-export const appendConceptsToAddQueQuality = createQuality(
+export const axiumAppendConceptsToAddQueQuality = createQuality(
   axiumAppendConceptsToAddQueType,
   appendConceptsToAddQueReducer,
   defaultMethodCreator

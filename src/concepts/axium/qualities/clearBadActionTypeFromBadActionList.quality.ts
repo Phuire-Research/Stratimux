@@ -16,7 +16,7 @@ function clearBadActionTypeFromBadActionListReducer(state: AxiumState, action: A
   };
 }
 
-export const clearBadActionTypeFromBadActionListQuality = createQuality(
+export const axiumClearBadActionTypeFromBadActionListQuality = createQuality(
   axiumClearBadActionTypeFromBadActionListType,
   clearBadActionTypeFromBadActionListReducer,
   defaultMethodCreator,

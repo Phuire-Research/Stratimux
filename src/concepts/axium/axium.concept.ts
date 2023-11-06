@@ -3,31 +3,32 @@ import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumClosePrinciple, axiumPrinciple } from './axium.principle';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { openQuality } from './qualities/open.quality';
-import { badActionQuality } from './qualities/badAction.quality';
-import { closeQuality } from './qualities/close.quality';
-import { logQuality } from './qualities/log.quality';
-import { registerSubscriberQuality } from './qualities/registerSubscription.quality';
-import { initializePrinciplesQuality } from './qualities/initializePrinciples.quality';
+import { axiumOpenQuality } from './qualities/open.quality';
+import { axiumBadActionQuality } from './qualities/badAction.quality';
+import { axiumCloseQuality } from './qualities/close.quality';
+import { axiumLogQuality } from './qualities/log.quality';
+import { axiumRegisterSubscriberQuality } from './qualities/registerSubscription.quality';
+import { axiumInitializePrinciplesQuality } from './qualities/initializePrinciples.quality';
 export { initializationStrategy } from './strategies/initialization.strategy';
-import { setBlockingModeQuality } from './qualities/setBlockingMode.quality';
-import { setDefaultModeQuality } from './qualities/setDefaultMode.quality';
-import { addConceptsFromQueQuality } from './qualities/addConceptsFromQue.quality';
-import { appendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
-import { appendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRemoveQue.quality';
-import { removeConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
-import { appendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
+import { axiumSetBlockingModeQuality } from './qualities/setBlockingMode.quality';
+import { axiumSetDefaultModeQuality } from './qualities/setDefaultMode.quality';
+import { axiumAddConceptsFromQueQuality } from './qualities/addConceptsFromQue.quality';
+import { axiumAppendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
+import { axiumAppendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRemoveQue.quality';
+import { axiumRemoveConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
+import { axiumAppendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
 import { createConcept } from '../../model/concept';
-import { setModeQuality } from './qualities/setMode.quality';
-import { setDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
-import { clearDialogQuality } from './qualities/clearDialog.quality';
+import { axiumSetModeQuality } from './qualities/setMode.quality';
+import { axiumSetDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
+import { axiumClearDialogQuality } from './qualities/clearDialog.quality';
 import { NamedStagePlanner, Plan, UnifiedSubject } from '../../model/stagePlanner';
-import { clearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
-import { clearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
-import { clearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
-import { registerStagePlannerQuality } from './qualities/registerStagePlanner.quality';
-import { kickQuality } from './qualities/kick.quality';
-import { preCloseQuality } from './qualities/preClose.quality';
+import { axiumClearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
+import { axiumClearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
+import { axiumClearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
+import { axiumRegisterStagePlannerQuality } from './qualities/registerStagePlanner.quality';
+import { axiumKickQuality } from './qualities/kick.quality';
+import { axiumPreCloseQuality } from './qualities/preClose.quality';
+import { axiumStitchQuality } from './qualities/stitch.quality';
 
 export type NamedSubscription = {
   name: string;
@@ -106,28 +107,29 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
     axiumName,
     createAxiumState(name, storeDialog, logging),
     [
-      kickQuality,
-      openQuality,
-      badActionQuality,
-      closeQuality,
-      preCloseQuality,
-      appendActionListToDialogQuality,
-      clearDialogQuality,
-      logQuality,
-      registerSubscriberQuality,
-      registerStagePlannerQuality,
-      initializePrinciplesQuality,
-      setBlockingModeQuality,
-      setDefaultModeQuality,
-      setDefaultModeIndexQuality,
-      addConceptsFromQueQuality,
-      appendConceptsToAddQueQuality,
-      appendConceptsToRemoveQueQuality,
-      removeConceptsViaQueQuality,
-      setModeQuality,
-      clearBadActionTypeFromBadActionListQuality,
-      clearBadStrategyTopicFromBadActionListQuality,
-      clearBadPlanFromBadPlanListQuality
+      axiumKickQuality,
+      axiumOpenQuality,
+      axiumBadActionQuality,
+      axiumCloseQuality,
+      axiumPreCloseQuality,
+      axiumAppendActionListToDialogQuality,
+      axiumClearDialogQuality,
+      axiumLogQuality,
+      axiumStitchQuality,
+      axiumRegisterSubscriberQuality,
+      axiumRegisterStagePlannerQuality,
+      axiumInitializePrinciplesQuality,
+      axiumSetBlockingModeQuality,
+      axiumSetDefaultModeQuality,
+      axiumSetDefaultModeIndexQuality,
+      axiumAddConceptsFromQueQuality,
+      axiumAppendConceptsToAddQueQuality,
+      axiumAppendConceptsToRemoveQueQuality,
+      axiumRemoveConceptsViaQueQuality,
+      axiumSetModeQuality,
+      axiumClearBadActionTypeFromBadActionListQuality,
+      axiumClearBadStrategyTopicFromBadActionListQuality,
+      axiumClearBadPlanFromBadPlanListQuality
     ],
     [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]

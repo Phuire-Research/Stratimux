@@ -5,7 +5,7 @@ import { createQuality } from '../../../model/concept';
 export const axiumKickType: ActionType = 'Kick Axium';
 export const axiumKick = prepareActionCreator(axiumKickType);
 
-export const kickQuality = createQuality(
+export const axiumKickQuality = createQuality(
   axiumKickType,
   defaultReducer,
   defaultMethodCreator

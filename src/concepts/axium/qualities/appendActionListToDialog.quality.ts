@@ -37,7 +37,7 @@ export function appendActionListToDialogReducer(state: AxiumState, action: Actio
   };
 }
 
-export const appendActionListToDialogQuality = createQuality(
+export const axiumAppendActionListToDialogQuality = createQuality(
   axiumAppendActionListToDialogType,
   appendActionListToDialogReducer,
 );

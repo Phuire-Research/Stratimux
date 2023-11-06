@@ -25,7 +25,7 @@ export function registerSubscriberReducer(state: AxiumState, action: Action) {
   };
 }
 
-export const registerSubscriberQuality = createQuality(
+export const axiumRegisterSubscriberQuality = createQuality(
   axiumRegisterSubscriberType,
   registerSubscriberReducer,
   defaultMethodCreator

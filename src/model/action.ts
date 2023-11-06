@@ -2,7 +2,7 @@ import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { BadActionPayload, axiumBadAction } from '../concepts/axium/qualities/badAction.quality';
+import { BadActionPayload } from '../concepts/axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
 export const nullActionType: ActionType = 'null';
@@ -78,6 +78,22 @@ export function primeAction(concepts: Concepts, action: Action): Action {
   }
   return badAction;
 }
+
+/**
+ * @param action A previously created action.
+ * @returns Returns a newly recomposed Action with a updated expiration, takes into account agreement if present.
+ */
+export const refreshAction = (action: Action): Action => {
+  const newAction = {
+    ...action,
+  };
+  if (newAction.agreement) {
+    newAction.expiration = Date.now() + newAction.agreement;
+  } else {
+    newAction.expiration = Date.now() + 5000;
+  }
+  return newAction;
+};
 
 export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
   const axiumState = concepts[0].state as AxiumState;
