@@ -263,3 +263,4 @@ As will this still allows for your ActionStrategyStitches to be used independent
   });
 }
 ```
+If you are using this approach to compose strategies into greater graphs of functionality. Each strategy should be composed with a final goal in mind that is returned as the tail. As we are composing strategies first with the sequence necessary to accomplish some objective. Then providing different failureNodes and/or decisionNodes to afford for error correcting, to obtain that final goal. Therefore each strategy when composed in this manner, will still only return a head and tail. The difference within that strategy, is how it gets to that tail, or if it is allowed to get there at all.
