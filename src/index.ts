@@ -66,7 +66,8 @@ export {
   unifyConcepts,
   forEachConcept,
   conceptToString,
-  conceptsToString
+  conceptsToString,
+  getConceptSemaphore
 } from './model/concept';
 export type {
   Concept,

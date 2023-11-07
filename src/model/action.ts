@@ -174,6 +174,7 @@ export function createAction(
     keyedSelectors,
     agreement,
     expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
+    conceptSemaphore
   };
 }
 

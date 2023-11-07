@@ -55,3 +55,37 @@ Therefore this allows for each of your concepts to have their own counter functi
 The benefit of this approach. Is that we can determine responsible concepts that only function only via its internal specification, including being responsible for its spatial location within any loaded Axium. Allows for these responsible concepts to be "Unified" without worry of interacting with "Concepts" that may use some functionality it others would depend upon. Therefore the "Axium" can be seen in current terms as a "Composition of Applications" that have a shared interface that is the "Axium" itself.
 
 If the select function returns undefined. It means that the "Unified Concept," has been removed from the Axium. Therefore this denotes when a "Principle" should then disengage any active functionality contained. This further allows for Principles to be fully composable "Applications." And in the scope of "Observers," prevents the possibility of a hot observable with no subscribers.
+
+# Routing for Unified Actions
+The last method of guaranteeing that your unified concepts can be arranged amongst any number of other unified concepts, that happen to utilize the same qualities. Is that the action creators must be passed your concept's semaphore passed into your principles/methods. Or if this is being managed from an outside observer, this is still possible via accessing that unified concept's semaphore. Note that these values are dynamic and are set at run time.
+```typescript
+export function prepareActionCreator(actionType: ActionType) {
+  return (
+    conceptSemaphore?: number,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    qualitySemaphore?: [number, number, number, number]
+  ) => Action;
+}
+export function prepareActionWithPayloadCreator<T>(actionType: ActionType) {
+  return (
+    payload: T,
+    conceptSemaphore?: number,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    semaphore?: [number, number, number, number]
+  ) => Action;
+}
+// If you are creating actions based on type
+export function createAction(
+  type: ActionType,
+  payload?: unknown,
+  keyedSelectors?: KeyedSelector[],
+  agreement?: number,
+  _semaphore?: [number, number, number, number],
+  conceptSemaphore?: number
+): Action;
+
+// To properly work with a unified concept from outside the axium
+export const getConceptSemaphore = (concepts: Concepts, conceptName: string): number
+```

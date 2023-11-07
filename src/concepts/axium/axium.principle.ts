@@ -1,5 +1,5 @@
-import { Observable, Subject, Subscriber, catchError } from 'rxjs';
-import { Concept, Concepts, Mode, forEachConcept } from '../../model/concept';
+import { Observable, Subscriber, catchError } from 'rxjs';
+import { Concepts, Mode, forEachConcept } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$, registerPrincipleSubscription } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
 import { AxiumState, axiumName } from './axium.concept';
@@ -9,8 +9,6 @@ import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConc
 import { blockingMode, permissiveMode } from './axium.mode';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { blockingMethodSubscription } from '../../model/axium';
-import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
-import { axiumSelectOpen } from './axium.selector';
 import { selectUnifiedState } from '../../model/selector';
 import { axiumClose } from './qualities/close.quality';
 
