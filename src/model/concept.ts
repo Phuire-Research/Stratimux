@@ -220,6 +220,17 @@ export function unifyConcepts(
   return filterSimilarQualities(newConcept);
 }
 
+// Will return -1 if not found
+export const getConceptSemaphore = (concepts: Concepts, conceptName: string): number => {
+  // eslint-disable-next-line consistent-return
+  forEachConcept(concepts, (concept, semaphore) => {
+    if (concept.name === conceptName) {
+      return semaphore;
+    }
+  });
+  return -1;
+};
+
 export function createQuality(
   actionType: ActionType,
   reducer: Reducer,
