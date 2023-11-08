@@ -146,11 +146,13 @@ function filterSimilarQualities(concept: Concept) {
 }
 
 function unify(base: Concept, target: Concept): Concept {
-  base.unified.push(target.name);
-  base.unified = {
+  if (target.name !== '') {
+    base.unified.push(target.name);
+  }
+  base.unified = [
     ...base.unified,
     ...target.unified
-  };
+  ];
   base.state = {
     ...base.state,
     ...target.state,
@@ -209,7 +211,7 @@ export function unifyConcepts(
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
   }));
-  newConcept = unify(newConcept, emergentConcept);
+  newConcept = unify(emergentConcept, newConcept);
   newConcept.name = emergentConcept.name;
   if (newConcept.mode) {
     newConcept.mode.forEach((m, i) => {
