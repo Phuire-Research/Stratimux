@@ -9,7 +9,7 @@ import {
   createStrategy,
   strategyBegin
 } from '../model/actionStrategy';
-import { createAxium } from '../model/axium';
+import { createAxium, getAxiumState } from '../model/axium';
 import { selectSlice } from '../model/selector';
 
 export const yourStrategyStitch: ActionStrategyStitch = () => {
@@ -68,5 +68,17 @@ test('Axium advanced usage: StrategyStitch', (done) => {
         done();
       }
     }
+  ]);
+});
+
+test('Axium advanced usage: StrategyStitch', (done) => {
+  const axium = createAxium('Test advanced usage', []);
+  axium.stage('Test getAxiumState', [
+    (concepts, _) => {
+      if (getAxiumState(concepts)) {
+        expect(true).toBe(true);
+        done();
+      }
+    },
   ]);
 });

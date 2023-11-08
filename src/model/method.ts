@@ -262,3 +262,137 @@ export const createAsyncMethodThrottleWithState =
     defaultMethod.toString = () => ('Async Throttle Method with State');
     return [defaultMethod, defaultSubject];
   };
+export const createMethodWithConcepts =
+  (
+    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action,
+    concepts$: UnifiedSubject,
+    semaphore: number
+  ): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      withLatestFrom(concepts$ as UnifiedSubject),
+      map(([act, concepts] : [Action, Concepts]) => {
+        const methodAction = methodWithConcepts(act, concepts, semaphore);
+        if (methodAction.strategy) {
+          return methodAction;
+        }
+        const conclude = axiumConclude();
+        return {
+          ...act,
+          ...conclude,
+        };
+      }),
+    );
+    defaultMethod.toString = () => ('Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodWithConcepts =
+  (
+    asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) => void,
+    concepts$: UnifiedSubject,
+    semaphore: number
+  )
+    : [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      withLatestFrom(concepts$ as UnifiedSubject),
+      switchMap(([act, concepts] : [Action, Concepts]) => createActionController$(act, (controller: ActionController, action: Action) => {
+        asyncMethodWithConcepts(controller, action, concepts, semaphore);
+      })),
+    );
+    defaultMethod.toString = () => ('Async Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createMethodDebounceWithConcepts =
+  (
+    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action, concepts$: UnifiedSubject,
+    semaphore: number,
+    duration: number
+  ) : [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      debounceAction(duration),
+      withLatestFrom(concepts$ as UnifiedSubject),
+      map(([act, concepts] : [Action, Concepts]) => {
+        // Logically Determined axiumConclude
+        if (act.semaphore[3] !== 3) {
+          const methodAction = methodWithConcepts(act, concepts, semaphore);
+          if (methodAction.strategy) {
+            return methodAction;
+          }
+          const conclude = axiumConclude();
+          return {
+            ...act,
+            ...conclude,
+          };
+        } else {
+          return act;
+        }
+      }),
+    );
+    defaultMethod.toString = () => ('Debounce Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodDebounceWithConcepts =
+  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) =>
+    void, concepts$: UnifiedSubject, semaphore: number, duration: number, ): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      debounceAction(duration),
+      withLatestFrom(concepts$ as UnifiedSubject),
+      switchMap(([act, concepts] : [Action, Concepts]) => {
+        return createActionController$(act, (controller: ActionController, action: Action) => {
+          asyncMethodWithConcepts(controller, action, concepts, semaphore);
+        });
+      })
+    );
+    defaultMethod.toString = () => ('Async Debounce Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createMethodThrottleWithConcepts =
+  (
+    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action,
+    concepts$: UnifiedSubject,
+    semaphore: number,
+    duration: number
+  ) : [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      throttleAction(duration),
+      withLatestFrom(concepts$ as UnifiedSubject),
+      map(([act, concepts] : [Action, Concepts]) => {
+        // Logically Determined axiumConclude
+        if (act.semaphore[3] !== 3) {
+          const methodAction = methodWithConcepts(act, concepts, semaphore);
+          if (methodAction.strategy) {
+            return methodAction;
+          }
+          const conclude = axiumConclude();
+          return {
+            ...act,
+            ...conclude,
+          };
+        } else {
+          return act;
+        }
+      }),
+    );
+    defaultMethod.toString = () => ('Throttle Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodThrottleWithConcepts =
+  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) =>
+    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      throttleAction(duration),
+      withLatestFrom(concepts$ as UnifiedSubject),
+      switchMap(([act, concepts] : [Action, Concepts]) => {
+        return createActionController$(act, (controller: ActionController, action: Action) => {
+          asyncMethodWithConcepts(controller, action, concepts, semaphore);
+        });
+      })
+    );
+    defaultMethod.toString = () => ('Async Throttle Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
