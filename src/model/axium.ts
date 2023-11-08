@@ -162,3 +162,5 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
     stage: subConcepts$.stage.bind(subConcepts$),
   };
 }
+
+export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);

@@ -1,4 +1,4 @@
-export { createAxium } from './model/axium';
+export { createAxium, getAxiumState } from './model/axium';
 export type {
   ActionNode,
   ActionNotes,
@@ -41,7 +41,13 @@ export {
   createMethodThrottle,
   createMethodThrottleWithState,
   createAsyncMethodThrottle,
-  createAsyncMethodThrottleWithState
+  createAsyncMethodThrottleWithState,
+  createMethodWithConcepts,
+  createAsyncMethodWithConcepts,
+  createMethodThrottleWithConcepts,
+  createMethodDebounceWithConcepts,
+  createAsyncMethodThrottleWithConcepts,
+  createAsyncMethodDebounceWithConcepts
 } from './model/method';
 export {
   debounceAction,
@@ -67,7 +73,8 @@ export {
   forEachConcept,
   conceptToString,
   conceptsToString,
-  getConceptSemaphore
+  getConceptSemaphore,
+  getUnifiedName
 } from './model/concept';
 export type {
   Concept,

@@ -147,6 +147,10 @@ function filterSimilarQualities(concept: Concept) {
 
 function unify(base: Concept, target: Concept): Concept {
   base.unified.push(target.name);
+  base.unified = {
+    ...base.unified,
+    ...target.unified
+  };
   base.state = {
     ...base.state,
     ...target.state,
@@ -219,6 +223,8 @@ export function unifyConcepts(
   }
   return filterSimilarQualities(newConcept);
 }
+
+export const getUnifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);
 
 // Will return -1 if not found
 export const getConceptSemaphore = (concepts: Concepts, conceptName: string): number => {
