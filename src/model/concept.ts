@@ -211,7 +211,8 @@ export function unifyConcepts(
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
   }));
-  newConcept = unify(emergentConcept, newConcept);
+  newConcept = unify(newConcept, emergentConcept);
+  newConcept.unified = newConcept.unified.filter(name => name !== emergentConcept.name);
   newConcept.name = emergentConcept.name;
   if (newConcept.mode) {
     newConcept.mode.forEach((m, i) => {

@@ -26,7 +26,7 @@ test('Unified Names Test', (done) => {
   ],
   createConcept('unified', {})
   );
-  console.log('CHECK UNIFIED', unified.unified);
+  console.log('CHECK UNIFIED', unified.unified, unified);
   expect(unified.unified.length).toBe([one, two, three, four, five].length);
   done();
 });
