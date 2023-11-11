@@ -1,6 +1,7 @@
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
+  experimentAsyncIterateIdThenReceiveInMethod,
   experimentAsyncIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/asyncIterateIdThenReceiveInMethod.quality';
 import { experimentIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
@@ -36,6 +37,30 @@ test('Async Method Test', (done) => {
         expect(experimentState.mock).toBe(true);
         plan.conclude();
         axium.close();
+        done();
+      }
+    }
+  ]);
+});
+
+test('Async Method Plain Iterate Id Test', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncIterateIdThenReceiveInMethodQuality]);
+  const axium = createAxium('Experiment async method creator', [experiment]);
+  const plan = axium.stage('timed mock to true', [
+    (_, dispatch) => {
+      dispatch(experimentAsyncIterateIdThenReceiveInMethod(), {
+        iterateStage: true
+      });
+    },
+    (concepts, _) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      console.log(experiment.state);
+      if (experimentState?.id) {
+        expect(experimentState.id).toBe(1);
+        setTimeout(() => {
+          plan.conclude();
+          axium.close();
+        }, 50);
         done();
       }
     }
