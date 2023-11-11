@@ -14,7 +14,7 @@
 * Hot Loading
 * No Dependency Injection
 
-Getting Started: [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
+Getting Started: [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)  
 User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Research/logixUX)
 
 *Note if you notice a strange any capitalization, this is a new format that is being formalized as conceptual logic. Where we capitalize not just people, places, and things, but concepts as well. In addition, there was no generative intelligence used in the creation of this framework or documentation. This is **100% hand written.***
