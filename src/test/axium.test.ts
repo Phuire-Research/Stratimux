@@ -18,7 +18,7 @@ export const yourStrategyStitch: ActionStrategyStitch = () => {
     successNode: stepStitch,
     failureNode: null
   });
-  stepOne.payload = 'STITCH';
+  stepOne.payload = {data: 'STITCH'};
   return [stepStitch, createStrategy({
     topic: 'Your strategy\'s topic',
     initialNode: stepOne
@@ -30,7 +30,7 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
     successNode: null,
     failureNode: null
   });
-  stepFinal.payload = 'FINAL';
+  stepFinal.payload = {data: 'FINAL'};
 
   const [
     stitchEnd,
@@ -44,7 +44,7 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
     successNode: stitchHead,
     failureNode: null
   });
-  stepOne.payload = 'BEGIN';
+  stepOne.payload = {data: 'BEGIN'};
 
   return createStrategy({
     topic: 'your composing strategy\'s topic',

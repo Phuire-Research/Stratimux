@@ -1,7 +1,6 @@
-import { Subject } from 'rxjs';
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept, Concepts } from '../../../model/concept';
-import { Action, getSemaphore} from '../../../model/action';
+import { getSemaphore} from '../../../model/action';
 import { axiumAddConceptFromQue, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
 import { axiumAppendConceptsToAddQue, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
 import { axiumOpen, axiumOpenType } from '../qualities/open.quality';
@@ -42,7 +41,7 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
   const setDefaultModeSemaphore = getSemaphore(conceptualSet, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(conceptualSet, axiumName, axiumOpenType);
 
-  const stepThree = createActionNode(axiumOpen(true), {
+  const stepThree = createActionNode(axiumOpen({open: true}), {
     successNode: null,
     successNotes: {
       preposition: 'Reinstate',

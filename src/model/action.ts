@@ -17,7 +17,7 @@ export type Action = {
     type: ActionType;
     semaphore: [number, number, number, number];
     conceptSemaphore?: number;
-    payload?: unknown;
+    payload?: Record<string, unknown>;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
@@ -25,7 +25,7 @@ export type Action = {
     axium?: string;
 };
 
-const createPayload = <T>(payload: T) => payload;
+const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
 
 export function primeAction(concepts: Concepts, action: Action): Action {
   const expired = action.expiration < Date.now();
@@ -63,7 +63,7 @@ export function primeAction(concepts: Concepts, action: Action): Action {
   }
   const badAction: Action = {
     type: axiumBadActionType,
-    payload: createPayload<BadActionPayload>([action]),
+    payload: createPayload<BadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
     semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType)
   };
@@ -157,9 +157,9 @@ function getSpecialSemaphore(type: ActionType) {
   }
 }
 
-export function createAction(
+export function createAction<T extends Record<string, unknown>>(
   type: ActionType,
-  payload?: unknown,
+  payload?: T,
   keyedSelectors?: KeyedSelector[],
   agreement?: number,
   _semaphore?: [number, number, number, number],
@@ -188,7 +188,7 @@ export function prepareActionCreator(actionType: ActionType) {
     return createAction(actionType, undefined, keyedSelectors, agreement, qualitySemaphore, conceptSemaphore);
   };
 }
-export function prepareActionWithPayloadCreator<T>(actionType: ActionType) {
+export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(actionType: ActionType) {
   return (
     payload: T,
     conceptSemaphore?: number,

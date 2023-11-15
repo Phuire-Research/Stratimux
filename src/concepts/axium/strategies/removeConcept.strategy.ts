@@ -36,7 +36,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
 
-  const stepThree = createActionNode(axiumOpen(true), {
+  const stepThree = createActionNode(axiumOpen({open: true}), {
     semaphore: openSemaphore,
     successNode: null,
     successNotes: {

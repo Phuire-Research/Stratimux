@@ -12,7 +12,7 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
   const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
   const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
 
-  const stepThree: ActionNode = createActionNode(axiumOpen(true), {
+  const stepThree: ActionNode = createActionNode(axiumOpen({open: true}), {
     semaphore: openSemaphore,
     successNode: null,
     successNotes: {
