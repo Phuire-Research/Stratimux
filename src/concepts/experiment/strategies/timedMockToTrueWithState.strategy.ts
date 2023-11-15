@@ -1,5 +1,4 @@
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentMockTrue } from '../qualities/mockTrue.quality';
 import { experimentTimerEmitActionWithState } from '../qualities/timerEmitActionWithState.quality';
 

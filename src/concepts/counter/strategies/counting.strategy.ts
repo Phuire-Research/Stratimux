@@ -1,5 +1,5 @@
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, Concepts} from '../../../model/concept';
+import { Concepts} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { counterAdd, counterAddType } from '../qualities/add.quality';
 import { counterSubtract, counterSubtractType } from '../qualities/subtract.quality';

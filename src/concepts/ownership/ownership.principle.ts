@@ -1,10 +1,10 @@
 import { Subscriber } from 'rxjs';
-import { Concept, Concepts } from '../../model/concept';
+import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
-import { selectState, selectUnifiedState } from '../../model/selector';
+import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { UnifiedSubject  } from '../../model/stagePlanner';
@@ -69,17 +69,19 @@ export const ownershipPrinciple: PrincipleFunction = (
             concepts$.next(concepts);
             observer.next(newAction);
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
-            const badActions: BadActionPayload = [];
+            const payload: BadActionPayload = {
+              badActions: []
+            };
             const newPending: Action[] = [];
             for (const pending of ownershipState.pendingActions) {
               if (pending.expiration < Date.now()) {
-                badActions.push(denoteExpiredPending(pending));
+                payload.badActions.push(denoteExpiredPending(pending));
               } else {
                 newPending.push(pending);
               }
             }
-            if (badActions.length > 0) {
-              newAction = createAction(axiumBadActionType, badActions);
+            if (payload.badActions.length > 0) {
+              newAction = createAction(axiumBadActionType, payload);
               ownershipState.pendingActions = newPending;
               concepts$.next(concepts);
               observer.next(newAction);

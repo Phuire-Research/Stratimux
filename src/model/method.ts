@@ -8,11 +8,10 @@ import { debounceAction, throttleAction } from './actionOperators';
 import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
 
 export type ActionType = string;
-const axiumConcludeType: ActionType = 'Conclude';
 type Action = {
     type: ActionType;
     semaphore: [number, number, number, number];
-    payload?: unknown;
+    payload?: Record<string, unknown>;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     agreement?: number;

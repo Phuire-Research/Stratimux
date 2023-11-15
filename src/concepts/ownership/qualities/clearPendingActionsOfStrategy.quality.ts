@@ -4,13 +4,15 @@ import { OwnershipState } from '../ownership.concept';
 import { ActionStrategyTopic } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearPendingActionsOfStrategyPayload = ActionStrategyTopic;
+export type ClearPendingActionsOfStrategyPayload = {
+  topic: ActionStrategyTopic
+};
 export const ownershipClearPendingActionsOfStrategyType: ActionType = 'clear Ownership\'s Pending Actions of Strategy Topic';
 export const ownershipClearPendingActionsOfStrategy =
   prepareActionWithPayloadCreator<ClearPendingActionsOfStrategyPayload>(ownershipClearPendingActionsOfStrategyType);
 
 export function clearPendingActionsOfStrategyReducer(state: OwnershipState, action: Action): OwnershipState {
-  const topic = selectPayload<ClearPendingActionsOfStrategyPayload>(action);
+  const topic = selectPayload<ClearPendingActionsOfStrategyPayload>(action).topic;
   const newPendingActions: Action[] = [];
   for (const act of state.pendingActions) {
     if (act.strategy?.topic) {

@@ -19,7 +19,7 @@ export class ActionController extends Subject<Action> {
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
-        this.next(axiumBadAction([this.action]));
+        this.next(axiumBadAction({badActions: [this.action]}));
       }
     } else {
       this.timer = setTimeout(() => {
@@ -30,7 +30,7 @@ export class ActionController extends Subject<Action> {
             strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
           ));
         } else {
-          this.next(axiumBadAction([this.action]));
+          this.next(axiumBadAction({badActions: [this.action]}));
         }
       }, this.expiration - Date.now());
     }

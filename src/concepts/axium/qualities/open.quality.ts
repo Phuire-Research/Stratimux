@@ -3,16 +3,18 @@ import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../mo
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 
-export type OpenPayload = boolean;
+export type OpenPayload = {
+  open: boolean
+};
 
 export const axiumOpenType: ActionType = 'Open Axium';
 export const axiumOpen = prepareActionWithPayloadCreator<OpenPayload>(axiumOpenType);
 
 export function openReducer(state: AxiumState, action: Action): AxiumState {
-  const payload = selectPayload<OpenPayload>(action);
+  const open = selectPayload<OpenPayload>(action).open;
   return {
     ...state,
-    open: payload,
+    open,
   };
 }
 export const axiumOpenQuality = createQuality(

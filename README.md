@@ -19,8 +19,12 @@ User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Re
 
 *Note if you notice a strange any capitalization, this is a new format that is being formalized as conceptual logic. Where we capitalize not just people, places, and things, but concepts as well. In addition, there was no generative intelligence used in the creation of this framework or documentation. This is **100% hand written.***
 
+## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### 11/15/23
+* Action Payloads must extend type: Record<string, unknown>  
+   * This change is to provide a guarantee of advanced functionality in the current UI Proof of Concept.
+
 ----
-![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### Abstract
 One of the greatest gaps of understanding in the modern age is whether what we speak has some mechanical bearing, or is just some statistical output. What the Unified Turing Machine, and by extension Stratimux accomplishes is to make plain the unifying aspect of the unknown mechanics of language. This is accomplished via logical verbose descriptions that are unified by code implementations and proved via a test. That currently we have trouble distinguishing logic from opinion in our speech, thus this approach seeks to prove a distinction between speech that is testable versus not. As we are currently in the age of post truth and such would only be magnified without some test due to the advent of Ai. Where we can describe logically the exact process that would transform some data into something else in our very speech. Then back that description up with a code implementation that accomplishes the transformation. There is backing to this in the original Unified Science International Encyclopedia, via its entry on the "Foundations of Logic and Mathematics." But in the current generalized scope, there had been no further pursuit to understand the unifying aspect of language and mathematics. And colloquially are presented as if they are completely separate concepts. Yet mathematics is just one aspect of programming, we formalize mainly through logic and describe our functions and variables via names. Therefore programming is a fundamentally unified format that may be used to prove sound verbose logic.
 

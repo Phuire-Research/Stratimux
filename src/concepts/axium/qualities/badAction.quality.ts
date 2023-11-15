@@ -3,12 +3,14 @@ import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 import { AxiumState } from '../axium.concept';
 
-export type BadActionPayload = Action[];
+export type BadActionPayload = {
+  badActions: Action[],
+}
 export const axiumBadActionType: ActionType = 'Axium received a Bad Action';
 export const axiumBadAction = prepareActionWithPayloadCreator<BadActionPayload>(axiumBadActionType);
 
 export function badActionReducer(state: AxiumState, action: Action) {
-  const payload = selectPayload<BadActionPayload>(action);
+  const payload = selectPayload<BadActionPayload>(action).badActions;
   if (state.logging) {
     console.log('Axium Received a Bad Action: ', action);
   }
