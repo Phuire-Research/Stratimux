@@ -112,7 +112,7 @@ export function selectSlice<T>(
   let exists = false;
   let previous = cast;
   for (const k of keys) {
-    if (typeof previous === 'object' && previous[k]) {
+    if (typeof previous === 'object' && previous[k] !== undefined) {
       previous = previous[k];
       exists = true;
     } else {
