@@ -105,37 +105,25 @@ export function selectSlice<T>(
       return undefined;
     }
   }
-
   const keys = selector.stateKeys.split(' ');
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
-  const existsKeys = Object.keys(cast);
   let exists = false;
-  existsKeys.forEach(key => {key === keys[0] ? exists = true : null;});
-  if (!exists) {
+  let previous = cast;
+  for (const k of keys) {
+    if (typeof previous === 'object' && previous[k]) {
+      previous = previous[k];
+      exists = true;
+    } else {
+      exists = false;
+    }
+  }
+  if (exists) {
+    return previous as T;
+  } else {
     return undefined;
   }
-  if (keys.length === 1) {
-    return cast[keys[0]] as T;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let target: Record<string, any> = cast[keys.shift() as string];
-  let finalKey = '';
-  for (const [i, key] of keys.entries()) {
-    let aspectExists = false;
-    const aspectExistsKeys = Object.keys(target);
-    aspectExistsKeys.forEach(_key => {_key === key ? aspectExists = true : null;});
-    if (!aspectExists) {
-      return undefined;
-    }
-    if (i !== keys.length - 1) {
-      target = target[key];
-    } else {
-      finalKey = key;
-    }
-  }
-  return target[finalKey] as T;
 }
 
 export function selectConcept(concepts: Concepts, name: string): Concept {
