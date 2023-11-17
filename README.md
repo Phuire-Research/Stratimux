@@ -20,6 +20,8 @@ User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Re
 *Note if you notice a strange any capitalization, this is a new format that is being formalized as conceptual logic. Where we capitalize not just people, places, and things, but concepts as well. In addition, there was no generative intelligence used in the creation of this framework or documentation. This is **100% hand written.***
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### 11/17/23
+* selectSlice now performing deep selections.
 ### 11/15/23
 * Action Payloads must extend type: Record<string, unknown>  
    * This change is to provide a guarantee of advanced functionality in the current UI Proof of Concept.

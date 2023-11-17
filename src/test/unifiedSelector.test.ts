@@ -14,10 +14,13 @@ test('Unified Selector Test', (done) => {
     createCounterConcept()
   ], true, true);
   const plan = axium.stage('Plan: Counter Selector', [
-    (concepts, dispatch) => {
-      expect(selectSlice(concepts, updateUnifiedKeyedSelector(concepts, 1, counterSelectCount) as KeyedSelector)).toBe(0);
-      expect(selectSlice(concepts, createConceptKeyedSelector(concepts, counterName, counterSelectCount) as KeyedSelector)).toBe(0);
-      expect(selectSlice(concepts, createUnifiedKeyedSelector<Counter>(concepts, 1, 'count') as KeyedSelector)).toBe(0);
+    (concepts, _) => {
+      const updated = updateUnifiedKeyedSelector(concepts, 1, counterSelectCount) as KeyedSelector;
+      const concept = createConceptKeyedSelector(concepts, counterName, counterSelectCount) as KeyedSelector;
+      const unified = createUnifiedKeyedSelector<Counter>(concepts, 1, 'count') as KeyedSelector;
+      expect(selectSlice(concepts, updated)).toBe(0);
+      expect(selectSlice(concepts, concept)).toBe(0);
+      expect(selectSlice(concepts, unified)).toBe(0);
       setTimeout(() => done(), 0);
       plan.conclude();
     },
