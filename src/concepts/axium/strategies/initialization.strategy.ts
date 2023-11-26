@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a strategy that will initialize the axium of its base functionality.
+Within the Stratimux paradigm. Principles act as the start up script, or main function.
+$>*/
+/*<#*/
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
@@ -45,3 +50,4 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
 
   return createStrategy(params);
 }
+/*#>*/

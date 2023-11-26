@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a strategy that will safely remove concepts
+from the Axium's concepts state property.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept, Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
@@ -69,3 +74,4 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
 
   return createStrategy(params);
 }
+/*#>*/

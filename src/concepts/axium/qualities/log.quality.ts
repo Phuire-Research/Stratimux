@@ -1,8 +1,11 @@
-import { map, Subject } from 'rxjs';
-import { Method, MethodCreator, defaultReducer } from '../../../model/concept';
-import { Action, ActionType, prepareActionCreator } from '../../../model/action';
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will console log the action itself.
+This is used to trouble shoot strategies or simply notify the log of different states.
+$>*/
+/*<#*/
+import { MethodCreator, defaultReducer } from '../../../model/concept';
+import { ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { axiumConclude } from './conclude.quality';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
 
@@ -14,7 +17,7 @@ export const axiumLogMethodCreator: MethodCreator = () => createMethod((action) 
   if (action.strategy) {
     return strategySuccess(action.strategy);
   } else {
-    return axiumConclude();
+    return action;
   }
 });
 
@@ -23,3 +26,4 @@ export const axiumLogQuality = createQuality(
   defaultReducer,
   axiumLogMethodCreator,
 );
+/*#>*/

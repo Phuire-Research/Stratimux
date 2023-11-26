@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will initialize principles loaded into the Axium's conceptual set.
+$>*/
+/*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concept, Concepts, defaultMethodCreator, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
@@ -54,3 +58,4 @@ export const axiumInitializePrinciplesQuality = createQuality(
   axiumInitializePrinciplesReducer,
   defaultMethodCreator
 );
+/*#>*/

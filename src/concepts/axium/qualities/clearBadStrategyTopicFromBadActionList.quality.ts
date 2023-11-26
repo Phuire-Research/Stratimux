@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will remove a strategies topic from state's badAction list.
+This allows for an Artificial Intelligence that is embodying Stratimux to correct generated strategies on the fly.
+$>*/
+/*<#*/
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -30,3 +35,4 @@ export const axiumClearBadStrategyTopicFromBadActionListQuality = createQuality(
   axiumClearBadStrategyTopicFromBadActionListReducer,
   defaultMethodCreator,
 );
+/*#>*/

@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate an ActionStrategy that will add new concepts into the Axium's conceptual set.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept, Concepts } from '../../../model/concept';
 import { getSemaphore} from '../../../model/action';
@@ -74,3 +78,4 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
 
   return createStrategy(params);
 }
+/*#>*/

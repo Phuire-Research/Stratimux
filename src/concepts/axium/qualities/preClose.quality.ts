@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will trigger the axium's closing process via
+its close principle that is observing the prepareClose state property.
+$>*/
+/*<#*/
 import { createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -24,3 +29,4 @@ export const axiumPreCloseQuality = createQuality(
   axiumPreCloseType,
   axiumCloseReducer
 );
+/*#>*/

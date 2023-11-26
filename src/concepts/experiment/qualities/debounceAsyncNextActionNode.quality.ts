@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will asynchronously debounce the next action
+in the ongoing strategy.
+$>*/
+/*<#*/
 import { MethodCreator, defaultReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -22,3 +27,4 @@ export const asyncDebounceNextActionNodeQuality = createQuality(
   defaultReducer,
   experimentDebounceNextActionNodeMethodCreator
 );
+/*#>*/

@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will increment the state's ID.
+Then debounce the action via the qualities method that will then unify the state's id into the strategy's data.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -49,3 +54,4 @@ export const experimentDebounceAsyncIterateIdThenReceiveInMethodQuality = create
   experimentDebounceAsyncIterateIdThenReceiveInMethodReducer,
   experimentDebounceAsyncIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

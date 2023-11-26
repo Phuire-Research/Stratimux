@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a principle that observes the experiment's actionQue and dispatches
+in sequence upon each observation of state.
+$>*/
+/*<#*/
 import { Subscriber } from 'rxjs';
 import { Action, primeAction } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
@@ -15,7 +20,7 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
   semaphore: number
 ) => {
   let readyToGo = false;
-  const plan = concepts$.stage('ownership Principle Plan', [
+  const plan = concepts$.stage('Experiment Principle Plan', [
     (concepts, dispatch) => {
       dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: plan})), {
         on: {
@@ -28,14 +33,12 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
     (cpts, _) => {
       const concepts = cpts;
       const experimentState = selectUnifiedState<ExperimentState>(concepts, semaphore);
-      // console.log('Check que', experimentState.actionQue);
       if (experimentState && experimentState.actionQue.length > 0) {
         if (!readyToGo) {
           readyToGo = true;
           setTimeout(() => {
             readyToGo = false;
             const nextAction = experimentState.actionQue.shift();
-            // console.log('Dispatched from Experiment Principle', nextAction, experimentState.actionQue);
             if (nextAction) {
               experimentState.actionQue = [... experimentState.actionQue];
               concepts$.next(concepts);
@@ -50,4 +53,4 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
     }
   ]);
 };
-
+/*#>*/

@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a series of KeyedSelectors for the AxiumState.
+$>*/
+/*<#*/
 import { KeyedSelector } from '../../model/selector';
 
 export const axiumSelectOpen: KeyedSelector = {
@@ -29,3 +33,4 @@ export const axiumSelectBadActions: KeyedSelector = {
   conceptName: 'axium',
   stateKeys: 'badActions',
 };
+/*#>*/

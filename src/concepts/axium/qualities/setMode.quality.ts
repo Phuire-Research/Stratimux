@@ -1,5 +1,9 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will set the mode explicitly via the payload.
+$>*/
+/*<#*/
 import { AxiumState } from '../axium.concept';
-import { Action, createAction, prepareActionWithPayloadCreator} from '../../../model/action';
+import { Action, prepareActionWithPayloadCreator} from '../../../model/action';
 import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
@@ -37,3 +41,4 @@ export const axiumSetModeQuality = createQuality(
   axiumSetModeReducer,
   axiumSetModeMethodCreator
 );
+/*#>*/

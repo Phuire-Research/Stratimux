@@ -1,3 +1,9 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that signifies if the Axium has received a bad action that
+is currently not loaded, part of the wrong generation, expired, etc... If state logging is true, the developer will be notified
+of the bad action that was received.
+$>*/
+/*<#*/
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
@@ -26,3 +32,4 @@ export const axiumBadActionQuality = createQuality(
   axiumBadActionType,
   axiumBadActionReducer
 );
+/*#>*/

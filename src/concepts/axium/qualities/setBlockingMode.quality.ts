@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will set the Axium's mode to blocking. While in this mode
+the Axium operates in a synchronous behavior to quickly modify the Axium's conceptual set.
+$>*/
+/*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
@@ -47,3 +52,4 @@ export const axiumSetBlockingModeQuality = createQuality(
   axiumSetBlockingModeReducer,
   defaultMethodCreator
 );
+/*#>*/

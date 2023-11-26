@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Chain Concept, generate a principle that observes the chain's actionQue and dispatches
+those actions in order upon each state notification.
+$>*/
+/*<#*/
 import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
@@ -26,3 +31,4 @@ export const chainPrinciple: PrincipleFunction = (
   });
   registerPrincipleSubscription(observer, _concepts, chainName, subscription);
 };
+/*#>*/

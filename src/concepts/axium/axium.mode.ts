@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate the two default modes required for the Axium to function.
+$>*/
+/*<#*/
 import { Subject } from 'rxjs';
 import { Concepts, Mode } from '../../model/concept';
 import { Action, primeAction } from '../../model/action';
@@ -91,3 +95,4 @@ export const blockingMode: Mode = (
     }
   }
 };
+/*#>*/

@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Counter Concept, generate an ActionStrategy that will perform a series of counter actions that will
+ultimately just increment the count by one.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concepts} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
@@ -55,7 +60,12 @@ export function countingStrategy(): ActionStrategy {
 
   return createStrategy(params);
 }
-
+/*#>*/
+/*<$
+For the framework Stratimux and Counter Concept, generate a strategy that will ultimately increment the Counter's count by one.
+This strategy should likewise accept concepts to allow for a base Counter Concept to prime its action's semaphore.
+$>*/
+/*<#*/
 export const primedCountingTopic = 'Counting Strategy with Primed Actions';
 export function primedCountingStrategy(concepts: Concepts): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
@@ -104,3 +114,4 @@ export function primedCountingStrategy(concepts: Concepts): ActionStrategy {
 
   return createStrategy(params);
 }
+/*#>*/

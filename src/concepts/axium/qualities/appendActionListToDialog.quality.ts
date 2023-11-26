@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that appends a complete strategies action list
+into the dialog state property.
+$>*/
+/*<#*/
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
@@ -39,3 +44,4 @@ export const axiumAppendActionListToDialogQuality = createQuality(
   axiumAppendActionListToDialogType,
   axiumAppendActionListToDialogReducer,
 );
+/*#>*/

@@ -1,5 +1,9 @@
+/*<$
+For the framework Stratimux and Counter Concept, generate a quality that will increment the state's count by one.
+$>*/
+/*<#*/
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
-import { defaultMethodCreator, Method, MethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/concept';
 import { CounterState } from '../counter.concept';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
@@ -20,3 +24,4 @@ export const counterAddQuality = createQuality(
   defaultMethodCreator,
   [counterSelectCount]
 );
+/*#>*/

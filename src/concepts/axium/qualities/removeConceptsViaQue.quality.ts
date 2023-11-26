@@ -1,4 +1,9 @@
-import { Concept, defaultMethodCreator } from '../../../model/concept';
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will remove concepts that are currently loaded in the Axium.
+Will concluding plans and closing active subscriptions associated with the removed concepts.
+$>*/
+/*<#*/
+import { defaultMethodCreator } from '../../../model/concept';
 import { NamedSubscription } from '../axium.concept';
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -72,3 +77,4 @@ export const axiumRemoveConceptsViaQueQuality = createQuality(
   axiumRemoveConceptsViaQueReducer,
   defaultMethodCreator
 );
+/*#>*/

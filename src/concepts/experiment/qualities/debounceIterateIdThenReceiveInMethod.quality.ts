@@ -1,3 +1,9 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will iterate the state ID.
+Then debounce the quality of actions within a range. To dispatch the most recent action after the specified time elapses.
+That will finally unify the state id and setId from the payload into the most recent strategies data field.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -45,3 +51,4 @@ export const experimentDebounceIterateIdThenReceiveInMethodQuality = createQuali
   experimentDebounceIterateIdThenReceiveInMethodReducer,
   experimentDebounceIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

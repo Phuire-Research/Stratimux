@@ -1,4 +1,8 @@
-import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will set mock to true.
+$>*/
+/*<#*/
+import { defaultMethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -19,3 +23,4 @@ export const mockToTrueQuality = createQuality(
   checkInStrategyReducer,
   defaultMethodCreator
 );
+/*#>*/

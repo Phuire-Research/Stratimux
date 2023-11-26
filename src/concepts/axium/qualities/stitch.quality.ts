@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will silently start the next step in the strategy graph.
+$>*/
+/*<#*/
 import { prepareActionCreator } from '../../../model/action';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createQuality, defaultReducer } from '../../../model/concept';
@@ -28,3 +32,4 @@ export const axiumStitchQuality = createQuality(
   defaultReducer,
   axiumStitchMethodCreator
 );
+/*#>*/

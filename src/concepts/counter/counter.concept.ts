@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux generate a Counter Concept that will keep track of a count in its state.
+$>*/
+/*<#*/
 import { counterAddQuality } from './qualities/add.quality';
 import { counterSubtractQuality } from './qualities/subtract.quality';
 import { counterSetCountQuality } from './qualities/setCount.quality';
@@ -25,3 +29,4 @@ export const createCounterConcept = () => {
     ]
   );
 };
+/*#>*/

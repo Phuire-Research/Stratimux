@@ -1,3 +1,10 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a model file that specifies the gather action node concept.
+This concept allows for action nodes to be linked into a sequence based on a provided actions parameter.
+Note this should be limited to actions that provably do not require error correction.
+Otherwise you would want to use a Strategy Stitch instead.
+$>*/
+/*<#*/
 import { Action } from '../../../model/action';
 import { ActionNode, ActionNodeOptions, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { axiumLog } from '../qualities/log.quality';
@@ -75,3 +82,4 @@ export const axium_createGatherStrategy = (props: AxiumGatherStrategy, options?:
     initialNode: stepFirst
   });
 };
+/*#>*/

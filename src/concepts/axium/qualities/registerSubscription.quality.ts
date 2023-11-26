@@ -1,4 +1,9 @@
-import { Subscriber, Subscription } from 'rxjs';
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will register a subscription to the concepts$ stream.
+This allows for the clean closure of concepts that are removed or when the axium itself exits.
+$>*/
+/*<#*/
+import { Subscription } from 'rxjs';
 import { defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -30,3 +35,4 @@ export const axiumRegisterSubscriberQuality = createQuality(
   axiumRegisterSubscriberReducer,
   defaultMethodCreator
 );
+/*#>*/

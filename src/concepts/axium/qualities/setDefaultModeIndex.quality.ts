@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will set the default mode index to what is specified by
+the action's payload.
+$>*/
+/*<#*/
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -21,3 +26,4 @@ export const axiumSetDefaultModeIndexQuality = createQuality(
   axiumSetDefaultModeIndexReducer,
   defaultMethodCreator
 );
+/*#>*/

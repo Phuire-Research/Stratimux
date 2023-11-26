@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will append a series of concepts to the Axium's
+addConceptQue. This will then be observed via the Axium's principle.
+$>*/
+/*<#*/
 import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
@@ -5,7 +10,7 @@ import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 
 export type AxiumAppendConceptsToAddQuePayload = {
-    concepts: Concept[]
+  concepts: Concept[]
 }
 export const axiumAppendConceptsToAddQueType: ActionType = 'append Concepts to Axium\'s Add Concept Que';
 export const axiumAppendConceptsToAddQue =
@@ -27,3 +32,4 @@ export const axiumAppendConceptsToAddQueQuality = createQuality(
   axiumAppendConceptsToAddQueReducer,
   defaultMethodCreator
 );
+/*#>*/

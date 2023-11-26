@@ -1,3 +1,7 @@
+/*<$
+For the framework Stratimux and Chain Concept, generate a quality will add actions into the Chain's actionQue state property.
+$>*/
+/*<#*/
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
@@ -24,3 +28,4 @@ export const chainPrepareChainQuality = createQuality(
   chainDispatchActionsType,
   chainPrepareChainReducer,
 );
+/*#>*/

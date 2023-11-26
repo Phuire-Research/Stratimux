@@ -1,3 +1,9 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality similar to axium kick, except this is used when the Axium is
+currently in blocking mode. This allows for subscribers to be notified of any new configurations if set.
+Or simply that the axium is ready to receive actions.
+$>*/
+/*<#*/
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -22,3 +28,4 @@ export const axiumOpenQuality = createQuality(
   axiumOpenReducer,
   defaultMethodCreator
 );
+/*#>*/

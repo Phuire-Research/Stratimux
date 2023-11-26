@@ -1,4 +1,8 @@
-import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will check in the next action
+in the current strategy to the state's actionQue.
+$>*/
+/*<#*/
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
@@ -9,11 +13,9 @@ export const experimentCheckInStrategyType = 'Experiment Check in Action';
 
 export const experimentCheckInStrategy = prepareActionCreator(experimentCheckInStrategyType);
 
-export function checkInStrategyReducer(state: ExperimentState, action: Action): ExperimentState {
+function experimentCheckInStrategyReducer(state: ExperimentState, action: Action): ExperimentState {
   if (action.strategy) {
-    // console.log('Check in reducer', action);
     const nextAction = strategySuccess(action.strategy);
-    // console.log('Check in reducer2', nextAction.strategy?.lastActionNode.action, nextAction.strategy?.lastActionNode.action?.stubs);
     if (nextAction.type !== axiumConcludeType) {
       return {
         ...state,
@@ -28,5 +30,6 @@ export function checkInStrategyReducer(state: ExperimentState, action: Action): 
 
 export const checkInStrategyQuality = createQuality(
   experimentCheckInStrategyType,
-  checkInStrategyReducer,
+  experimentCheckInStrategyReducer,
 );
+/*#>*/

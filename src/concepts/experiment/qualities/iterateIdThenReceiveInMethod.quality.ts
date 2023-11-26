@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will iterate the ID and then
+set the id supplied to the method into the strategy's data field.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -33,3 +38,4 @@ export const experimentIterateIdThenReceiveInMethodQuality = createQuality(
   experimentIterateIdThenReceiveInMethodReducer,
   experimentIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

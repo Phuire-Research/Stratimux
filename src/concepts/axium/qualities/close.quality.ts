@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Axium Concept, generate a quality that will close the axium, if exit is set to true.
+This will also exit the current process.
+$>*/
+/*<#*/
 import { createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -36,3 +41,4 @@ export const axiumCloseQuality = createQuality(
   axiumCloseType,
   axiumCloseReducer
 );
+/*#>*/
