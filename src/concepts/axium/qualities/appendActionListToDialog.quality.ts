@@ -1,5 +1,3 @@
-import { map, Subject } from 'rxjs';
-import { Method, MethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
@@ -14,7 +12,7 @@ export const axiumAppendActionListToDialogType: ActionType = 'append Action List
 export const axiumAppendActionListToDialog =
   prepareActionWithPayloadCreator<AppendActionListToDialogPayload>(axiumAppendActionListToDialogType);
 
-export function appendActionListToDialogReducer(state: AxiumState, action: Action): AxiumState {
+export function axiumAppendActionListToDialogReducer(state: AxiumState, action: Action): AxiumState {
   const payload = selectPayload<AppendActionListToDialogPayload>(action);
   let newDialog = '';
   if (state.storeDialog) {
@@ -39,5 +37,5 @@ export function appendActionListToDialogReducer(state: AxiumState, action: Actio
 
 export const axiumAppendActionListToDialogQuality = createQuality(
   axiumAppendActionListToDialogType,
-  appendActionListToDialogReducer,
+  axiumAppendActionListToDialogReducer,
 );

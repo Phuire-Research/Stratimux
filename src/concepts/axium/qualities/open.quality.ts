@@ -10,7 +10,7 @@ export type OpenPayload = {
 export const axiumOpenType: ActionType = 'Open Axium';
 export const axiumOpen = prepareActionWithPayloadCreator<OpenPayload>(axiumOpenType);
 
-export function openReducer(state: AxiumState, action: Action): AxiumState {
+export function axiumOpenReducer(state: AxiumState, action: Action): AxiumState {
   const open = selectPayload<OpenPayload>(action).open;
   return {
     ...state,
@@ -19,6 +19,6 @@ export function openReducer(state: AxiumState, action: Action): AxiumState {
 }
 export const axiumOpenQuality = createQuality(
   axiumOpenType,
-  openReducer,
+  axiumOpenReducer,
   defaultMethodCreator
 );

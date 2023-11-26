@@ -9,7 +9,7 @@ import { createMethod } from '../../../model/method';
 export const axiumLogType: ActionType = 'logged a message passed to Axium';
 export const axiumLog = prepareActionCreator(axiumLogType);
 
-export const createLogMethodCreator: MethodCreator = () => createMethod((action) => {
+export const axiumLogMethodCreator: MethodCreator = () => createMethod((action) => {
   console.log('Logging: ', action);
   if (action.strategy) {
     return strategySuccess(action.strategy);
@@ -21,5 +21,5 @@ export const createLogMethodCreator: MethodCreator = () => createMethod((action)
 export const axiumLogQuality = createQuality(
   axiumLogType,
   defaultReducer,
-  createLogMethodCreator,
+  axiumLogMethodCreator,
 );

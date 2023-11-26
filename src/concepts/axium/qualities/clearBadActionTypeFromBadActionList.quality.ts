@@ -3,15 +3,15 @@ import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../mo
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearBadActionTypeFromBadActionListPayload = {
+export type AxiumClearBadActionTypeFromBadActionListPayload = {
   actionType: ActionType
 };
 export const axiumClearBadActionTypeFromBadActionListType: ActionType = 'clear ActionType from Axium\'s badAction list';
 export const axiumClearBadActionTypeFromBadActionList =
-  prepareActionWithPayloadCreator<ClearBadActionTypeFromBadActionListPayload>(axiumClearBadActionTypeFromBadActionListType);
+  prepareActionWithPayloadCreator<AxiumClearBadActionTypeFromBadActionListPayload>(axiumClearBadActionTypeFromBadActionListType);
 
-function clearBadActionTypeFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
-  const actionType = selectPayload<ClearBadActionTypeFromBadActionListPayload>(action).actionType;
+function axiumClearBadActionTypeFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
+  const actionType = selectPayload<AxiumClearBadActionTypeFromBadActionListPayload>(action).actionType;
   return {
     ...state,
     badActions: state.badActions.filter(act => act.type !== actionType),
@@ -20,6 +20,6 @@ function clearBadActionTypeFromBadActionListReducer(state: AxiumState, action: A
 
 export const axiumClearBadActionTypeFromBadActionListQuality = createQuality(
   axiumClearBadActionTypeFromBadActionListType,
-  clearBadActionTypeFromBadActionListReducer,
+  axiumClearBadActionTypeFromBadActionListReducer,
   defaultMethodCreator,
 );

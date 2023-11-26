@@ -8,16 +8,16 @@ import { selectPayload } from '../../../model/selector';
 import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
-export type RecurseIterateId = {controlling: string[]};
+export type ExperimentRecurseIterateId = {controlling: string[]};
 export const experimentRecurseIterateIdType
   = 'Asynchronous experiment, recursively iterate ID and receive in Method via State';
 
-export const experimentRecurseIterateId = prepareActionWithPayloadCreator<RecurseIterateId>(experimentRecurseIterateIdType);
+export const experimentRecurseIterateId = prepareActionWithPayloadCreator<ExperimentRecurseIterateId>(experimentRecurseIterateIdType);
 
 const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
   createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
-      const payload = selectPayload<RecurseIterateId>(action);
+      const payload = selectPayload<ExperimentRecurseIterateId>(action);
       payload.controlling.shift();
       if (action.strategy) {
         const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});

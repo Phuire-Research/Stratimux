@@ -5,7 +5,7 @@ import { AxiumState } from '../axium.concept';
 export const axiumClearDialogType: ActionType = 'clear Axium Dialog';
 export const axiumClearDialog = prepareActionCreator(axiumClearDialogType);
 
-export function clearDialogReducer(state: AxiumState, action: Action) {
+export function axiumClearDialogReducer(state: AxiumState, action: Action) {
   return {
     ...state,
     dialog: '',
@@ -14,6 +14,6 @@ export function clearDialogReducer(state: AxiumState, action: Action) {
 
 export const axiumClearDialogQuality = createQuality(
   axiumClearDialogType,
-  clearDialogReducer,
+  axiumClearDialogReducer,
   defaultMethodCreator,
 );

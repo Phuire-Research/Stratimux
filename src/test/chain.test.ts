@@ -2,7 +2,7 @@ import { createAxium } from '../model/axium';
 import { Concept, Concepts } from '../model/concept';
 import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
-import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { createChainConcept } from '../concepts/chain/chain.concept';
 import { ChainDispatchActionsPayload, chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
@@ -33,7 +33,7 @@ test('Axium Test', (done) => {
       axium.dispatch(primedPrepareChain);
     }
     else if (count === 7) {
-      const counter = selectState<Counter>(concepts, counterName);
+      const counter = selectState<CounterState>(concepts, counterName);
       expect(counter?.count).toBe(2);
       setTimeout(() => {done();}, 500);
       axium.close();

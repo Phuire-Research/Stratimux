@@ -1,7 +1,7 @@
 /* eslint-disable max-depth */
 import { Action, areSemaphoresEqual } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
-import { Concept, Concepts } from './concept';
+import { Concepts } from './concept';
 import { selectState } from './selector';
 import { ActionNode, ActionStrategy } from './actionStrategy';
 import { AxiumState } from '../concepts/axium/axium.concept';

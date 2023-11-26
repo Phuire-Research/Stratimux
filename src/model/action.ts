@@ -2,7 +2,7 @@ import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { BadActionPayload } from '../concepts/axium/qualities/badAction.quality';
+import { AxiumBadActionPayload } from '../concepts/axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
 export const nullActionType: ActionType = 'null';
@@ -63,7 +63,7 @@ export function primeAction(concepts: Concepts, action: Action): Action {
   }
   const badAction: Action = {
     type: axiumBadActionType,
-    payload: createPayload<BadActionPayload>({badActions: [action]}),
+    payload: createPayload<AxiumBadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
     semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType)
   };

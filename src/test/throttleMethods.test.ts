@@ -5,7 +5,7 @@ import {
   experimentThrottleAsyncIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/throttleAsyncIterateIdThenReceiveInMethod.quality';
 import {
-  ThrottleIterateIdThenReceiveInMethodPayload,
+  ExperimentThrottleIterateIdThenReceiveInMethodPayload,
   experimentThrottleIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/throttleIterateIdThenReceiveInMethod.quality';
 
@@ -60,7 +60,10 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState & ThrottleIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+        const data = selectSlice<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(
+          concepts,
+          axiumSelectLastStrategyData
+        );
         console.log('Action Throttle: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === throttleIterateIdThenAddToDataTopic) {
           if (data) {
@@ -117,7 +120,10 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState & ThrottleIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+        const data = selectSlice<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(
+          concepts,
+          axiumSelectLastStrategyData
+        );
         console.log('Last Async Action Throttle: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === throttleAsyncIterateIdThenAddToDataTopic) {
           if (data) {
@@ -173,7 +179,10 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState & ThrottleIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+          const data = selectSlice<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(
+            concepts,
+            axiumSelectLastStrategyData
+          );
           console.log('2 Last Async Action Throttle: ', experimentState.id, lastStrategy, data);
           if (lastStrategy === throttleAsyncIterateIdThenAddToDataTopic + 2) {
             if (data) {

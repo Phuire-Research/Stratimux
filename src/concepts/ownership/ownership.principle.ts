@@ -2,13 +2,13 @@ import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
-import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
+import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { UnifiedSubject  } from '../../model/stagePlanner';
-import { BadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
+import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { axiumSelectOpen } from '../axium/axium.selector';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
@@ -69,7 +69,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             concepts$.next(concepts);
             observer.next(newAction);
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
-            const payload: BadActionPayload = {
+            const payload: AxiumBadActionPayload = {
               badActions: []
             };
             const newPending: Action[] = [];
@@ -98,7 +98,7 @@ export const ownershipPrinciple: PrincipleFunction = (
         initDispatch = true;
         observer.next(
           strategyBegin(
-            setOwnershipModeStrategy(concepts, 'Ownership')
+            ownershipSetOwnershipModeStrategy(concepts, 'Ownership')
           )
         );
       }

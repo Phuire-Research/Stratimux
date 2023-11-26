@@ -1,13 +1,13 @@
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, Concepts } from '../../../model/concept';
+import { Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { ownershipInitializeOwnership, ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { axiumSetMode, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { ownershipName } from '../ownership.concept';
 import { AxiumState } from '../../axium/axium.concept';
 
-export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
-export function setOwnershipModeStrategy(concepts: Concepts, modeName: string): ActionStrategy {
+export const ownershipSetOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
+export function ownershipSetOwnershipModeStrategy(concepts: Concepts, modeName: string): ActionStrategy {
   const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipName, ownershipInitializeOwnershipType);
   const setModeSemaphore = getSemaphore(concepts, ownershipName, axiumSetModeType);
   let ownershipModeIndex = 2;
@@ -34,7 +34,7 @@ export function setOwnershipModeStrategy(concepts: Concepts, modeName: string): 
     failureNode: null,
   });
   const params: ActionStrategyParameters = {
-    topic: setOwnerShipModeTopic,
+    topic: ownershipSetOwnerShipModeTopic,
     initialNode: stepOne,
   };
 

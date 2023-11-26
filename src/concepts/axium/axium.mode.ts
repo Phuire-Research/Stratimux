@@ -3,7 +3,7 @@ import { Concepts, Mode } from '../../model/concept';
 import { Action, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
-import { BadActionPayload } from './qualities/badAction.quality';
+import { AxiumBadActionPayload } from './qualities/badAction.quality';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;
@@ -43,7 +43,7 @@ export const permissiveMode: Mode = (
         const nextAction = primeAction(concepts, action);
         // Logical Determination: axiumBadActionType
         if (nextAction.semaphore[3] === 1) {
-          const payload: BadActionPayload = {badActions: [action]};
+          const payload: AxiumBadActionPayload = {badActions: [action]};
           nextAction.payload = payload;
         }
         if (nextAction.semaphore[2] === axiumState.generation) {

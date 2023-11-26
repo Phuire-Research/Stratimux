@@ -1,13 +1,13 @@
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
-import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
+import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
   experimentDebounceAsyncIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
 import { asyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
 import {
-  DebounceIterateIdThenReceiveInMethodPayload,
+  ExperimentDebounceIterateIdThenReceiveInMethodPayload,
   experimentDebounceIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
 import { debounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
@@ -45,7 +45,7 @@ test('Debounce method prevent excess count', (done) => {
       });
     },
     (concepts, _) => {
-      const counterState = selectState<Counter>(concepts, counterName);
+      const counterState = selectState<CounterState>(concepts, counterName);
       console.log('Debounce HIT 4', counterState);
       if (counterState?.count === 1) {
         console.log('Final Debounce HIT 4', counterState);
@@ -77,7 +77,7 @@ test('Async debounce method prevent excess count', (done) => {
       });
     },
     (concepts, _) => {
-      const counterState = selectState<Counter>(concepts, counterName);
+      const counterState = selectState<CounterState>(concepts, counterName);
       console.log('Async Debounce HIT 4', counterState);
       if (counterState?.count === 1) {
         console.log('FINAL Async Debounce HIT 4', counterState);
@@ -104,7 +104,7 @@ test('Async debounce method prevent excess count', (done) => {
         });
       },
       (concepts, _) => {
-        const counterState = selectState<Counter>(concepts, counterName);
+        const counterState = selectState<CounterState>(concepts, counterName);
         console.log('Async 2 Debounce HIT 4', counterState);
         if (counterState?.count === 2) {
           console.log('FINAL Async 2 Debounce HIT 4', counterState);
@@ -161,7 +161,10 @@ test('Debounce Method Test with State id comparison', (done) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+        const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+          concepts,
+          axiumSelectLastStrategyData
+        );
         console.log('Debounce: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === debounceIterateIdThenAddToDataTopic) {
           if (data) {
@@ -213,7 +216,10 @@ test('Debounce Method Test with State id comparison', (done) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+          const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+            concepts,
+            axiumSelectLastStrategyData
+          );
           console.log('2 Debounce: ', experimentState.id, lastStrategy, data);
           if (lastStrategy === debounceIterateIdThenAddToDataTopic) {
             if (data && data.id === 6) {
@@ -272,7 +278,10 @@ test('Debounce Async Method Test with State id comparison', (done) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+        const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+          concepts,
+          axiumSelectLastStrategyData
+        );
         console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === debounceAsyncIterateIdThenAddToDataTopic) {
           if (data) {
@@ -329,7 +338,10 @@ test('Debounce Async Method Test with State id comparison', (done) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(concepts, axiumSelectLastStrategyData);
+          const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+            concepts,
+            axiumSelectLastStrategyData
+          );
           console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
           if (lastStrategy === debounceAsyncIterateIdThenAddToDataTopic + 2) {
             if (data) {

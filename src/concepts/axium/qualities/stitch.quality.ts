@@ -1,5 +1,5 @@
 import { prepareActionCreator } from '../../../model/action';
-import { ActionNodeOptions, createActionNode, strategySuccess } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/actionStrategy';
 import { createQuality, defaultReducer } from '../../../model/concept';
 import { ActionType, createMethod } from '../../../model/method';
 
@@ -28,15 +28,3 @@ export const axiumStitchQuality = createQuality(
   defaultReducer,
   axiumStitchMethodCreator
 );
-
-/**
- * Must be used within an ActionStrategyStitch with only one ActionNode provided.
- * @param options `optional` will set return ActionNode's options if provided.
- * @returns ActionNode of axiumStitch
- */
-export const axium_createStitchNode = (options?: ActionNodeOptions) =>
-  ({...createActionNode(axiumStitch(), options ? options : {
-    successNode: null,
-    failureNode: null,
-  })});
-

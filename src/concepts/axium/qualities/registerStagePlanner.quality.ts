@@ -5,16 +5,16 @@ import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 import { StagePlanner } from '../../../model/stagePlanner';
 
-export type RegisterStagePlannerPayload = {
+export type AxiumRegisterStagePlannerPayload = {
     stagePlanner: StagePlanner;
     conceptName: string;
 }
 export const axiumRegisterStagePlannerType: ActionType = 'register Stage Planner to Axium\'s Named Stage Planner list';
 export const axiumRegisterStagePlanner =
-  prepareActionWithPayloadCreator<RegisterStagePlannerPayload>(axiumRegisterStagePlannerType);
+  prepareActionWithPayloadCreator<AxiumRegisterStagePlannerPayload>(axiumRegisterStagePlannerType);
 
-export function registerSubscriberReducer(state: AxiumState, action: Action): AxiumState {
-  const payload = selectPayload<RegisterStagePlannerPayload>(action);
+function axiumRegisterSubscriberReducer(state: AxiumState, action: Action): AxiumState {
+  const payload = selectPayload<AxiumRegisterStagePlannerPayload>(action);
   const stagePlanners = state.stagePlanners;
   const stagePlanner = payload.stagePlanner;
   const name = payload.conceptName;
@@ -27,6 +27,6 @@ export function registerSubscriberReducer(state: AxiumState, action: Action): Ax
 
 export const axiumRegisterStagePlannerQuality = createQuality(
   axiumRegisterStagePlannerType,
-  registerSubscriberReducer,
+  axiumRegisterSubscriberReducer,
   defaultMethodCreator
 );

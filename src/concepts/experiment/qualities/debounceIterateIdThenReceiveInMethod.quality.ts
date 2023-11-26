@@ -8,20 +8,22 @@ import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
-export type DebounceIterateIdThenReceiveInMethodPayload = {
+export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentDebounceIterateIdThenReceiveInMethodType =
   'Experiment debounce iterate ID then receive in Method via State';
 
 export const experimentDebounceIterateIdThenReceiveInMethod =
-  prepareActionWithPayloadCreator<DebounceIterateIdThenReceiveInMethodPayload>(experimentDebounceIterateIdThenReceiveInMethodType);
+  prepareActionWithPayloadCreator<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+    experimentDebounceIterateIdThenReceiveInMethodType
+  );
 
 const experimentDebounceIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
   createMethodDebounceWithState<ExperimentState>((action, state) => {
-    const payload = selectPayload<DebounceIterateIdThenReceiveInMethodPayload>(action);
+    const payload = selectPayload<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action);
     if (action.strategy) {
-      const data = strategyData_unifyData<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
+      const data = strategyData_unifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
         id: state.id,
         setId: payload.setId
       });

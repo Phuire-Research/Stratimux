@@ -115,7 +115,6 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       axiumAppendActionListToDialogQuality,
       axiumClearDialogQuality,
       axiumLogQuality,
-      axiumStitchQuality,
       axiumRegisterSubscriberQuality,
       axiumRegisterStagePlannerQuality,
       axiumInitializePrinciplesQuality,
@@ -129,7 +128,8 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       axiumSetModeQuality,
       axiumClearBadActionTypeFromBadActionListQuality,
       axiumClearBadStrategyTopicFromBadActionListQuality,
-      axiumClearBadPlanFromBadPlanListQuality
+      axiumClearBadPlanFromBadPlanListQuality,
+      axiumStitchQuality
     ],
     [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]

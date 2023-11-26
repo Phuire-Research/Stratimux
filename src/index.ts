@@ -108,33 +108,49 @@ export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './mo
 export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axium.concept';
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
 export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
+// Models
+export {
+  AxiumGatherNode,
+  AxiumGatherStrategy,
+  axium_createGatherNode,
+  axium_createGatherStrategy
+} from './concepts/axium/model/gather.model';
+export {
+  axium_createStitchNode
+} from './concepts/axium/model/stitch.model';
 // Qualities
 export { axiumKick, axiumKickType } from './concepts/axium/qualities/kick.quality';
 export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
 export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
 export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
-export { axiumStitch, axiumStitchType, axium_createStitchNode } from './concepts/axium/qualities/stitch.quality';
-export {axiumPreClose, axiumPreCloseType, PreClosePayload } from './concepts/axium/qualities/preClose.quality';
+export { axiumStitch, axiumStitchType } from './concepts/axium/qualities/stitch.quality';
+export { axiumPreClose, axiumPreCloseType, AxiumPreClosePayload } from './concepts/axium/qualities/preClose.quality';
 export { axiumBadAction, axiumBadActionType } from './concepts/axium/qualities/badAction.quality';
-export { axiumSetMode, axiumSetModeType, SetModePayload } from './concepts/axium/qualities/setMode.quality';
+export { axiumSetMode, axiumSetModeType, AxiumSetModePayload } from './concepts/axium/qualities/setMode.quality';
 export {
   axiumSetDefaultModeIndex,
   axiumSetDefaultModeIndexType,
-  SetDefaultModeIndexPayload
+  AxiumSetDefaultModeIndexPayload
 } from './concepts/axium/qualities/setDefaultModeIndex.quality';
 export {
   axiumRegisterSubscriber,
-  RegisterSubscriberPayload,
+  AxiumRegisterSubscriberPayload,
   axiumRegisterSubscriberType
 } from './concepts/axium/qualities/registerSubscription.quality';
 export {
   axiumRegisterStagePlanner,
-  RegisterStagePlannerPayload,
+  AxiumRegisterStagePlannerPayload,
   axiumRegisterStagePlannerType
 } from './concepts/axium/qualities/registerStagePlanner.quality';
 export { axiumClearDialog, axiumClearDialogType } from './concepts/axium/qualities/clearDialog.quality';
-export { axiumSetDefaultMode, axiumSetDefaultModeType, SetDefaultModePayload } from './concepts/axium/qualities/setDefaultMode.quality';
-export { axiumSetBlockingMode, axiumSetBlockingModeType, SetBlockingModePayload } from './concepts/axium/qualities/setBlockingMode.quality';
+export { axiumSetDefaultMode,
+  axiumSetDefaultModeType,
+  AxiumSetDefaultModePayload
+} from './concepts/axium/qualities/setDefaultMode.quality';
+export { axiumSetBlockingMode,
+  axiumSetBlockingModeType,
+  AxiumSetBlockingModePayload
+} from './concepts/axium/qualities/setBlockingMode.quality';
 // Strategies
 export {
   addConceptsToAddQueThenBlockStrategy,
@@ -146,12 +162,12 @@ export {
 } from './concepts/axium/strategies/removeConcept.strategy';
 
 // Counter
-export { Counter, counterName, createCounterConcept } from './concepts/counter/counter.concept';
+export { CounterState, counterName, createCounterConcept } from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';
 // Qualities
 export { counterAdd, counterAddType } from './concepts/counter/qualities/add.quality';
 export { counterSubtract, counterSubtractType } from './concepts/counter/qualities/subtract.quality';
-export { counterSetCount, counterSetCountType, SetCountPayload } from './concepts/counter/qualities/setCount.quality';
+export { counterSetCount, counterSetCountType, CounterSetCountPayload } from './concepts/counter/qualities/setCount.quality';
 // Strategies
 export {
   countingStrategy,
@@ -161,7 +177,7 @@ export {
 } from './concepts/counter/strategies/counting.strategy';
 
 // Chain
-export { Chain, chainName, createChainConcept } from './concepts/chain/chain.concept';
+export { ChainState, chainName, createChainConcept } from './concepts/chain/chain.concept';
 // Qualities
 export {
   chainDispatchActions,
@@ -177,13 +193,13 @@ export { ownershipSelectInitialized, ownershipSelectLedger } from './concepts/ow
 export { ownershipBackTrack, ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
 export {
   ownershipClearPayloadStubs,
-  ClearPayloadStubsPayload,
+  OwnershipClearPayloadStubsPayload,
   ownershipClearPayloadStubsType
 } from './concepts/ownership/qualities/clearPayloadStubs.quality';
 export { ownershipClearPendingActions, ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
 export {
   ownershipClearPendingActionsOfStrategy,
-  ClearPendingActionsOfStrategyPayload,
+  OwnershipClearPendingActionsOfStrategyPayload,
   ownershipClearPendingActionsOfStrategyType
 } from './concepts/ownership/qualities/clearPendingActionsOfStrategy.quality';
 export {

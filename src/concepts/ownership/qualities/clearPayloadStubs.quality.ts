@@ -4,14 +4,15 @@ import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearPayloadStubsPayload = {
+export type OwnershipClearPayloadStubsPayload = {
   stubs: OwnershipTicketStub[]
 };
 export const ownershipClearPayloadStubsType: ActionType = 'clear payload Stubs from Ownership Ledger';
-export const ownershipClearPayloadStubs = prepareActionWithPayloadCreator<ClearPayloadStubsPayload>(ownershipClearPayloadStubsType);
+export const ownershipClearPayloadStubs =
+  prepareActionWithPayloadCreator<OwnershipClearPayloadStubsPayload>(ownershipClearPayloadStubsType);
 
-export function clearPayloadStubsReducer(state: OwnershipState, action: Action): OwnershipState {
-  const stubs = selectPayload<ClearPayloadStubsPayload>(action).stubs;
+function ownershipClearPayloadStubsReducer(state: OwnershipState, action: Action): OwnershipState {
+  const stubs = selectPayload<OwnershipClearPayloadStubsPayload>(action).stubs;
   const ownershipLedger = state.ownershipLedger;
   stubs.forEach(ticketStub => {
     const line = ownershipLedger.get(ticketStub.key);
@@ -38,6 +39,6 @@ export function clearPayloadStubsReducer(state: OwnershipState, action: Action):
 }
 export const clearPayloadStubsQuality = createQuality(
   ownershipClearPayloadStubsType,
-  clearPayloadStubsReducer,
+  ownershipClearPayloadStubsReducer,
   defaultMethodCreator
 );

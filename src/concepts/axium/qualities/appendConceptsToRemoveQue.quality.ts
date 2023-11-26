@@ -4,15 +4,15 @@ import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../mo
 import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 
-export type AppendConceptsToRemoveQuePayload = {
+export type AxiumAppendConceptsToRemoveQuePayload = {
     concepts: Concept[]
 }
 export const axiumAppendConceptsToRemoveQueType: ActionType = 'append Concepts to Axium\'s Remove Concept Que';
 export const axiumAppendConceptsToRemoveQue =
-  prepareActionWithPayloadCreator<AppendConceptsToRemoveQuePayload>(axiumAppendConceptsToRemoveQueType);
+  prepareActionWithPayloadCreator<AxiumAppendConceptsToRemoveQuePayload>(axiumAppendConceptsToRemoveQueType);
 
-export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
-  const payload = selectPayload<AppendConceptsToRemoveQuePayload>(action);
+export function axiumAppendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
+  const payload = selectPayload<AxiumAppendConceptsToRemoveQuePayload>(action);
   let removeQue = state.removeConceptQue;
   removeQue = [
     ...removeQue,
@@ -26,6 +26,6 @@ export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Acti
 
 export const axiumAppendConceptsToRemoveQueQuality = createQuality(
   axiumAppendConceptsToRemoveQueType,
-  appendConceptsToRemoveQueReducer,
+  axiumAppendConceptsToRemoveQueReducer,
   defaultMethodCreator
 );

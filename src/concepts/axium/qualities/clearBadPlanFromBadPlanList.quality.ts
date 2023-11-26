@@ -3,15 +3,15 @@ import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../mo
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearBadPlanFromBadPlanListPayload = {
+export type AxiumClearBadPlanFromBadPlanListPayload = {
   title: string
 };
 export const axiumClearBadPlanFromBadPlanListType: ActionType = 'clear Plan Topic from Axium\'s badPlan list';
 export const axiumClearBadPlanFromBadPlanList =
-  prepareActionWithPayloadCreator<ClearBadPlanFromBadPlanListPayload>(axiumClearBadPlanFromBadPlanListType);
+  prepareActionWithPayloadCreator<AxiumClearBadPlanFromBadPlanListPayload>(axiumClearBadPlanFromBadPlanListType);
 
-function clearBadPlanFromBadPlanListReducer(state: AxiumState, action: Action): AxiumState {
-  const title = selectPayload<ClearBadPlanFromBadPlanListPayload>(action).title;
+function axiumClearBadPlanFromBadPlanListReducer(state: AxiumState, action: Action): AxiumState {
+  const title = selectPayload<AxiumClearBadPlanFromBadPlanListPayload>(action).title;
   return {
     ...state,
     badPlans: state.badPlans.filter(act => act.title !== title),
@@ -20,6 +20,6 @@ function clearBadPlanFromBadPlanListReducer(state: AxiumState, action: Action): 
 
 export const axiumClearBadPlanFromBadPlanListQuality = createQuality(
   axiumClearBadPlanFromBadPlanListType,
-  clearBadPlanFromBadPlanListReducer,
+  axiumClearBadPlanFromBadPlanListReducer,
   defaultMethodCreator,
 );

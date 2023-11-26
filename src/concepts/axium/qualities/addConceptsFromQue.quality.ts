@@ -8,7 +8,7 @@ import { blockingMethodSubscription } from '../../../model/axium';
 export const axiumAddConceptFromQueType: ActionType = 'Add Concepts from Axium Concept Que';
 export const axiumAddConceptFromQue = prepareActionCreator(axiumAddConceptFromQueType);
 
-function addConceptsFromQueReducer(state: AxiumState, action: Action) {
+function axiumAddConceptsFromQueReducer(state: AxiumState, action: Action) {
   const methodSubscribers = state.methodSubscribers;
   const addConceptsQue = state.addConceptQue;
   addConceptsQue.forEach((concept, index) => {
@@ -41,6 +41,6 @@ function addConceptsFromQueReducer(state: AxiumState, action: Action) {
 
 export const axiumAddConceptsFromQueQuality = createQuality(
   axiumAddConceptFromQueType,
-  addConceptsFromQueReducer,
+  axiumAddConceptsFromQueReducer,
   defaultMethodCreator
 );

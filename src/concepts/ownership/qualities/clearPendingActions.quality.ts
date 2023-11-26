@@ -5,7 +5,7 @@ import { OwnershipState } from '../ownership.concept';
 export const ownershipClearPendingActionsType: ActionType = 'clear Ownership\'s Pending Actions';
 export const ownershipClearPendingActions = prepareActionCreator(ownershipClearPendingActionsType);
 
-export function clearPendingActionsReducer(state: OwnershipState, _: Action): OwnershipState {
+function ownershipClearPendingActionsReducer(state: OwnershipState, _: Action): OwnershipState {
   return {
     ...state,
     pendingActions: []
@@ -13,6 +13,6 @@ export function clearPendingActionsReducer(state: OwnershipState, _: Action): Ow
 }
 export const clearPendingActionsQuality = createQuality(
   ownershipClearPendingActionsType,
-  clearPendingActionsReducer,
+  ownershipClearPendingActionsReducer,
   defaultMethodCreator
 );

@@ -1,6 +1,6 @@
 import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
-import { axium_createStitchNode } from '../concepts/axium/qualities/stitch.quality';
+import { axium_createStitchNode } from '../concepts/axium/model/stitch.model';
 import {
   ActionStrategy,
   ActionStrategyStitch,

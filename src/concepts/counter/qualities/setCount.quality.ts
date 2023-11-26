@@ -1,28 +1,28 @@
-import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { Counter } from '../counter.concept';
+import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { selectPayload } from '../../../model/selector';
 
 export const counterSetCountType = 'set Count';
 
-export type SetCountPayload = {
+export type CounterSetCountPayload = {
   newCount: number
 }
-export const counterSetCount = prepareActionWithPayloadCreator<SetCountPayload>(counterSetCountType);
+export const counterSetCount = prepareActionWithPayloadCreator<CounterSetCountPayload>(counterSetCountType);
 
-export function setCountReducer(state: Counter, action: Action) {
-  const payload = selectPayload<SetCountPayload>(action);
+function counterSetCountReducer(state: CounterState, action: Action) {
+  const payload = selectPayload<CounterSetCountPayload>(action);
   return {
     ...state,
     count: payload.newCount
   };
 }
 
-export const setCountQuality = createQuality(
+export const counterSetCountQuality = createQuality(
   counterSetCountType,
-  setCountReducer,
+  counterSetCountReducer,
   defaultMethodCreator,
   [counterSelectCount]
 );
