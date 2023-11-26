@@ -3,15 +3,15 @@ import {
   experimentThrottleAsyncIterateIdThenReceiveInMethod
 } from '../qualities/throttleAsyncIterateIdThenReceiveInMethod.quality';
 
-export const throttleAsyncIterateIdThenAddToDataTopic = 'Throttle Async iterate experiment ID then add to strategy data';
-export function throttleAsyncIterateIdThenAddToData(setId: number): ActionStrategy {
+export const experimentThrottleAsyncIterateIdThenAddToDataTopic = 'Throttle Async iterate experiment ID then add to strategy data';
+export function experimentThrottleAsyncIterateIdThenAddToData(setId: number): ActionStrategy {
   const stepOne = createActionNode(experimentThrottleAsyncIterateIdThenReceiveInMethod({setId}), {
     successNode: null,
     failureNode: null,
   });
 
   const params: ActionStrategyParameters = {
-    topic: throttleAsyncIterateIdThenAddToDataTopic,
+    topic: experimentThrottleAsyncIterateIdThenAddToDataTopic,
     initialNode: stepOne,
   };
 

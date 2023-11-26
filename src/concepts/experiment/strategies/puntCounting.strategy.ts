@@ -3,8 +3,8 @@ import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality';
 import { experimentCountingStrategy } from './experimentCounting.strategy';
 
-export const puntCountingStrategyTopic = 'This will Punt the Counting Strategy into the Experiment\'s Action Que';
-export function puntCountingStrategy(): ActionStrategy {
+export const experimentPuntCountingStrategyTopic = 'This will Punt the Counting Strategy into the Experiment\'s Action Que';
+export function experimentPuntCountingStrategy(): ActionStrategy {
   const stepOne = createActionNode(experimentCheckInStrategy(), {
     successNode: null,
     failureNode: null,
@@ -12,7 +12,7 @@ export function puntCountingStrategy(): ActionStrategy {
   });
 
   const params: ActionStrategyParameters = {
-    topic: puntCountingStrategyTopic,
+    topic: experimentPuntCountingStrategyTopic,
     initialNode: stepOne,
   };
 

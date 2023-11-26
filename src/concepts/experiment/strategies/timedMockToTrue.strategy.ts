@@ -1,10 +1,9 @@
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentMockTrue } from '../qualities/mockTrue.quality';
 import { experimentTimerEmitAction } from '../qualities/timerEmitAction.quality';
 
-export const timedMockToTrueTopic = 'This will use a async method to eventually set mock to True';
-export function timedMockToTrue(): ActionStrategy {
+export const experimentTimedMockToTrueTopic = 'This will use a async method to eventually set mock to True';
+export function experimentTimedMockToTrue(): ActionStrategy {
   const stepTwo = createActionNode(experimentMockTrue(), {
     successNode: null,
     failureNode: null,
@@ -15,7 +14,7 @@ export function timedMockToTrue(): ActionStrategy {
   });
 
   const params: ActionStrategyParameters = {
-    topic: timedMockToTrueTopic,
+    topic: experimentTimedMockToTrueTopic,
     initialNode: stepOne,
   };
 

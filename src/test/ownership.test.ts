@@ -6,7 +6,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
-import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
+import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import {
   experimentPrimedCountingStrategy,
@@ -38,7 +38,7 @@ test('Ownership Test', (done) => {
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
             //    Via its principle, to simulate an action moving off premise.
-            dispatch(strategyBegin(puntCountingStrategy()), {
+            dispatch(strategyBegin(experimentPuntCountingStrategy()), {
               iterateStage: true
             });
           }

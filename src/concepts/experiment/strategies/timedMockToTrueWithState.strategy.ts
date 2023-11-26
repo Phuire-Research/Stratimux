@@ -2,7 +2,7 @@ import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrat
 import { experimentMockTrue } from '../qualities/mockTrue.quality';
 import { experimentTimerEmitActionWithState } from '../qualities/timerEmitActionWithState.quality';
 
-export const timedMockToTrueWithStateTopic =
+export const experimentTimedMockToTrueWithStateTopic =
   'This will use a async method to eventually set mock to True via State and append mock to strategy data.';
 export function timedMockToTrueWithState(): ActionStrategy {
   const stepTwo = createActionNode(experimentMockTrue(), {
@@ -15,7 +15,7 @@ export function timedMockToTrueWithState(): ActionStrategy {
   });
 
   const params: ActionStrategyParameters = {
-    topic: timedMockToTrueWithStateTopic,
+    topic: experimentTimedMockToTrueWithStateTopic,
     initialNode: stepOne,
   };
 

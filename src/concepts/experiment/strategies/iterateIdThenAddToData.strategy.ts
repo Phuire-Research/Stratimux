@@ -1,7 +1,7 @@
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentIterateIdThenReceiveInMethod } from '../qualities/iterateIdThenReceiveInMethod.quality';
 
-export const iterateIdThenAddToDataTopic = 'Iterate experiment ID then add to strategy data';
+export const experimentIterateIdThenAddToDataTopic = 'Iterate experiment ID then add to strategy data';
 export function iterateIdThenAddToData(): ActionStrategy {
   const stepOne = createActionNode(experimentIterateIdThenReceiveInMethod(), {
     successNode: null,
@@ -9,7 +9,7 @@ export function iterateIdThenAddToData(): ActionStrategy {
   });
 
   const params: ActionStrategyParameters = {
-    topic: iterateIdThenAddToDataTopic,
+    topic: experimentIterateIdThenAddToDataTopic,
     initialNode: stepOne,
   };
 

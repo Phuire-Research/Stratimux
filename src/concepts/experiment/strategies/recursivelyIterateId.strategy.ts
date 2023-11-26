@@ -1,15 +1,15 @@
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentRecurseIterateId } from '../qualities/recurseIncrementId.quality';
 
-export const recursivelyIterateIdTopic = 'Recursively iterate experiment ID then add to strategy data';
-export function recursivelyIterateId(controlling: string[]): ActionStrategy {
+export const experimentRecursivelyIterateIdTopic = 'Recursively iterate experiment ID then add to strategy data';
+export function experimentRecursivelyIterateId(controlling: string[]): ActionStrategy {
   const stepOne = createActionNode(experimentRecurseIterateId({controlling}), {
     successNode: null,
     failureNode: null,
   });
 
   const params: ActionStrategyParameters = {
-    topic: recursivelyIterateIdTopic,
+    topic: experimentRecursivelyIterateIdTopic,
     initialNode: stepOne,
   };
 
