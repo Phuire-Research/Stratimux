@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will initialize principles loaded into the Axium's conceptual set.
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will initialize principles loaded into the Axium's conceptual set.
 $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';

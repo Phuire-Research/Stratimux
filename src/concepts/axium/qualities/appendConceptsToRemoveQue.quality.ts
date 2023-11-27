@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will append a sequence of concepts to the Axium's
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will append a sequence of concepts to the Axium's
 removeConceptQue. The main axium principle will then initialize a removal strategy based on this que.
 $>*/
 /*<#*/

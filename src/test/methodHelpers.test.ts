@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that method helpers are working as intended.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
@@ -155,3 +159,4 @@ test('Async Method Test with State id comparison', (done) => {
     }
   ]);
 });
+/*#>*/

@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test that ensures that unified concepts inherit their unified names as intended.
+$>*/
+/*<#*/
 import { createConcept, unifyConcepts } from '../model/concept';
 
 test('Unified Names Test', (done) => {
@@ -30,3 +34,4 @@ test('Unified Names Test', (done) => {
   expect(unified.unified.length).toBe([one, two, three, four, five].length);
   done();
 });
+/*#>*/

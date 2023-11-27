@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux,
+define the current index file that exports all public functionality for the framework as a module.
+$>*/
+/*<#*/
 export { createAxium, getAxiumState } from './model/axium';
 export type {
   ActionNode,
@@ -230,3 +235,4 @@ export {
   experimentPrimedCountingTopic
 } from './concepts/experiment/strategies/experimentCounting.strategy';
 export {experimentActionQuePrinciple} from './concepts/experiment/experiment.principle';
+/*#>*/

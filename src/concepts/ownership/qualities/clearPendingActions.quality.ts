@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept,
+generate a quality that will clear the current pending actions list on state.
+$>*/
+/*<#*/
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
@@ -16,3 +21,4 @@ export const clearPendingActionsQuality = createQuality(
   ownershipClearPendingActionsReducer,
   defaultMethodCreator
 );
+/*#>*/

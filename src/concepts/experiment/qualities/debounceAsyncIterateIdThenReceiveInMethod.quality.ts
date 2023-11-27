@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will increment the state's ID.
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will increment the state's ID.
 Then debounce the action via the qualities method that will then unify the state's id into the strategy's data.
 $>*/
 /*<#*/

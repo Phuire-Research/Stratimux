@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure the stage planner and its options are working as intended.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
@@ -68,3 +72,4 @@ test('Axium Stage Dispatch Options Test', (done) => {
       }
     ]);
 });
+/*#>*/

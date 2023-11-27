@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux,
+generate a test to ensure that the strategy consumer function strategyRecurse is functioning as intended.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData, axiumSelectLastStrategyDialog } from '../concepts/axium/axium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import { experimentRecurseIterateIdQuality } from '../concepts/experiment/qualities/recurseIncrementId.quality';
@@ -38,3 +43,4 @@ test('Asynchronous recursion', (done) => {
     }
   ]);
 });
+/*$>*/

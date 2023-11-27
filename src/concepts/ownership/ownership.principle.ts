@@ -1,3 +1,10 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept,
+generate a principle will manage the ownership's pendingActions based upon the current
+ownershipLedger's contents. Only actions that are first in all lines of their tickets set the the strategy's KeyedSelectors,
+may be dispatched into the Axium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
+$>*/
+/*<#*/
 import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
@@ -105,7 +112,13 @@ export const ownershipPrinciple: PrincipleFunction = (
     }
   ]);
 };
-
+/*#>*/
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, generate a principle that manage clear lines of expired tickets.
+This functionality is chiefly important for Actions that have moved off the current process, but will return after completing
+their strategies in outside Axiums.
+$>*/
+/*<#*/
 export const ownershipExpirationPrinciple: PrincipleFunction = (
   _: Subscriber<Action>,
   _concepts: Concepts,
@@ -151,3 +164,4 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
     }
   ]);
 };
+/*#>*/

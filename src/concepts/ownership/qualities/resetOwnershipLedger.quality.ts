@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, generate a quality that hard resets the current ownership ledger.
+$>*/
+/*<#*/
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
@@ -17,3 +21,4 @@ export const resetOwnershipLedgerQuality = createQuality(
   ownershipResetOwnershipLedgerReducer,
   defaultMethodCreator
 );
+/*#>*/

@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that the base selector consumer functions are working as intended.
+$>*/
+/*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
 import { selectPayload, selectSlice, selectState } from '../model/selector';
@@ -36,3 +40,4 @@ test('Axium Selector Payload Test', (done) => {
   expect(payload.newCount).toBe(10);
   done();
 });
+/*#>*/

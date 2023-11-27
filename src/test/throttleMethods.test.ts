@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test that ensures that throttle method helper functions are working as intended.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
@@ -201,3 +205,4 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
     axium.dispatch(axiumKick());
   }, 1000);
 });
+/*#>*/

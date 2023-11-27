@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will iterate the ID and then
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will iterate the ID and then
 set the id supplied to the method into the strategy's data field.
 $>*/
 /*<#*/

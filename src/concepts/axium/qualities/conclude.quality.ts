@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will conclude a strategy.
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will conclude a strategy.
 This is the primary quality that allows for Stratimux to be provably terminating and/or halting complete.
 Functionally. This is a pure action with no method or reducer. That will instead activate its functionality
 within each qualities method if specified. As well as ownership if loaded in the Axium's concept set.

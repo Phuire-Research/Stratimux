@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will recursively dispatch the incoming action,
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will recursively dispatch the incoming action,
 limited via a control variable that is an arbitrary string array that is shifted until depleted.
 $>*/
 /*<#*/

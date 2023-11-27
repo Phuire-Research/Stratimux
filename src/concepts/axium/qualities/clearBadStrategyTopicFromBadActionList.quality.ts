@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will remove a strategies topic from state's badAction list.
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will remove a strategies topic from state's badAction list.
 This allows for an Artificial Intelligence that is embodying Stratimux to correct generated strategies on the fly.
 $>*/
 /*<#*/

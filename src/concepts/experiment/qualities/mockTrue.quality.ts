@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will set mock to true.
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will set mock to true.
 $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/concept';

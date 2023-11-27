@@ -1,5 +1,9 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
+$>*/
+/*<#*/
 import { createAxium  } from '../model/axium';
-import { Concept, Concepts } from '../model/concept';
+import { Concepts } from '../model/concept';
 import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -126,3 +130,4 @@ test('Ownership Test', (done) => {
     }
   });
 });
+/*#>*/

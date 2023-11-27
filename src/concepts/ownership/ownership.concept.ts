@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux generate the Ownership Concept that will manage Stratimux's locking functionality if loaded into the Axium.
+For the graph programming framework Stratimux generate the Ownership Concept,
+that will manage Stratimux's locking functionality if loaded into the Axium.
 This is accomplished via a ticketing system that will set actions to pending if their associated property is currently owned via strategy
 that is currently performing operations within the Axium.
 $>*/

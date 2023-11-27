@@ -1,3 +1,11 @@
+/*<$
+For the graph programming framework Stratimux, define the Action Controller model file.
+This file defines the asynchronous functionality for Methods.
+That will utilize an Action's expiration as a means to invalidate an Action if the asynchronous functionality has
+reached its expiration. Emitting a Strategy Failed if the Action was a Strategy, or bad action if the strategy was
+not provided.
+$>*/
+/*<#*/
 import { Action, axiumBadAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
@@ -74,3 +82,4 @@ export const createActionController$ = (act: Action, controlling: (controller: A
   }, 0);
   return ctrl;
 };
+/*#>*/

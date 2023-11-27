@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Counter Concept, generate an ActionStrategy that will perform a series of counter actions that will
+For the graph programming framework Stratimux and Counter Concept,
+generate an ActionStrategy that will perform a series of counter actions that will
 ultimately just increment the count by one.
 $>*/
 /*<#*/
@@ -62,7 +63,8 @@ export function countingStrategy(): ActionStrategy {
 }
 /*#>*/
 /*<$
-For the framework Stratimux and Counter Concept, generate a strategy that will ultimately increment the Counter's count by one.
+For the graph programming framework Stratimux and Counter Concept,
+generate a strategy that will ultimately increment the Counter's count by one.
 This strategy should likewise accept concepts to allow for a base Counter Concept to prime its action's semaphore.
 $>*/
 /*<#*/

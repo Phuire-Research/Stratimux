@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the next
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the next
 action in the incoming strategy via an inner timer.
 $>*/
 /*<#*/

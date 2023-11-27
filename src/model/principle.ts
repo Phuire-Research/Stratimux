@@ -1,5 +1,11 @@
+/*<$
+For the graph programming framework Stratimux, define the Principle model file.
+This file allows for user to define Principle Functions, as well as for the axium to initialize those functions
+within its recursive run time.
+$>*/
+/*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concept, Concepts } from './concept';
+import { Concepts } from './concept';
 import { Action, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
@@ -26,3 +32,4 @@ export function registerPrincipleSubscription(observer: Subscriber<Action>, conc
   const primedRegisterSubscriber = primeAction(concepts, axiumRegisterSubscriber({ subscription, name }));
   observer.next(primedRegisterSubscriber);
 }
+/*#>*/

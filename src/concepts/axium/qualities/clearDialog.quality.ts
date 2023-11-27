@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will clear the state's dialog.
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will clear the state's dialog.
 $>*/
 /*<#*/
 import { defaultMethodCreator, createQuality } from '../../../model/concept';

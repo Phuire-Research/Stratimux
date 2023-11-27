@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will set the mode explicitly via the payload.
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will set the mode explicitly via the payload.
 $>*/
 /*<#*/
 import { AxiumState } from '../axium.concept';

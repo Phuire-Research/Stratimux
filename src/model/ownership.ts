@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux, define the Ownership model file.
+This file will dictate functionality used within the Ownership Concept to engage in its functionality.
+$>*/
+/*<#*/
 /* eslint-disable max-depth */
 import { Action, areSemaphoresEqual } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
@@ -11,7 +16,6 @@ export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
 export type OwnershipTicket = {
   ticket: string;
-  // new Date().now() + Agreement
   expiration: number;
 }
 
@@ -72,7 +76,6 @@ export const clearStubs = (concepts: Concepts, strategy: ActionStrategy): Concep
   if (stubs) {
     stubs.forEach(ticketStub => {
       const line = ownershipLedger.get(ticketStub.key);
-      // console.log('Start Clear', line);
       if (line) {
         const newLine = [] as OwnershipTicket[];
         for (const stub of line) {
@@ -80,7 +83,6 @@ export const clearStubs = (concepts: Concepts, strategy: ActionStrategy): Concep
             newLine.push(stub);
           }
         }
-        // console.log('Check new line', newLine);
         if (newLine.length === 0) {
           ownershipLedger.delete(ticketStub.key);
         } else {
@@ -146,11 +148,6 @@ export const checkIn =
       if (!found) {
         const expiration = action.expiration;
         const axiumState = concepts[0].state as AxiumState;
-        // This can be improved by checking to see if UUID does not exist on ledger.
-        //    Likewise would be proven to halt beyond @100%.
-        //      Via the handling the axium name to be that of a guaranteed unique network identifier.
-        //        In addition to authentication with incoming actions.
-        //        As the benefit is knowing that all UUIDs have an expiration and are bound to their origin.
         const ticket = axiumState.name + randomUUID();
         const newTicketStub = {
           key,
@@ -277,7 +274,6 @@ export const areEqual = (first: Action, second: Action ) => {
 export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) => {
   let concepts = _concepts;
   const action = _action;
-  // console.log('CHECK ADD TO PENDING ACTIONS', action);
   const ownershipState = selectState(concepts, ownershipName) as OwnershipState;
   const pendingActions = ownershipState.pendingActions;
   const newPendingActions: Action[] = [];
@@ -301,3 +297,4 @@ export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) 
   }
   return concepts;
 };
+/*#>*/

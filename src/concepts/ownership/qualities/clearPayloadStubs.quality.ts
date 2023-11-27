@@ -1,3 +1,9 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept,
+generate a quality that will clear the provided stubs from the current Ownership Ledger.
+If no tickets exist within a line, delete that line from the ledger.
+$>*/
+/*<#*/
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
@@ -16,7 +22,6 @@ function ownershipClearPayloadStubsReducer(state: OwnershipState, action: Action
   const ownershipLedger = state.ownershipLedger;
   stubs.forEach(ticketStub => {
     const line = ownershipLedger.get(ticketStub.key);
-    // console.log('Start Clear', line);
     if (line) {
       const newLine = [] as OwnershipTicket[];
       for (const stub of line) {
@@ -24,7 +29,6 @@ function ownershipClearPayloadStubsReducer(state: OwnershipState, action: Action
           newLine.push(stub);
         }
       }
-      // console.log('Check new line', newLine);
       if (newLine.length === 0) {
         ownershipLedger.delete(ticketStub.key);
       } else {
@@ -42,3 +46,4 @@ export const clearPayloadStubsQuality = createQuality(
   ownershipClearPayloadStubsReducer,
   defaultMethodCreator
 );
+/*#>*/

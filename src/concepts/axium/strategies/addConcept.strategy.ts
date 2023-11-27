@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate an ActionStrategy that will add new concepts into the Axium's conceptual set.
+For the graph programming framework Stratimux and Axium Concept,
+generate an ActionStrategy that will add new concepts into the Axium's conceptual set.
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';

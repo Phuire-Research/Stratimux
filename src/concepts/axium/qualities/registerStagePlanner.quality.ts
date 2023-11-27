@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will append a stage planner to the stagePlanners state property.
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will append a stage planner to the stagePlanners state property.
 This allows for the closing of hot observables if the concept they are associated with is removed, or the axium itself is closed.
 $>*/
 /*<#*/

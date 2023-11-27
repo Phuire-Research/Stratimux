@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a principle that observes the experiment's actionQue and dispatches
+For the graph programming framework Stratimux and Experiment Concept,
+generate a principle that observes the experiment's actionQue and dispatches
 in sequence upon each observation of state.
 $>*/
 /*<#*/

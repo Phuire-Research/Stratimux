@@ -1,10 +1,14 @@
+/*<$
+For the graph programming framework Stratimux and Chain Concept, generate a test ensure that chain is working as intended.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
-import { Concept, Concepts } from '../model/concept';
+import { Concepts } from '../model/concept';
 import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { createChainConcept } from '../concepts/chain/chain.concept';
-import { ChainDispatchActionsPayload, chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
+import { chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
 
@@ -41,3 +45,4 @@ test('Axium Test', (done) => {
     }
   });
 });
+/*#>*/

@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will set the default mode index to what is specified by
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will set the default mode index to what is specified by
 the action's payload.
 $>*/
 /*<#*/

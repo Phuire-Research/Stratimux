@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux generate a Counter Concept that will keep track of a count in its state.
+For the graph programming framework Stratimux generate a Counter Concept that will keep track of a count in its state.
 $>*/
 /*<#*/
 import { counterAddQuality } from './qualities/add.quality';

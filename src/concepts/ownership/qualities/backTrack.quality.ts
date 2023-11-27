@@ -1,4 +1,8 @@
-import { MethodCreator, createQuality, defaultMethodCreator, defaultReducer } from '../../../model/concept';
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, generate a quality that will back track the provided strategy.
+$>*/
+/*<#*/
+import { MethodCreator, createQuality, defaultReducer } from '../../../model/concept';
 import { ActionType, prepareActionCreator } from '../../../model/action';
 import { strategyBackTrack } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
@@ -6,7 +10,7 @@ import { createMethod } from '../../../model/method';
 export const ownershipBackTrackType: ActionType = 'backtracking to previous ActionNode';
 export const ownershipBackTrack = prepareActionCreator(ownershipBackTrackType);
 
-const createBackTrackMethodCreator: MethodCreator = () => createMethod((action) => {
+const ownershipCreateBackTrackMethodCreator: MethodCreator = () => createMethod((action) => {
   if (action.strategy) {
     const newAction = strategyBackTrack(action.strategy);
     return newAction;
@@ -18,5 +22,6 @@ const createBackTrackMethodCreator: MethodCreator = () => createMethod((action) 
 export const backTrackQuality = createQuality(
   ownershipBackTrackType,
   defaultReducer,
-  createBackTrackMethodCreator,
+  ownershipCreateBackTrackMethodCreator,
 );
+/*#>*/

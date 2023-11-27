@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux,
+generate a test to that selectSlice is capable of performing shallow and deep state selections.
+$>*/
+/*<#*/
 import { Concepts, createConcept } from '../model/concept';
 import { KeyedSelector, createUnifiedKeyedSelector, selectSlice } from '../model/selector';
 
@@ -45,3 +50,4 @@ test('userInterfaceBindingsToString', (done) => {
   expect(selectSlice(concepts, getUndefined)).toBe(undefined);
   done();
 });
+/*#>*/

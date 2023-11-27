@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux, define the Action model file.
+This file dictates the functionality of Actions within Stratimux.
+$>*/
+/*<#*/
 import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
@@ -207,3 +212,4 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
 export function areSemaphoresEqual(first: Action, second: Action) {
   return first.semaphore[0] === second.semaphore[0] && first.semaphore[1] === second.semaphore[1];
 }
+/*#>*/

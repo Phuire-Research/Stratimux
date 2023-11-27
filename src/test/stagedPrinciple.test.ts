@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
@@ -57,3 +61,4 @@ test('Axium Principle Stage', (done) => {
     createExperimentConcept(createExperimentState(), [experimentMockToTrueQuality], [experimentPrinciple])
   ], true, true);
 });
+/*#>*/

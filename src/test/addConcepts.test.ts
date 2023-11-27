@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test that ensures that the Axium can add concepts into its conceptual sets.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
@@ -45,3 +49,4 @@ test('Axium add Concepts Strategy Test', (done) => {
     }
   ]);
 });
+/*#>*/

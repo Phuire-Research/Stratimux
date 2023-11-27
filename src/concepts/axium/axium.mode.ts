@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate the two default modes required for the Axium to function.
+For the graph programming framework Stratimux and Axium Concept, generate the two default modes required for the Axium to function.
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';

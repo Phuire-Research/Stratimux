@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Counter Concept, generate a quality that set the state property count to the new count provided
+For the graph programming framework Stratimux and Counter Concept,
+generate a quality that set the state property count to the new count provided
 by the action's payload.
 $>*/
 /*<#*/

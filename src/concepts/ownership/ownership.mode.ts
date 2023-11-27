@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Ownership Concept, generate mode that will govern the ownership system.
+For the graph programming framework Stratimux and Ownership Concept,
+generate mode that will govern the ownership system.
 This mode will pay attention to an ActionStrategy's assigned KeyedSelector and if it currently does not have
 ownership of the value that the selector would return via the selectSlice helper function.
 Ownership will add that action to its actionList. That will then be monitored via an ownership principle.
@@ -31,7 +32,8 @@ export const ownershipMode: Mode = (
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
   } else {
-    finalMode = (concepts[0].mode as Mode[])[axiumState.defaultModeIndex];
+    // This assumes that ownership will be treated as the new default mode.
+    finalMode = (concepts[0].mode as Mode[])[1];
   }
   // Logical Determination: axiumConcludeType
   // If generation is set to -1, then the action is not primed.

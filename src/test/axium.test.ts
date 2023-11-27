@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure the Axium's ability to stitch strategies together and likewise
+for the getAxiumState helper function to properly return the current axium state.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { axium_createStitchNode } from '../concepts/axium/model/stitch.model';
@@ -37,7 +42,6 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
     stitchStrategy
   ] = yourStrategyStitch();
   stitchEnd.successNode = stepFinal;
-  // Note we are not providing options to preserve the structure of your stitched strategy.
   const stitchHead = createActionNodeFromStrategy(stitchStrategy);
 
   const stepOne = createActionNode(axiumLog(), {
@@ -71,7 +75,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
   ]);
 });
 
-test('Axium advanced usage: StrategyStitch', (done) => {
+test('Axium get axium state helper function', (done) => {
   const axium = createAxium('Test advanced usage', []);
   axium.stage('Test getAxiumState', [
     (concepts, _) => {

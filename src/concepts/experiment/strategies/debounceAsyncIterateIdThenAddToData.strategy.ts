@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a single step strategy that will iterate the Experiment state ID,
+For the graph programming framework Stratimux and Experiment Concept,
+generate a single step strategy that will iterate the Experiment state ID,
 then debounce and asynchronously notify the Axium of the strategy's conclusion.
 $>*/
 /*<#*/

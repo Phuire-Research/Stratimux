@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test that ensures that ActionStrategies are working as intended.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
@@ -25,3 +29,4 @@ test('Axium Counting Strategy Test', (done) => {
       }
     ]);
 });
+/*#>*/

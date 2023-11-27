@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will console log the action itself.
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will console log the action itself.
 This is used to trouble shoot strategies or simply notify the log of different states.
 $>*/
 /*<#*/

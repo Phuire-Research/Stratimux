@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will silently start the next step in the strategy graph.
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will silently start the next step in the strategy graph.
 $>*/
 /*<#*/
 import { prepareActionCreator } from '../../../model/action';

@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Experiment Concept, generate a quality that will asynchronously debounce the next action
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously debounce the next action
 in the ongoing strategy.
 $>*/
 /*<#*/

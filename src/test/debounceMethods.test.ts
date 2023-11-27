@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a tests and demonstrates how debouncing methods perform their functionality.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
@@ -361,3 +365,4 @@ test('Debounce Async Method Test with State id comparison', (done) => {
     axium.dispatch(axiumKick());
   }, 1000);
 });
+/*#>*/

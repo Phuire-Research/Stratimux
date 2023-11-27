@@ -1,5 +1,5 @@
 /*<$
-For the framework Stratimux and Axium Concept, generate a quality that will set the Axium to its default mode.
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will set the Axium to its default mode.
 This mode likewise can be specified by changing the defaultModeIndex state property.
 $>*/
 /*<#*/
