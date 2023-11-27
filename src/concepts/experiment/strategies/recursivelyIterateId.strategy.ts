@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a strategy that will cursively iterate the Experiment's state ID,
+that is limited by an incoming array of strings.
+$>*/
+/*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentRecurseIterateId } from '../qualities/recurseIncrementId.quality';
 
@@ -15,3 +20,4 @@ export function experimentRecursivelyIterateId(controlling: string[]): ActionStr
 
   return createStrategy(params);
 }
+/*#>*/

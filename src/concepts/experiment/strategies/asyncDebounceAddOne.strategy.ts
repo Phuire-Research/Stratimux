@@ -1,7 +1,11 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a strategy that will debounce next action to be dispatched.
+Then when the debounce time expires enacts the counter add one quality.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { counterAdd } from '../../counter/qualities/add.quality';
 import { experimentAsyncDebounceNextActionNode } from '../qualities/debounceAsyncNextActionNode.quality';
-import { experimentDebounceNextActionNode } from '../qualities/debounceNextActionNode.quality';
 
 export const experimentAsyncDebounceAddOneTopic = 'Async debounce add one';
 export function experimentAsyncDebounceAddOneStrategy(): ActionStrategy {
@@ -31,3 +35,4 @@ export function experimentAsyncDebounceAddOneStrategy(): ActionStrategy {
 
   return createStrategy(params);
 }
+/*#>*/

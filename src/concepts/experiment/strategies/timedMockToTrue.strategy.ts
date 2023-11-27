@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a strategy that will eventually set the Experiment's mock property
+to true. This is accomplished via a timer emit action quality. That will then finally dispatch the setting action.
+$>*/
+/*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentMockTrue } from '../qualities/mockTrue.quality';
 import { experimentTimerEmitAction } from '../qualities/timerEmitAction.quality';
@@ -20,3 +25,4 @@ export function experimentTimedMockToTrue(): ActionStrategy {
 
   return createStrategy(params);
 }
+/*#>*/

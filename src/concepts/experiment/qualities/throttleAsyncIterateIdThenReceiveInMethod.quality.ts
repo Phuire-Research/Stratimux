@@ -1,10 +1,15 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will iterate the id then
+asynchronously dispatch the next action in the incoming strategy, then throttle the quality for a period of time.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
 import { createAsyncMethodThrottleWithState } from '../../../model/method';
-import { selectPayload, selectState } from '../../../model/selector';
+import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
@@ -49,3 +54,4 @@ export const experimentThrottleAsyncIterateIdThenReceiveInMethodQuality = create
   experimentThrottleAsyncIterateIdThenReceiveInMethodReducer,
   experimentThrottleAsyncIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

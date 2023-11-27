@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a strategy that will punt a counting strategy in favor of a new
+strategy that will check in the punted strategy into an actionQue. That will later be dispatched via a principle.
+$>*/
+/*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy, strategyPunt } from '../../../model/actionStrategy';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality';
@@ -18,3 +23,4 @@ export function experimentPuntCountingStrategy(): ActionStrategy {
 
   return strategyPunt(experimentCountingStrategy(), createStrategy(params));
 }
+/*#>*/

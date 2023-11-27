@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a single step strategy that will iterate the Experiment state ID,
+then debounce and asynchronously notify the Axium of the strategy's conclusion.
+$>*/
+/*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentDebounceAsyncIterateIdThenReceiveInMethod } from '../qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
 
@@ -15,3 +20,4 @@ export function experimentDebounceAsyncIterateIdThenAddToData(setId: number): Ac
 
   return createStrategy(params);
 }
+/*#>*/

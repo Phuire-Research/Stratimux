@@ -1,3 +1,12 @@
+/*<$
+For the framework Stratimux and Ownership Concept, generate mode that will govern the ownership system.
+This mode will pay attention to an ActionStrategy's assigned KeyedSelector and if it currently does not have
+ownership of the value that the selector would return via the selectSlice helper function.
+Ownership will add that action to its actionList. That will then be monitored via an ownership principle.
+This mode will also relieve ownership upon receiving concluding parts of a strategy, such as conclusion, or even
+a bad action that signifies that the associated action was invalidated.
+$>*/
+/*<#*/
 import { Subject } from 'rxjs';
 import { Action } from '../../model/action';
 import { Concepts } from '../../model/concept';
@@ -94,3 +103,4 @@ export const ownershipMode: Mode = (
     finalMode([action, concepts, action$, concepts$]);
   }
 };
+/*#>*/

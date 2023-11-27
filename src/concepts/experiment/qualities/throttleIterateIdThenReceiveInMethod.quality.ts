@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will iterate the id, then
+dispatch the next action in the incoming strategy, then throttle the quality for a period of time.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -45,3 +50,4 @@ export const experimentThrottleIterateIdThenReceiveInMethodQuality = createQuali
   experimentThrottleIterateIdThenReceiveInMethodReducer,
   experimentThrottleIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

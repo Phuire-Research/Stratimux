@@ -1,3 +1,8 @@
+/*<$
+For the framework Stratimux and Experiment Concept, generate a quality that will recursively dispatch the incoming action,
+limited via a control variable that is an arbitrary string array that is shifted until depleted.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -45,3 +50,4 @@ export const experimentRecurseIterateIdQuality = createQuality(
   experimentRecurseIterateIdReducer,
   experimentRecurseIterateIdCreator
 );
+/*#>*/
