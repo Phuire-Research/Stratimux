@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will set the Axium to its default mode.
+This mode likewise can be specified by changing the defaultModeIndex state property.
+$>*/
+/*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
@@ -6,17 +11,17 @@ import { createQuality } from '../../../model/concept';
 import { defaultMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
-export type SetDefaultModePayload = {
+export type AxiumSetDefaultModePayload = {
     concepts: Concepts
 }
 export const axiumSetDefaultModeType: ActionType = 'set Axium to its current Default Mode Index';
-export const axiumSetDefaultMode = prepareActionWithPayloadCreator<SetDefaultModePayload>(axiumSetDefaultModeType);
+export const axiumSetDefaultMode = prepareActionWithPayloadCreator<AxiumSetDefaultModePayload>(axiumSetDefaultModeType);
 
-export function setDefaultModeReducer(state: AxiumState, _action: Action): AxiumState {
+function axiumSetDefaultModeReducer(state: AxiumState, _action: Action): AxiumState {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
-  const payload = selectPayload<SetDefaultModePayload>(_action);
+  const payload = selectPayload<AxiumSetDefaultModePayload>(_action);
   const concepts = payload.concepts;
   forEachConcept(concepts, (concept => {
     concept.qualities.forEach(quality => {
@@ -42,6 +47,7 @@ export function setDefaultModeReducer(state: AxiumState, _action: Action): Axium
 
 export const axiumSetDefaultModeQuality = createQuality(
   axiumSetDefaultModeType,
-  setDefaultModeReducer,
+  axiumSetDefaultModeReducer,
   defaultMethodCreator
 );
+/*#>*/

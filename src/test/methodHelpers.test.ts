@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that method helpers are working as intended.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
@@ -9,14 +13,17 @@ import { mockToTrueQuality } from '../concepts/experiment/qualities/mockTrue.qua
 import { timerEmitActionQuality } from '../concepts/experiment/qualities/timerEmitAction.quality';
 import { timerEmitActionWithStateQuality } from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
 import {
-  asyncIterateIdThenAddToData,
-  asyncIterateIdThenAddToDataTopic
+  experimentAsyncIterateIdThenAddToData,
+  experimentAsyncIterateIdThenAddToDataTopic
 } from '../concepts/experiment/strategies/asyncIterateIdThenAddToData.strategy';
-import { iterateIdThenAddToData, iterateIdThenAddToDataTopic } from '../concepts/experiment/strategies/iterateIdThenAddToData.strategy';
-import { timedMockToTrue } from '../concepts/experiment/strategies/timedMockToTrue.strategy';
+import {
+  iterateIdThenAddToData,
+  experimentIterateIdThenAddToDataTopic
+} from '../concepts/experiment/strategies/iterateIdThenAddToData.strategy';
+import { experimentTimedMockToTrue } from '../concepts/experiment/strategies/timedMockToTrue.strategy';
 import {
   timedMockToTrueWithState,
-  timedMockToTrueWithStateTopic
+  experimentTimedMockToTrueWithStateTopic
 } from '../concepts/experiment/strategies/timedMockToTrueWithState.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
@@ -27,7 +34,7 @@ test('Async Method Test', (done) => {
   const axium = createAxium('Experiment async method creator', [experiment]);
   const plan = axium.stage('timed mock to true', [
     (_, dispatch) => {
-      dispatch(strategyBegin(timedMockToTrue()), {
+      dispatch(strategyBegin(experimentTimedMockToTrue()), {
         iterateStage: true
       });
     },
@@ -80,7 +87,7 @@ test('Async Method with State Test', (done) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        if (lastStrategy === timedMockToTrueWithStateTopic) {
+        if (lastStrategy === experimentTimedMockToTrueWithStateTopic) {
           const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
           if (data) {
             expect(data.mock).toBe(false);
@@ -108,7 +115,7 @@ test('Method Test with State id comparison', (done) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        if (lastStrategy === iterateIdThenAddToDataTopic) {
+        if (lastStrategy === experimentIterateIdThenAddToDataTopic) {
           const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
           if (data) {
             console.log('Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
@@ -129,7 +136,7 @@ test('Async Method Test with State id comparison', (done) => {
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.stage('Iterate id', [
     (_, dispatch) => {
-      dispatch(strategyBegin(asyncIterateIdThenAddToData()), {
+      dispatch(strategyBegin(experimentAsyncIterateIdThenAddToData()), {
         iterateStage: true
       });
     },
@@ -137,7 +144,7 @@ test('Async Method Test with State id comparison', (done) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        if (lastStrategy === asyncIterateIdThenAddToDataTopic) {
+        if (lastStrategy === experimentAsyncIterateIdThenAddToDataTopic) {
           const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
           if (data) {
             console.log('Async Strategy Data: ', data.id, 'Experiment State ID: ', experimentState.id);
@@ -152,3 +159,4 @@ test('Async Method Test with State id comparison', (done) => {
     }
   ]);
 });
+/*#>*/

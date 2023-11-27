@@ -1,3 +1,9 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will set the Axium's mode to blocking. While in this mode
+the Axium operates in a synchronous behavior to quickly modify the Axium's conceptual set.
+$>*/
+/*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
@@ -6,18 +12,18 @@ import { createQuality } from '../../../model/concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 
-export type SetBlockingModePayload = {
+export type AxiumSetBlockingModePayload = {
     concepts: Concepts
 }
 export const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
-export const axiumSetBlockingMode = prepareActionWithPayloadCreator<SetBlockingModePayload>(axiumSetBlockingModeType);
+export const axiumSetBlockingMode = prepareActionWithPayloadCreator<AxiumSetBlockingModePayload>(axiumSetBlockingModeType);
 
-export function setBlockingModeReducer(state: AxiumState, _action: Action): AxiumState {
+function axiumSetBlockingModeReducer(state: AxiumState, _action: Action): AxiumState {
   let methodSubscribers = state.methodSubscribers;
   methodSubscribers.forEach(named => named.subscription.unsubscribe());
   methodSubscribers = [];
 
-  const payload = selectPayload<SetBlockingModePayload>(_action);
+  const payload = selectPayload<AxiumSetBlockingModePayload>(_action);
   const concepts = payload.concepts;
   forEachConcept(concepts, (concept => {
     concept.qualities.forEach(quality => {
@@ -44,6 +50,7 @@ export function setBlockingModeReducer(state: AxiumState, _action: Action): Axiu
 
 export const axiumSetBlockingModeQuality = createQuality(
   axiumSetBlockingModeType,
-  setBlockingModeReducer,
+  axiumSetBlockingModeReducer,
   defaultMethodCreator
 );
+/*#>*/

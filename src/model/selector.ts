@@ -1,11 +1,14 @@
+/*<$
+For the graph programming framework Stratimux, define the Selector model file.
+This file will contain a series of selectors that can be used to engage with different parts of the Axium Conceptual Set.
+$>*/
+/*<#*/
 import { Action } from './action';
 import { Concept, Concepts } from './concept';
 
-// Dumb association, as we would be setting this value via a generated value
-// Would like to expand this system to include slices of Arrays or a List of Keys from a Dictionary
-//  Will not worry about such until we are working in a Massively Parallel Environment.
-//  But this is where we would effect such and likewise the Consumer Function would have to be Updated
-// TO-DO: Have state keys be represented as an array of strings.
+/**
+ * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
+ */
 export type KeyedSelector = {
   conceptName: string,
   stateKeys: string
@@ -154,3 +157,4 @@ export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T 
     return undefined;
   }
 }
+/*#>*/

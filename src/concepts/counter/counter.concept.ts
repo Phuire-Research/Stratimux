@@ -1,16 +1,20 @@
-import { addQuality } from './qualities/add.quality';
-import { subtractQuality } from './qualities/subtract.quality';
-import { setCountQuality } from './qualities/setCount.quality';
+/*<$
+For the graph programming framework Stratimux generate a Counter Concept that will keep track of a count in its state.
+$>*/
+/*<#*/
+import { counterAddQuality } from './qualities/add.quality';
+import { counterSubtractQuality } from './qualities/subtract.quality';
+import { counterSetCountQuality } from './qualities/setCount.quality';
 import { createConcept } from '../../model/concept';
 export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
-export type Counter = {
+export type CounterState = {
     count: number
 }
 
 export const counterName = 'counter';
 
-const initialCounterState: Counter = {
+const initialCounterState: CounterState = {
   count: 0
 };
 
@@ -19,9 +23,10 @@ export const createCounterConcept = () => {
     counterName,
     initialCounterState,
     [
-      addQuality,
-      subtractQuality,
-      setCountQuality
+      counterAddQuality,
+      counterSubtractQuality,
+      counterSetCountQuality
     ]
   );
 };
+/*#>*/

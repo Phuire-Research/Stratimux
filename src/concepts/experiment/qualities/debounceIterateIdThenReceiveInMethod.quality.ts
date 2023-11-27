@@ -1,3 +1,9 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will iterate the state ID.
+Then debounce the quality of actions within a range. To dispatch the most recent action after the specified time elapses.
+That will finally unify the state id and setId from the payload into the most recent strategies data field.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -8,20 +14,22 @@ import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
-export type DebounceIterateIdThenReceiveInMethodPayload = {
+export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentDebounceIterateIdThenReceiveInMethodType =
   'Experiment debounce iterate ID then receive in Method via State';
 
 export const experimentDebounceIterateIdThenReceiveInMethod =
-  prepareActionWithPayloadCreator<DebounceIterateIdThenReceiveInMethodPayload>(experimentDebounceIterateIdThenReceiveInMethodType);
+  prepareActionWithPayloadCreator<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
+    experimentDebounceIterateIdThenReceiveInMethodType
+  );
 
 const experimentDebounceIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
   createMethodDebounceWithState<ExperimentState>((action, state) => {
-    const payload = selectPayload<DebounceIterateIdThenReceiveInMethodPayload>(action);
+    const payload = selectPayload<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action);
     if (action.strategy) {
-      const data = strategyData_unifyData<ExperimentState & DebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
+      const data = strategyData_unifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
         id: state.id,
         setId: payload.setId
       });
@@ -43,3 +51,4 @@ export const experimentDebounceIterateIdThenReceiveInMethodQuality = createQuali
   experimentDebounceIterateIdThenReceiveInMethodReducer,
   experimentDebounceIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

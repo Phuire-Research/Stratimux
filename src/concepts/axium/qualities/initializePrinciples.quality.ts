@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will initialize principles loaded into the Axium's conceptual set.
+$>*/
+/*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concept, Concepts, defaultMethodCreator, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
@@ -7,15 +12,15 @@ import { createQuality } from '../../../model/concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 
-export type InitializePrinciplesPayload = {
+export type AxiumInitializePrinciplesPayload = {
     concepts: Concepts;
 }
 export const axiumInitializePrinciplesType: ActionType = 'initialize Principles and set new Subscribers to General Subscribers list';
 export const axiumInitializePrinciples =
-  prepareActionWithPayloadCreator<InitializePrinciplesPayload>(axiumInitializePrinciplesType);
+  prepareActionWithPayloadCreator<AxiumInitializePrinciplesPayload>(axiumInitializePrinciplesType);
 
-export function initializePrinciplesReducer(state: AxiumState, _action: Action): AxiumState {
-  const payload = selectPayload<InitializePrinciplesPayload>(_action);
+export function axiumInitializePrinciplesReducer(state: AxiumState, _action: Action): AxiumState {
+  const payload = selectPayload<AxiumInitializePrinciplesPayload>(_action);
   const concepts = payload.concepts;
   let conceptCounter = state.conceptCounter;
   const action$ = state.action$ as Subject<Action>;
@@ -51,6 +56,7 @@ export function initializePrinciplesReducer(state: AxiumState, _action: Action):
 
 export const axiumInitializePrinciplesQuality = createQuality(
   axiumInitializePrinciplesType,
-  initializePrinciplesReducer,
+  axiumInitializePrinciplesReducer,
   defaultMethodCreator
 );
+/*#>*/

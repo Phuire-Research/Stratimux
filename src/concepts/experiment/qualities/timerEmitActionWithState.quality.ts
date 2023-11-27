@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the
+next action in the ActionStrategy via a timeout. While appending to the strategy's data field the current mock value from state.
+$>*/
+/*<#*/
 import { MethodCreator, defaultReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -20,7 +25,7 @@ export const experimentTimerEmitActionWithStateMethodCreator: MethodCreator = (c
       } else {
         controller.fire(axiumConclude());
       }
-    }, 500);
+    }, 50);
   }, concepts$ as UnifiedSubject, semaphore as number);
 
 export const timerEmitActionWithStateQuality = createQuality(
@@ -28,3 +33,4 @@ export const timerEmitActionWithStateQuality = createQuality(
   defaultReducer,
   experimentTimerEmitActionWithStateMethodCreator
 );
+/*#>*/

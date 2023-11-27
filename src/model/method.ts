@@ -1,5 +1,11 @@
+/*<$
+For the graph programming framework Stratimux, define the Method model file.
+This file hold a series of helper functions that enable users to quickly create specific provably terminating methods
+within their own defined qualities.
+$>*/
+/*<#*/
 import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
-import { Concept, Concepts } from './concept';
+import { Concepts } from './concept';
 import { UnifiedSubject } from './stagePlanner';
 import { ActionController, createActionController$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
@@ -395,3 +401,4 @@ export const createAsyncMethodThrottleWithConcepts =
     defaultMethod.toString = () => ('Async Throttle Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
+  /*#>*/

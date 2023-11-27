@@ -1,3 +1,9 @@
+/*<$
+For the graph programming framework Stratimux, define the Action Operator model file.
+This file dictates the functionality of both Debounce, Throttle Methods and
+their interaction with ActionStrategy.
+$>*/
+/*<#*/
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
@@ -279,3 +285,4 @@ export function throttleAction(
   const duration$ = timer(duration, scheduler);
   return throttle(() => duration$, config);
 }
+/*#>*/

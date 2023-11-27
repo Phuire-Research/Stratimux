@@ -1,18 +1,23 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will append a sequence of concepts to the Axium's
+removeConceptQue. The main axium principle will then initialize a removal strategy based on this que.
+$>*/
+/*<#*/
 import { Concept, defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 
-export type AppendConceptsToRemoveQuePayload = {
-    concepts: Concept[]
+export type AxiumAppendConceptsToRemoveQuePayload = {
+  concepts: Concept[]
 }
 export const axiumAppendConceptsToRemoveQueType: ActionType = 'append Concepts to Axium\'s Remove Concept Que';
 export const axiumAppendConceptsToRemoveQue =
-  prepareActionWithPayloadCreator<AppendConceptsToRemoveQuePayload>(axiumAppendConceptsToRemoveQueType);
+  prepareActionWithPayloadCreator<AxiumAppendConceptsToRemoveQuePayload>(axiumAppendConceptsToRemoveQueType);
 
-export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
-  const payload = selectPayload<AppendConceptsToRemoveQuePayload>(action);
+export function axiumAppendConceptsToRemoveQueReducer(state: AxiumState, action: Action) {
+  const payload = selectPayload<AxiumAppendConceptsToRemoveQuePayload>(action);
   let removeQue = state.removeConceptQue;
   removeQue = [
     ...removeQue,
@@ -26,6 +31,7 @@ export function appendConceptsToRemoveQueReducer(state: AxiumState, action: Acti
 
 export const axiumAppendConceptsToRemoveQueQuality = createQuality(
   axiumAppendConceptsToRemoveQueType,
-  appendConceptsToRemoveQueReducer,
+  axiumAppendConceptsToRemoveQueReducer,
   defaultMethodCreator
 );
+/*#>*/

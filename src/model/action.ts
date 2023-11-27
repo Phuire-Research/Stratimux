@@ -1,8 +1,13 @@
+/*<$
+For the graph programming framework Stratimux, define the Action model file.
+This file dictates the functionality of Actions within Stratimux.
+$>*/
+/*<#*/
 import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { BadActionPayload } from '../concepts/axium/qualities/badAction.quality';
+import { AxiumBadActionPayload } from '../concepts/axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
 export const nullActionType: ActionType = 'null';
@@ -63,7 +68,7 @@ export function primeAction(concepts: Concepts, action: Action): Action {
   }
   const badAction: Action = {
     type: axiumBadActionType,
-    payload: createPayload<BadActionPayload>({badActions: [action]}),
+    payload: createPayload<AxiumBadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
     semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType)
   };
@@ -207,3 +212,4 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
 export function areSemaphoresEqual(first: Action, second: Action) {
   return first.semaphore[0] === second.semaphore[0] && first.semaphore[1] === second.semaphore[1];
 }
+/*#>*/

@@ -1,17 +1,23 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will clear a specified action type from the state's badAction list.
+This list is utilized by future on the fly error correction for handling generated qualities for an embodied artificial intelligence.
+$>*/
+/*<#*/
 import { defaultMethodCreator, createQuality } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearBadActionTypeFromBadActionListPayload = {
+export type AxiumClearBadActionTypeFromBadActionListPayload = {
   actionType: ActionType
 };
 export const axiumClearBadActionTypeFromBadActionListType: ActionType = 'clear ActionType from Axium\'s badAction list';
 export const axiumClearBadActionTypeFromBadActionList =
-  prepareActionWithPayloadCreator<ClearBadActionTypeFromBadActionListPayload>(axiumClearBadActionTypeFromBadActionListType);
+  prepareActionWithPayloadCreator<AxiumClearBadActionTypeFromBadActionListPayload>(axiumClearBadActionTypeFromBadActionListType);
 
-function clearBadActionTypeFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
-  const actionType = selectPayload<ClearBadActionTypeFromBadActionListPayload>(action).actionType;
+function axiumClearBadActionTypeFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
+  const actionType = selectPayload<AxiumClearBadActionTypeFromBadActionListPayload>(action).actionType;
   return {
     ...state,
     badActions: state.badActions.filter(act => act.type !== actionType),
@@ -20,6 +26,7 @@ function clearBadActionTypeFromBadActionListReducer(state: AxiumState, action: A
 
 export const axiumClearBadActionTypeFromBadActionListQuality = createQuality(
   axiumClearBadActionTypeFromBadActionListType,
-  clearBadActionTypeFromBadActionListReducer,
+  axiumClearBadActionTypeFromBadActionListReducer,
   defaultMethodCreator,
 );
+/*#>*/

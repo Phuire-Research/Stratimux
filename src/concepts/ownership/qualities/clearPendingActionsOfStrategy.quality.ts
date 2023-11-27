@@ -1,18 +1,23 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept,
+generate a quality clear pending actions of the provided ActionStrategy topic.
+$>*/
+/*<#*/
 import { createQuality, defaultMethodCreator } from '../../../model/concept';
 import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { ActionStrategyTopic } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
 
-export type ClearPendingActionsOfStrategyPayload = {
+export type OwnershipClearPendingActionsOfStrategyPayload = {
   topic: ActionStrategyTopic
 };
 export const ownershipClearPendingActionsOfStrategyType: ActionType = 'clear Ownership\'s Pending Actions of Strategy Topic';
 export const ownershipClearPendingActionsOfStrategy =
-  prepareActionWithPayloadCreator<ClearPendingActionsOfStrategyPayload>(ownershipClearPendingActionsOfStrategyType);
+  prepareActionWithPayloadCreator<OwnershipClearPendingActionsOfStrategyPayload>(ownershipClearPendingActionsOfStrategyType);
 
-export function clearPendingActionsOfStrategyReducer(state: OwnershipState, action: Action): OwnershipState {
-  const topic = selectPayload<ClearPendingActionsOfStrategyPayload>(action).topic;
+function ownershipClearPendingActionsOfStrategyReducer(state: OwnershipState, action: Action): OwnershipState {
+  const topic = selectPayload<OwnershipClearPendingActionsOfStrategyPayload>(action).topic;
   const newPendingActions: Action[] = [];
   for (const act of state.pendingActions) {
     if (act.strategy?.topic) {
@@ -28,6 +33,7 @@ export function clearPendingActionsOfStrategyReducer(state: OwnershipState, acti
 }
 export const clearPendingActionsOfStrategyQuality = createQuality(
   ownershipClearPendingActionsOfStrategyType,
-  clearPendingActionsOfStrategyReducer,
+  ownershipClearPendingActionsOfStrategyReducer,
   defaultMethodCreator
 );
+/*#>*/

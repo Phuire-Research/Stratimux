@@ -1,12 +1,16 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
+$>*/
+/*<#*/
 import { createAxium  } from '../model/axium';
-import { Concept, Concepts } from '../model/concept';
+import { Concepts } from '../model/concept';
 import { selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { setOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { Counter, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
+import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
+import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
-import { puntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
+import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import {
   experimentPrimedCountingStrategy,
@@ -30,15 +34,15 @@ test('Ownership Test', (done) => {
     'Testing Ownership Staging', [
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
-        if (axiumState.lastStrategy === setOwnerShipModeTopic) {
+        if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(cpts, ownershipName);
           if (ownership) {
             console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
-            const counter = selectState<Counter>(cpts, counterName);
+            const counter = selectState<CounterState>(cpts, counterName);
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
             //    Via its principle, to simulate an action moving off premise.
-            dispatch(strategyBegin(puntCountingStrategy()), {
+            dispatch(strategyBegin(experimentPuntCountingStrategy()), {
               iterateStage: true
             });
           }
@@ -57,7 +61,7 @@ test('Ownership Test', (done) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         if (ownership) {
           console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
-          const counter = selectState<Counter>(cpts, counterName);
+          const counter = selectState<CounterState>(cpts, counterName);
           console.log('Count: ', counter?.count);
           dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
             iterateStage: true
@@ -66,7 +70,7 @@ test('Ownership Test', (done) => {
       },
       (cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
-        const counter = selectState<Counter>(cpts, counterName);
+        const counter = selectState<CounterState>(cpts, counterName);
         if (counter) {
           console.log('Stage 4', axiumState.lastStrategy, orderOfTopics);
           if (orderOfTopics.length === 2 && finalRun) {
@@ -110,10 +114,10 @@ test('Ownership Test', (done) => {
     const state = selectState<OwnershipState>(concepts, ownershipName);
     if (state) {
       const _axiumState = concepts[0].state as AxiumState;
-      if (state.initialized && _axiumState.lastStrategy === setOwnerShipModeTopic) {
+      if (state.initialized && _axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
         expect(state.initialized).toBe(true);
       }
-      const counter = selectState<Counter>(concepts, counterName);
+      const counter = selectState<CounterState>(concepts, counterName);
       // This will run last, despite setCount being the second staged dispatch.
       if (counter && counter.count >= 1000) {
         console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
@@ -126,3 +130,4 @@ test('Ownership Test', (done) => {
     }
   });
 });
+/*#>*/

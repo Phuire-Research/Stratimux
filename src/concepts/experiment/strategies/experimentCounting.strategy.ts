@@ -1,5 +1,11 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept,
+generate a strategy that will take ownership of the Counter's count state property.
+Then proceed to increment and decrement the count over a sequence that in total only increments to count by one.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, Concepts} from '../../../model/concept';
+import { Concepts} from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { counterAdd, counterAddType } from '../../counter/qualities/add.quality';
 import { counterSubtract, counterSubtractType } from '../../counter/qualities/subtract.quality';
@@ -72,7 +78,16 @@ export function experimentCountingStrategy(): ActionStrategy {
 
   return createStrategy(params);
 }
-
+/*#>*/
+/*<$
+For the graph programming framework Stratimux and Experiment Concept,
+generate a strategy that will take ownership of the Counter's count state property.
+Then prime each step to avoid a semaphore look up at run time. That will then increment and decrement the count over a sequence that
+in total only increments to count by one. But only if it has ownership of the Counter's count state property.
+If the count is owned by another strategy. The strategy will enact a back tracking action.
+So that the original action may be dispatched into the Axium once ownership has been relieved from the other strategies.
+$>*/
+/*<#*/
 export const experimentPrimedCountingTopic = 'Counting Strategy with Primed Actions';
 export function experimentPrimedCountingStrategy(concepts: Concepts): ActionStrategy {
   const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
@@ -135,3 +150,4 @@ export function experimentPrimedCountingStrategy(concepts: Concepts): ActionStra
 
   return createStrategy(params);
 }
+/*#>*/

@@ -1,22 +1,27 @@
+/*<$
+For the graph programming framework Stratimux and Counter Concept, generate a quality that will increment the state's count by one.
+$>*/
+/*<#*/
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';
-import { defaultMethodCreator, Method, MethodCreator } from '../../../model/concept';
-import { Counter } from '../counter.concept';
+import { defaultMethodCreator } from '../../../model/concept';
+import { CounterState } from '../counter.concept';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
 
 export const counterAddType: ActionType = 'Counter Add';
 
 export const counterAdd = prepareActionCreator(counterAddType);
-export function addReducer(state: Counter, _: Action) {
+function counterAddReducer(state: CounterState, _: Action) {
   return {
     ...state,
     count: state.count + 1
   };
 }
 
-export const addQuality = createQuality(
+export const counterAddQuality = createQuality(
   counterAddType,
-  addReducer,
+  counterAddReducer,
   defaultMethodCreator,
   [counterSelectCount]
 );
+/*#>*/

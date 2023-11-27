@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux,
+generate a test to that ensures the functionality of is concept loaded and are concept loaded helper functions.
+$>*/
+/*<#*/
 import { counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createAxium } from '../model/axium';
 import { areConceptsLoaded, chainName, createChainConcept, isConceptLoaded } from '../index';
@@ -35,3 +40,4 @@ test('Concepts exists', (done) => {
     },
   ]);
 });
+/*#>*/

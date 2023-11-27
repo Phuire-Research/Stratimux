@@ -1,3 +1,10 @@
+/*<$
+For the graph programming framework Stratimux generate the Ownership Concept,
+that will manage Stratimux's locking functionality if loaded into the Axium.
+This is accomplished via a ticketing system that will set actions to pending if their associated property is currently owned via strategy
+that is currently performing operations within the Axium.
+$>*/
+/*<#*/
 import { createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
@@ -51,3 +58,4 @@ export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
     [ownershipMode]
   );
 };
+/*#>*/

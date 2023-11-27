@@ -1,3 +1,13 @@
+/*<$
+For the graph programming framework Stratimux, define the ActionStrategy model file.
+This file is what allows for Stratimux to be provably terminating.
+As each strategy constitutes a finite set of symbols that must reach a conclusion.
+Using this data structure we can constrain the Axium's recursive functionality to the length
+of the strategies that currently exist within it.
+This file likewise defines a series of consumer functions that accept an ActionStrategy and data parameter; that
+then returns a new ActionStrategy based on the inputs.
+$>*/
+/*<#*/
 import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { Action, ActionType, createAction, nullActionType } from './action';
 import { OwnershipTicketStub } from './ownership';

@@ -1,29 +1,34 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will iterate the id, then
+dispatch the next action in the incoming strategy, then throttle the quality for a period of time.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
-import { ExperimentState, experimentName } from '../experiment.concept';
+import { ExperimentState } from '../experiment.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
 import { createMethodThrottleWithState } from '../../../model/method';
-import { selectPayload, selectState } from '../../../model/selector';
+import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 
-export type ThrottleIterateIdThenReceiveInMethodPayload = {
+export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 export const experimentThrottleIterateIdThenReceiveInMethodType =
   'Experiment throttle iterate ID then receive in Method via State';
 
 export const experimentThrottleIterateIdThenReceiveInMethod =
-  prepareActionWithPayloadCreator<ThrottleIterateIdThenReceiveInMethodPayload>(
+  prepareActionWithPayloadCreator<ExperimentThrottleIterateIdThenReceiveInMethodPayload>(
     experimentThrottleIterateIdThenReceiveInMethodType
   );
 
 const experimentThrottleIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
   createMethodThrottleWithState<ExperimentState>((action, state) => {
-    const payload = selectPayload<ThrottleIterateIdThenReceiveInMethodPayload>(action);
+    const payload = selectPayload<ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action);
     if (action.strategy) {
-      const data = strategyData_unifyData<ExperimentState & ThrottleIterateIdThenReceiveInMethodPayload>(action.strategy, {
+      const data = strategyData_unifyData<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action.strategy, {
         id: state.id,
         setId: payload.setId
       });
@@ -45,3 +50,4 @@ export const experimentThrottleIterateIdThenReceiveInMethodQuality = createQuali
   experimentThrottleIterateIdThenReceiveInMethodReducer,
   experimentThrottleIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

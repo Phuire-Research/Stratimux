@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept,
+generate a quality that will add concepts within the addConceptQue into the Axium's Concepts.
+$>*/
+/*<#*/
 import { Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { defaultMethodCreator, qualityToString } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
@@ -8,10 +13,10 @@ import { blockingMethodSubscription } from '../../../model/axium';
 export const axiumAddConceptFromQueType: ActionType = 'Add Concepts from Axium Concept Que';
 export const axiumAddConceptFromQue = prepareActionCreator(axiumAddConceptFromQueType);
 
-function addConceptsFromQueReducer(state: AxiumState, action: Action) {
+function axiumAddConceptsFromQueReducer(state: AxiumState, action: Action) {
   const methodSubscribers = state.methodSubscribers;
   const addConceptsQue = state.addConceptQue;
-  addConceptsQue.forEach((concept, index) => {
+  addConceptsQue.forEach((concept) => {
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator(state.concepts$, concept.semaphore);
@@ -41,6 +46,7 @@ function addConceptsFromQueReducer(state: AxiumState, action: Action) {
 
 export const axiumAddConceptsFromQueQuality = createQuality(
   axiumAddConceptFromQueType,
-  addConceptsFromQueReducer,
+  axiumAddConceptsFromQueReducer,
   defaultMethodCreator
 );
+/*#>*/

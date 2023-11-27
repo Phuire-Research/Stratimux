@@ -1,26 +1,28 @@
-import { map, Subject } from 'rxjs';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { defaultMethodCreator, Method, MethodCreator } from '../../../model/concept';
-import { Counter } from '../counter.concept';
-import { Action, ActionType, createAction, prepareActionCreator } from '../../../model/action';
+/*<$
+For the graph programming framework Stratimux and Counter Concept, generate a quality that will decrement the state count by one.
+$>*/
+/*<#*/
+import { defaultMethodCreator } from '../../../model/concept';
+import { CounterState } from '../counter.concept';
+import { ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
-import { axiumConclude } from '../../axium/qualities/conclude.quality';
 
 export const counterSubtractType: ActionType = 'Counter Subtract';
 
 export const counterSubtract = prepareActionCreator(counterSubtractType);
 
-export function subtractReducer(state: Counter) {
+function counterSubtractReducer(state: CounterState) {
   return {
     ...state,
     count: state.count - 1
   };
 }
 
-export const subtractQuality = createQuality(
+export const counterSubtractQuality = createQuality(
   counterSubtractType,
-  subtractReducer,
+  counterSubtractReducer,
   defaultMethodCreator,
   [counterSelectCount]
 );
+/*#>*/

@@ -1,6 +1,10 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure the stage planner and its options are working as intended.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
-import { Counter, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
@@ -13,7 +17,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
     const axiumState = concepts[0].state as AxiumState;
     if (axiumState.badPlans.length > 0) {
       const badPlan = axiumState.badPlans[0];
-      const counter = selectState<Counter>(concepts, counterName);
+      const counter = selectState<CounterState>(concepts, counterName);
       console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter?.count);
       plan.conclude();
       sub.unsubscribe();
@@ -25,14 +29,14 @@ test('Axium Stage Dispatch Options Test', (done) => {
   const plan = axium.stage('Stage DispatchOptions Test',
     [
       (concepts, dispatch) => {
-        const counter = selectState<Counter>(concepts, counterName);
+        const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 1 ', counter, runCount);
         dispatch(counterAdd(), {
           iterateStage: true
         });
       }, (concepts, dispatch) => {
         runCount++;
-        const counter = selectState<Counter>(concepts, counterName);
+        const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 2 ', counter, runCount);
         // Sets count to 2 and only runs once per state update
         dispatch(counterAdd(), {
@@ -51,7 +55,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         // }
       }, (concepts, dispatch) => {
         runCount++;
-        const counter = selectState<Counter>(concepts, counterName);
+        const counter = selectState<CounterState>(concepts, counterName);
         console.log('Should run twice, Stage 3 ', counter, runCount);
         // Will cause an action overflow forcing the stage to close and add itself to badPlans
         dispatch(counterSubtract(), {
@@ -68,3 +72,4 @@ test('Axium Stage Dispatch Options Test', (done) => {
       }
     ]);
 });
+/*#>*/

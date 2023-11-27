@@ -1,4 +1,10 @@
-import { Observable, Subject, debounceTime, switchMap, withLatestFrom } from 'rxjs';
+/*<$
+For the graph programming framework Stratimux, define the Concept model file.
+This file defines the Concept abstraction that the Axium uses to Transform its functionality.
+A concept is composed of name, unified, state, qualities, semaphore, principles, and some meta attributes if necessary.
+$>*/
+/*<#*/
+import { Observable, Subject } from 'rxjs';
 import { Action, ActionType } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
@@ -329,7 +335,7 @@ const stateToString = (state: Record<string, unknown>): string => {
     try {
       input += `${key}: ${JSON.stringify(state[key])},\n`;
     } catch (err) {
-      input = `${key}: CIRCULAR,\n`;
+      input = `${key}: [CIRCULAR],\n`;
     }
     final += input;
   }
@@ -374,3 +380,4 @@ export const qualityToString = (quality: Quality) => () => {
   const method = quality.method?.toString();
   return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
+/*#>*/

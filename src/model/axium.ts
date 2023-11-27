@@ -1,3 +1,9 @@
+/*<$
+For the graph programming framework Stratimux, define the Axium model file.
+This file dictates the creation of the Axium itself and engages all necessary parts to ensure its functionality
+as a provably recursive terminating function.
+$>*/
+/*<#*/
 import {
   Observable,
   Subject,
@@ -7,7 +13,7 @@ import {
 } from 'rxjs';
 import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, Concepts, Method, Mode, forEachConcept, qualityToString } from './concept';
+import { Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -164,3 +170,4 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);
+/*#>*/

@@ -1,3 +1,7 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that the axium can properly remove concepts from its current load.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
@@ -37,3 +41,4 @@ test('Axium remove Concepts Strategy Test', (done) => {
     }
   ]);
 });
+/*#>*/

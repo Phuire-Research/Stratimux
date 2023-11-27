@@ -1,7 +1,14 @@
+/*<$
+For the graph programming framework Stratimux generate the Axium Concept that will manage Stratimux's functionality.
+The Axium is a set of concepts that create a greater whole via their associations
+within strategies, plans, modes, qualities, and principles.
+$>*/
+/*<#*/
 import { Subject, Subscription } from 'rxjs';
 import { Concept } from '../../model/concept';
 import { Action } from '../../model/action';
-import { axiumClosePrinciple, axiumPrinciple } from './axium.principle';
+import { axiumPrinciple } from './axium.principle';
+import { axiumClosePrinciple } from './axium.close.principle';
 import { blockingMode, permissiveMode } from './axium.mode';
 import { axiumOpenQuality } from './qualities/open.quality';
 import { axiumBadActionQuality } from './qualities/badAction.quality';
@@ -115,7 +122,6 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       axiumAppendActionListToDialogQuality,
       axiumClearDialogQuality,
       axiumLogQuality,
-      axiumStitchQuality,
       axiumRegisterSubscriberQuality,
       axiumRegisterStagePlannerQuality,
       axiumInitializePrinciplesQuality,
@@ -129,9 +135,11 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       axiumSetModeQuality,
       axiumClearBadActionTypeFromBadActionListQuality,
       axiumClearBadStrategyTopicFromBadActionListQuality,
-      axiumClearBadPlanFromBadPlanListQuality
+      axiumClearBadPlanFromBadPlanListQuality,
+      axiumStitchQuality
     ],
     [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]
   );
 };
+/*#>*/

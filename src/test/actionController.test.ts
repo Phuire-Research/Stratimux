@@ -1,7 +1,10 @@
+/*<$
+For the graph programming framework Stratimux, generate a test to ensure that the ActionController model is working as intended.
+$>*/
+/*<#*/
 import { ActionController, createActionController$ } from '../model/actionController';
 import { axiumBadActionType  } from '../concepts/axium/qualities/badAction.quality';
 import { axiumLog, axiumLogType } from '../concepts/axium/qualities/log.quality';
-import { createActionNode } from '../model/actionStrategy';
 
 test('ActionController Expired Test', (done) => {
   const act = axiumLog(undefined, undefined, 200);
@@ -32,3 +35,4 @@ test('ActionController createActionController$ Test', (done) => {
     done();
   });
 });
+/*#>*/

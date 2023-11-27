@@ -1,13 +1,18 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Axium's mode to Ownership.
+$>*/
+/*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, Concepts } from '../../../model/concept';
+import { Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { ownershipInitializeOwnership, ownershipInitializeOwnershipType } from '../qualities/initializeOwnership.quality';
 import { axiumSetMode, axiumSetModeType } from '../../axium/qualities/setMode.quality';
 import { ownershipName } from '../ownership.concept';
 import { AxiumState } from '../../axium/axium.concept';
+import { axiumSetDefaultModeIndex } from '../../axium/qualities/setDefaultModeIndex.quality';
 
-export const setOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
-export function setOwnershipModeStrategy(concepts: Concepts, modeName: string): ActionStrategy {
+export const ownershipSetOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
+export function ownershipSetOwnershipModeStrategy(concepts: Concepts, modeName: string): ActionStrategy {
   const initializeOwnershipSemaphore = getSemaphore(concepts, ownershipName, ownershipInitializeOwnershipType);
   const setModeSemaphore = getSemaphore(concepts, ownershipName, axiumSetModeType);
   let ownershipModeIndex = 2;
@@ -17,13 +22,22 @@ export function setOwnershipModeStrategy(concepts: Concepts, modeName: string): 
     }
   });
 
-  const stepTwo = createActionNode(ownershipInitializeOwnership(), {
+  const stepThree = createActionNode(ownershipInitializeOwnership(), {
     semaphore: initializeOwnershipSemaphore,
     successNode: null,
     successNotes: {
       preposition: 'Set',
     },
     failureNode: null,
+  });
+  const stepTwo = createActionNode(axiumSetDefaultModeIndex({
+    index: ownershipModeIndex
+  }), {
+    successNode: stepThree,
+    successNotes: {
+      preposition: 'Then'
+    },
+    failureNode: null
   });
   const stepOne = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
     semaphore: setModeSemaphore,
@@ -34,9 +48,10 @@ export function setOwnershipModeStrategy(concepts: Concepts, modeName: string): 
     failureNode: null,
   });
   const params: ActionStrategyParameters = {
-    topic: setOwnerShipModeTopic,
+    topic: ownershipSetOwnerShipModeTopic,
     initialNode: stepOne,
   };
 
   return createStrategy(params);
 }
+/*#>*/

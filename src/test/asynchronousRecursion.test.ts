@@ -1,7 +1,15 @@
+/*<$
+For the graph programming framework Stratimux,
+generate a test to ensure that the strategy consumer function strategyRecurse is functioning as intended.
+$>*/
+/*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData, axiumSelectLastStrategyDialog } from '../concepts/axium/axium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import { experimentRecurseIterateIdQuality } from '../concepts/experiment/qualities/recurseIncrementId.quality';
-import { recursivelyIterateId, recursivelyIterateIdTopic } from '../concepts/experiment/strategies/recursivelyIterateId.strategy';
+import {
+  experimentRecursivelyIterateId,
+  experimentRecursivelyIterateIdTopic
+} from '../concepts/experiment/strategies/recursivelyIterateId.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
@@ -12,7 +20,7 @@ test('Asynchronous recursion', (done) => {
   const axium = createAxium('Experiment async method creator with Concepts', [experiment], false, true);
   const plan = axium.stage('Experiment debounce add one', [
     (_, dispatch) => {
-      dispatch(strategyBegin(recursivelyIterateId([...list])), {
+      dispatch(strategyBegin(experimentRecursivelyIterateId([...list])), {
         iterateStage: true
       });
     },
@@ -23,7 +31,7 @@ test('Asynchronous recursion', (done) => {
         const lastData = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
         const lastDialog = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyDialog);
         console.log('Check Recursion: ', experimentState.id);
-        if (lastTopic === recursivelyIterateIdTopic) {
+        if (lastTopic === experimentRecursivelyIterateIdTopic) {
           console.log('Final Recursion Check', experimentState.id, lastData, `\n${lastDialog}`);
           expect(experimentState.id).toBe(list.length);
           expect(lastData?.id).toBe(list.length - 1);
@@ -35,3 +43,4 @@ test('Asynchronous recursion', (done) => {
     }
   ]);
 });
+/*$>*/

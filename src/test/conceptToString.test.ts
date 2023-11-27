@@ -1,10 +1,10 @@
+/*<$
+For the graph programming framework Stratimux, generate a test that logs how a concept would be parsed to a stream to the console.
+$>*/
+/*<#*/
 import { createAxium } from '../model/axium';
-import { strategyBegin } from '../model/actionStrategy';
-import { selectState } from '../model/selector';
-import { Counter, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
-import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { conceptToString, conceptsToString } from '../model/concept';
+import { createCounterConcept } from '../concepts/counter/counter.concept';
+import { conceptsToString } from '../model/concept';
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
@@ -17,3 +17,4 @@ test('Axium Counting Strategy Test', (done) => {
     }, 500);
   });
 });
+/*#>*/

@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will simply debounce actions till the most
+recent. Then dispatch the most recent's next action via the supplied action strategy.
+$>*/
+/*<#*/
 import { MethodCreator, defaultReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -20,3 +25,4 @@ export const debounceNextActionNodeQuality = createQuality(
   defaultReducer,
   experimentDebounceNextActionNodeMethodCreator
 );
+/*#>*/

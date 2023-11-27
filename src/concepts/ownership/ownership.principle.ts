@@ -1,14 +1,21 @@
+/*<$
+For the graph programming framework Stratimux and Ownership Concept,
+generate a principle will manage the ownership's pendingActions based upon the current
+ownershipLedger's contents. Only actions that are first in all lines of their tickets set the the strategy's KeyedSelectors,
+may be dispatched into the Axium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
+$>*/
+/*<#*/
 import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
-import { setOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
+import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { UnifiedSubject  } from '../../model/stagePlanner';
-import { BadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
+import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { axiumSelectOpen } from '../axium/axium.selector';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
@@ -69,7 +76,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             concepts$.next(concepts);
             observer.next(newAction);
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
-            const payload: BadActionPayload = {
+            const payload: AxiumBadActionPayload = {
               badActions: []
             };
             const newPending: Action[] = [];
@@ -98,14 +105,20 @@ export const ownershipPrinciple: PrincipleFunction = (
         initDispatch = true;
         observer.next(
           strategyBegin(
-            setOwnershipModeStrategy(concepts, 'Ownership')
+            ownershipSetOwnershipModeStrategy(concepts, 'Ownership')
           )
         );
       }
     }
   ]);
 };
-
+/*#>*/
+/*<$
+For the graph programming framework Stratimux and Ownership Concept, generate a principle that manage clear lines of expired tickets.
+This functionality is chiefly important for Actions that have moved off the current process, but will return after completing
+their strategies in outside Axiums.
+$>*/
+/*<#*/
 export const ownershipExpirationPrinciple: PrincipleFunction = (
   _: Subscriber<Action>,
   _concepts: Concepts,
@@ -151,3 +164,4 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
     }
   ]);
 };
+/*#>*/

@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the next
+action in the incoming strategy via an inner timer.
+$>*/
+/*<#*/
 import { MethodCreator, defaultReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -15,7 +20,7 @@ export const experimentTimerEmitActionMethodCreator: MethodCreator = () => creat
     } else {
       controller.fire(axiumConclude());
     }
-  }, 500);
+  }, 50);
 });
 
 export const timerEmitActionQuality = createQuality(
@@ -23,3 +28,4 @@ export const timerEmitActionQuality = createQuality(
   defaultReducer,
   experimentTimerEmitActionMethodCreator
 );
+/*#>*/

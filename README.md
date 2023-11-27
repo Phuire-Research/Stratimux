@@ -20,6 +20,9 @@ User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Re
 *Note if you notice a strange any capitalization, this is a new format that is being formalized as conceptual logic. Where we capitalize not just people, places, and things, but concepts as well. In addition, there was no generative intelligence used in the creation of this framework or documentation. This is **100% hand written.***
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### 11/26/23
+* Updated naming conventions throughout. Counter is now CounterState. Strategies now export with their associated concept's prepended.
+* Added parsing tokens. If curious about this functionality see the logixUX project. These tokens in combination with that project will upon its release. Allow for the ease of parsing Stratimux or other TypeScript projects into high quality training data.
 ### 11/17/23
 * selectSlice now performing deep selections.
 ### 11/15/23

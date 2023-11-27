@@ -1,3 +1,8 @@
+/*<$
+For the graph programming framework Stratimux and Experiment Concept, generate a quality that will increment state by one.
+Then its method will asynchronously unify the state's id value onto the strategy.
+$>*/
+/*<#*/
 import { MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
@@ -36,3 +41,4 @@ export const experimentAsyncIterateIdThenReceiveInMethodQuality = createQuality(
   experimentAsyncIterateIdThenReceiveInMethodReducer,
   experimentAsyncIterateIdThenReceiveInMethodCreator
 );
+/*#>*/

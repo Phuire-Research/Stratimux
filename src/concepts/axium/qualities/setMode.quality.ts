@@ -1,20 +1,24 @@
+/*<$
+For the graph programming framework Stratimux and Axium Concept, generate a quality that will set the mode explicitly via the payload.
+$>*/
+/*<#*/
 import { AxiumState } from '../axium.concept';
-import { Action, createAction, prepareActionWithPayloadCreator} from '../../../model/action';
+import { Action, prepareActionWithPayloadCreator} from '../../../model/action';
 import { createQuality, MethodCreator, Method } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
 import { createMethod } from '../../../model/method';
 
-export type SetModePayload = {
+export type AxiumSetModePayload = {
   modeIndex: number;
   modeName: string;
 }
 
 export const axiumSetModeType = 'set Axium Mode';
-export const axiumSetMode = prepareActionWithPayloadCreator<SetModePayload>(axiumSetModeType);
+export const axiumSetMode = prepareActionWithPayloadCreator<AxiumSetModePayload>(axiumSetModeType);
 
-export const axiumSetModeMethodCreator: MethodCreator = () => createMethod((action) => {
-  const payload = action.payload as SetModePayload;
+const axiumSetModeMethodCreator: MethodCreator = () => createMethod((action) => {
+  const payload = action.payload as AxiumSetModePayload;
   if (action.strategy) {
     action.strategy.currentNode.successNotes = {
       denoter: `to ${payload.modeName}.`
@@ -24,8 +28,8 @@ export const axiumSetModeMethodCreator: MethodCreator = () => createMethod((acti
   return action;
 });
 
-export function setModeReducer(state: AxiumState, _action: Action) {
-  const payload = selectPayload<SetModePayload>(_action);
+function axiumSetModeReducer(state: AxiumState, _action: Action) {
+  const payload = selectPayload<AxiumSetModePayload>(_action);
   return {
     ...state,
     modeIndex: [payload.modeIndex],
@@ -34,6 +38,7 @@ export function setModeReducer(state: AxiumState, _action: Action) {
 
 export const axiumSetModeQuality = createQuality(
   axiumSetModeType,
-  setModeReducer,
+  axiumSetModeReducer,
   axiumSetModeMethodCreator
 );
+/*#>*/
