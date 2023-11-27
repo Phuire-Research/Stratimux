@@ -22,6 +22,7 @@ User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Re
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### 11/26/23
 * Updated naming conventions throughout. Counter is now CounterState. Strategies now export with their associated concept's prepended.
+* Added parsing tokens. If curious about this functionality see the logixUX project. These tokens in combination with that project will upon its release. Allow for the ease of parsing Stratimux or other TypeScript projects into high quality training data.
 ### 11/17/23
 * selectSlice now performing deep selections.
 ### 11/15/23
