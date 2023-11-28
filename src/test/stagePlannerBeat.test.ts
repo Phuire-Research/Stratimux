@@ -59,6 +59,6 @@ test('Stage Planner Beat Test', (done) => {
     () => {
       //
     }
-  ], 90);
+  ], 93);
 });
 /*#>*/
