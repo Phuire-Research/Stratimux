@@ -20,6 +20,9 @@ export type Plan = {
   stages: Staging[],
   stage: number;
   stageFailed: number;
+  beat: number;
+  offBeat: number;
+  timer: NodeJS.Timeout[]
 }
 
 export type NamedStagePlanner = {
@@ -200,13 +203,14 @@ export class UnifiedSubject extends Subject<Concepts> {
   private planId = 0;
   private currentStages: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
+  private concepts: Concepts = {};
   constructor() {
     super();
   }
-  stage(title: string, stages: Staging[]): StagePlanner {
+  stage(title: string, stages: Staging[], beat?: number): StagePlanner {
     const planId = this.planId;
     this.planId++;
-    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1});
+    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []});
     const conclude = () => {
       this.currentStages.delete(planId);
     };
@@ -287,7 +291,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   next(value: Concepts) {
-    const concepts = {
+    this.concepts = {
       ...value
     };
     if (!this.closed) {
@@ -295,12 +299,33 @@ export class UnifiedSubject extends Subject<Concepts> {
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
       const axiumState = value[0].state as AxiumState;
       this.currentStages.forEach((plan, key) => {
-        const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
-          this._dispatch(axiumState, key, plan, concepts, action, options);
-        };
         const index = plan.stage;
         if (index < plan.stages.length) {
-          plan.stages[index](concepts, dispatcher);
+          const timer = plan.timer;
+          const now = Date.now();
+          if (plan.beat > -1) {
+            if (plan.offBeat < now) {
+              plan.offBeat = Date.now() + plan.beat;
+              const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
+                this._dispatch(axiumState, key, plan, this.concepts, action, options);
+              };
+              plan.stages[index](this.concepts, dispatcher);
+            } else if (timer.length === 0 && plan.offBeat > now) {
+              timer.push(setTimeout(() => {
+                plan.timer = [];
+                plan.offBeat = Date.now() + plan.beat;
+                const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
+                  this._dispatch(axiumState, key, plan, this.concepts, action, options);
+                }).bind(this)();
+                plan.stages[index](this.concepts, dispatcher);
+              }, plan.offBeat - Date.now()));
+            }
+          } else {
+            const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
+              this._dispatch(axiumState, key, plan, this.concepts, action, options);
+            };
+            plan.stages[index](this.concepts, dispatcher);
+          }
         }
       });
       const {observers} = this;
@@ -308,7 +333,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       const len = observers.length;
       for (let i = 0; i < len; i++) {
         if (observers[i]) {
-          observers[i].next(concepts);
+          observers[i].next(this.concepts);
         }
       }
     }
