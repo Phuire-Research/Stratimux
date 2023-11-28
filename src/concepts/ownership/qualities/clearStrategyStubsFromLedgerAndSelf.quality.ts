@@ -1,5 +1,6 @@
 /*<$
-For the framework Stratimux and Ownership Concept, generate a quality that will clear the current strategies stubs from the
+For the graph programming framework Stratimux and Ownership Concept,
+generate a quality that will clear the current strategies stubs from the
 ownership ledger. This is to afford for strategies to relieve their ownership prior to their conclusion.
 $>*/
 /*<#*/
