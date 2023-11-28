@@ -21,7 +21,9 @@ User Interface Proof of Concept and Demo: [logixUX](https://github.com/Phuire-Re
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### 11/27/23
-* Added a new experimental parameter to staging. Beat, which is a duration that will "Throttle and debounce," state notifications to that specific plan.  
+* Added a new experimental parameter to staging. Beat, which is a duration that will "Throttle and debounce," state notifications to that specific plan.
+
+
 *Note: This becomes necessary to set once your application grows in complexity. As the fundamental issue with graph programming, is that at a sufficient scale. You are fighting your computers branch prediction. You can think of the run time of Stratimux like a balloon. In theory as long as your logic is clean, you shouldn't run into race conditions. But the unfortunate truth is that the more logic that your balloon if filled with. The higher likelihood your balloon will pop. So to avoid this, you need to supply a beat to complex plans that might overinflate your balloon.*
 
 *This is counter intuitive to most programming, but is the trade off for this new dynamic paradigm. As computers have been designed for transactional object oriented programming. This paradigm moves beyond that comfortable scale of complexity and reveals the generally good enough design of the computers we rely upon. Funny to say that you can write by hand a program that hallucinates. **hint** **hint***
