@@ -34,7 +34,7 @@ User Interface MVP and Stratimux Project Sidekick Application: [logixUX](https:/
 
 ----
 ```bash
-npm i
+npm i stratimux
 ```
 *Note if tsconfig.json is giving a type error for jest, be sure to open jest config after your **npm i***
 
