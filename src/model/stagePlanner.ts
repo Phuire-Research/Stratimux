@@ -14,6 +14,7 @@ import { KeyedSelector, selectSlice } from './selector';
 import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
+import { getAxiumState } from './axium';
 
 export type Plan = {
   title: string;
@@ -290,6 +291,14 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
+  protected execute(plan: Plan, key: number, index: number): void {
+    const axiumState = getAxiumState(this.concepts);
+    const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
+      this._dispatch(axiumState, key, plan, this.concepts, action, options);
+    }).bind(this)();
+    plan.stages[index](this.concepts, dispatcher);
+  }
+
   next(value: Concepts) {
     this.concepts = {
       ...value
@@ -297,7 +306,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     if (!this.closed) {
       // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
-      const axiumState = value[0].state as AxiumState;
       this.currentStages.forEach((plan, key) => {
         const index = plan.stage;
         if (index < plan.stages.length) {
@@ -306,25 +314,16 @@ export class UnifiedSubject extends Subject<Concepts> {
           if (plan.beat > -1) {
             if (plan.offBeat < now) {
               plan.offBeat = Date.now() + plan.beat;
-              const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
-                this._dispatch(axiumState, key, plan, this.concepts, action, options);
-              };
-              plan.stages[index](this.concepts, dispatcher);
+              this.execute(plan, key, index);
             } else if (timer.length === 0 && plan.offBeat > now) {
               timer.push(setTimeout(() => {
                 plan.timer = [];
                 plan.offBeat = Date.now() + plan.beat;
-                const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
-                  this._dispatch(axiumState, key, plan, this.concepts, action, options);
-                }).bind(this)();
-                plan.stages[index](this.concepts, dispatcher);
+                this.execute(plan, key, index);
               }, plan.offBeat - Date.now()));
             }
           } else {
-            const dispatcher: Dispatcher = (action: Action, options: dispatchOptions) => {
-              this._dispatch(axiumState, key, plan, this.concepts, action, options);
-            };
-            plan.stages[index](this.concepts, dispatcher);
+            this.execute(plan, key, index);
           }
         }
       });
