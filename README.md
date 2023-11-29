@@ -45,7 +45,7 @@ For more examples: [https://github.com/Phuire-Research/Stratimux/tree/main/src/c
 ```
 src/ index.ts
 src/ concepts / uX / qualities / qOfUX.quality.ts
-     concepts / uX / strategies / sOfUX.strategy.ts
+     concepts / uX / strategies / uXSome.strategy.ts
      concepts / uX / uX.concept.ts
      concepts / uX / uX.principle.ts
      tests / uX.test.ts
@@ -66,7 +66,7 @@ export type UXState = {
 
 export const uXName = 'uX';
 
-export const createUXState = (): ExperimentState => {
+export const createUXState = (): UXState => {
   return {
     //
   };
@@ -86,7 +86,6 @@ export const createUXConcept = (
       uXqOfUXQuality
     ],
     [
-
       uXPrinciple,
     ],
     mode
@@ -97,37 +96,69 @@ export const createUXConcept = (
 This isolates all the parts necessary for your actions to have impact within this system. Be mindful of your types, as even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are not setting the semaphore ahead of time.
 
 The semaphore is the method of quality selection within the Axium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Axium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [logixUX](https://github.com/Phuire-Research/logixUX). In addition to other scaffolding improvements, AI assistance, and more.
+### uXqOfUx.quality.ts
+This isolates all the parts necessary for your actions to have impact within this system. Be mindful of your types, as even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are not setting the semaphore ahead of time.
+
+The semaphore is the method of quality selection within the Axium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Axium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [logixUX](https://github.com/Phuire-Research/logixUX). In addition to other scaffolding improvements, AI assistance, and more.
 ```typescript
-import { MethodCreator, Action, prepareActionCreator, createQuality, UnifiedSubject, createMethodWithState, strategySuccess } from '../../../model/concept';
+import {
+  MethodCreator,
+  Action,
+  prepareActionCreator,
+  createQuality,
+  UnifiedSubject,
+  createMethodWithState,
+  strategySuccess,
+  strategyData_unifyData,
+  strategyFailed
+} from 'stratimux';
+import { UXState } from '../uX.concept';
 
-export type uXqOfUXType = 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction';
+export const uXqOfUXType = 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction';
 export const uXqOfUX = prepareActionCreator(uXqOfUXType);
+export type uXqOfUxField = {
+  state: UXState
+};
 
-const qOfUXCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+function getRandomRange(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
+
+const uXqOfUXCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
   // Only if you need to access state, otherwise
-  createMethodWithState<ExperimentState>((action, state) => {
+  createMethodWithState<UXState>((action, state) => {
     if (action.strategy) {
-      const strategy = strategySuccess(action.strategy);
-      return strategy;
+      // P/NP?
+      const even = Math.round(getRandomRange(1, 5)) % 2;
+      if (even) {
+        const strategy = strategySuccess(action.strategy, strategyData_unifyData(action.strategy, {
+          state
+        }));
+        return strategy;
+      } else {
+        const strategy = strategyFailed(action.strategy);
+        return strategy;
+      }
     }
     return action;
   }, concepts$ as UnifiedSubject, semaphore as number);
 
-function qOfUXReducer(state: ExperimentState, _: Action): ExperimentState {
+function uXqOfUXReducer(state: UXState, _: Action): UXState {
   return {
     ...state,
   };
 }
 
 export const uXqOfUXQuality = createQuality(
-  qOfUXType,
-  qOfUXReducer,
-  qOfUXCreator
+  uXqOfUXType,
+  uXqOfUXReducer,
+  uXqOfUXCreator
 );
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
 //   qOfUXType,
 //   defaultReducer,
+// The method is optional and is an advanced behavior
 //   defaultMethodCreator
 // );
 ```
@@ -141,11 +172,23 @@ Your concept's "main" function. This will be called after the axium initializes.
 
 ```typescript
 import { Subscriber } from 'rxjs';
-import { Action, Concepts, PrincipleFunction, UnifiedSubject, registerPrincipleSubscription, selectUnifiedState } from '../../model/concept';
-import { UXSTATE, uXName } from './uX.concept';
+import {
+  Action,
+  Concepts,
+  PrincipleFunction,
+  UnifiedSubject,
+  axiumRegisterStagePlanner,
+  axiumSelectOpen,
+  getAxiumState,
+  primeAction,
+  selectUnifiedState,
+  strategyBegin
+} from 'stratimux';
+import { UXState, uXName } from './uX.concept';
+import { uXSomeStrategy, uXSomeStrategyTopic } from './strategies/uXSome.strategy';
 
 export const uXPrinciple: PrincipleFunction = (
-  observer: Subscriber<Action>,
+  _obs: Subscriber<Action>,
   _concepts: Concepts,
   concepts$: UnifiedSubject,
   semaphore: number
@@ -162,14 +205,22 @@ export const uXPrinciple: PrincipleFunction = (
       });
     },
     (concepts, dispatch) => {
-      const state = selectUnifiedState(concepts, semaphore);
+      const state = selectUnifiedState<UXState>(concepts, semaphore);
       if (state) {
-        //
+        dispatch(strategyBegin(uXSomeStrategy()), {
+          iterateStage: true
+        });
+      }
+    },
+    (concepts) => {
+      const {lastStrategy} = getAxiumState(concepts);
+      if (lastStrategy === uXSomeStrategyTopic) {
+        plan.conclude();
       }
     }
-  ]);
+  // There always needs to be atleast one subscriber or plan for the Axium to be active.
+  ], 30);
 };
-
 ```
 
 ### uXSome.strategy.ts
@@ -177,37 +228,40 @@ When you are creating your strategies within this system of design. You are opti
 
 This approach to algorithm design is the core strength of Stratimux, but likewise its weakness due to branch prediction. Therefore be mindful if your strategies behave in unexpected ways. The Stage Planner paradigm, especially the beat attribute should be your first go to. As chances are your logic is becoming to complex and you need to tone down when parts of your application are notified changes to state.
 ```typescript
-export const uXSomeStrategyTopic = 'uX Some Error Correcting Strategy'
+import { ActionStrategy, axiumKick, axiumLog, createActionNode, createStrategy } from 'stratimux';
+import { uXqOfUX } from '../qualities/qOfUx.quality';
+
+export const uXSomeStrategyTopic = 'uX Some Error Correcting Strategy';
 export const uXSomeStrategy = (): ActionStrategy => {
-  const stepSuccess = createActionNode(uXSomeConsecutiveAction(), {
+  const stepSuccess = createActionNode(axiumLog(), {
     successNode: null,
     failureNode: null
   });
-  const stepFailure = createActionNode(uXSomeErrorCorrectionAction(), {
+  const stepFailure = createActionNode(axiumKick(), {
     successNode: stepSuccess,
     failureNode: null
   });
-  const stepBegin = createActionNode(uXSomeAction(), {
+  const stepBegin = createActionNode(uXqOfUX(), {
     successNode: stepSuccess,
     failureNode: stepFailure
   });
   return createStrategy({
-    topic: uxStrategyTopic,
+    topic: uXSomeStrategyTopic,
     initialNode: stepBegin
-  })
+  });
 };
 ```
 
 ### index.ts
 ```typescript
 import { createAxium } from 'stratimux';
-import { createUXConcept } from './concepts/uX/uX.concept'
+import { createUXConcept } from './concepts/uX/uX.concept';
 
 (() => {
   const axiumName = '';
-  // First boolean will set logging to true and store dialog to true will log errors to the console.
-  //  Will likewise log each dialog of completed ActionStrategies.
-  // The second will store the entire application dialog context in the axium's dialog.
+  // Sets logging to true and store dialog to true
+  //  This will log to the console the dialog of each successive ActionStrategy
+  //  And store the entire application context in the axium's dialog.
   createAxium(axiumName, [createUXConcept()], true, true);
 })();
 ```
