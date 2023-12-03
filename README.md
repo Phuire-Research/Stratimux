@@ -14,7 +14,8 @@
 * Hot Loading
 * No Dependency Injection
 
-* Getting Started: [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)  
+### Getting Started
+* [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)  
 * User Interface MVP and Stratimux Project Sidekick Application: [logixUX](https://github.com/Phuire-Research/logixUX)
 * [PURF: Safe Recursive Improvement of AI](https://github.com/Phuire-Research/PURF)
 
