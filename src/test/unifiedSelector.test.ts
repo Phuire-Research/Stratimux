@@ -5,7 +5,6 @@ That specifically you can utilize the incoming semaphore to create new KeyedSele
 $>*/
 /*<#*/
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { createAxium } from '../model/axium';
 import {
   KeyedSelector,
@@ -24,6 +23,7 @@ test('Unified Selector Test', (done) => {
       const concept = createConceptKeyedSelector<CounterState>(counterName, 'count');
       const updated = updateUnifiedKeyedSelector(concepts, 1, concept) as KeyedSelector;
       const unified = createUnifiedKeyedSelector<CounterState>(concepts, 1, 'count') as KeyedSelector;
+      console.log('CHECK SELECTORS', concept, updated, unified);
       expect(selectSlice(concepts, updated)).toBe(0);
       expect(selectSlice(concepts, concept)).toBe(0);
       expect(selectSlice(concepts, unified)).toBe(0);

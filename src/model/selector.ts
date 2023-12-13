@@ -12,19 +12,19 @@ import { Concept, Concepts } from './concept';
 export type KeyedSelector = {
   keys: string,
   selector: string[],
-  index?: number
+  symbols?: (number | string)[]
 };
 
 /**
  * For usage outside of the Axium, or when subscribed to other Axiums
  */
 export const createConceptKeyedSelector =
-  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, index?: number): KeyedSelector => {
+  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, symbols?: (number|string)[]): KeyedSelector => {
     const selector = [conceptName, ...keys.split('.')];
     return {
-      keys,
+      keys: conceptName + '.' + keys,
       selector,
-      index
+      symbols
     };
   };
 
@@ -35,13 +35,13 @@ export const createConceptKeyedSelector =
 export const updateUnifiedKeyedSelector =
   (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
     if (concepts[semaphore]) {
-      const selector = {...keyedSelector.selector};
+      const selector = [...keyedSelector.selector];
       selector[0] = concepts[semaphore].name;
-      if (keyedSelector.index) {
+      if (keyedSelector.symbols) {
         return {
           selector,
           keys: selector.join('.'),
-          index: keyedSelector.index
+          symbols: keyedSelector.symbols
         };
       }
       return {
@@ -113,7 +113,7 @@ export const createUnifiedKeyedSelector = <T extends object>(
   concepts: Concepts,
   semaphore: number,
   keys: DotPath<T>,
-  index?: number
+  symbols?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
   if (concept) {
@@ -121,20 +121,27 @@ export const createUnifiedKeyedSelector = <T extends object>(
     return {
       selector,
       keys: concept.name + '.' + keys,
-      index
+      symbols
     };
   } else {
     return undefined;
   }
 };
 
+// Temporary until there is a better means to create this form of deep selection
+//  As already I am having to go off script for specific array indexes, despite being able to assemble the logic
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const assembleDynamicSelection = (selection: unknown[]): any => {
+  return selection.join('.');
+};
+
 export function selectState<T>(concepts: Concepts, name: string): T | undefined {
-  const conceptKeys = Object.keys(concepts);
+  const conceptKeys = Object.keys(concepts).map(key => Number(key));
   const length = conceptKeys.length;
   const select = (index: number): T | undefined => {
-    if (concepts[Number(conceptKeys[index])].name === name) {
+    if (concepts[conceptKeys[index]].name === name) {
       return concepts[index].state as T;
-    } else if (index < length) {
+    } else if (index < length - 1) {
       return select(index + 1);
     } else {
       return undefined;
@@ -155,11 +162,12 @@ export function selectSlice<T>(
   concepts: Concepts,
   keyed: KeyedSelector): T | undefined {
   const name = keyed.selector[0];
-  const conceptKeys = Object.keys(concepts);
+  const conceptKeys = Object.keys(concepts).map(key => Number(key));
   const length = conceptKeys.length;
   const select = (index: number): Concept | undefined => {
-    if (concepts[Number(conceptKeys[index])].name === name) {
-      return concepts[index];
+    const possible = concepts[conceptKeys[index]];
+    if (possible && possible.name === name) {
+      return concepts[conceptKeys[index]];
     } else if (index < length) {
       return select(index + 1);
     } else {
@@ -170,23 +178,35 @@ export function selectSlice<T>(
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
-  let previous = cast;
-  const slice = (index: number): T | undefined => {
-    if (typeof previous === 'object' && previous[keyed.selector[index]] !== undefined) {
-      previous = previous[keyed.selector[index]];
-      if (index < keyed.selector.length) {
-        return slice(index + 1);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const slice = (prev: Record<string, any>, index: number): T | undefined => {
+    const next = prev[keyed.selector[index]];
+    if (typeof prev === 'object' && next !== undefined) {
+      if (index < keyed.selector.length - 1) {
+        return slice(next, index + 1);
       } else {
-        if (keyed.index) {
-          return previous[keyed.index] ? previous[keyed.index] as T : undefined;
+        if (keyed.symbols) {
+          const symbols = keyed.symbols;
+          const extract = (i: number): unknown[] => {
+            const ext = next[symbols[i]];
+            if (ext) {
+              return [
+                ext,
+                ...extract(i + 1)
+              ];
+            } else {
+              return [];
+            }
+          };
+          return (extract(0) as unknown) as T;
         }
-        return previous as T;
+        return next as T;
       }
     } else {
       return undefined;
     }
   };
-  return slice(0);
+  return slice(cast, 1);
 }
 
 export function selectConcept(concepts: Concepts, name: string): Concept | undefined {

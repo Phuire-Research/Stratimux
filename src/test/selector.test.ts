@@ -69,11 +69,17 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment
   };
-  const selector = createUnifiedKeyedSelector<Deeper>(experiment, 0, 'anything.something.somethingArray', 10);
+  const selector = createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
   if (selector) {
-    const slice = selectSlice<string>(concepts, selector);
-    expect(slice).toBe('10');
-    done();
+    const slices = selectSlice<string[]>(concepts, selector);
+    console.log('CHECK SLICES', slices);
+    if (slices) {
+      expect(slices[0]).toBe('10');
+      expect(slices[1]).toBe('9');
+      expect(slices[2]).toBe('8');
+      expect(slices[3]).toBe('7');
+      done();
+    }
   }
 });
 /*#>*/
