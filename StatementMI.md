@@ -43,6 +43,16 @@ The solution here, would be using a comparable surrogate ABI. That is not a bloc
 
 This merely demonstrates that a data first approach is far more practical. That the ABI itself would also be quality data and represents a direct method of training provable alignment. And if you don't want a network outputting dangerous chemical formulas and instructions. Don't give it any data related to chemistry. Then train it to say that it doesn't know chemistry and that you should interact with a different bot. Finally throw transparent alignment on top of that if you are really concerned but remember that just because you managed to tweak some value. Does not mean there isn't a network effect across a massively complex set of interactions.
 
+## Floating Point Error Correction in combination with Branch Prediction makes for a bad time.
+Noting that Statistical Determinism is indeed is worthless due to our general scope of computation: [Causes and Effects of Unanticipated Numerical Deviations in Neural Network Inference Frameworks](https://neurips.cc/media/neurips-2023/Slides/72729_z160jpK.pdf).
+
+Likewise what Stratimux likewise reveals when attempting to design surrogate graph networks that can replicate intelligent higher order reasoning. That these systems can be made probabilistic beyond a scale of complexity. Currently can measure these impacts within designing a simple UI system. And despite the outcome being the same, if I set explicitly a variable that would otherwise be accessed via a looping mechanism. The looping mechanism if it exceeds O(n^3) within the total calculation, becomes probabilistic in its success.
+
+Effectively this means that we need a push for slow amazing computation that is rock solid. As what I will later replicate, but place here just to make note. I can likewise replicate the same probabilistic nature within an ActionStrategy, just by having a random number generator dictate what satisfies an createActionNode function. That the dialog will log as if the strategy was successful, but the state would remain unaffected.
+
+This framework and approach is beyond the general scope of understanding. Meaning it is designed for post AGI as this framework is exploring what is beyond such. Once we achieve AGI, we may very well need computers that are no longer fast and just good enough. But strong slow calculations that we can perform in massive parallel.
+
+Otherwise how can you guarantee a locking mechanism that should be deterministic stays that way? I've already seen this happen in production prior to 2020. What about the massive scale?
 
 ## Statements
 * [Safety Statement](https://github.com/Phuire-Research/Stratimux/blob/main/StatementSafety.md)
