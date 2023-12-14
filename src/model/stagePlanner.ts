@@ -262,7 +262,7 @@ export class UnifiedSubject extends Subject<Concepts> {
         if (options?.iterateStage) {
           plan.stage += 1;
         }
-        if (options?.setStage) {
+        if (options?.setStage !== undefined) {
           plan.stage = options.setStage;
         }
         if (options?.iterateStage || (options?.setStage && options.setStage !== plan.stage)) {
