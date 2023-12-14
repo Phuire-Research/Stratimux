@@ -1,9 +1,9 @@
-import { createAxium, getAxiumState } from '../../../model/axium';
-import { strategyBegin } from '../../../model/actionStrategy';
-import { selectState } from '../../../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../../../concepts/counter/counter.concept';
+import { createAxium, getAxiumState } from '../../model/axium';
+import { strategyBegin } from '../../model/actionStrategy';
+import { selectState } from '../../model/selector';
+import { CounterState, createCounterConcept, countingStrategy, counterName } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
-import { axiumKick } from '../../../concepts/axium/qualities/kick.quality';
+import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
@@ -30,7 +30,7 @@ test('Axium Counting Strategy Test', (done) => {
         if (axiumState.lastStrategy === strategyTopic && counter) {
           console.log('Count: ', counter?.count, 'Topic: ', axiumState.lastStrategy, 'Steps: ', steps, 'Repeating for: ',  repeat);
           console.log('Expected: ', expectedOutput);
-          expect(counter.count).toBe(expectedOutput);
+          expect(counter.count).toBe(totalExpected);
           if (steps < repeat) {
             steps++;
             count = counter.count;

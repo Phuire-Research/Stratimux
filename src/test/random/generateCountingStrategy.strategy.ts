@@ -1,6 +1,6 @@
-import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { counterAdd, counterAddType } from '../../../concepts/counter/qualities/add.quality';
-import { counterSubtract } from '../../../concepts/counter/qualities/subtract.quality';
+import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../model/actionStrategy';
+import { counterAdd, counterAddType } from '../../concepts/counter/qualities/add.quality';
+import { counterSubtract } from '../../concepts/counter/qualities/subtract.quality';
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;

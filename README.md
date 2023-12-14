@@ -25,9 +25,6 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
-* [What to Avoid](https://github.com/Phuire-Research/Stratimux/blob/main/src/test/error/random/random.md)
-* [How to implement the above without running into the limits of generally good enough computation](https://github.com/Phuire-Research/logixUX/blob/main/server/src/concepts/logixUX/strategies/generateCountingStrategy.strategy.ts)
-
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Axium](https://github.com/Phuire-Research/Stratimux/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
@@ -44,6 +41,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### 12/14/23
+* Set Stage can now properly be set to 0.
 ### 11/29/23
 * Official Release
 * Stage Planner Beat - No longer experimental, have fun! It's Stratimux is now a dancing algorithm recursive function.
