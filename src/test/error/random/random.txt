@@ -1,0 +1,147 @@
+  console.log
+    Axium Initialization Strategy. Begin with initialize Principles and set new Subscribers to General Subscribers list. Then set Axium to its current Default Mode Index. Finally Open Axium to Notify Subscribers of State changes.
+
+      at axiumAppendActionListToDialogReducer (src/concepts/axium/qualities/appendActionListToDialog.quality.ts:26:15)
+
+  console.log
+    Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts. Success with Counter Subtract. Success with Counter Subtract. Success with Counter Subtract. Success with Counter Subtract. Success with Counter Add. Success with Counter Subtract. Success with Counter Subtract.
+
+      at axiumAppendActionListToDialogReducer (src/concepts/axium/qualities/appendActionListToDialog.quality.ts:26:15)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  0 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  1 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  2 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  3 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  4 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  5 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  6 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  7 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  8 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  9 Repeating for:  10                                                                                                                                                                    
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log                                                                                                                                                                                                                                                                            
+    Expected:  -5                                                                                                                                                                                                                                                                        
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log
+    Count:  -5 Topic:  Generated Counting Strategy from: 0, using 1 Adds and 6 Subtracts Steps:  10 Repeating for:  10
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:31:19)
+          at Map.forEach (<anonymous>)
+
+  console.log
+    Expected:  -5
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:32:19)
+          at Map.forEach (<anonymous>)
+
+  console.log
+    Total Expected:  -5 -5
+
+      at Array.<anonymous> (src/test/error/random/random.test.ts:42:21)
+          at Map.forEach (<anonymous>)
