@@ -26,6 +26,24 @@ export type Plan = {
   timer: NodeJS.Timeout[]
 }
 
+export type Stage = {
+  staging: Staging,
+  selectors: KeyedSelector[],
+  beat: number,
+  priority: number
+}
+
+export type Staging = (
+  concepts: Concepts,
+  dispatch: (action: Action, options: dispatchOptions) => void
+) => void;
+
+type Carousel = {
+  engaged: boolean;
+  mobius: number[][];
+  index: number;
+}
+
 export type NamedStagePlanner = {
   name: string;
   title: string;
@@ -52,10 +70,7 @@ export type dispatchOptions = {
 }
 
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
-export type Staging = (
-  concepts: Concepts,
-  dispatch: (action: Action, options: dispatchOptions) => void
-) => void;
+
 export type StageDelimiter = {
   stage: number,
   prevActions: ActionType[],
@@ -201,6 +216,12 @@ const handleStageDelimiter =
   };
 
 export class UnifiedSubject extends Subject<Concepts> {
+  private carousel: Carousel = {
+    engaged: false,
+    mobius: [],
+    index: 0,
+  };
+  private timer: NodeJS.Timer[] = [];
   private planId = 0;
   private currentStages: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
@@ -299,6 +320,65 @@ export class UnifiedSubject extends Subject<Concepts> {
     plan.stages[index](this.concepts, dispatcher);
   }
 
+  protected bend(): void {
+    if (this.carousel.index === this.carousel.mobius[0].length - 1) {
+      this.carousel = {
+        index: 0,
+        mobius: [
+          [...this.carousel.mobius[1]],
+          []
+        ],
+        engaged: false,
+      };
+    } else {
+      this.turn();
+    }
+  }
+
+  protected turn(): void {
+    const plan = this.currentStages.get(this.carousel.mobius[0][this.carousel.index]);
+    this.carousel.index++;
+    if (plan) {
+      this.carousel.mobius[1].push(this.carousel.mobius[0][this.carousel.index]);
+      this.bend();
+    } else {
+      this.bend();
+    }
+  }
+
+  protected engage(): void {
+    this.carousel = {
+      engaged: true,
+      mobius: [Object.keys(this.currentStages).map(key => Number(key)), []],
+      index: 0,
+    };
+    this.turn();
+  }
+
+  protected nextPlans() {
+    this.currentStages.forEach((plan, key) => {
+      const index = plan.stage;
+      if (index < plan.stages.length) {
+        const timer = plan.timer;
+        const now = Date.now();
+        if (plan.beat > -1) {
+          if (plan.offBeat < now) {
+            plan.offBeat = Date.now() + plan.beat;
+            this.execute(plan, key, index);
+          } else if (timer.length === 0 && plan.offBeat > now) {
+            timer.push(setTimeout(() => {
+              plan.timer = [];
+              plan.offBeat = Date.now() + plan.beat;
+              this.execute(plan, key, index);
+            }, plan.offBeat - Date.now()));
+          }
+        } else {
+          this.execute(plan, key, index);
+        }
+      }
+    });
+  }
+
   next(value: Concepts) {
     this.concepts = {
       ...value
@@ -306,35 +386,18 @@ export class UnifiedSubject extends Subject<Concepts> {
     if (!this.closed) {
       // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
-      this.currentStages.forEach((plan, key) => {
-        const index = plan.stage;
-        if (index < plan.stages.length) {
-          const timer = plan.timer;
-          const now = Date.now();
-          if (plan.beat > -1) {
-            if (plan.offBeat < now) {
-              plan.offBeat = Date.now() + plan.beat;
-              this.execute(plan, key, index);
-            } else if (timer.length === 0 && plan.offBeat > now) {
-              timer.push(setTimeout(() => {
-                plan.timer = [];
-                plan.offBeat = Date.now() + plan.beat;
-                this.execute(plan, key, index);
-              }, plan.offBeat - Date.now()));
-            }
-          } else {
-            this.execute(plan, key, index);
-          }
-        }
-      });
+      this.nextPlans();
       const {observers} = this;
-
       const len = observers.length;
-      for (let i = 0; i < len; i++) {
-        if (observers[i]) {
-          observers[i].next(this.concepts);
+      const nextSub = (index: number) => {
+        if (observers[index]) {
+          observers[index].next(this.concepts);
         }
-      }
+        if (index < len - 1) {
+          nextSub(index + 1);
+        }
+      };
+      nextSub(0);
     }
   }
 }
