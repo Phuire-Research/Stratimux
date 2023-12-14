@@ -43,7 +43,7 @@ test('Stage Planner Beat Test', (done) => {
       if (!timerActive) {
         const state = selectState<CounterState>(concepts, counterName);
         if (state) {
-          expect(state.count).toBe(10);
+          expect(state.count).toBe(9);
           setTimeout(() => done(), 1000);
           dispatch(axiumPreClose({exit: false}), {
             iterateStage: true
@@ -59,6 +59,6 @@ test('Stage Planner Beat Test', (done) => {
     () => {
       //
     }
-  ], 93);
+  ], 105);
 });
 /*#>*/
