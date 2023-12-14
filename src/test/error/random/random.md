@@ -57,3 +57,9 @@ This is noting that within logixUX I have a version of this form of counting tha
 Therefore, branch prediction in combination with floating point error correction as used within the random number generation process. Is causing a direct hallucination in a program written by hand. This test may vary by computer, but that only serves to demonstrate that this paradigm of computation reveals that we have pushed such to a limit.
 
 Why would the same output be repeated? I do know the reason, but will leave others to attempt to figure out why this might be the case.
+
+The other potential:
+* The dispatched action strategy is invalidating the stage
+  * If that was the case, the throttle would prevent that by invalidating the entire plan and likewise the entire test would fail to run.
+  * The count associated in the strategy topic, would be adjusted to the most recent count and likewise have a unique set of adds and subtracts, making a unique strategy topic every time.
+  * The totalExpected would likewise be mutated per successful set stage back to 0.
