@@ -25,6 +25,9 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
+* [What to Avoid](https://github.com/Phuire-Research/Stratimux/blob/main/src/test/error/random/random.md)
+* [How to implement the above without running into the limits of generally good enough computation](https://github.com/Phuire-Research/logixUX/blob/main/server/src/concepts/logixUX/strategies/generateCountingStrategy.strategy.ts)
+
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Axium](https://github.com/Phuire-Research/Stratimux/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
