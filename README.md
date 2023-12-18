@@ -60,13 +60,13 @@ When in doubt simplify.
 ## Current Work: Project Carousel
 While I did not want to release a major API change after an initial release. Work on logixUX revealed that I need to reduce the time complexity within the Axium itself. Carousel, is a rework on how selectors function, as well as a larger refactor on how stages work.
 
-Effectively the UnifiedSubject will no memoize all potential state changes. And your stages will be able to pass in selectors to receive what has changed based on your stage's need. I'm my time with this update to ensure that everything is well tested within logixUX. Prior to breaking APIs.
+Effectively the UnifiedSubject will now memoize all potential state changes. And your stages will be able to pass selectors in creation to as a changed record. I'm taking my time with this update to ensure that everything is well tested within logixUX. Prior to breaking APIs.
 
-With this change, I will be able to call the underlying pattern a solution to what bothered me about ECS(Entity Component Systems). As I designed Stratimux and the Unified Turing Machine it is based on to act as the foundation for simulations. It just so happens that it is currently simulating data transformations and through logixUX a complete UI system.
+With this change, I will be able to call the underlying pattern a solution to what bothered me about ECS(Entity Component Systems). As I designed Stratimux and the Unified Turing Machine to act as the foundation for simulation in conjunction with AI. It just so happens that it is currently simulating data transformations and through logixUX a complete UI system.
 
-What I am currently addressing is something that has always bothered me in frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval function with no looping quality.
+What I am currently addressing is something that has always bothered me in other frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval functions with no looping quality.
 
-I expect to have this ready for release by the start of the new year. Till then if you stumble upon this project. Have a wonderful holiday and rest up. The next year is going to be an interesting one!
+I expect to have Carousel ready for release by the start of the new year. Till then if you stumble upon this project. Have a wonderful holiday and rest up. The next year is going to be an interesting one!
 
 ----
 ```bash
