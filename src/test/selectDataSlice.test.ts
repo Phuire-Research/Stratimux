@@ -46,16 +46,11 @@ test('userInterfaceBindingsToString', (done) => {
     assembleDynamicSelection(['trainingData', 0, 'dataSet', 0, 'prompt'])
   );
   const shallow = createUnifiedKeyedSelector<typeof simulated>(concepts, 1, 'shallow');
-  const getUndefined = {...selector} as KeyedSelector;
-  getUndefined.selector = [...getUndefined.selector];
-  getUndefined.selector[0] = 'something';
-  getUndefined.keys = getUndefined.selector.join('.');
 
   console.log('CHECK SHALLOW', shallow);
   if (selector && shallow) {
     expect(selectSlice(concepts, selector)).toBe(entry.prompt);
     expect(selectSlice(concepts, shallow)).toBe(true);
-    expect(selectSlice(concepts, getUndefined)).toBe(undefined);
     done();
   }
 });

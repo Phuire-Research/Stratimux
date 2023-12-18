@@ -9,21 +9,25 @@ import { Concept, Concepts } from './concept';
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
  */
+export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {
+  conceptName: string,
+  conceptSemaphore: number,
   keys: string,
-  selector: string[],
+  selector: SelectorFunction,
   symbols?: (number | string)[]
 };
-
 /**
  * For usage outside of the Axium, or when subscribed to other Axiums
  */
 export const createConceptKeyedSelector =
   <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, symbols?: (number|string)[]): KeyedSelector => {
-    const selector = [conceptName, ...keys.split('.')];
+    const selectorBase = [conceptName, ...keys.split('.')];
     return {
+      conceptName,
+      conceptSemaphore: -1,
       keys: conceptName + '.' + keys,
-      selector,
+      selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
       symbols
     };
   };
@@ -35,18 +39,23 @@ export const createConceptKeyedSelector =
 export const updateUnifiedKeyedSelector =
   (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
     if (concepts[semaphore]) {
-      const selector = [...keyedSelector.selector];
-      selector[0] = concepts[semaphore].name;
+      const selectorBase = keyedSelector.keys.split('.');
+      selectorBase[0] = concepts[semaphore].name;
+      const selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
       if (keyedSelector.symbols) {
         return {
+          conceptName: concepts[semaphore].name,
+          conceptSemaphore: semaphore,
           selector,
-          keys: selector.join('.'),
+          keys: selectorBase.join('.'),
           symbols: keyedSelector.symbols
         };
       }
       return {
+        conceptName: concepts[semaphore].name,
+        conceptSemaphore: semaphore,
         selector,
-        keys: selector.join('.')
+        keys: selectorBase.join('.')
       };
     } else {
       return undefined;
@@ -117,12 +126,52 @@ export const createUnifiedKeyedSelector = <T extends object>(
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
   if (concept) {
-    const selector = [concept.name, ...keys.split('.')];
+    const selectorBase = [concept.name, ...keys.split('.')];
     return {
-      selector,
+      conceptName: concept.name,
+      conceptSemaphore: semaphore,
+      selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
       keys: concept.name + '.' + keys,
       symbols
     };
+  } else {
+    return undefined;
+  }
+};
+
+const recordReturn = (key: string, previous: SelectorFunction) => {
+  return (obj: Record<string, unknown>) => {
+    if (obj[key] !== undefined) {
+      return previous(obj[key] as Record<string, unknown>);
+    } else {
+      return undefined;
+    }
+  };
+};
+const finalReturn = (key: string) => {
+  return (obj: Record<string, unknown>) => {
+    if (obj[key] !== undefined) {
+      return obj[key];
+    } else {
+      return undefined;
+    }
+  };
+};
+
+const creation = (keys: string[], index: number, length: number, prev?: SelectorFunction | undefined): SelectorFunction | undefined => {
+  let previous: SelectorFunction | undefined = prev;
+  // console.log('CHECK CREATION: ', previous ? previous.toString() : 'is Undefined');
+  console.log('CHECK CREATION: ', keys[index], prev);
+  let i = index;
+  if (index === length - 1) {
+    previous = finalReturn(keys[i]);
+    i--;
+  }
+  if (i !== 0 && previous) {
+    previous = recordReturn(keys[i], previous);
+    return creation(keys, i - 1, length, previous);
+  } else if (previous) {
+    return previous;
   } else {
     return undefined;
   }
@@ -161,52 +210,48 @@ export function selectPayload<T>(action: Action): T {
 export function selectSlice<T>(
   concepts: Concepts,
   keyed: KeyedSelector): T | undefined {
-  const name = keyed.selector[0];
-  const conceptKeys = Object.keys(concepts).map(key => Number(key));
-  const length = conceptKeys.length;
-  const select = (index: number): Concept | undefined => {
-    const possible = concepts[conceptKeys[index]];
-    if (possible && possible.name === name) {
-      return concepts[conceptKeys[index]];
-    } else if (index < length) {
-      return select(index + 1);
+  const concept: Concept | undefined = (() => {
+    if (keyed.conceptSemaphore === -1) {
+      const name = keyed.conceptName;
+      const conceptKeys = Object.keys(concepts).map(key => Number(key));
+      const length = conceptKeys.length;
+      const select = (index: number): Concept | undefined => {
+        const possible = concepts[conceptKeys[index]];
+        if (possible && possible.name === name) {
+          return concepts[conceptKeys[index]];
+        } else if (index < length) {
+          return select(index + 1);
+        } else {
+          return undefined;
+        }
+      };
+      return select(0);
     } else {
-      return undefined;
+      return concepts[keyed.conceptSemaphore];
     }
-  };
-  const concept: Concept | undefined = select(0);
+  })();
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const slice = (prev: Record<string, any>, index: number): T | undefined => {
-    const next = prev[keyed.selector[index]];
-    if (typeof prev === 'object' && next !== undefined) {
-      if (index < keyed.selector.length - 1) {
-        return slice(next, index + 1);
+  const value = keyed.selector(cast) as T | undefined;
+  if (keyed.symbols) {
+    const next = value as Record<string, unknown>;
+    const symbols = keyed.symbols;
+    const extract = (i: number): unknown[] => {
+      const ext = next[symbols[i]];
+      if (ext) {
+        return [
+          ext,
+          ...extract(i + 1)
+        ];
       } else {
-        if (keyed.symbols) {
-          const symbols = keyed.symbols;
-          const extract = (i: number): unknown[] => {
-            const ext = next[symbols[i]];
-            if (ext) {
-              return [
-                ext,
-                ...extract(i + 1)
-              ];
-            } else {
-              return [];
-            }
-          };
-          return (extract(0) as unknown) as T;
-        }
-        return next as T;
+        return [];
       }
-    } else {
-      return undefined;
-    }
-  };
-  return slice(cast, 1);
+    };
+    return (extract(0) as unknown) as T;
+  }
+  return value;
 }
 
 export function selectConcept(concepts: Concepts, name: string): Concept | undefined {
