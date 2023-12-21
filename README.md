@@ -25,6 +25,7 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
+### [TS Documentation](https://tsdocs.dev/docs/stratimux/0.1.1)
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Axium](https://github.com/Phuire-Research/Stratimux/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
@@ -57,7 +58,7 @@ When in doubt simplify.
 * Action Payloads must extend type: Record<string, unknown>  
    * This change is to provide a guarantee of advanced functionality in the current UI Proof of Concept.
 
-## Current Work: Project Carousel
+## Working Branch: Carousel
 While I did not want to release a major API change after an initial release. Work on logixUX revealed that I need to reduce the time complexity within the Axium itself. Carousel, is a rework on how selectors function, as well as a larger refactor on how stages work.
 
 Effectively the UnifiedSubject will now memoize all potential state changes. And your stages will be able to pass selectors in creation to as a changed record. I'm taking my time with this update to ensure that everything is well tested within logixUX. Prior to breaking APIs.
@@ -66,7 +67,7 @@ With this change, I will be able to call the underlying pattern a solution to wh
 
 What I am currently addressing is something that has always bothered me in other frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval functions with no looping quality.
 
-I expect to have Carousel ready for release by the start of the new year. Till then if you stumble upon this project. Have a wonderful holiday and rest up. The next year is going to be an interesting one!
+I expect to have Carousel ready for release and test after the start of the new year. Till then if you stumble upon this project. Have a wonderful holiday and rest up. The next year is going to be an interesting one!
 
 ----
 ```bash
