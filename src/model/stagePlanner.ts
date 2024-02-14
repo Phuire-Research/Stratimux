@@ -320,41 +320,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     plan.stages[index](this.concepts, dispatcher);
   }
 
-  protected bend(): void {
-    if (this.carousel.index === this.carousel.mobius[0].length - 1) {
-      this.carousel = {
-        index: 0,
-        mobius: [
-          [...this.carousel.mobius[1]],
-          []
-        ],
-        engaged: false,
-      };
-    } else {
-      this.turn();
-    }
-  }
-
-  protected turn(): void {
-    const plan = this.currentStages.get(this.carousel.mobius[0][this.carousel.index]);
-    this.carousel.index++;
-    if (plan) {
-      this.carousel.mobius[1].push(this.carousel.mobius[0][this.carousel.index]);
-      this.bend();
-    } else {
-      this.bend();
-    }
-  }
-
-  protected engage(): void {
-    this.carousel = {
-      engaged: true,
-      mobius: [Object.keys(this.currentStages).map(key => Number(key)), []],
-      index: 0,
-    };
-    this.turn();
-  }
-
   protected nextPlans() {
     this.currentStages.forEach((plan, key) => {
       const index = plan.stage;
@@ -379,25 +344,31 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
   }
 
-  next(value: Concepts) {
-    this.concepts = {
-      ...value
+  protected nextSubs() {
+    const {observers} = this;
+    const len = observers.length;
+    const nextSub = (index: number) => {
+      if (observers[index]) {
+        observers[index].next(this.concepts);
+      }
+      if (index < len - 1) {
+        nextSub(index + 1);
+      }
     };
-    if (!this.closed) {
-      // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
-      // Where Dispatcher would be (action$: Subject<Action>) => {}();
-      this.nextPlans();
-      const {observers} = this;
-      const len = observers.length;
-      const nextSub = (index: number) => {
-        if (observers[index]) {
-          observers[index].next(this.concepts);
-        }
-        if (index < len - 1) {
-          nextSub(index + 1);
-        }
+    nextSub(0);
+  }
+
+  next(concepts: Concepts | null) {
+    if (concepts !== null) {
+      this.concepts = {
+        ...concepts
       };
-      nextSub(0);
+      if (!this.closed) {
+        // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
+        // Where Dispatcher would be (action$: Subject<Action>) => {}();
+        this.nextPlans();
+        this.nextSubs();
+      }
     }
   }
 }

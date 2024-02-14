@@ -270,6 +270,11 @@ export function defaultReducer(state: unknown, _: Action) {
 }
 defaultReducer.toString = () => ('Default Reducer');
 
+export function nullReducer(_: unknown, __: Action) {
+  return null;
+}
+nullReducer.toString = () => ('Null Reducer');
+
 export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
   const defaultSubject = new Subject<Action>();
   const defaultMethod: Method = defaultSubject.pipe(
