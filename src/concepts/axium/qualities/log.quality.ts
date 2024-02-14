@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Axium Concept, generate a qual
 This is used to trouble shoot strategies or simply notify the log of different states.
 $>*/
 /*<#*/
-import { MethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator, defaultReducer, nullReducer } from '../../../model/concept';
 import { ActionType, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
@@ -23,7 +23,7 @@ export const axiumLogMethodCreator: MethodCreator = () => createMethod((action) 
 
 export const axiumLogQuality = createQuality(
   axiumLogType,
-  defaultReducer,
+  nullReducer,
   axiumLogMethodCreator,
 );
 /*#>*/

@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 action in the incoming strategy via an inner timer.
 $>*/
 /*<#*/
-import { MethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator, defaultReducer, nullReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { createAsyncMethod } from '../../../model/method';
@@ -25,7 +25,7 @@ export const experimentTimerEmitActionMethodCreator: MethodCreator = () => creat
 
 export const timerEmitActionQuality = createQuality(
   experimentTimerEmitActionType,
-  defaultReducer,
+  nullReducer,
   experimentTimerEmitActionMethodCreator
 );
 /*#>*/

@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 recent. Then dispatch the most recent's next action via the supplied action strategy.
 $>*/
 /*<#*/
-import { MethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator, defaultReducer, nullReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { createMethodDebounce } from '../../../model/method';
@@ -22,7 +22,7 @@ export const experimentDebounceNextActionNodeMethodCreator: MethodCreator = () =
 
 export const debounceNextActionNodeQuality = createQuality(
   experimentDebounceNextActionNodeType,
-  defaultReducer,
+  nullReducer,
   experimentDebounceNextActionNodeMethodCreator
 );
 /*#>*/

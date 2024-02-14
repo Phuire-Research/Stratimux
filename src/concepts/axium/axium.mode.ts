@@ -40,9 +40,12 @@ export const permissiveMode: Mode = (
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
         const state = concepts[action.semaphore[0]].state;
-        concepts[action.semaphore[0]].state = reduce(state, action);
-        concepts$.next(concepts);
-        axiumState.subConcepts$.next(concepts);
+        const newState = reduce(state, action);
+        if (newState !== null) {
+          concepts[action.semaphore[0]].state = newState;
+          concepts$.next(concepts);
+          axiumState.subConcepts$.next(concepts);
+        }
       } else {
         const nextAction = primeAction(concepts, action);
         // Logical Determination: axiumBadActionType
@@ -70,8 +73,11 @@ export const blockingMode: Mode = (
     if (action.semaphore[2] === axiumState.generation && action.expiration > Date.now()) {
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
       const state = concepts[action.semaphore[0]].state;
-      concepts[action.semaphore[0]].state = reduce(state, action);
-      axiumState.innerConcepts$.next(concepts);
+      const newState = reduce(state, action);
+      if (newState !== null) {
+        concepts[action.semaphore[0]].state = newState;
+        axiumState.innerConcepts$.next(concepts);
+      }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;

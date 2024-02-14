@@ -216,12 +216,6 @@ const handleStageDelimiter =
   };
 
 export class UnifiedSubject extends Subject<Concepts> {
-  private carousel: Carousel = {
-    engaged: false,
-    mobius: [],
-    index: 0,
-  };
-  private timer: NodeJS.Timer[] = [];
   private planId = 0;
   private currentStages: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
@@ -358,17 +352,15 @@ export class UnifiedSubject extends Subject<Concepts> {
     nextSub(0);
   }
 
-  next(concepts: Concepts | null) {
-    if (concepts !== null) {
-      this.concepts = {
-        ...concepts
-      };
-      if (!this.closed) {
-        // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
-        // Where Dispatcher would be (action$: Subject<Action>) => {}();
-        this.nextPlans();
-        this.nextSubs();
-      }
+  next(concepts: Concepts) {
+    this.concepts = {
+      ...concepts
+    };
+    if (!this.closed) {
+      // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
+      // Where Dispatcher would be (action$: Subject<Action>) => {}();
+      this.nextPlans();
+      this.nextSubs();
     }
   }
 }

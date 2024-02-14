@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 next action in the ActionStrategy via a timeout. While appending to the strategy's data field the current mock value from state.
 $>*/
 /*<#*/
-import { MethodCreator, defaultReducer } from '../../../model/concept';
+import { MethodCreator, defaultReducer, nullReducer } from '../../../model/concept';
 import { prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { createAsyncMethodWithState } from '../../../model/method';
@@ -30,7 +30,7 @@ export const experimentTimerEmitActionWithStateMethodCreator: MethodCreator = (c
 
 export const timerEmitActionWithStateQuality = createQuality(
   experimentTimerEmitActionWithStateType,
-  defaultReducer,
+  nullReducer,
   experimentTimerEmitActionWithStateMethodCreator
 );
 /*#>*/
