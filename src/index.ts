@@ -70,6 +70,7 @@ export {
 export {
   createConcept,
   createQuality,
+  nullReducer,
   defaultReducer,
   defaultMethodCreator,
   isConceptLoaded,
