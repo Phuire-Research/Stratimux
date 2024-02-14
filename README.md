@@ -69,6 +69,8 @@ What I am currently addressing is something that has always bothered me in other
 
 * *Update 12/28/23*  
 Now that this branch is able to break implementations, the planned scope of this refactor has expanded to move allow this framework to be multithreaded out of the box. This new plan will take some time to implement and will be merged into main when ready.
+* *Update 2/14/24*
+On the working branch I have included a new nullReducer. This will allow for stratimux to be able to execute as state or stateless beyond initial set up.
 
 ----
 ```bash
