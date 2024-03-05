@@ -42,6 +42,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### 3/05/24
+* Minor DX release, properly exporting Axium type for inclusion in other frameworks.
 ### 12/14/23
 * Set Stage can now properly be set to 0.
 ### 11/29/23
@@ -67,6 +69,8 @@ With this change, I will be able to call the underlying pattern a solution to wh
 
 What I am currently addressing is something that has always bothered me in other frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval functions with no looping quality.
 
+* *Update 3/05/24*
+Releasing a minor update so that Stratimux can be introduced into other frameworks, as the reality of the current release. It that it is ready in a limited scale such as a simple state machine. The main issue with the current approach is a back pressure becomes an issue at higher complexity and starts interfering with branch prediction.
 * *Update 12/28/23*  
 Now that this branch is able to break implementations, the planned scope of this refactor has expanded to move allow this framework to be multithreaded out of the box. This new plan will take some time to implement and will be merged into main when ready.
 * *Update 2/14/24*
