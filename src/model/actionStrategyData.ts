@@ -79,4 +79,12 @@ export const strategyData_unifyData =
       return {...data};
     }
   };
+
+export const strategyData = ({
+  appendFailure: strategyData_appendFailure,
+  selectFailureCondition: strategyData_selectFailureCondition,
+  clearFailureCondition: strategyData_clearFailureCondition,
+  select: strategyData_select,
+  unifyData: strategyData_unifyData,
+});
 /*#>*/

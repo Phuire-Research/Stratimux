@@ -297,4 +297,15 @@ export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) 
   }
   return concepts;
 };
+
+export const ownership = ({
+  createOwnershipLedger,
+  ownershipShouldBlock,
+  clearStubs,
+  editStubs,
+  checkIn,
+  isActionReady,
+  areEqual,
+  updateAddToPendingActions,
+});
 /*#>*/

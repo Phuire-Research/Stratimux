@@ -82,4 +82,8 @@ export const createActionController$ = (act: Action, controlling: (controller: A
   }, 0);
   return ctrl;
 };
+
+export const actionController = ({
+  create$: createActionController$
+});
 /*#>*/

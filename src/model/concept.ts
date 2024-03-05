@@ -385,4 +385,18 @@ export const qualityToString = (quality: Quality) => () => {
   const method = quality.method?.toString();
   return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
+
+export const concept = () => ({
+  create: createConcept,
+  unify: unifyConcepts,
+  createQuality,
+  defaultReducer,
+  defaultMethodCreator,
+  isLoaded: isConceptLoaded,
+  areLoaded: areConceptsLoaded,
+  forEach: forEachConcept,
+  toString: conceptToString,
+  toStringConcepts: conceptsToString,
+  toStringQuality: qualityToString,
+});
 /*#>*/

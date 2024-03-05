@@ -32,4 +32,9 @@ export function registerPrincipleSubscription(observer: Subscriber<Action>, conc
   const primedRegisterSubscriber = primeAction(concepts, axiumRegisterSubscriber({ subscription, name }));
   observer.next(primedRegisterSubscriber);
 }
+
+export const principle = ({
+  createPrinciple$,
+  registerPrincipleSubscription
+});
 /*#>*/

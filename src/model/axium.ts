@@ -181,4 +181,9 @@ export type Axium = {
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);
+
+export const axium = ({
+  create: createAxium,
+  getState: getAxiumState
+});
 /*#>*/

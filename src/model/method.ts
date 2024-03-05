@@ -401,4 +401,23 @@ export const createAsyncMethodThrottleWithConcepts =
     defaultMethod.toString = () => ('Async Throttle Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
-  /*#>*/
+
+export const method = ({
+  create: createMethod,
+  createWithState: createMethodWithState,
+  createWithConcepts: createMethodWithConcepts,
+  createDebounce: createMethodDebounce,
+  createDebounceWithState: createMethodDebounceWithState,
+  createDebounceWithConcepts: createMethodDebounceWithConcepts,
+  createThrottle: createMethodThrottle,
+  createThrottleWithState: createMethodThrottleWithState,
+  createThrottleWithConcepts: createMethodThrottleWithConcepts,
+  createAsync: createAsyncMethod,
+  createAsyncDebounce: createAsyncMethodDebounce,
+  createAsyncDebounceWithState: createAsyncMethodDebounceWithState,
+  createAsyncDebounceWithConcepts: createAsyncMethodDebounceWithConcepts,
+  createAsyncThrottle: createAsyncMethodThrottle,
+  createAsyncThrottleWithState: createAsyncMethodThrottleWithState,
+  createAsyncThrottleWithConcepts: createAsyncMethodThrottleWithConcepts,
+});
+/*#>*/

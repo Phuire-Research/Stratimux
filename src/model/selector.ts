@@ -331,4 +331,13 @@ export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T 
     return undefined;
   }
 }
+
+export const select = ({
+  createUnifiedKeyedSelector,
+  state: selectState,
+  payLoad: selectPayload,
+  slice: selectSlice,
+  concept: selectConcept,
+  unifiedState: selectUnifiedState,
+});
 /*#>*/

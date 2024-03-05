@@ -542,3 +542,18 @@ export const strategyRecurse =
     action.strategy = strategy;
     return action;
   };
+
+export const strategy = ({
+  createActionNode,
+  createActionNodeFromStrategy,
+  create: createStrategy,
+  begin: strategyBegin,
+  success: strategySuccess,
+  failed: strategyFailed,
+  decide: strategyDecide,
+  punt: strategyPunt,
+  sequence: strategySequence,
+  backTrack: strategyBackTrack,
+  recurse: strategyRecurse,
+});
+/*#>*/
