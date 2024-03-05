@@ -10,6 +10,8 @@ import {
   withLatestFrom,
   Subscriber,
   catchError,
+  Subscription,
+  Observer,
 } from 'rxjs';
 import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
@@ -24,6 +26,7 @@ import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
+import { StagePlanner, Staging } from './stagePlanner';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
@@ -75,7 +78,7 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
   }
 };
 
-export function createAxium(name: string, initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) {
+export function createAxium(name: string, initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean): Axium {
   const concepts: Concepts = {};
   const init = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
   init.forEach((concept, i) => {
@@ -167,6 +170,14 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
     },
     stage: subConcepts$.stage.bind(subConcepts$),
   };
+}
+
+export type Axium = {
+  subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
+  unsubscribe: () => void;
+  close: (exit?: boolean) => void;
+  dispatch: (action: Action) => void;
+  stage: (title: string, stages: Staging[], beat?: number) => StagePlanner
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);
