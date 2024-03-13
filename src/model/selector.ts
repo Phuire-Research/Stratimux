@@ -15,23 +15,23 @@ export type KeyedSelector = {
   conceptSemaphore: number,
   keys: string,
   selector: SelectorFunction,
-  symbols?: (number | string)[]
-  symbolSelector?: SelectorFunction
+  setKeys?: (number | string)[]
+  setSelector?: SelectorFunction
 };
 /**
  * For usage outside of the Axium, or when subscribed to other Axiums
  */
 export const createConceptKeyedSelector =
-  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, symbols?: (number|string)[]): KeyedSelector => {
+  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
     const selectorBase = [conceptName, ...keys.split('.')];
-    if (symbols) {
+    if (setKeys) {
       return {
         conceptName,
         conceptSemaphore: -1,
         keys: conceptName + '.' + keys,
         selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-        symbols,
-        symbolSelector: setCreation(symbols, symbols.length - 1, symbols.length)
+        setKeys,
+        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
       };
     }
     return {
@@ -39,7 +39,7 @@ export const createConceptKeyedSelector =
       conceptSemaphore: -1,
       keys: conceptName + '.' + keys,
       selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-      symbols
+      setKeys
     };
   };
 
@@ -53,14 +53,14 @@ export const updateUnifiedKeyedSelector =
       const selectorBase = keyedSelector.keys.split('.');
       selectorBase[0] = concepts[semaphore].name;
       const selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
-      if (keyedSelector.symbols) {
+      if (keyedSelector.setKeys) {
         return {
           conceptName: concepts[semaphore].name,
           conceptSemaphore: semaphore,
           selector,
           keys: selectorBase.join('.'),
-          symbols: keyedSelector.symbols,
-          symbolSelector: keyedSelector.symbolSelector
+          setKeys: keyedSelector.setKeys,
+          setSelector: keyedSelector.setSelector
         };
       }
       return {
@@ -134,19 +134,19 @@ export const createUnifiedKeyedSelector = <T extends object>(
   concepts: Concepts,
   semaphore: number,
   keys: DotPath<T>,
-  symbols?: (number | string)[]
+  setKeys?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
   if (concept) {
     const selectorBase = [concept.name, ...keys.split('.')];
-    if (symbols) {
+    if (setKeys) {
       return {
         conceptName: concept.name,
         conceptSemaphore: semaphore,
         selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
         keys: concept.name + '.' + keys,
-        symbols,
-        symbolSelector: setCreation(symbols, symbols.length - 1, symbols.length)
+        setKeys,
+        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
       };
     }
     return {
@@ -293,12 +293,15 @@ export function selectSlice<T>(
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const value = keyed.selector(cast) as T | undefined;
-  if (keyed.symbolSelector) {
-    return (keyed.symbolSelector(value as Record<string | number, unknown>)) as T;
+  return keyed.selector(cast) as T | undefined;
+}
+
+export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | undefined {
+  const state: T | undefined = selectSlice<T>(concepts, keyed);
+  if (keyed.setSelector) {
+    return (keyed.setSelector(state as Record<string | number, unknown>)) as T;
   }
-  return value;
+  return undefined;
 }
 
 export function selectConcept(concepts: Concepts, name: string): Concept | undefined {
@@ -334,7 +337,10 @@ export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T 
 
 export const select = ({
   createUnifiedKeyedSelector,
+  createConceptKeyedSelector,
+  updateUnifiedKeyedSelector,
   state: selectState,
+  set: selectSet,
   payLoad: selectPayload,
   slice: selectSlice,
   concept: selectConcept,

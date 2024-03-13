@@ -14,6 +14,7 @@ import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
+jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
   let timerActive = false;

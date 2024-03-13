@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { createUnifiedKeyedSelector, selectPayload, selectSlice, selectState } from '../model/selector';
+import { createUnifiedKeyedSelector, select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
@@ -69,9 +69,9 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment
   };
-  const selector = createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const selector = select.createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
   if (selector) {
-    const slices = selectSlice<string[]>(concepts, selector);
+    const slices = select.set<string[]>(concepts, selector);
     console.log('CHECK SLICES', slices);
     if (slices) {
       expect(slices[0]).toBe('10');
