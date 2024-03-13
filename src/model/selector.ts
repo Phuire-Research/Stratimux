@@ -137,27 +137,31 @@ export const createUnifiedKeyedSelector = <T extends object>(
   setKeys?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
-  if (concept) {
-    const selectorBase = [concept.name, ...keys.split('.')];
-    if (setKeys) {
+  try {
+    if (concept) {
+      const selectorBase = [concept.name, ...keys.split('.')];
+      if (setKeys) {
+        return {
+          conceptName: concept.name,
+          conceptSemaphore: semaphore,
+          selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          keys: concept.name + '.' + keys,
+          setKeys,
+          setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+        };
+      }
       return {
         conceptName: concept.name,
         conceptSemaphore: semaphore,
         selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
         keys: concept.name + '.' + keys,
-        setKeys,
-        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
       };
     }
-    return {
-      conceptName: concept.name,
-      conceptSemaphore: semaphore,
-      selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-      keys: concept.name + '.' + keys,
-    };
-  } else {
-    return undefined;
+  } catch (err) {
+    console.error(err);
+    console.warn('ERROR AT: ', keys);
   }
+  return undefined;
 };
 
 const recordReturn = (key: string, previous: SelectorFunction) => {

@@ -107,7 +107,8 @@ export {
   updateUnifiedKeyedSelector,
   createConceptKeyedSelector,
   createUnifiedKeyedSelector,
-  select
+  select,
+  DotPath
 } from './model/selector';
 export { PrincipleFunction, principle } from './model/principle';
 export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
