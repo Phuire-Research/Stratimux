@@ -168,7 +168,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
     dispatch: (action: Action) => {
       action$.next(action);
     },
-    stage: subConcepts$.stage.bind(subConcepts$),
+    plan: subConcepts$.plan.bind(subConcepts$),
   };
 }
 
@@ -177,7 +177,7 @@ export type Axium = {
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action) => void;
-  stage: (title: string, stages: Staging[], beat?: number) => StagePlanner
+  plan: (title: string, stages: Staging[], beat?: number) => StagePlanner
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);

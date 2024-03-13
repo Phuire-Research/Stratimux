@@ -17,6 +17,7 @@ import { ownershipSelectInitialized } from '../concepts/ownership/ownership.sele
 import { getAxiumState } from './axium';
 
 export type Plan = {
+  id: number;
   title: string;
   stages: Staging[],
   stage: number;
@@ -26,23 +27,23 @@ export type Plan = {
   timer: NodeJS.Timeout[]
 }
 
-export type Stage = {
-  staging: Staging,
-  selectors: KeyedSelector[],
-  beat: number,
-  priority: number
-}
+export type Stage = (concepts: Concepts,
+    dispatch: (action: Action, options: dispatchOptions) => void
+  ) => void;
 
-export type Staging = (
-  concepts: Concepts,
-  dispatch: (action: Action, options: dispatchOptions) => void
-) => void;
+export type Staging = {
+  stage: Stage;
+  selectors: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
 
-type Carousel = {
-  engaged: boolean;
-  mobius: number[][];
-  index: number;
-}
+export type PartialStaging = {
+  stage: Stage;
+  selectors?: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
 
 export type NamedStagePlanner = {
   name: string;
@@ -78,7 +79,7 @@ export type StageDelimiter = {
   runOnceMap: Map<string, boolean>
 }
 
-export const stageWaitForOpenThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
+export const stageWaitForOpenThenIterate = (action: Action): Stage => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: axiumSelectOpen,
@@ -88,7 +89,7 @@ export const stageWaitForOpenThenIterate = (action: Action): Staging => (concept
   });
 };
 
-export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
+export const stageWaitForOwnershipThenIterate = (action: Action): Stage => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: ownershipSelectInitialized,
@@ -97,6 +98,17 @@ export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (co
     iterateStage: true
   });
 };
+
+export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?: number, beat?: number): Staging => {
+  return {
+    stage,
+    selectors: selector ? selector : [],
+    priority,
+    beat
+  };
+};
+
+const ALL = '*4||*';
 
 const handleRun =
   (value: Concepts, stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
@@ -217,24 +229,146 @@ const handleStageDelimiter =
 
 export class UnifiedSubject extends Subject<Concepts> {
   private planId = 0;
-  private currentStages: Map<number, Plan> = new Map();
+  private currentPlans: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
+  // Selector key, number is planId
+  private selectors: Map<string, number[]> = new Map();
+  private priorityQue: string[] = [];
   constructor() {
     super();
   }
-  stage(title: string, stages: Staging[], beat?: number): StagePlanner {
+  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
     const planId = this.planId;
     this.planId++;
-    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []});
+    const staged: Staging[] = stages.map<Staging>(s => {
+      return {
+        stage: s.stage,
+        selectors: s.selectors ? s.selectors : [],
+        priority: s.priority,
+        beat: s.beat
+      };
+    });
+    const plan: Plan = {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    this.currentPlans.set(planId, plan);
+    this.registerStagedSelector(plan);
     const conclude = () => {
-      this.currentStages.delete(planId);
+      this.deletePlan(planId);
     };
     return {
       title: title,
       planId: planId,
       conclude: conclude.bind(this)
     };
+  }
+
+  protected deletePlan(planId: number) {
+    const plan = this.currentPlans.get(planId);
+    if (plan) {
+      this.removePlanSelector(plan);
+      this.currentPlans.delete(planId);
+    }
+  }
+
+  protected updatePriorityQue() {
+    const newList: string[] = [];
+    // Generalized example
+    // Devise priority heatmap
+    // For each selector, create a dictionary that stores the total priority within that list
+    // Then from highest to lowest assemble a priority dispatch que
+    // Where this que checks in order of priority slices of state that changed
+    // If changed dispatches.
+    // Replaces old next rotation
+    // Specific Example
+    // Would be to replace the above to utilize a priority list for specific parts
+    // Then to utilize the above again to finish notifying the generalized aspect
+    // Best of both worlds
+  }
+
+  protected registerStagedSelector(plan: Plan) {
+    const insert = (key: string) => {
+      const range = this.selectors.get(key);
+      if (range) {
+        const priority = plan.stages[plan.stage].priority;
+        if (priority) {
+          let found = false;
+          const newList: number[] = [];
+          for (let i = 0; i < range.length; i++) {
+            const p = this.currentPlans.get(range[i]);
+            if (p) {
+              const pPriority = p.stages[p.stage].priority;
+              if (pPriority && pPriority < priority) {
+                newList.push(plan.id);
+                found = true;
+                this.selectors.set(s.keys, [
+                  ...newList,
+                  ...range.slice(i)
+                ]);
+                break;
+              } else {
+                newList.push(p.id);
+              }
+            }
+          }
+          if (!found) {
+            this.selectors.set(key, [
+              plan.id,
+              ...newList,
+            ]);
+          }
+        } else {
+          this.selectors.set(key, [
+            ...range,
+            plan.id
+          ]);
+        }
+      } else {
+        this.selectors.set(key, [plan.id]);
+      }
+    };
+
+    const selectors = plan.stages[plan.stage].selectors;
+    if (selectors.length === 0) {
+      insert(ALL);
+    } else {
+      selectors.forEach(s => {
+        insert(s.keys);
+      });
+    }
+  }
+
+  protected removePlanSelector(plan: Plan) {
+    const remove = (key: string) => {
+      const range = this.selectors.get(key);
+      if (range) {
+        const newList: number[] = [];
+        for (let i = 0; i < range.length; i++) {
+          if (range[i] !== plan.id) {
+            newList.push(range[i]);
+          }
+        }
+        if (newList.length === 0) {
+          this.selectors.delete(key);
+        } else {
+          this.selectors.set(key, newList);
+        }
+      }
+    };
+    const selectors = plan.stages[plan.stage].selectors;
+    if (selectors.length === 0) {
+      remove(ALL);
+    } else {
+      selectors.forEach(s => {
+        remove(s.keys);
+      });
+    }
+  }
+
+  protected updatePlanSelector(plan: Plan, start: number, end?: number) {
+    this.removePlanSelector({...plan, stage: start});
+    if (end) {
+      this.registerStagedSelector({...plan, stage: end});
+    }
   }
 
   protected _dispatch(
@@ -275,7 +409,9 @@ export class UnifiedSubject extends Subject<Concepts> {
       this.stageDelimiters.set(key, stageDelimiter);
       if (!throttle && run) {
         if (options?.iterateStage) {
-          plan.stage += 1;
+          const next = plan.stage + 1;
+          this.updatePlanSelector(plan, plan.stage, next < plan.stages.length ? next : undefined);
+          plan.stage = next;
         }
         if (options?.setStage !== undefined) {
           plan.stage = options.setStage;
@@ -299,7 +435,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;
-      const deleted = this.currentStages.delete(key);
+      const deleted = this.currentPlans.delete(key);
       if (deleted) {
         axiumState.badPlans.push(plan);
       }
@@ -311,11 +447,11 @@ export class UnifiedSubject extends Subject<Concepts> {
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, key, plan, this.concepts, action, options);
     }).bind(this)();
-    plan.stages[index](this.concepts, dispatcher);
+    plan.stages[index].stage(this.concepts, dispatcher);
   }
 
   protected nextPlans() {
-    this.currentStages.forEach((plan, key) => {
+    this.currentPlans.forEach((plan, key) => {
       const index = plan.stage;
       if (index < plan.stages.length) {
         const timer = plan.timer;

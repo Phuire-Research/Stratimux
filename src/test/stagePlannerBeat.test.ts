@@ -14,6 +14,7 @@ import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
+import { createStage } from '../model/stagePlanner';
 jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
@@ -21,8 +22,8 @@ test('Stage Planner Beat Test', (done) => {
   const axium = createAxium('axium test stage planner beat', [
     createCounterConcept()
   ], true, true);
-  const plan = axium.stage('Stage Planner Beat Test', [
-    (___, dispatch) => {
+  const plan = axium.plan('Stage Planner Beat Test', [
+    createStage((___, dispatch) => {
       timerActive = true;
       setTimeout(() => {
         timerActive = false;
@@ -34,13 +35,13 @@ test('Stage Planner Beat Test', (done) => {
           expected: true
         },
       });
-    },
-    (___, dispatch) => {
+    }),
+    createStage((___, dispatch) => {
       dispatch(counterAdd(), {
         iterateStage: true
       });
-    },
-    (concepts, dispatch) => {
+    }),
+    createStage((concepts, dispatch) => {
       if (!timerActive) {
         const state = selectState<CounterState>(concepts, counterName);
         if (state) {
@@ -56,10 +57,10 @@ test('Stage Planner Beat Test', (done) => {
           throttle: 1
         });
       }
-    },
-    () => {
+    }),
+    createStage(() => {
       //
-    }
+    })
   ], 105);
 });
 /*#>*/
