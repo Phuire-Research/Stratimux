@@ -233,7 +233,7 @@ export const uXPrinciple: PrincipleFunction = (
   concepts$: UnifiedSubject,
   semaphore: number
 ) => {
-  const plan = concepts$.stage('uX Plan', [
+  const plan = concepts$.plan('uX Plan', [
     (concepts, dispatch) => {
       // This will register this plan to the axium, this allows for the axium to close or remove your concept cleanly.
       dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: uXName, stagePlanner: plan})), {

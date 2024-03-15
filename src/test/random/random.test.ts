@@ -4,6 +4,7 @@ import { selectState } from '../../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
 import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
+import { createStage } from '../../model/stagePlanner';
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
@@ -13,9 +14,9 @@ test('Axium Counting Strategy Test', (done) => {
   let count = 0;
   const repeat = 10;
   let steps = 0;
-  const plan = axium.stage('Counting Strategy Stage',
+  const plan = axium.plan('Counting Strategy Stage',
     [
-      (_, dispatch) => {
+      createStage((_, dispatch) => {
         const [shouldBe, strategy] = generateRandomCountingStrategy(count);
         strategyTopic = strategy.topic;
         expectedOutput = shouldBe;
@@ -24,7 +25,8 @@ test('Axium Counting Strategy Test', (done) => {
           iterateStage: true,
           throttle: 1
         });
-      }, (concepts, dispatch) => {
+      }),
+      createStage((concepts, dispatch) => {
         const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         if (axiumState.lastStrategy === strategyTopic && counter) {
@@ -46,6 +48,6 @@ test('Axium Counting Strategy Test', (done) => {
             axium.close();
           }
         }
-      }
+      })
     ]);
 });

@@ -74,7 +74,7 @@ const sub = axium.subscribe((concepts) => {
     setTimeout(() => {done();}, 500);
   }
 });
-const plan = axium.stage('Stage DispatchOptions Test',
+const plan = axium.plan('Stage DispatchOptions Test',
   [
     (concepts, dispatch) => {
       const counter = selectState<Counter>(concepts, counterName);
@@ -131,7 +131,7 @@ Lastly, in an action overflow state, sequentially the overflow will call the sam
 ## Stage Planner within your Principle
 Stratimux is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
 ```typescript
-const plan = concept$.stage('Principle Stage Example', [
+const plan = concept$.plan('Principle Stage Example', [
   (___, dispatch) => {
     dispatch(someAction(), {
       iterateStage: true,
