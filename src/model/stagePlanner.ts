@@ -299,7 +299,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     this.currentPlans.set(planId, plan);
     this.manageQues();
     this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
-    // this.registerStagedSelector(plan);
     const conclude = () => {
       this.deletePlan(planId);
     };
@@ -313,7 +312,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected deletePlan(planId: number) {
     const plan = this.currentPlans.get(planId);
     if (plan) {
-      // this.removePlanSelector(plan);
       this.currentPlans.delete(planId);
       this.manageQues();
       this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
@@ -321,8 +319,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected updateFrequencyMap() {
-    // Logic to add each unique priority number together per unique selector
-    // Add such to a dictionary that we then use to control the generalized list.
     const que = this.priorityQue;
     const map: typeof this.frequencyMap = new Map();
 
@@ -388,7 +384,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected assembleGeneralQue() {
-    // Fresh assemble
     const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
     for (const [_, plan] of this.currentPlans) {
       console.log('CHECK PLAN', plan);
@@ -423,9 +418,6 @@ export class UnifiedSubject extends Subject<Concepts> {
         }
       }
     }
-    // Then based on the aggregate frequency per stage selector in total
-    // Add such to general que.
-    // Where we assume no frequency may be any order.
     const planIdMap: Map<number, number> = new Map();
     for (const [_, slice] of generalMap.entries()) {
       slice.planIDs.forEach(id => {
@@ -447,108 +439,10 @@ export class UnifiedSubject extends Subject<Concepts> {
     console.log('CHECK: ', planIdMap, flat, this.generalQue);
   }
 
-  // To rebuild each time, or to change atomically that is the question
-  // Generalized example
-  // Devise priority frequency map
-  // For each selector, create a dictionary that stores the total priority within that list
-  // Then from highest to lowest assemble a priority dispatch que
-  // Where this que checks in order of priority slices of state that changed
-  // If changed dispatches.
-  // Replaces old next rotation
-  // Specific Example
-  // Would be to replace the above to utilize a priority list for specific parts
-  // Then to utilize the above again to finish notifying the generalized aspect
-  // Best of both worlds Specifics Generalized
   protected manageQues() {
     this.assemblePriorityQue();
     this.assembleGeneralQue();
   }
-
-  // protected registerStagedSelector(plan: Plan) {
-  //   const insert = (key: string) => {
-  //     const range = this.selectors.get(key);
-  //     if (range) {
-  //       const priority = plan.stages[plan.stage].priority;
-  //       if (priority) {
-  //         let found = false;
-  //         const newList: number[] = [];
-  //         for (let i = 0; i < range.length; i++) {
-  //           const p = this.currentPlans.get(range[i]);
-  //           if (p) {
-  //             const pPriority = p.stages[p.stage].priority;
-  //             if (pPriority && pPriority < priority) {
-  //               newList.push(plan.id);
-  //               found = true;
-  //               this.selectors.set(s.keys, [
-  //                 ...newList,
-  //                 ...range.slice(i)
-  //               ]);
-  //               break;
-  //             } else {
-  //               newList.push(p.id);
-  //             }
-  //           }
-  //         }
-  //         if (!found) {
-  //           this.selectors.set(key, [
-  //             plan.id,
-  //             ...newList,
-  //           ]);
-  //         }
-  //       } else {
-  //         this.selectors.set(key, [
-  //           ...range,
-  //           plan.id
-  //         ]);
-  //       }
-  //     } else {
-  //       this.selectors.set(key, [plan.id]);
-  //     }
-  //   };
-
-  //   const selectors = plan.stages[plan.stage].selectors;
-  //   if (selectors.length === 0) {
-  //     insert(ALL);
-  //   } else {
-  //     selectors.forEach(s => {
-  //       insert(s.keys);
-  //     });
-  //   }
-  // }
-
-  // protected removePlanSelector(plan: Plan) {
-  //   const remove = (key: string) => {
-  //     const range = this.selectors.get(key);
-  //     if (range) {
-  //       const newList: number[] = [];
-  //       for (let i = 0; i < range.length; i++) {
-  //         if (range[i] !== plan.id) {
-  //           newList.push(range[i]);
-  //         }
-  //       }
-  //       if (newList.length === 0) {
-  //         this.selectors.delete(key);
-  //       } else {
-  //         this.selectors.set(key, newList);
-  //       }
-  //     }
-  //   };
-  //   const selectors = plan.stages[plan.stage].selectors;
-  //   if (selectors.length === 0) {
-  //     remove(ALL);
-  //   } else {
-  //     selectors.forEach(s => {
-  //       remove(s.keys);
-  //     });
-  //   }
-  // }
-
-  // protected updatePlanSelector(plan: Plan, start: number, end?: number) {
-  //   this.removePlanSelector({...plan, stage: start});
-  //   if (end) {
-  //     this.registerStagedSelector({...plan, stage: end});
-  //   }
-  // }
 
   protected _dispatch(
     axiumState: AxiumState,
@@ -701,13 +595,11 @@ export class UnifiedSubject extends Subject<Concepts> {
         ids.forEach(id => notifyIds.set(id, id));
       }
     }
-    this.concepts = concepts;
 
-    console.log('HITTING!!!', notifyIds, this.priorityQue, this.generalQue);
+    this.concepts = concepts;
 
     for (const p of this.priorityQue) {
       const ready = notifyIds.has(p.planID);
-      console.log('CHECK!!!', ready);
       const plan = this.currentPlans.get(p.planID);
       if (plan && ready) {
         this.nextPlan(plan as Plan);
@@ -715,7 +607,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
     for (const g of this.generalQue) {
       const ready = notifyIds.has(g);
-      console.log('CHECK!!!', ready);
       const plan = this.currentPlans.get(g);
       if (plan && ready) {
         this.nextPlan(plan as Plan);

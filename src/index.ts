@@ -107,6 +107,7 @@ export {
   updateUnifiedKeyedSelector,
   createConceptKeyedSelector,
   createUnifiedKeyedSelector,
+  createAdvancedKeys,
   select,
   DotPath
 } from './model/selector';
