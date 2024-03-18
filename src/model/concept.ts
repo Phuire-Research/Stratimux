@@ -386,7 +386,7 @@ export const qualityToString = (quality: Quality) => () => {
   return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
 
-export const concept = () => ({
+export const concept = {
   create: createConcept,
   unify: unifyConcepts,
   createQuality,
@@ -398,5 +398,5 @@ export const concept = () => ({
   toString: conceptToString,
   toStringConcepts: conceptsToString,
   toStringQuality: qualityToString,
-});
+};
 /*#>*/

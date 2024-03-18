@@ -69,7 +69,7 @@ export {
   prepareActionCreator,
   prepareActionWithPayloadCreator,
   refreshAction,
-  action
+  act
 } from './model/action';
 export {
   createConcept,
