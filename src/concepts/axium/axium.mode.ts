@@ -8,6 +8,7 @@ import { Action, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumBadActionPayload } from './qualities/badAction.quality';
+import { counterAdd } from '../counter/qualities/add.quality';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;
@@ -36,16 +37,26 @@ export const permissiveMode: Mode = (
         let subject: Subject<Action>;
         if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
           subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
+          if (action.strategy?.topic === 'Counting Strategy') {
+            console.log('Method Subject', action);
+          }
           subject.next(action);
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
         const state = {...concepts[action.semaphore[0]].state};
         const newState = reduce(state, action);
+        if (action.type === counterAdd().type) {
+          console.log('State: ', state, 'New State: ', newState, concepts[action.semaphore[0]].qualities[action.semaphore[1]]);
+        }
         if (newState !== null) {
           const newConcepts = {...concepts};
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
           newConcepts[action.semaphore[0]].state = newState;
+
+          if (action.type === counterAdd().type) {
+            console.log('Check new state: ', newConcepts[action.semaphore[0]].state);
+          }
           concepts$.next(newConcepts);
           axiumState.subConcepts$.next(newConcepts);
         }
@@ -87,6 +98,9 @@ export const blockingMode: Mode = (
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
+        // if (action.strategy?.topic === 'Counting Strategy') {
+        //   console.log('Method Subject', action);
+        // }
         subject.next(action);
       }
     } else {

@@ -14,32 +14,31 @@ export const axiumAddConceptFromQueType: ActionType = 'Add Concepts from Axium C
 export const axiumAddConceptFromQue = prepareActionCreator(axiumAddConceptFromQueType);
 
 function axiumAddConceptsFromQueReducer(state: AxiumState, action: Action) {
-  const methodSubscribers = state.methodSubscribers;
-  const addConceptsQue = state.addConceptQue;
-  addConceptsQue.forEach((concept) => {
-    concept.qualities.forEach(quality => {
-      if (quality.methodCreator) {
-        [quality.method, quality.subject] = quality.methodCreator(state.concepts$, concept.semaphore);
-        quality.method.pipe(
-          catchError((err: unknown, caught: Observable<Action>) => {
-            if (state.logging) {
-              console.error('METHOD ERROR', err);
-            }
-            return caught;
-          }));
-        quality.toString = qualityToString(quality);
-        const methodSub = quality.method.subscribe((act: Action) => {
-          const action$ = state.action$ as Subject<Action>;
-          blockingMethodSubscription(action$, act);
-        }) as Subscriber<Action>;
-        methodSubscribers.push({name: concept.name, subscription: methodSub});
-      }
-    });
-  });
-
+  // const methodSubscribers = state.methodSubscribers;
+  // const addConceptsQue = state.addConceptQue;
+  // addConceptsQue.forEach((concept) => {
+  //   concept.qualities.forEach(quality => {
+  //     if (quality.methodCreator) {
+  //       [quality.method, quality.subject] = quality.methodCreator(state.concepts$, concept.semaphore);
+  //       quality.method.pipe(
+  //         catchError((err: unknown, caught: Observable<Action>) => {
+  //           if (state.logging) {
+  //             console.error('METHOD ERROR', err);
+  //           }
+  //           return caught;
+  //         }));
+  //       quality.toString = qualityToString(quality);
+  //       const methodSub = quality.method.subscribe((act: Action) => {
+  //         const action$ = state.action$ as Subject<Action>;
+  //         blockingMethodSubscription(action$, act);
+  //       }) as Subscriber<Action>;
+  //       methodSubscribers.push({name: concept.name, subscription: methodSub});
+  //     }
+  //   });
+  // });
   return {
     ...state,
-    methodSubscribers,
+    // methodSubscribers,
     addConceptQue: []
   };
 }

@@ -9,6 +9,10 @@ export const axiumSelectOpen: KeyedSelector = createConceptKeyedSelector<AxiumSt
 
 export const axiumSelectPrepareClose: KeyedSelector = createConceptKeyedSelector<AxiumState>('axium', 'prepareClose');
 
+export const axiumSelectAddConceptQue: KeyedSelector = createConceptKeyedSelector<AxiumState>('axium', 'addConceptQue');
+
+export const axiumSelectRemoveConceptQue: KeyedSelector = createConceptKeyedSelector<AxiumState>('axium', 'removeConceptQue');
+
 export const axiumSelectLastStrategy: KeyedSelector = createConceptKeyedSelector<AxiumState>('axium', 'lastStrategy');
 
 export const axiumSelectLastStrategyData: KeyedSelector = createConceptKeyedSelector<AxiumState>('axium', 'lastStrategyData');

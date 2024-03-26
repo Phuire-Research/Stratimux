@@ -27,6 +27,7 @@ import {
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
+import { counterName } from '../concepts/counter/counter.concept';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
@@ -136,7 +137,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
-      console.log('CHECK ACTION STREAM', action.type, action.strategy?.actionList);
+      console.log('CHECK ACTION STREAM', action.type, action.strategy?.actionList, action.semaphore);
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);

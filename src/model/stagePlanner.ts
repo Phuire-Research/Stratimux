@@ -313,13 +313,17 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected deletePlan(planId: number) {
-    console.log('DELETE PLAN: ', planId);
+    console.log('DELETE PLAN: ', this.currentPlans.get(planId));
     const plan = this.currentPlans.get(planId);
     if (plan) {
       this.currentPlans.delete(planId);
+      const selectors = plan.stages[plan.stage]?.selectors;
+      if (selectors) {
+        this.handleRemoveSelector(selectors, plan.id);
+      }
       this.manageQues();
-      this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
     }
+    return plan;
   }
 
   protected updateFrequencyMap() {
@@ -507,8 +511,8 @@ export class UnifiedSubject extends Subject<Concepts> {
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;
-      console.log('DELETED PLAN: ', plan.id);
-      const deleted = this.currentPlans.delete(plan.id);
+      console.error('DELETED PLAN: ', plan.id);
+      const deleted = this.deletePlan(plan.id);
       if (deleted) {
         axiumState.badPlans.push(plan);
       }

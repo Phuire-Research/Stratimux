@@ -11,7 +11,7 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { forEachConcept } from '../model/concept';
 import { createStage } from '../model/stagePlanner';
-import { axiumSelectBadPlans } from '../concepts/axium/axium.selector';
+import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], true, true);
@@ -28,20 +28,22 @@ test('Axium add Concepts Strategy Test', (done) => {
       );
     }),
     createStage((concepts, dispatch) => {
-      let exists = false;
-      console.log('CHECK CONCEPTS', concepts);
-      forEachConcept(concepts, (concept) => {
-        if (concept.name === counterName) {
-          exists = true;
-          const strat = countingStrategy();
-          console.log('Dispatched', strat);
-          dispatch(strategyBegin(strat), {
-            iterateStage: true
-          });
-          expect(exists).toBe(true);
-        }
-      });
-    }),
+      if (select.slice(concepts, axiumSelectOpen)) {
+        let exists = false;
+        console.log('CHECK CONCEPTS', concepts);
+        forEachConcept(concepts, (concept) => {
+          if (concept.name === counterName) {
+            exists = true;
+            const str = countingStrategy();
+            console.log('Dispatched', str);
+            dispatch(strategyBegin(str), {
+              iterateStage: true
+            });
+            expect(exists).toBe(true);
+          }
+        });
+      }
+    }, [axiumSelectOpen]),
     createStage((concepts) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);
