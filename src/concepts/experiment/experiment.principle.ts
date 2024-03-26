@@ -8,7 +8,7 @@ import { Subscriber } from 'rxjs';
 import { Action, primeAction } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
 import { Concepts } from '../../model/concept';
-import { UnifiedSubject } from '../../model/stagePlanner';
+import { UnifiedSubject, createStage } from '../../model/stagePlanner';
 import { selectUnifiedState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
@@ -21,8 +21,8 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
   semaphore: number
 ) => {
   let readyToGo = false;
-  const plan = concepts$.stage('Experiment Principle Plan', [
-    (concepts, dispatch) => {
+  const plan = concepts$.plan('Experiment Principle Plan', [
+    createStage((concepts, dispatch) => {
       dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: plan})), {
         on: {
           selector: axiumSelectOpen,
@@ -30,8 +30,8 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
         },
         iterateStage: true
       });
-    },
-    (cpts, _) => {
+    }),
+    createStage((cpts, _) => {
       const concepts = cpts;
       const experimentState = selectUnifiedState<ExperimentState>(concepts, semaphore);
       if (experimentState && experimentState.actionQue.length > 0) {
@@ -51,7 +51,7 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
           }, 400);
         }
       }
-    }
+    })
   ]);
 };
 /*#>*/

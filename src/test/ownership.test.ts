@@ -21,6 +21,7 @@ import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { checkInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
+import { createStage } from '../model/stagePlanner';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
@@ -30,9 +31,9 @@ test('Ownership Test', (done) => {
     createCounterConcept(),
     createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
   ], true, true);
-  const plan = axium.stage(
+  const plan = axium.plan(
     'Testing Ownership Staging', [
-      (cpts, dispatch) => {
+      createStage((cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
         if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(cpts, ownershipName);
@@ -47,17 +48,17 @@ test('Ownership Test', (done) => {
             });
           }
         }
-      },
+      }),
       // Comment out if testing log and the halting quality of the Unified Turing Machine.
-      (cpts, dispatch) => {
+      createStage((cpts, dispatch) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         if (ownership) {
           console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
           dispatch(counterSetCount({newCount: 1000}, undefined, undefined, 7000), { iterateStage: true});
         }
-      },
-      (cpts, dispatch) => {
+      }),
+      createStage((cpts, dispatch) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         if (ownership) {
           console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
@@ -67,8 +68,8 @@ test('Ownership Test', (done) => {
             iterateStage: true
           });
         }
-      },
-      (cpts, dispatch) => {
+      }),
+      createStage((cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
         const counter = selectState<CounterState>(cpts, counterName);
         if (counter) {
@@ -108,7 +109,7 @@ test('Ownership Test', (done) => {
             }
           }
         }
-      }
+      })
     ]);
   const sub = axium.subscribe((concepts: Concepts) => {
     const state = selectState<OwnershipState>(concepts, ownershipName);

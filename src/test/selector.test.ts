@@ -9,7 +9,7 @@ import { CounterState, createCounterConcept, counterName  } from '../concepts/co
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { createExperimentConcept } from '../concepts/experiment/experiment.concept';
+import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 
 test('Axium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -70,6 +70,7 @@ test('Axium Unified Selector Test', (done) => {
     0: experiment
   };
   const selector = select.createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const conceptSelector = select.createConceptKeyedSelector<Deeper>(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);
     console.log('CHECK SLICES', slices);
@@ -78,6 +79,7 @@ test('Axium Unified Selector Test', (done) => {
       expect(slices[1]).toBe('9');
       expect(slices[2]).toBe('8');
       expect(slices[3]).toBe('7');
+      expect(select.slice(concepts, conceptSelector)).toBe(obj.anything.something.somethingElse);
       done();
     }
   }

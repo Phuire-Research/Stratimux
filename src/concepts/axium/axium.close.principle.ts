@@ -5,10 +5,11 @@ import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { selectUnifiedState } from '../../model/selector';
-import { UnifiedSubject } from '../../model/stagePlanner';
+import { UnifiedSubject, createStage } from '../../model/stagePlanner';
 import { AxiumState } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
 import { Action } from '../../model/action';
+import { axiumSelectPrepareClose } from './axium.selector';
 /*<#*/
 export const axiumClosePrinciple: PrincipleFunction = (
   _: Subscriber<Action>,
@@ -17,8 +18,8 @@ export const axiumClosePrinciple: PrincipleFunction = (
   semaphore: number
 ) => {
   let init = false;
-  const plan = concepts$.stage('Plan Axium Close', [
-    (concepts, dispatch) => {
+  const plan = concepts$.plan('Plan Axium Close', [
+    createStage((concepts, dispatch) => {
       const state = selectUnifiedState<AxiumState>(concepts, semaphore);
       if (!init && state?.prepareClose) {
         init = true;
@@ -28,10 +29,10 @@ export const axiumClosePrinciple: PrincipleFunction = (
         });
         plan.conclude();
       }
-    },
-    () => {
+    }, [axiumSelectPrepareClose], Infinity),
+    createStage(() => {
       //
-    }
+    })
   ]);
 };
 /*#>*/

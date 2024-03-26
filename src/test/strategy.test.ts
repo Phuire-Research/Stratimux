@@ -8,16 +8,18 @@ import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
+import { createStage } from '../model/stagePlanner';
 
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
-  const plan = axium.stage('Counting Strategy Stage',
+  const plan = axium.plan('Counting Strategy Stage',
     [
-      (_, dispatch) => {
+      createStage((_, dispatch) => {
         dispatch(strategyBegin(countingStrategy()), {
           iterateStage: true
         });
-      }, (concepts) => {
+      }),
+      createStage((concepts) => {
         const axiumState = concepts[0].state as AxiumState;
         if (axiumState.lastStrategy === countingTopic) {
           const counter = selectState<CounterState>(concepts, counterName);
@@ -26,7 +28,7 @@ test('Axium Counting Strategy Test', (done) => {
           plan.conclude();
           axium.close();
         }
-      }
+      })
     ]);
 });
 /*#>*/

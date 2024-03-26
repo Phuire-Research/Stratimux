@@ -4,7 +4,7 @@ This file will contain a series of selectors that can be used to engage with dif
 $>*/
 /*<#*/
 import { Action } from './action';
-import { Concept, Concepts } from './concept';
+import { Concept, Concepts, createConcept } from './concept';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
@@ -313,7 +313,7 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
   const length = conceptKeys.length;
   const select = (index: number): Concept | undefined => {
     const i = Number(conceptKeys[index]);
-    if (concepts[i].name === name) {
+    if (concepts[i] && concepts[i].name === name) {
       return concepts[i];
     } else if (index < length) {
       return select(index + 1);
@@ -324,6 +324,17 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
   return select(0);
 }
 
+/**
+ * Advanced functionality, set a custom key path that may include array indexes.
+ * @example createAdvancedKeys('some', 1, 'once', 2, 'me', 7, 'world', 4) : some.1.once.2.m.7.world.4
+ * @param arr a series of keys that points to your targeted slice
+ * @returns DotPath<T extends object>
+ */
+export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T> {
+  return arr.join('.') as DotPath<T>;
+}
+
+createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
 /**
  * Allows for the Unification of Concepts and a form of Data Oriented Functional Inheritance.
  * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.
@@ -342,6 +353,7 @@ export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T 
 export const select = ({
   createUnifiedKeyedSelector,
   createConceptKeyedSelector,
+  createAdvancedKeys,
   updateUnifiedKeyedSelector,
   state: selectState,
   set: selectSet,

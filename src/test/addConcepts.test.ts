@@ -4,17 +4,20 @@ $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
-import { selectState } from '../model/selector';
+import { select, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { forEachConcept } from '../model/concept';
+import { createStage } from '../model/stagePlanner';
+import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], true, true);
-  const plan = axium.stage('Add Concepts Stage',[
-    (concepts, dispatch) => {
+  const plan = axium.plan('Add Concepts Stage',[
+    createStage((concepts, dispatch) => {
+      console.log('Add Counter Concept');
       dispatch(
         strategyBegin(
           addConceptsToAddQueThenBlockStrategy(concepts,[createCounterConcept()])
@@ -23,22 +26,27 @@ test('Axium add Concepts Strategy Test', (done) => {
           iterateStage: true
         }
       );
-    },
-    (concepts, dispatch) => {
-      let exists = false;
-      console.log('CHECK CONCEPTS', concepts);
-      forEachConcept(concepts, (concept) => {
-        if (concept.name === counterName) {
-          exists = true;
-          dispatch(strategyBegin(countingStrategy()), {
-            iterateStage: true
-          });
-          expect(exists).toBe(true);
-        }
-      });
-    },
-    (concepts) => {
+    }),
+    createStage((concepts, dispatch) => {
+      if (select.slice(concepts, axiumSelectOpen)) {
+        let exists = false;
+        console.log('CHECK CONCEPTS', concepts);
+        forEachConcept(concepts, (concept) => {
+          if (concept.name === counterName) {
+            exists = true;
+            const str = countingStrategy();
+            console.log('Dispatched', str);
+            dispatch(strategyBegin(str), {
+              iterateStage: true
+            });
+            expect(exists).toBe(true);
+          }
+        });
+      }
+    }, [axiumSelectOpen]),
+    createStage((concepts) => {
       const axiumState = concepts[0].state as AxiumState;
+      console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);
       if (axiumState.lastStrategy === countingTopic) {
         const counter = selectState<CounterState>(concepts, counterName);
         expect(counter?.count).toBe(1);
@@ -46,7 +54,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         plan.conclude();
         axium.close();
       }
-    }
+    })
   ]);
 });
 /*#>*/

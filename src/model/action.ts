@@ -213,7 +213,7 @@ export function areSemaphoresEqual(first: Action, second: Action) {
   return first.semaphore[0] === second.semaphore[0] && first.semaphore[1] === second.semaphore[1];
 }
 
-export const action = ({
+export const act = ({
   prime: primeAction,
   refresh: refreshAction,
   getSemaphore,

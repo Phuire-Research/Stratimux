@@ -12,6 +12,7 @@ import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
+import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -280,6 +281,9 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {
       if (action.strategy) {
+        if (action.strategy.topic === 'Counting Strategy') {
+          console.log('Counting Strategy HIT!: ', action);
+        }
         return strategySuccess(action.strategy);
       }
       return {
@@ -386,7 +390,7 @@ export const qualityToString = (quality: Quality) => () => {
   return (`\n{\nactionType: ${actionType},\nreducer: ${reducer},\nmethod: ${method}\n}`);
 };
 
-export const concept = () => ({
+export const concept = {
   create: createConcept,
   unify: unifyConcepts,
   createQuality,
@@ -398,5 +402,5 @@ export const concept = () => ({
   toString: conceptToString,
   toStringConcepts: conceptsToString,
   toStringQuality: qualityToString,
-});
+};
 /*#>*/

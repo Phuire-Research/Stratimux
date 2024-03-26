@@ -44,7 +44,7 @@ const axium = createAxium('ownershipTest', [
   createCounterConcept(),
   createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
 ], true, true);
-const plan = axium.stage(
+const plan = axium.plan(
   'Testing Ownership Staging', [
     (cpts, dispatch) => {
       const axiumState = cpts[0].state as AxiumState;

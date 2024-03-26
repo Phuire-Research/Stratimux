@@ -13,18 +13,19 @@ import {
 import { strategyBegin } from '../model/actionStrategy';
 import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
+import { createStage } from '../model/stagePlanner';
 
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
   const experiment = createExperimentConcept(createExperimentState(), [experimentRecurseIterateIdQuality]);
   const axium = createAxium('Experiment async method creator with Concepts', [experiment], false, true);
-  const plan = axium.stage('Experiment debounce add one', [
-    (_, dispatch) => {
+  const plan = axium.plan('Experiment debounce add one', [
+    createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentRecursivelyIterateId([...list])), {
         iterateStage: true
       });
-    },
-    (concepts, _) => {
+    }),
+    createStage((concepts, _) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
@@ -40,7 +41,7 @@ test('Asynchronous recursion', (done) => {
           done();
         }
       }
-    }
+    })
   ]);
 });
 /*$>*/

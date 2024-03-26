@@ -69,7 +69,7 @@ export {
   prepareActionCreator,
   prepareActionWithPayloadCreator,
   refreshAction,
-  action
+  act
 } from './model/action';
 export {
   createConcept,
@@ -107,6 +107,7 @@ export {
   updateUnifiedKeyedSelector,
   createConceptKeyedSelector,
   createUnifiedKeyedSelector,
+  createAdvancedKeys,
   select,
   DotPath
 } from './model/selector';

@@ -10,13 +10,15 @@ $>*/
 import { Subject } from 'rxjs';
 import { Concepts } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { KeyedSelector, selectSlice } from './selector';
+import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
 import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { getAxiumState } from './axium';
+import { experimentName } from '../concepts/experiment/experiment.concept';
 
 export type Plan = {
+  id: number;
   title: string;
   stages: Staging[],
   stage: number;
@@ -26,23 +28,23 @@ export type Plan = {
   timer: NodeJS.Timeout[]
 }
 
-export type Stage = {
-  staging: Staging,
-  selectors: KeyedSelector[],
-  beat: number,
-  priority: number
-}
+export type Stage = (concepts: Concepts,
+    dispatch: (action: Action, options: dispatchOptions) => void
+  ) => void;
 
-export type Staging = (
-  concepts: Concepts,
-  dispatch: (action: Action, options: dispatchOptions) => void
-) => void;
+export type Staging = {
+  stage: Stage;
+  selectors: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
 
-type Carousel = {
-  engaged: boolean;
-  mobius: number[][];
-  index: number;
-}
+export type PartialStaging = {
+  stage: Stage;
+  selectors?: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
 
 export type NamedStagePlanner = {
   name: string;
@@ -78,7 +80,7 @@ export type StageDelimiter = {
   runOnceMap: Map<string, boolean>
 }
 
-export const stageWaitForOpenThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
+export const stageWaitForOpenThenIterate = (action: Action): Stage => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: axiumSelectOpen,
@@ -88,7 +90,7 @@ export const stageWaitForOpenThenIterate = (action: Action): Staging => (concept
   });
 };
 
-export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (concepts: Concepts, dispatch: Dispatcher) => {
+export const stageWaitForOwnershipThenIterate = (action: Action): Stage => (concepts: Concepts, dispatch: Dispatcher) => {
   dispatch(action, {
     on: {
       selector: ownershipSelectInitialized,
@@ -97,6 +99,17 @@ export const stageWaitForOwnershipThenIterate = (action: Action): Staging => (co
     iterateStage: true
   });
 };
+
+export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?: number, beat?: number): Staging => {
+  return {
+    stage,
+    selectors: selector ? selector : [],
+    priority,
+    beat
+  };
+};
+
+const ALL = '*4||*';
 
 const handleRun =
   (value: Concepts, stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
@@ -216,19 +229,81 @@ const handleStageDelimiter =
   };
 
 export class UnifiedSubject extends Subject<Concepts> {
-  private planId = 0;
-  private currentStages: Map<number, Plan> = new Map();
+  private planId = -1;
+  private toggle = false;
+  private currentPlans: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
+  // Assemble front of line
+  private priorityQue: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[] = [];
+  private priorityExists: Map<string, boolean> = new Map();
+  private frequencyMap: Map<string, number> = new Map();
+  private selectors: Map<string, {selector: KeyedSelector, ids: number[]}> = new Map();
+  // Assemble back of line, exempts priority que members
+  private generalQue: number[] = [];
+  // The above approach is enhanced by a onChange dict
   constructor() {
     super();
+    this.planId = 0;
   }
-  stage(title: string, stages: Staging[], beat?: number): StagePlanner {
+
+  protected createPriorityKey(planId: number, stage: number) {
+    return `${planId}${stage}`;
+  }
+
+  protected handleAddSelector(selectors: KeyedSelector[], id: number) {
+    if (selectors.length === 0) {
+      const ALL_SELECTOR = select.createConceptKeyedSelector(ALL, ALL);
+      this.addSelector(ALL_SELECTOR, id);
+    }
+    selectors.forEach(selector => this.addSelector(selector, id));
+  }
+
+  protected addSelector(selector: KeyedSelector, id: number) {
+    const s = this.selectors.get(selector.keys);
+    if (s) {
+      this.selectors.set(selector.keys, {selector, ids: [...s.ids, id]});
+    } else {
+      this.selectors.set(selector.keys, {selector, ids: [id]});
+    }
+  }
+
+  protected handleRemoveSelector(selectors: KeyedSelector[], id: number) {
+    if (selectors.length === 0) {
+      const ALL_SELECTOR = select.createConceptKeyedSelector(ALL, ALL);
+      this.removeSelector(ALL_SELECTOR, id);
+    }
+    selectors.forEach(selector => this.removeSelector(selector, id));
+  }
+
+  protected removeSelector(selector: KeyedSelector, id: number) {
+    const s = this.selectors.get(selector.keys);
+    if (s) {
+      if (s.ids.length - 1 === 0) {
+        this.selectors.delete(selector.keys);
+      } else {
+        this.selectors.set(selector.keys, {selector, ids: s.ids.filter(idx => idx !== id)});
+      }
+    }
+  }
+
+  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
     const planId = this.planId;
-    this.planId++;
-    this.currentStages.set(planId, {title, stages, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []});
+    this.planId += 1;
+    const staged: Staging[] = stages.map<Staging>(s => {
+      return {
+        stage: s.stage,
+        selectors: s.selectors ? s.selectors : [],
+        priority: s.priority,
+        beat: s.beat
+      };
+    });
+    const plan: Plan = {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    this.currentPlans.set(planId, plan);
+    this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+    this.manageQues();
     const conclude = () => {
-      this.currentStages.delete(planId);
+      this.deletePlan(planId);
     };
     return {
       title: title,
@@ -237,20 +312,144 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   }
 
+  protected deletePlan(planId: number) {
+    console.log('DELETE PLAN: ', this.currentPlans.get(planId));
+    const plan = this.currentPlans.get(planId);
+    if (plan) {
+      this.currentPlans.delete(planId);
+      const selectors = plan.stages[plan.stage]?.selectors;
+      if (selectors) {
+        this.handleRemoveSelector(selectors, plan.id);
+      }
+      this.manageQues();
+    }
+    return plan;
+  }
+
+  protected updateFrequencyMap() {
+    const que = this.priorityQue;
+    const map: typeof this.frequencyMap = new Map();
+
+    que.forEach(plan => {
+      plan.selectors.forEach(selector => {
+        const frequency = map.get(selector.keys);
+        if (frequency) {
+          map.set(selector.keys, frequency + plan.priority);
+        } else {
+          map.set(selector.keys, plan.priority);
+        }
+      });
+    });
+
+    this.frequencyMap = map;
+  }
+
+  protected assemblePriorityQue() {
+    let prioritize = false;
+    const priorityMap: typeof this.priorityExists = new Map();
+    const newList: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[] = [];
+    for (const [_, plan] of this.currentPlans) {
+      const stage = plan.stages[plan.stage];
+      const priority = stage.priority;
+      if (priority) {
+        prioritize = true;
+        const key = this.createPriorityKey(plan.id, plan.stage);
+        const selectors = plan.stages[plan.stage].selectors;
+        priorityMap.set(key, true);
+        const entry = {
+          planID: plan.id,
+          priority,
+          stage: plan.stage,
+          selectors,
+        };
+        newList.push(entry);
+        console.log('Priority List: ', newList);
+        this.priorityExists.set(key, true);
+      }
+    }
+    if (!prioritize) {
+      this.priorityQue = [];
+    } else {
+      this.priorityQue = newList.sort((a, b) => b.priority - a.priority);
+    }
+    this.priorityExists = priorityMap;
+    this.updateFrequencyMap();
+  }
+
+  protected assembleGeneralQue() {
+    const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
+    for (const [_, plan] of this.currentPlans) {
+      const stage = plan.stages[plan.stage];
+      const priority = stage.priority;
+      if (priority === undefined) {
+        const prepareGeneralMap = (selector: KeyedSelector) => {
+          const entry = generalMap.get(selector.keys);
+          const frequency = this.frequencyMap.get(selector.keys);
+          if (entry) {
+            entry.planIDs.push(plan.id);
+          } else if (frequency) {
+            generalMap.set(selector.keys, {
+              planIDs: [plan.id],
+              priorityAggregate: frequency,
+              selector: selector
+            });
+          } else {
+            generalMap.set(selector.keys, {
+              planIDs: [plan.id],
+              priorityAggregate: 0,
+              selector: selector
+            });
+          }
+        };
+        if (stage.selectors.length === 0) {
+          prepareGeneralMap(createConceptKeyedSelector(ALL, ALL));
+        } else {
+          for (const selector of stage.selectors) {
+            prepareGeneralMap(selector);
+          }
+        }
+      }
+    }
+    const planIdMap: Map<number, number> = new Map();
+    for (const [_, slice] of generalMap.entries()) {
+      slice.planIDs.forEach(id => {
+        const priority = planIdMap.get(id);
+        if (priority) {
+          planIdMap.set(id, priority + slice.priorityAggregate);
+        } else {
+          planIdMap.set(id, slice.priorityAggregate);
+        }
+      });
+    }
+    const flat = [];
+    for (const [id, frequency] of planIdMap.entries()) {
+      flat.push([id, frequency]);
+    }
+    flat.sort((a, b) => b[1] - a[1]);
+    // We should add a selector union
+    this.generalQue = flat.map(([id, _]) => id);
+    console.log('CHECK: ', planIdMap, flat, this.generalQue);
+  }
+
+  protected manageQues() {
+    this.assemblePriorityQue();
+    this.assembleGeneralQue();
+  }
+
   protected _dispatch(
     axiumState: AxiumState,
-    key: number, plan: Plan,
+    plan: Plan,
     value: Concepts,
     action: Action,
     options: dispatchOptions): void {
-    let stageDelimiter = this.stageDelimiters.get(key);
+    let stageDelimiter = this.stageDelimiters.get(plan.id);
     let throttle = false;
     let goodAction = true;
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
-    // console.log('HIT', action, goodAction, run);
-    this.stageDelimiters.set(key, stageDelimiter);
+    console.log('HIT', action, goodAction, run);
+    this.stageDelimiters.set(plan.id, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;
       if (options?.throttle !== undefined) {
@@ -272,19 +471,32 @@ export class UnifiedSubject extends Subject<Concepts> {
           }
         }
       }
-      this.stageDelimiters.set(key, stageDelimiter);
+      this.stageDelimiters.set(plan.id, stageDelimiter);
       if (!throttle && run) {
+        let next = -1;
         if (options?.iterateStage) {
-          plan.stage += 1;
+          next = plan.stage + 1;
+          // this.updatePlanSelector(plan, plan.stage, next < plan.stages.length ? next : undefined);
         }
         if (options?.setStage !== undefined) {
-          plan.stage = options.setStage;
+          next = options.setStage;
         }
-        if (options?.iterateStage || (options?.setStage && options.setStage !== plan.stage)) {
+        if (next !== -1) {
+          console.log('CHECK ERROR', plan, next);
+          // Don't like having to do this.
+          // Double check this logic while writing the unit test.
+          if (plan.stages[plan.stage]) {
+            this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
+          }
+          plan.stage = next;
+          this.manageQues();
+          if (plan.stages[plan.stage]) {
+            this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+          }
           stageDelimiter.prevActions = [];
           stageDelimiter.unionExpiration = [];
           stageDelimiter.runOnceMap = new Map();
-          this.stageDelimiters.set(key, stageDelimiter);
+          this.stageDelimiters.set(plan.id, stageDelimiter);
         }
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
@@ -299,43 +511,50 @@ export class UnifiedSubject extends Subject<Concepts> {
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;
-      const deleted = this.currentStages.delete(key);
+      console.error('DELETED PLAN: ', plan.id);
+      const deleted = this.deletePlan(plan.id);
       if (deleted) {
         axiumState.badPlans.push(plan);
       }
     }
   }
 
-  protected execute(plan: Plan, key: number, index: number): void {
+  protected execute(plan: Plan, index: number): void {
+    console.log('EXECUTE PLAN', plan.id, index);
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
-      this._dispatch(axiumState, key, plan, this.concepts, action, options);
+      this._dispatch(axiumState, plan, this.concepts, action, options);
     }).bind(this)();
-    plan.stages[index](this.concepts, dispatcher);
+    // console.log('EXECUTE CHECK: ', plan.stages[index].stage.toString());
+    plan.stages[index].stage(this.concepts, dispatcher);
   }
 
   protected nextPlans() {
-    this.currentStages.forEach((plan, key) => {
-      const index = plan.stage;
-      if (index < plan.stages.length) {
-        const timer = plan.timer;
-        const now = Date.now();
-        if (plan.beat > -1) {
-          if (plan.offBeat < now) {
-            plan.offBeat = Date.now() + plan.beat;
-            this.execute(plan, key, index);
-          } else if (timer.length === 0 && plan.offBeat > now) {
-            timer.push(setTimeout(() => {
-              plan.timer = [];
-              plan.offBeat = Date.now() + plan.beat;
-              this.execute(plan, key, index);
-            }, plan.offBeat - Date.now()));
-          }
-        } else {
-          this.execute(plan, key, index);
-        }
-      }
+    this.currentPlans.forEach(plan => {
+      this.nextPlan(plan);
     });
+  }
+
+  protected nextPlan(plan: Plan) {
+    const index = plan.stage;
+    if (index < plan.stages.length) {
+      const timer = plan.timer;
+      const now = Date.now();
+      if (plan.beat > -1) {
+        if (plan.offBeat < now) {
+          plan.offBeat = Date.now() + plan.beat;
+          this.execute(plan, index);
+        } else if (timer.length === 0 && plan.offBeat > now) {
+          timer.push(setTimeout(() => {
+            plan.timer = [];
+            plan.offBeat = Date.now() + plan.beat;
+            this.execute(plan, index);
+          }, plan.offBeat - Date.now()));
+        }
+      } else {
+        this.execute(plan, index);
+      }
+    }
   }
 
   protected nextSubs() {
@@ -352,14 +571,68 @@ export class UnifiedSubject extends Subject<Concepts> {
     nextSub(0);
   }
 
+  protected handleChange(concepts: Concepts) {
+    const notifyIds: Map<number, number> = new Map();
+    for (const [_, slice] of this.selectors) {
+      const {selector, ids} = slice;
+      let notify = false;
+      if (slice.selector.conceptName === ALL) {
+        notify = true;
+      } else {
+        const incoming = select.slice(concepts, selector);
+        const original = select.slice(this.concepts, selector);
+        console.log('Incoming: ', incoming, selector.keys, 'Original: ', original, Object.is(this.concepts, concepts));
+        if (typeof incoming === 'object' && !Object.is(incoming, original)) {
+          // stuff
+          notify = true;
+        } else if (incoming !== original) {
+          notify = true;
+        }
+      }
+      if (notify) {
+        ids.forEach(id => notifyIds.set(id, id));
+      }
+    }
+    // console.log(
+    //   'NOTIFY IDS: ', notifyIds,
+    //   '\nPLANS: ', this.currentPlans,
+    //   '\nPriority Que: ', this.priorityQue,
+    //   '\nGeneral Que: ', this.generalQue,
+    //   '\nSelectors: ',  this.selectors
+    // );
+
+    this.concepts = concepts;
+
+    for (const p of this.priorityQue) {
+      const ready = notifyIds.has(p.planID);
+      const plan = this.currentPlans.get(p.planID);
+      if (plan && ready) {
+        console.log('PRIORITY NEXT PLAN: ', plan.id);
+        this.nextPlan(plan as Plan);
+      }
+    }
+    for (const g of this.generalQue) {
+      const ready = notifyIds.has(g);
+      const plan = this.currentPlans.get(g);
+      if (plan && ready) {
+        console.log('GENERAL NEXT PLAN: ', plan.id);
+        this.nextPlan(plan as Plan);
+      }
+    }
+  }
+
+  // Per next we will check old versus new concepts for changed values via a list of selectors
+  // These selectors are aggregated from incoming plans
+  // If said selector has been triggered, store a map of changes based on selector
+  // Then cycle through priorityQue then generalQue notifying each plan only once that a change happened
+  // To increase the speed of this after initialization, we may use semaphores.
   next(concepts: Concepts) {
-    this.concepts = {
-      ...concepts
-    };
     if (!this.closed) {
       // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
-      this.nextPlans();
+
+      // Next up to do: Add back in ALL option.
+      this.handleChange(concepts);
       this.nextSubs();
     }
   }

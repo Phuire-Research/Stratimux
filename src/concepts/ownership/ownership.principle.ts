@@ -14,7 +14,7 @@ import { Action, areSemaphoresEqual, createAction, primeAction } from '../../mod
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
-import { UnifiedSubject  } from '../../model/stagePlanner';
+import { UnifiedSubject, createStage  } from '../../model/stagePlanner';
 import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { axiumSelectOpen } from '../axium/axium.selector';
@@ -36,8 +36,8 @@ export const ownershipPrinciple: PrincipleFunction = (
 ) => {
   let initDispatch = false;
   let finalCheck = true;
-  const plan = concepts$.stage('ownership Principle Plan', [
-    (concepts, dispatch) => {
+  const plan = concepts$.plan('ownership Principle Plan', [
+    createStage((concepts, dispatch) => {
       dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})), {
         on: {
           selector: axiumSelectOpen,
@@ -45,8 +45,8 @@ export const ownershipPrinciple: PrincipleFunction = (
         },
         iterateStage: true
       });
-    },
-    (cpts, _) => {
+    }),
+    createStage((cpts, _) => {
       let concepts = cpts;
       let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {
@@ -109,7 +109,7 @@ export const ownershipPrinciple: PrincipleFunction = (
           )
         );
       }
-    }
+    })
   ]);
 };
 /*#>*/
@@ -125,8 +125,8 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
   concepts$: UnifiedSubject,
   semaphore: number
 ) => {
-  const plan = concepts$.stage('ownership Principle Plan', [
-    (concepts, dispatch) => {
+  const plan = concepts$.plan('ownership Principle Plan', [
+    createStage((concepts, dispatch) => {
       dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})), {
         on: {
           selector: axiumSelectOpen,
@@ -134,8 +134,8 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
         },
         iterateStage: true
       });
-    },
-    (cpts, __) => {
+    }),
+    createStage((cpts, __) => {
       const concepts = cpts;
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {
@@ -161,7 +161,7 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
           concepts$.next(concepts);
         }
       }
-    }
+    })
   ]);
 };
 /*#>*/
