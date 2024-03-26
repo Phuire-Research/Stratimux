@@ -39,12 +39,15 @@ export const permissiveMode: Mode = (
           subject.next(action);
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
-        const state = concepts[action.semaphore[0]].state;
+        const state = {...concepts[action.semaphore[0]].state};
         const newState = reduce(state, action);
         if (newState !== null) {
-          concepts[action.semaphore[0]].state = newState;
-          concepts$.next(concepts);
-          axiumState.subConcepts$.next(concepts);
+          const newConcepts = {...concepts};
+          const newConcept = {...newConcepts[action.semaphore[0]]};
+          newConcepts[action.semaphore[0]] = newConcept;
+          newConcepts[action.semaphore[0]].state = newState;
+          concepts$.next(newConcepts);
+          axiumState.subConcepts$.next(newConcepts);
         }
       } else {
         const nextAction = primeAction(concepts, action);
@@ -72,11 +75,14 @@ export const blockingMode: Mode = (
   if (isActionable(axiumState, action)) {
     if (action.semaphore[2] === axiumState.generation && action.expiration > Date.now()) {
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
-      const state = concepts[action.semaphore[0]].state;
+      const state = {...concepts[action.semaphore[0]].state};
       const newState = reduce(state, action);
       if (newState !== null) {
-        concepts[action.semaphore[0]].state = newState;
-        axiumState.innerConcepts$.next(concepts);
+        const newConcepts = {...concepts};
+        const newConcept = {...newConcepts[action.semaphore[0]]};
+        newConcepts[action.semaphore[0]] = newConcept;
+        newConcepts[action.semaphore[0]].state = newState;
+        axiumState.innerConcepts$.next(newConcepts);
       }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {

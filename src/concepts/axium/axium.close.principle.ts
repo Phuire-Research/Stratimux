@@ -9,6 +9,7 @@ import { UnifiedSubject, createStage } from '../../model/stagePlanner';
 import { AxiumState } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
 import { Action } from '../../model/action';
+import { axiumSelectPrepareClose } from './axium.selector';
 /*<#*/
 export const axiumClosePrinciple: PrincipleFunction = (
   _: Subscriber<Action>,
@@ -28,7 +29,7 @@ export const axiumClosePrinciple: PrincipleFunction = (
         });
         plan.conclude();
       }
-    }),
+    }, [axiumSelectPrepareClose], Infinity),
     createStage(() => {
       //
     })

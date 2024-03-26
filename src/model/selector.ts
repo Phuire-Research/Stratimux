@@ -313,7 +313,7 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
   const length = conceptKeys.length;
   const select = (index: number): Concept | undefined => {
     const i = Number(conceptKeys[index]);
-    if (concepts[i].name === name) {
+    if (concepts[i] && concepts[i].name === name) {
       return concepts[i];
     } else if (index < length) {
       return select(index + 1);

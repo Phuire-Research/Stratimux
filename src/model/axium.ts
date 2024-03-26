@@ -136,7 +136,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
-      // console.log('CHECK ACTION STREAM', action);
+      console.log('CHECK ACTION STREAM', action.type, action.strategy?.actionList);
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);

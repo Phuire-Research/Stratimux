@@ -1,6 +1,6 @@
 import { createExperimentConcept } from '../../concepts/experiment/experiment.concept';
 import { experimentPriorityIsReadyQuality } from './qualities/isReady.quality';
-import { experimentPrioritySetValueQuality } from './qualities/setValue.quality';
+import { experimentPriorityAddValueQuality } from './qualities/addValue.quality';
 
 export type ExperimentPriorityState = {
   value: number;
@@ -13,7 +13,7 @@ export const createExperimentPriorityConcept = () => createExperimentConcept(
   createExperimentPriorityState(),
   [
     experimentPriorityIsReadyQuality,
-    experimentPrioritySetValueQuality
+    experimentPriorityAddValueQuality
   ],
   []
 );

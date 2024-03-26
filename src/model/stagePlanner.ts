@@ -15,6 +15,7 @@ import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { getAxiumState } from './axium';
+import { experimentName } from '../concepts/experiment/experiment.concept';
 
 export type Plan = {
   id: number;
@@ -228,7 +229,8 @@ const handleStageDelimiter =
   };
 
 export class UnifiedSubject extends Subject<Concepts> {
-  private planId = 0;
+  private planId = -1;
+  private toggle = false;
   private currentPlans: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
@@ -242,6 +244,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   // The above approach is enhanced by a onChange dict
   constructor() {
     super();
+    this.planId = 0;
   }
 
   protected createPriorityKey(planId: number, stage: number) {
@@ -286,7 +289,7 @@ export class UnifiedSubject extends Subject<Concepts> {
 
   plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
     const planId = this.planId;
-    this.planId++;
+    this.planId += 1;
     const staged: Staging[] = stages.map<Staging>(s => {
       return {
         stage: s.stage,
@@ -297,8 +300,8 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
     const plan: Plan = {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
     this.currentPlans.set(planId, plan);
-    this.manageQues();
     this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+    this.manageQues();
     const conclude = () => {
       this.deletePlan(planId);
     };
@@ -310,6 +313,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected deletePlan(planId: number) {
+    console.log('DELETE PLAN: ', planId);
     const plan = this.currentPlans.get(planId);
     if (plan) {
       this.currentPlans.delete(planId);
@@ -339,6 +343,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected assemblePriorityQue() {
     let prioritize = false;
     const priorityMap: typeof this.priorityExists = new Map();
+    const newList: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[] = [];
     for (const [_, plan] of this.currentPlans) {
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
@@ -353,31 +358,15 @@ export class UnifiedSubject extends Subject<Concepts> {
           stage: plan.stage,
           selectors,
         };
-        let added = false;
-        let newList: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[] = [];
-        for (const [i, slice] of this.priorityQue.entries()) {
-          if (slice.priority < priority && slice.planID !== entry.planID) {
-            const remainder = this.priorityQue.slice(i);
-            newList = [
-              ...newList,
-              entry,
-              ...remainder
-            ];
-            added = true;
-            break;
-          } else {
-            newList.push(slice);
-          }
-        }
-        if (!added) {
-          newList.push(entry);
-        }
-        this.priorityQue = newList;
+        newList.push(entry);
+        console.log('Priority List: ', newList);
         this.priorityExists.set(key, true);
       }
     }
     if (!prioritize) {
       this.priorityQue = [];
+    } else {
+      this.priorityQue = newList.sort((a, b) => b.priority - a.priority);
     }
     this.priorityExists = priorityMap;
     this.updateFrequencyMap();
@@ -386,7 +375,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected assembleGeneralQue() {
     const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
     for (const [_, plan] of this.currentPlans) {
-      console.log('CHECK PLAN', plan);
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
       if (priority === undefined) {
@@ -456,7 +444,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
-    // console.log('HIT', action, goodAction, run);
+    console.log('HIT', action, goodAction, run);
     this.stageDelimiters.set(plan.id, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;
@@ -490,7 +478,7 @@ export class UnifiedSubject extends Subject<Concepts> {
           next = options.setStage;
         }
         if (next !== -1) {
-          console.log('CHECK ERROR', plan);
+          console.log('CHECK ERROR', plan, next);
           // Don't like having to do this.
           // Double check this logic while writing the unit test.
           if (plan.stages[plan.stage]) {
@@ -519,6 +507,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       )) {
       plan.stageFailed = plan.stage;
       plan.stage = plan.stages.length;
+      console.log('DELETED PLAN: ', plan.id);
       const deleted = this.currentPlans.delete(plan.id);
       if (deleted) {
         axiumState.badPlans.push(plan);
@@ -527,10 +516,12 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected execute(plan: Plan, index: number): void {
+    console.log('EXECUTE PLAN', plan.id, index);
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, this.concepts, action, options);
     }).bind(this)();
+    // console.log('EXECUTE CHECK: ', plan.stages[index].stage.toString());
     plan.stages[index].stage(this.concepts, dispatcher);
   }
 
@@ -580,21 +571,31 @@ export class UnifiedSubject extends Subject<Concepts> {
     const notifyIds: Map<number, number> = new Map();
     for (const [_, slice] of this.selectors) {
       const {selector, ids} = slice;
-      const incoming = selector.selector(concepts);
-      const original = selector.selector(this.concepts);
       let notify = false;
       if (slice.selector.conceptName === ALL) {
         notify = true;
-      } else if (typeof incoming === 'object' && Object.is(incoming, original)) {
-        // stuff
-        notify = true;
-      } else if (incoming !== original) {
-        notify = true;
+      } else {
+        const incoming = select.slice(concepts, selector);
+        const original = select.slice(this.concepts, selector);
+        console.log('Incoming: ', incoming, selector.keys, 'Original: ', original, Object.is(this.concepts, concepts));
+        if (typeof incoming === 'object' && !Object.is(incoming, original)) {
+          // stuff
+          notify = true;
+        } else if (incoming !== original) {
+          notify = true;
+        }
       }
       if (notify) {
         ids.forEach(id => notifyIds.set(id, id));
       }
     }
+    // console.log(
+    //   'NOTIFY IDS: ', notifyIds,
+    //   '\nPLANS: ', this.currentPlans,
+    //   '\nPriority Que: ', this.priorityQue,
+    //   '\nGeneral Que: ', this.generalQue,
+    //   '\nSelectors: ',  this.selectors
+    // );
 
     this.concepts = concepts;
 
@@ -602,6 +603,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       const ready = notifyIds.has(p.planID);
       const plan = this.currentPlans.get(p.planID);
       if (plan && ready) {
+        console.log('PRIORITY NEXT PLAN: ', plan.id);
         this.nextPlan(plan as Plan);
       }
     }
@@ -609,6 +611,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       const ready = notifyIds.has(g);
       const plan = this.currentPlans.get(g);
       if (plan && ready) {
+        console.log('GENERAL NEXT PLAN: ', plan.id);
         this.nextPlan(plan as Plan);
       }
     }

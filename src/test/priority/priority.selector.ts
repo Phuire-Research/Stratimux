@@ -2,11 +2,12 @@
 For the graph programming framework Stratimux and a Experiment Priority Concept, generate both possible selectors
 $>*/
 /*<#*/
+import { experimentName } from '../../concepts/experiment/experiment.concept';
 import { KeyedSelector, createConceptKeyedSelector } from '../../model/selector';
 import { ExperimentPriorityState } from './priority.concept';
 
-export const experimentPriorityReadySelector: KeyedSelector = createConceptKeyedSelector<ExperimentPriorityState>('axium', 'ready');
+export const experimentPriorityReadySelector: KeyedSelector = createConceptKeyedSelector<ExperimentPriorityState>(experimentName, 'ready');
 
-export const experimentPriorityValueSelector: KeyedSelector = createConceptKeyedSelector<ExperimentPriorityState>('axium', 'value');
+export const experimentPriorityValueSelector: KeyedSelector = createConceptKeyedSelector<ExperimentPriorityState>(experimentName, 'value');
 
 /*#>*/

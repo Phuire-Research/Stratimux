@@ -11,7 +11,7 @@ import { StagePlanner, createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
 import { experimentPriorityIsReady } from './qualities/isReady.quality';
-import { experimentPrioritySetValue } from './qualities/setValue.quality';
+import { experimentPriorityAddValue } from './qualities/addValue.quality';
 
 test('Priority Test', (done) => {
   console.log('Priority Test');
@@ -42,7 +42,7 @@ test('Priority Test', (done) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     if (priorityState) {
       console.log(`${name} Priority Base Value: `, priorityState.value);
-      dispatch(experimentPrioritySetValue({newValue}), {
+      dispatch(experimentPriorityAddValue({newValue}), {
         iterateStage: true
       });
     }
@@ -93,5 +93,5 @@ test('Priority Test', (done) => {
   setTimeout(() => {
     priorityTest.dispatch(experimentPriorityIsReady());
   }, 1000);
-  priorityTest.subscribe(val => console.log('CHECK STATE: ', val)); });
+  priorityTest.subscribe(val => console.log('CHECK STATE: ', select.state(val, experimentName))); });
 /*#>*/
