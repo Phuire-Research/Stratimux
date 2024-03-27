@@ -297,7 +297,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   //   return this.initPlan(this.createPlan(title, stages, true, beat));
   // }
 
-  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
+  plan(title: string, stages: Staging[], beat?: number): StagePlanner {
     // [TODO Unify Streams]
     // return this.initPlan(this.createPlan(title, stages, false, beat));
     return this.initPlan(this.createPlan(title, stages, beat));
