@@ -28,19 +28,14 @@ export type dispatchOptions = {
   throttle?: number;
   setStep?: number;
   iterateStep?: boolean;
-  on?: {
-    selector: KeyedSelector,
-    expected: any
-  },
 }
 
 ```
-* dispatchOptions
+* **dispatchOptions**
 * runOnce - If enabled on the dispatch options, this will permit only one dispatch of that action within its stage.
 * throttle - Required to prevent the stage to be considered bad if rerunning the same action within the same stage, specific use case is tracking some position over time. If on is part of options, this will only come into play after that action is first dispatched.
 * incrementStage - Will increment to the next stage index, this should be your default option for dispatching actions or strategies to prevent action overflow.
 * setStage - This will set the stage to a specific stage index, useful if some strategy failed and the staging needs to be reset to prepare for that strategy again. This will always override iterateStage.
-* on - Simple handler that will prevent dispatch until the selected value is set to what is expected. Keep in mind this should also be occupied by a throttle, as this dispatch will run on each successful state update. This should be utilized alongside iterateStage, setStage, or throttle to prevent action overflow.
  
 ### Stage Planner Internals
 ```typescript

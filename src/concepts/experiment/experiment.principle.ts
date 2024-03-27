@@ -8,7 +8,7 @@ import { Subscriber } from 'rxjs';
 import { Action, primeAction } from '../../model/action';
 import { PrincipleFunction } from '../../model/principle';
 import { Concepts } from '../../model/concept';
-import { UnifiedSubject, createStage } from '../../model/stagePlanner';
+import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 import { selectUnifiedState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
@@ -22,15 +22,7 @@ export const experimentActionQuePrinciple: PrincipleFunction = (
 ) => {
   let readyToGo = false;
   const plan = concepts$.plan('Experiment Principle Plan', [
-    createStage((concepts, dispatch) => {
-      dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: plan})), {
-        on: {
-          selector: axiumSelectOpen,
-          expected: true,
-        },
-        iterateStage: true
-      });
-    }),
+    stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: plan}))),
     createStage((cpts, _) => {
       const concepts = cpts;
       const experimentState = selectUnifiedState<ExperimentState>(concepts, semaphore);

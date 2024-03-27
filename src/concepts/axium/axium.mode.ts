@@ -45,18 +45,12 @@ export const permissiveMode: Mode = (
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
         const state = {...concepts[action.semaphore[0]].state};
         const newState = reduce(state, action);
-        if (action.type === counterAdd().type) {
-          console.log('State: ', state, 'New State: ', newState, concepts[action.semaphore[0]].qualities[action.semaphore[1]]);
-        }
         if (newState !== null) {
           const newConcepts = {...concepts};
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
           newConcepts[action.semaphore[0]].state = newState;
 
-          if (action.type === counterAdd().type) {
-            console.log('Check new state: ', newConcepts[action.semaphore[0]].state);
-          }
           concepts$.next(newConcepts);
           axiumState.subConcepts$.next(newConcepts);
         }

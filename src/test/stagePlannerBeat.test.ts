@@ -8,7 +8,7 @@ This is a combination of throttle and debounce.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
-import { selectState } from '../model/selector';
+import { selectSlice, selectState } from '../model/selector';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
@@ -23,18 +23,16 @@ test('Stage Planner Beat Test', (done) => {
     createCounterConcept()
   ], true, true);
   const plan = axium.plan('Stage Planner Beat Test', [
-    createStage((___, dispatch) => {
+    createStage((concepts, dispatch) => {
       timerActive = true;
       setTimeout(() => {
         timerActive = false;
       }, 1000);
-      dispatch(axiumKick(), {
-        iterateStage: true,
-        on: {
-          selector: axiumSelectOpen,
-          expected: true
-        },
-      });
+      if (selectSlice(concepts, axiumSelectOpen)) {
+        dispatch(axiumKick(), {
+          iterateStage: true,
+        });
+      }
     }),
     createStage((___, dispatch) => {
       dispatch(counterAdd(), {

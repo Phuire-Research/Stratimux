@@ -112,9 +112,9 @@ export {
   DotPath
 } from './model/selector';
 export { PrincipleFunction, principle } from './model/principle';
-export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
 export { createActionController$, actionController } from './model/actionController';
-export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate } from './model/stagePlanner';
+export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
+export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
 
@@ -197,8 +197,9 @@ export { ChainState, chainName, createChainConcept } from './concepts/chain/chai
 export {
   chainDispatchActions,
   chainDispatchActionsType,
-  ChainDispatchActionsPayload
+  ChainDispatchActionsPayload,
 } from './concepts/chain/qualities/prepareChain.quality';
+export {chainEnd, chainEndType} from './concepts/chain/qualities/chainEnd.quality';
 
 // Ownership
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';

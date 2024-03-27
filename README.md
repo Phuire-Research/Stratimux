@@ -69,6 +69,14 @@ With this change, I will be able to call the underlying pattern a solution to wh
 
 What I am currently addressing is something that has always bothered me in other frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval functions with no looping quality.
 
+* **BREAKING** *Update 3/27/24*
+  * Removed the "on.expected" option from dispatch to reduce inner complexity of your stages
+  * Renamed axium.stage to axium.plan to be in line with industry terminology
+    * The new plan set up requires a Staging Entity or the return from the new createStage helper function
+    * This new entity enables you to change the priority in which your stages are informed per state change
+    * Likewise you may now assign each stage its own separate beat versus the entire plan
+    * This change trims the total plans that are checked per state, but may still supply plans that trigger on all changes via empty array in entity or outright ignoring the value field via the createStage function
+  * Updated StagePlanner documentation
 * *Update 3/05/24*
 Releasing a minor update so that Stratimux can be introduced into other frameworks, as the reality of the current release. It that it is ready in a limited scale such as a simple state machine. The main issue with the current approach is a back pressure becomes an issue at higher complexity and starts interfering with branch prediction.
 * *Update 12/28/23*  
