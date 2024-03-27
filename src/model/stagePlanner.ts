@@ -67,6 +67,9 @@ export type dispatchOptions = {
   iterateStage?: boolean;
   setStage?: number;
   throttle?: number;
+  newSelectors?: KeyedSelector[];
+  newPriority?: number;
+  newBeat?: number;
 }
 
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
@@ -196,6 +199,23 @@ const handleStageDelimiter =
       goodAction
     ];
   };
+
+const handleNewStageOptions = (plan: Plan, options: dispatchOptions): boolean => {
+  let evaluate = false;
+  if (options.newPriority) {
+    plan.stages[plan.stage].priority = options.newPriority;
+    evaluate = true;
+  }
+  if (options.newSelectors) {
+    plan.stages[plan.stage].selectors = options.newSelectors;
+    evaluate = true;
+  }
+  if (options.newBeat) {
+    plan.stages[plan.stage].beat = options.newBeat;
+    evaluate = true;
+  }
+  return evaluate;
+};
 
 export class UnifiedSubject extends Subject<Concepts> {
   private planId = -1;
@@ -504,6 +524,12 @@ export class UnifiedSubject extends Subject<Concepts> {
           stageDelimiter.runOnceMap = new Map();
           this.stageDelimiters.set(plan.id, stageDelimiter);
         }
+        const evaluate = handleNewStageOptions(plan, options);
+        if (evaluate && next === -1) {
+          this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
+          this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+          this.manageQues();
+        }
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
         if (plan.stageFailed === -1) {
@@ -538,6 +564,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
   }
 
+  // [TODO Update Stage Beat]
   protected nextPlan(plan: Plan, changes: KeyedSelector[]) {
     const index = plan.stage;
     if (index < plan.stages.length) {
