@@ -10,7 +10,6 @@ import { Action, ActionType, prepareActionCreator } from '../model/action';
 import { Subscriber } from 'rxjs';
 import { Concepts, createQuality } from '../model/concept';
 import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 
 type ExperimentState = {

@@ -28,9 +28,9 @@ test('Priority Test', (done) => {
     createExperimentPriorityConcept()
   ], true, true);
 
-  const firstStage = (name: string, priority: number) => createStage((concepts, dispatch) => {
+  const firstStage = (name: string, priority: number) => createStage((concepts, dispatch, changes) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
-    console.log('HIT: ', name);
+    console.log('HIT: ', name, changes);
     if (priorityState?.ready) {
       console.log(`${name} Priority BEGIN`);
       dispatch(axiumKick(), {

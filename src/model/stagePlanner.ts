@@ -29,9 +29,11 @@ export type Plan = {
   timer: NodeJS.Timeout[]
 }
 
-export type Stage = (concepts: Concepts,
-    dispatch: (action: Action, options: dispatchOptions) => void
-  ) => void;
+export type Stage = (
+  concepts: Concepts,
+  dispatch: (action: Action, options: dispatchOptions, ) => void,
+  changes?: KeyedSelector[]
+) => void;
 
 export type Staging = {
   stage: Stage;
@@ -365,6 +367,7 @@ export class UnifiedSubject extends Subject<Concepts> {
 
   protected assembleGeneralQues() {
     const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
+    // [TODO Unify Streams]
     // const outerMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
     for (const [_, plan] of this.currentPlans) {
       const map = generalMap;
@@ -445,7 +448,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected _dispatch(
     axiumState: AxiumState,
     plan: Plan,
-    value: Concepts,
     action: Action,
     options: dispatchOptions): void {
     let stageDelimiter = this.stageDelimiters.get(plan.id);
@@ -522,21 +524,21 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected execute(plan: Plan, index: number): void {
+  protected execute(plan: Plan, index: number, changes: KeyedSelector[]): void {
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
-      this._dispatch(axiumState, plan, this.concepts, action, options);
+      this._dispatch(axiumState, plan, action, options);
     }).bind(this)();
-    plan.stages[index].stage(this.concepts, dispatcher);
+    plan.stages[index].stage(this.concepts, dispatcher, changes);
   }
 
   protected nextPlans() {
     this.currentPlans.forEach(plan => {
-      this.nextPlan(plan);
+      this.nextPlan(plan, []);
     });
   }
 
-  protected nextPlan(plan: Plan) {
+  protected nextPlan(plan: Plan, changes: KeyedSelector[]) {
     const index = plan.stage;
     if (index < plan.stages.length) {
       const timer = plan.timer;
@@ -544,16 +546,16 @@ export class UnifiedSubject extends Subject<Concepts> {
       if (plan.beat > -1) {
         if (plan.offBeat < now) {
           plan.offBeat = Date.now() + plan.beat;
-          this.execute(plan, index);
+          this.execute(plan, index, changes);
         } else if (timer.length === 0 && plan.offBeat > now) {
           timer.push(setTimeout(() => {
             plan.timer = [];
             plan.offBeat = Date.now() + plan.beat;
-            this.execute(plan, index);
+            this.execute(plan, index, changes);
           }, plan.offBeat - Date.now()));
         }
       } else {
-        this.execute(plan, index);
+        this.execute(plan, index, changes);
       }
     }
   }
@@ -573,7 +575,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected handleChange(concepts: Concepts) {
-    const notifyIds: Map<number, number> = new Map();
+    const notifyIds: Map<number, KeyedSelector[]> = new Map();
     for (const [_, slice] of this.selectors) {
       const {selector, ids} = slice;
       let notify = false;
@@ -590,17 +592,26 @@ export class UnifiedSubject extends Subject<Concepts> {
         }
       }
       if (notify) {
-        ids.forEach(id => notifyIds.set(id, id));
+        ids.forEach(id => {
+          const n = notifyIds.get(id);
+          if (n && selector.conceptName !== ALL) {
+            n.push(selector);
+          } else if (selector.conceptName !== ALL) {
+            notifyIds.set(id, [selector]);
+          } else {
+            notifyIds.set(id, []);
+          }
+        });
       }
     }
 
     this.concepts = concepts;
 
     const notification = (id: number) => {
-      const ready = notifyIds.has(id);
+      const ready = notifyIds.get(id);
       const plan = this.currentPlans.get(id);
-      if (plan && ready) {
-        this.nextPlan(plan as Plan);
+      if (plan && ready !== undefined) {
+        this.nextPlan(plan as Plan, ready);
       }
     };
 

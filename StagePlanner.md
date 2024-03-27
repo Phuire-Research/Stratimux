@@ -40,9 +40,13 @@ export type dispatchOptions = {
 ### Stage Planner Internals
 ```typescript
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
-export type Stage = (concepts: Concepts,
-    dispatch: (action: Action, options: dispatchOptions) => void
-  ) => void;
+
+export type Stage = (
+  concepts: Concepts,
+  dispatch: (action: Action, options: dispatchOptions, ) => void,
+  changes?: KeyedSelector[]
+) => void;
+
 export type Staging = {
   stage: Stage;
   selectors: KeyedSelector[];
@@ -70,9 +74,12 @@ export class UnifiedSubject extends Subject<Concepts> {
 }
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
-* Staging - The interface that you will be interacting with when setting up your stages, noting placement of concepts and the dispatch function.
+* Staging - A functional interface that informs input and output of each stage in your plan.
+  * **concepts** The most recent concepts
+  * **dispatch** Use to dispatch new actions and strategies into your axium
+  * **changes** - Informs which properties of the supplied KeyedSelectors for the current stage have changed.
 * createStage - Helper function that guides assembly of a Staging entity
-* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of PartialStaging.
+* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
 
 ## Example
 ```typescript
