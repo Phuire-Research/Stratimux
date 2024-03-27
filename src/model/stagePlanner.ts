@@ -313,7 +313,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected deletePlan(planId: number) {
-    console.log('DELETE PLAN: ', this.currentPlans.get(planId));
     const plan = this.currentPlans.get(planId);
     if (plan) {
       this.currentPlans.delete(planId);
@@ -363,7 +362,6 @@ export class UnifiedSubject extends Subject<Concepts> {
           selectors,
         };
         newList.push(entry);
-        console.log('Priority List: ', newList);
         this.priorityExists.set(key, true);
       }
     }
@@ -428,7 +426,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     flat.sort((a, b) => b[1] - a[1]);
     // We should add a selector union
     this.generalQue = flat.map(([id, _]) => id);
-    console.log('CHECK: ', planIdMap, flat, this.generalQue);
   }
 
   protected manageQues() {
@@ -448,7 +445,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     let run = true;
     [stageDelimiter, goodAction] = handleStageDelimiter(plan, action, stageDelimiter, options);
     [stageDelimiter, run] = handleRun(value, stageDelimiter, plan, action, options);
-    console.log('HIT', action, goodAction, run);
     this.stageDelimiters.set(plan.id, stageDelimiter);
     if (goodAction && run) {
       const action$ = axiumState.action$ as Subject<Action>;
@@ -482,7 +478,6 @@ export class UnifiedSubject extends Subject<Concepts> {
           next = options.setStage;
         }
         if (next !== -1) {
-          console.log('CHECK ERROR', plan, next);
           // Don't like having to do this.
           // Double check this logic while writing the unit test.
           if (plan.stages[plan.stage]) {
@@ -520,12 +515,10 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected execute(plan: Plan, index: number): void {
-    console.log('EXECUTE PLAN', plan.id, index);
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, this.concepts, action, options);
     }).bind(this)();
-    // console.log('EXECUTE CHECK: ', plan.stages[index].stage.toString());
     plan.stages[index].stage(this.concepts, dispatcher);
   }
 
@@ -581,7 +574,6 @@ export class UnifiedSubject extends Subject<Concepts> {
       } else {
         const incoming = select.slice(concepts, selector);
         const original = select.slice(this.concepts, selector);
-        console.log('Incoming: ', incoming, selector.keys, 'Original: ', original, Object.is(this.concepts, concepts));
         if (typeof incoming === 'object' && !Object.is(incoming, original)) {
           // stuff
           notify = true;
@@ -593,13 +585,6 @@ export class UnifiedSubject extends Subject<Concepts> {
         ids.forEach(id => notifyIds.set(id, id));
       }
     }
-    // console.log(
-    //   'NOTIFY IDS: ', notifyIds,
-    //   '\nPLANS: ', this.currentPlans,
-    //   '\nPriority Que: ', this.priorityQue,
-    //   '\nGeneral Que: ', this.generalQue,
-    //   '\nSelectors: ',  this.selectors
-    // );
 
     this.concepts = concepts;
 
@@ -607,7 +592,6 @@ export class UnifiedSubject extends Subject<Concepts> {
       const ready = notifyIds.has(p.planID);
       const plan = this.currentPlans.get(p.planID);
       if (plan && ready) {
-        console.log('PRIORITY NEXT PLAN: ', plan.id);
         this.nextPlan(plan as Plan);
       }
     }
@@ -615,7 +599,6 @@ export class UnifiedSubject extends Subject<Concepts> {
       const ready = notifyIds.has(g);
       const plan = this.currentPlans.get(g);
       if (plan && ready) {
-        console.log('GENERAL NEXT PLAN: ', plan.id);
         this.nextPlan(plan as Plan);
       }
     }
@@ -631,7 +614,6 @@ export class UnifiedSubject extends Subject<Concepts> {
       // Need a Stage Observer that would merely deconstruct to {concepts: Concepts , dispatch: Dispatcher}
       // Where Dispatcher would be (action$: Subject<Action>) => {}();
 
-      // Next up to do: Add back in ALL option.
       this.handleChange(concepts);
       this.nextSubs();
     }
