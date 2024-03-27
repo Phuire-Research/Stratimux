@@ -513,6 +513,7 @@ export class UnifiedSubject extends Subject<Concepts> {
           // Double check this logic while writing the unit test.
           if (plan.stages[plan.stage]) {
             this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
+            handleNewStageOptions(plan, options);
           }
           plan.stage = next;
           this.manageQues();

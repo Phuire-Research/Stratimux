@@ -6,9 +6,12 @@ $>*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
 import { createAxium } from '../../model/axium';
 import { createStage } from '../../model/stagePlanner';
-import { KeyedSelector } from '../../model/selector';
+import { KeyedSelector, selectSlice } from '../../model/selector';
 import { planOptionsSelect } from './newPlanOptions.selectors';
 import { experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
+import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
+import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
+import { experimentPlanOptionsReadySelector } from './priority.selector';
 
 test('New Plan Options Selector Test', (done) => {
   const planNewStageSelectors = createAxium('Plan New Stage Selectors Test', [
@@ -16,7 +19,7 @@ test('New Plan Options Selector Test', (done) => {
   ]);
   let count = 0;
   const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', [
-    createStage((_, dispatch, changes) => {
+    createStage((concepts, dispatch, changes) => {
       // First run will be all
       const selectors: KeyedSelector[] = [];
       let final = false;
@@ -91,5 +94,116 @@ test('New Plan Options Selector Test', (done) => {
       }, 50);
     })
   ]);
+});
+
+test('New Plan Options Priority Test', (done) => {
+  const planNewStagePriority = createAxium('Plan New Stage Priority Test', [
+    createExperimentPlanOptionsConcept()
+  ]);
+  let count = 0;
+  let planOneCount = 0;
+  const planOne = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+    createStage((concepts, dispatch) => {
+      if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
+        console.log('Plan 1 Count: ', count, planOneCount);
+        if (planOneCount === 0) {
+          planOneCount++;
+          count++;
+          expect(count).toBe(1);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 100,
+          }), {
+            throttle: 0,
+            newPriority: 2
+          });
+        } else {
+          planOneCount++;
+          count++;
+          expect(count).toBe(6);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 100,
+          }), {
+            throttle: 0,
+            iterateStage: true,
+          });
+        }
+      }
+    }, undefined, 100),
+    createStage(() => {
+      planOne.conclude();
+      setTimeout(() => {
+        console.log('Test Conclude');
+        planNewStagePriority.close();
+        done();
+      }, 100);
+    })
+  ]);
+
+  let planTwoCount = 0;
+  const planTwo = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+    createStage((concepts, dispatch) => {
+      if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
+        console.log('Plan 2 Count: ', count, planTwoCount);
+        if (planTwoCount === 0) {
+          planTwoCount++;
+          count++;
+          expect(count).toBe(2);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 50,
+          }), {
+            throttle: 0,
+            newPriority: 3
+          });
+        } else {
+          planTwoCount++;
+          count++;
+          expect(count).toBe(5);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 50,
+          }), {
+            throttle: 0,
+            iterateStage: true
+          });
+        }
+      }
+    }, undefined, 50),
+    createStage(() => {
+      planTwo.conclude();
+    })
+  ]);
+
+  let planThreeCount = 0;
+  const planThree = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+    createStage((concepts, dispatch) => {
+      if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
+        console.log('Plan 3 Count: ', count, planThreeCount);
+        if (planThreeCount === 0) {
+          planThreeCount++;
+          count++;
+          expect(count).toBe(3);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 50,
+          }), {
+            throttle: 0,
+            newPriority: 5
+          });
+        } else {
+          planThreeCount++;
+          count++;
+          expect(count).toBe(4);
+          dispatch(experimentPlanOptionsAddValue({
+            newValue: 50,
+          }), {
+            throttle: 0,
+            iterateStage: true
+          });
+        }
+      }
+    }, undefined, 5),
+    createStage(() => {
+      planThree.conclude();
+    })
+  ]);
+  planNewStagePriority.dispatch(experimentPlanOptionsIsReady());
 });
 /*#>*/
