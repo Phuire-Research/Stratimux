@@ -99,6 +99,7 @@ test('New Plan Options Selector Test', (done) => {
 // [TESTING NOTE]
 // Interesting note about this test and jest, if the expect doesn't line up, the underlying implementation fowls up the processing order,
 // As if you set the tests to explicitly fail, the third stage will repeat over and over again despite the iterateStage...
+// This is a non-trivial example of an abstraction leaking an implementation detail towards the handling of expect in jest.
 test('New Plan Options Priority Test', (done) => {
   const planNewStagePriority = createAxium('Plan New Stage Priority Test', [
     createExperimentPlanOptionsConcept()
