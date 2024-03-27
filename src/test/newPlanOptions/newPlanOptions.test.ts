@@ -19,7 +19,7 @@ test('New Plan Options Selector Test', (done) => {
   ]);
   let count = 0;
   const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', [
-    createStage((concepts, dispatch, changes) => {
+    createStage((_, dispatch, changes) => {
       // First run will be all
       const selectors: KeyedSelector[] = [];
       let final = false;
@@ -96,6 +96,9 @@ test('New Plan Options Selector Test', (done) => {
   ]);
 });
 
+// [TESTING NOTE]
+// Interesting note about this test and jest, if the expect doesn't line up, the underlying implementation fowls up the processing order,
+// As if you set the tests to explicitly fail, the third stage will repeat over and over again despite the iterateStage...
 test('New Plan Options Priority Test', (done) => {
   const planNewStagePriority = createAxium('Plan New Stage Priority Test', [
     createExperimentPlanOptionsConcept()
