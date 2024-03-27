@@ -45,17 +45,39 @@ export type dispatchOptions = {
 ### Stage Planner Internals
 ```typescript
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
-export type Staging = (
-  concepts: Concepts,
-  dispatch: (action: Action, options: dispatchOptions) => void
-) => void;
+export type Stage = (concepts: Concepts,
+    dispatch: (action: Action, options: dispatchOptions) => void
+  ) => void;
+export type Staging = {
+  stage: Stage;
+  selectors: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
+export type PartialStaging = {
+  stage: Stage;
+  selectors?: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
+
+export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?: number, beat?: number): Staging => {
+  return {
+    stage,
+    selectors: selector ? selector : [],
+    priority,
+    beat
+  };
+};
+
 export class UnifiedSubject extends Subject<Concepts> {
-  stage(title: string, stages: Staging[]) {}
+  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {}
 }
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - The interface that you will be interacting with when setting up your stages, noting placement of concepts and the dispatch function.
-* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of functions even with just one stage.
+* createStage - Helper function that guides assembly of a Staging entity
+* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of PartialStaging.
 
 ## Example
 ```typescript
@@ -65,26 +87,27 @@ const sub = axium.subscribe((concepts) => {
   const axiumState = concepts[0].state as AxiumState;
   if (axiumState.badPlans.length > 0) {
     const badPlan = axiumState.badPlans[0];
-    const counter = selectState<Counter>(concepts, counterName);
-    console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter.count);
+    const counter = selectState<CounterState>(concepts, counterName);
+    console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter?.count);
     plan.conclude();
     sub.unsubscribe();
     expect(badPlan.stageFailed).toBe(2);
-    expect(counter.count).toBe(2);
+    expect(counter?.count).toBe(2);
     setTimeout(() => {done();}, 500);
   }
 });
 const plan = axium.plan('Stage DispatchOptions Test',
   [
-    (concepts, dispatch) => {
-      const counter = selectState<Counter>(concepts, counterName);
+    createStage((concepts, dispatch) => {
+      const counter = selectState<CounterState>(concepts, counterName);
       console.log('Stage 1 ', counter, runCount);
       dispatch(counterAdd(), {
         iterateStage: true
       });
-    }, (concepts, dispatch) => {
+    }),
+    createStage((concepts, dispatch) => {
       runCount++;
-      const counter = selectState<Counter>(concepts, counterName);
+      const counter = selectState<CounterState>(concepts, counterName);
       console.log('Stage 2 ', counter, runCount);
       // Sets count to 2 and only runs once per state update
       dispatch(counterAdd(), {
@@ -101,11 +124,12 @@ const plan = axium.plan('Stage DispatchOptions Test',
         throttle: 1
       });
       // }
-    }, (concepts, dispatch) => {
+    }),
+    createStage((concepts, dispatch) => {
       runCount++;
-      const counter = selectState<Counter>(concepts, counterName);
+      const counter = selectState<CounterState>(concepts, counterName);
       console.log('Should run twice, Stage 3 ', counter, runCount);
-      // Will cause an action overflow forcing the current stage to conclude and add the plan to badPlans
+      // Will cause an action overflow forcing the stage to close and add itself to badPlans
       dispatch(counterSubtract(), {
         // Enabling will cause this test to timeout via the subscription watching for badPlans to never be ran.
         // throttle: 500
@@ -117,7 +141,7 @@ const plan = axium.plan('Stage DispatchOptions Test',
         'Will also run twice. 1st will be before "Stage Ran Away,"',
         'and after "Should run twice." The 2nd will be final console log output.'
       );
-    }
+    })
   ]);
 ```
 To prevent action overflow, each stage is paying attention to consecutive actions of the same type. Noting that this can likewise be overwhelmed via a throttle set to 0. If throttle 0 is utilized, the current stage should change.
@@ -132,17 +156,17 @@ Lastly, in an action overflow state, sequentially the overflow will call the sam
 Stratimux is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
 ```typescript
 const plan = concept$.plan('Principle Stage Example', [
-  (___, dispatch) => {
-    dispatch(someAction(), {
-      iterateStage: true,
-      on: {
-        selector: axiumSelectOpen,
-        expected: true
-      },
-    });
-  },
-  (concepts, dispatch) => {
+  createStage((concepts, dispatch) => {
+    // If axium is currently open
+    if (select.slice(concepts, axiumSelectOpen)) {
+      dispatch(someAction(), {
+        iterateStage: true,
+      });
+    }
+  // Plan will only run if the open property on the main axium concept has changed.
+  }, [axiumSelectOpen]),
+  createStage((concepts, dispatch) => {
     // Your principle's run time logic.
-  }
+  })
 ]);
 ```
