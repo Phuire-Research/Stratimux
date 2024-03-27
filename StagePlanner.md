@@ -75,8 +75,8 @@ export class UnifiedSubject extends Subject<Concepts> {
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - A functional interface that informs input and output of each stage in your plan.
-  * **concepts** The most recent concepts
-  * **dispatch** Use to dispatch new actions and strategies into your axium
+  * **concepts** - The most recent concepts
+  * **dispatch** - Use to dispatch new actions and strategies into your axium
   * **changes** - Informs which properties of the supplied KeyedSelectors for the current stage have changed.
 * createStage - Helper function that guides assembly of a Staging entity
 * UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
@@ -116,15 +116,13 @@ const plan = axium.plan('Stage DispatchOptions Test',
         runOnce: true
       });
       // Will wait until count is set to 2, then set the Stage Explicitly to the third Step counting from 0.
-      dispatch(counterAdd(), {
-        setStage: 2,
-        on: {
-          selector: counterSelectCount,
-          expected: 2
-        },
-        // Requires throttle, because the previous action is of the same type, but runs only once.
-        throttle: 1
-      });
+      if (selectSlice(concepts, counterSelectCount) === 2) {
+        dispatch(counterAdd(), {
+          setStage: 2,
+          // Requires throttle, because the previous action is of the same type, but runs only once.
+          throttle: 1
+        });
+      }
       // }
     }),
     createStage((concepts, dispatch) => {
