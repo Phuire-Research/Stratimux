@@ -14,11 +14,12 @@ import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from '
 import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { getAxiumState } from './axium';
+import { axium, getAxiumState } from './axium';
 import { experimentName } from '../concepts/experiment/experiment.concept';
 
 export type Plan = {
   id: number;
+  outer: boolean;
   title: string;
   stages: Staging[],
   stage: number;
@@ -46,14 +47,14 @@ export type PartialStaging = {
   beat?: number,
 };
 
-export type NamedStagePlanner = {
-  name: string;
+export type StagePlanner = {
   title: string;
   planId: number;
   conclude: () => void;
 }
 
-export type StagePlanner = {
+export type NamedStagePlanner = {
+  name: string;
   title: string;
   planId: number;
   conclude: () => void;
@@ -230,7 +231,6 @@ const handleStageDelimiter =
 
 export class UnifiedSubject extends Subject<Concepts> {
   private planId = -1;
-  private toggle = false;
   private currentPlans: Map<number, Plan> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
@@ -241,6 +241,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   private selectors: Map<string, {selector: KeyedSelector, ids: number[]}> = new Map();
   // Assemble back of line, exempts priority que members
   private generalQue: number[] = [];
+  private outerQue: number[] = [];
   // The above approach is enhanced by a onChange dict
   constructor() {
     super();
@@ -287,7 +288,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
+  protected createPlan(title: string, stages: PartialStaging[], outer: boolean, beat?: number): Plan {
     const planId = this.planId;
     this.planId += 1;
     const staged: Staging[] = stages.map<Staging>(s => {
@@ -298,18 +299,29 @@ export class UnifiedSubject extends Subject<Concepts> {
         beat: s.beat
       };
     });
-    const plan: Plan = {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
-    this.currentPlans.set(planId, plan);
+    return {id: planId, outer, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+  }
+
+  protected initPlan(plan: Plan): StagePlanner {
+    this.currentPlans.set(plan.id, plan);
     this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
     this.manageQues();
     const conclude = () => {
-      this.deletePlan(planId);
+      this.deletePlan(plan.id);
     };
     return {
-      title: title,
-      planId: planId,
+      title: plan.title,
+      planId: plan.id,
       conclude: conclude.bind(this)
     };
+  }
+
+  outerPlan(title: string, stages: PartialStaging[], beat?: number) {
+    return this.initPlan(this.createPlan(title, stages, true, beat));
+  }
+
+  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {
+    return this.initPlan(this.createPlan(title, stages, false, beat));
   }
 
   protected deletePlan(planId: number) {
@@ -374,25 +386,30 @@ export class UnifiedSubject extends Subject<Concepts> {
     this.updateFrequencyMap();
   }
 
-  protected assembleGeneralQue() {
+  protected assembleGeneralQues() {
     const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
+    const outerMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
     for (const [_, plan] of this.currentPlans) {
+      let map = generalMap;
+      if (plan.outer) {
+        map = outerMap;
+      }
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
       if (priority === undefined) {
-        const prepareGeneralMap = (selector: KeyedSelector) => {
+        const prepareMap = (selector: KeyedSelector) => {
           const entry = generalMap.get(selector.keys);
           const frequency = this.frequencyMap.get(selector.keys);
           if (entry) {
             entry.planIDs.push(plan.id);
           } else if (frequency) {
-            generalMap.set(selector.keys, {
+            map.set(selector.keys, {
               planIDs: [plan.id],
               priorityAggregate: frequency,
               selector: selector
             });
           } else {
-            generalMap.set(selector.keys, {
+            map.set(selector.keys, {
               planIDs: [plan.id],
               priorityAggregate: 0,
               selector: selector
@@ -400,37 +417,48 @@ export class UnifiedSubject extends Subject<Concepts> {
           }
         };
         if (stage.selectors.length === 0) {
-          prepareGeneralMap(createConceptKeyedSelector(ALL, ALL));
+          prepareMap(createConceptKeyedSelector(ALL, ALL));
         } else {
           for (const selector of stage.selectors) {
-            prepareGeneralMap(selector);
+            prepareMap(selector);
           }
         }
       }
     }
-    const planIdMap: Map<number, number> = new Map();
-    for (const [_, slice] of generalMap.entries()) {
+    const generalIdMap: Map<number, number> = new Map();
+    const outerIdMap: Map<number, number> = new Map();
+    const handleSlice = (slice: {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}, map: Map<number, number>) => {
       slice.planIDs.forEach(id => {
-        const priority = planIdMap.get(id);
+        const priority = map.get(id);
         if (priority) {
-          planIdMap.set(id, priority + slice.priorityAggregate);
+          map.set(id, priority + slice.priorityAggregate);
         } else {
-          planIdMap.set(id, slice.priorityAggregate);
+          map.set(id, slice.priorityAggregate);
         }
       });
-    }
-    const flat = [];
-    for (const [id, frequency] of planIdMap.entries()) {
-      flat.push([id, frequency]);
-    }
-    flat.sort((a, b) => b[1] - a[1]);
-    // We should add a selector union
-    this.generalQue = flat.map(([id, _]) => id);
+    };
+    generalMap.forEach((slice) => {
+      handleSlice(slice, generalIdMap);
+    });
+    outerMap.forEach((slice) => {
+      handleSlice(slice, outerIdMap);
+    });
+    const flatten = (map: Map<number, number>) => {
+      const flat = [];
+      for (const [id, frequency] of map.entries()) {
+        flat.push([id, frequency]);
+      }
+      flat.sort((a, b) => b[1] - a[1]);
+      // We should add a selector union
+      return flat.map(([id, _]) => id);
+    };
+    this.generalQue = flatten(generalIdMap);
+    this.outerQue = flatten(outerIdMap);
   }
 
   protected manageQues() {
     this.assemblePriorityQue();
-    this.assembleGeneralQue();
+    this.assembleGeneralQues();
   }
 
   protected _dispatch(
@@ -588,18 +616,23 @@ export class UnifiedSubject extends Subject<Concepts> {
 
     this.concepts = concepts;
 
-    for (const p of this.priorityQue) {
-      const ready = notifyIds.has(p.planID);
-      const plan = this.currentPlans.get(p.planID);
+    const notification = (id: number) => {
+      const ready = notifyIds.has(id);
+      const plan = this.currentPlans.get(id);
       if (plan && ready) {
         this.nextPlan(plan as Plan);
       }
+    };
+
+    for (const p of this.priorityQue) {
+      notification(p.planID);
     }
     for (const g of this.generalQue) {
-      const ready = notifyIds.has(g);
-      const plan = this.currentPlans.get(g);
-      if (plan && ready) {
-        this.nextPlan(plan as Plan);
+      notification(g);
+    }
+    if (axium.isOpen(concepts)) {
+      for (const o of this.outerQue) {
+        notification(o);
       }
     }
   }

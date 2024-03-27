@@ -183,8 +183,11 @@ export type Axium = {
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);
 
+export const isAxiumOpen = (concepts: Concepts) => ((concepts[0].state as AxiumState).open);
+
 export const axium = ({
   create: createAxium,
-  getState: getAxiumState
+  getState: getAxiumState,
+  isOpen: isAxiumOpen
 });
 /*#>*/
