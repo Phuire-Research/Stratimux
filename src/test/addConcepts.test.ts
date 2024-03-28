@@ -43,7 +43,7 @@ test('Axium add Concepts Strategy Test', (done) => {
           }
         });
       }
-    }, [axiumSelectOpen]),
+    }, { selectors: [axiumSelectOpen] }),
     createStage((concepts) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);

@@ -132,7 +132,7 @@ test('New Plan Options Priority Test', (done) => {
           });
         }
       }
-    }, undefined, 100),
+    }, { priority: 100 }),
     createStage(() => {
       planOne.conclude();
       setTimeout(() => {
@@ -170,7 +170,7 @@ test('New Plan Options Priority Test', (done) => {
           });
         }
       }
-    }, undefined, 50),
+    }, { priority: 50 }),
     createStage(() => {
       planTwo.conclude();
     })
@@ -203,7 +203,7 @@ test('New Plan Options Priority Test', (done) => {
           });
         }
       }
-    }, undefined, 5),
+    }, { priority: 5 }),
     createStage(() => {
       planThree.conclude();
     })

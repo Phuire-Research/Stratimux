@@ -90,7 +90,7 @@ export const axiumPrinciple: PrincipleFunction = (
           throttle: 50
         });
       }
-    }, [axiumSelectAddConceptQue], Infinity - 1),
+    }, { selectors: [axiumSelectAddConceptQue], priority: Infinity - 1}),
   ]);
 
   const removeConceptsPlan = concepts$.plan('Remove Concepts Plan', [
@@ -171,7 +171,7 @@ export const axiumPrinciple: PrincipleFunction = (
           throttle: 50
         });
       }
-    }, [axiumSelectRemoveConceptQue], Infinity - 2)
+    }, { selectors: [axiumSelectRemoveConceptQue], priority: Infinity - 2})
   ]);
   observer.next(strategy.begin(strategy.create({
     topic: 'Register Axium Add/Remove Plans',

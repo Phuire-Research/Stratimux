@@ -29,7 +29,7 @@ export const axiumClosePrinciple: PrincipleFunction = (
         });
         plan.conclude();
       }
-    }, [axiumSelectPrepareClose], Infinity),
+    }, { selectors: [axiumSelectPrepareClose], priority: Infinity}),
     createStage(() => {
       //
     })

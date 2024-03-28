@@ -37,7 +37,7 @@ test('Priority Test', (done) => {
         iterateStage: true
       });
     }
-  }, [experimentPriorityReadySelector], priority);
+  }, {selectors: [experimentPriorityReadySelector], priority});
   const secondStage = (name: string, newValue: number, priority: number) => createStage((concepts, dispatch) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     if (priorityState) {
@@ -46,7 +46,7 @@ test('Priority Test', (done) => {
         iterateStage: true
       });
     }
-  }, undefined, priority);
+  }, {priority});
   const thirdStage = (name: string, expected: number, priority: number) => createStage((concepts, dispatch) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     if (priorityState) {
@@ -56,7 +56,7 @@ test('Priority Test', (done) => {
         iterateStage: true
       });
     }
-  }, [experimentPriorityValueSelector], priority);
+  }, {selectors: [experimentPriorityValueSelector], priority});
   const concludePlan = (name: string, func: () => StagePlanner) => createStage(() => {
     console.log(`${name} Priority END`);
     func().conclude();

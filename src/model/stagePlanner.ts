@@ -87,7 +87,7 @@ export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (cre
       iterateStage: true
     });
   }
-}, [axiumSelectOpen]));
+}, { selectors: [axiumSelectOpen] }));
 
 export const stageWaitForOwnershipThenIterate =
   (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
@@ -96,7 +96,7 @@ export const stageWaitForOwnershipThenIterate =
         iterateStage: true
       });
     }
-  }, [ownershipSelectInitialized]));
+  }, { selectors: [ownershipSelectInitialized] }));
 
 /**
  * Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
@@ -106,13 +106,20 @@ export const stageWaitForOwnershipThenIterate =
  * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
  * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
  */
-export const createStage = (stage: Stage, selectors?: KeyedSelector[], priority?: number, beat?: number): Staging => {
-  return {
-    stage,
-    selectors: selectors ? selectors : [],
-    priority,
-    beat
-  };
+export const createStage = (stage: Stage, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging => {
+  if (options) {
+    return {
+      stage,
+      selectors: options.selectors ? options.selectors : [],
+      priority: options.priority,
+      beat: options.beat
+    };
+  } else {
+    return {
+      stage,
+      selectors: []
+    };
+  }
 };
 
 // Token to denote ALL, using a selector that utilizes this token should return undefined
@@ -200,7 +207,7 @@ const handleStageDelimiter =
     ];
   };
 
-const handleNewStageOptions = (plan: Plan, options: dispatchOptions): boolean => {
+const handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
   let evaluate = false;
   if (options.newPriority) {
     plan.stages[plan.stage].priority = options.newPriority;
@@ -212,6 +219,9 @@ const handleNewStageOptions = (plan: Plan, options: dispatchOptions): boolean =>
   }
   if (options.newBeat) {
     plan.stages[plan.stage].beat = options.newBeat;
+    if (next === -1) {
+      plan.beat = options.newBeat;
+    }
     evaluate = true;
   }
   return evaluate;
@@ -280,7 +290,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan(title: string, stages: PartialStaging[], beat?: number): Plan {
+  protected createPlan(title: string, stages: PartialStaging[]): Plan {
   // [TODO Unify Streams]
   // protected createPlan(title: string, stages: PartialStaging[], outer: boolean, beat?: number): Plan {
     const planId = this.planId;
@@ -293,7 +303,8 @@ export class UnifiedSubject extends Subject<Concepts> {
         beat: s.beat
       };
     });
-    return {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    const beat = staged[0].beat;
+    return {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat !== undefined ? beat : -1, offBeat: -1, timer: []};
     // [TODO Unify Streams]
     // return {id: planId, outer, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
   }
@@ -317,10 +328,10 @@ export class UnifiedSubject extends Subject<Concepts> {
   //   return this.initPlan(this.createPlan(title, stages, true, beat));
   // }
 
-  plan(title: string, stages: Staging[], beat?: number): StagePlanner {
+  plan(title: string, stages: Staging[]): StagePlanner {
     // [TODO Unify Streams]
     // return this.initPlan(this.createPlan(title, stages, false, beat));
-    return this.initPlan(this.createPlan(title, stages, beat));
+    return this.initPlan(this.createPlan(title, stages));
   }
 
   protected deletePlan(planId: number) {
@@ -513,19 +524,20 @@ export class UnifiedSubject extends Subject<Concepts> {
           // Double check this logic while writing the unit test.
           if (plan.stages[plan.stage]) {
             this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
-            handleNewStageOptions(plan, options);
           }
           plan.stage = next;
           this.manageQues();
           if (plan.stages[plan.stage]) {
             this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
           }
+          const beat = plan.stages[plan.stage].beat;
+          plan.beat = beat !== undefined ? beat : -1;
           stageDelimiter.prevActions = [];
           stageDelimiter.unionExpiration = [];
           stageDelimiter.runOnceMap = new Map();
           this.stageDelimiters.set(plan.id, stageDelimiter);
         }
-        const evaluate = handleNewStageOptions(plan, options);
+        const evaluate = handleNewStageOptions(plan, options, next);
         if (evaluate && next === -1) {
           this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
           this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
@@ -571,6 +583,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     if (index < plan.stages.length) {
       const timer = plan.timer;
       const now = Date.now();
+      // console.log('CHECK', plan.title, plan.beat);
       if (plan.beat > -1) {
         if (plan.offBeat < now) {
           plan.offBeat = Date.now() + plan.beat;
