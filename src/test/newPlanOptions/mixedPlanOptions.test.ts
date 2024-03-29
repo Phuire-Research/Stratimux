@@ -15,7 +15,7 @@ test('Mixed Plan Options Test', (done) => {
     createExperimentPlanOptionsConcept()
   ]);
   const allShouldBeTrue = [false, false, false, false, false, false, false, false];
-  const planOne = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be infomed', [
+  const planOne = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE One');
