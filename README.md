@@ -44,7 +44,9 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### **BREAKING Update v0.1.4** *Update 3/28/24*
+### **NOTE: Hold off on updating to v0.1.4 and instead use v0.1.2**
+See issue: [https://github.com/Phuire-Research/Stratimux/issues/188](https://github.com/Phuire-Research/Stratimux/issues/188)
+### **BREAKING Update v0.1.4** 3/28/24
 * Removed the "on.expected" option from dispatch to reduce inner complexity of your stages
 * Renamed **axium.stage** to **axium.plan** to be in line with industry terminology
   * The new plan set up requires a staging entity or the return from the new createStage helper function
