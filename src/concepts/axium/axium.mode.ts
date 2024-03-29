@@ -82,7 +82,7 @@ export const blockingMode: Mode = (
         const newConcept = {...newConcepts[action.semaphore[0]]};
         newConcepts[action.semaphore[0]] = newConcept;
         newConcepts[action.semaphore[0]].state = newState;
-        axiumState.innerConcepts$.next(newConcepts);
+        axiumState.concepts$.nextBlocking(newConcept);
       }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {

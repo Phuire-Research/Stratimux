@@ -14,11 +14,11 @@ import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from '
 import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { axium, getAxiumState, isAxiumOpen } from './axium';
+import { getAxiumState, isAxiumOpen } from './axium';
 
 export type Plan = {
   id: number;
-  outer: boolean;
+  space: number;
   title: string;
   stages: Staging[],
   stage: number;
@@ -229,6 +229,10 @@ const handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: numbe
   return evaluate;
 };
 
+const Inner = 0;
+const Base = 1;
+const Outer = 2;
+
 export class UnifiedSubject extends Subject<Concepts> {
   private planId = -1;
   private currentPlans: Map<number, Plan> = new Map();
@@ -240,12 +244,16 @@ export class UnifiedSubject extends Subject<Concepts> {
   private frequencyMap: Map<string, number> = new Map();
   private selectors: Map<string, {selector: KeyedSelector, ids: number[]}> = new Map();
   // Assemble back of line, exempts priority que members
-  private generalQue: number[] = [];
+  private ques: {
+    priorityQue: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[],
+    generalQue: number[],
+  }[] = [{generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}];
+  // private generalQue: number[] = [];
   // [TODO Unify Streams]: Simplify streams into one single UnifiedSubject
   // [Experiment notes]: When attempting to unify all streams the chain test presented a ghost count repeating at 14 with both 0 and 2
   // [Punt]: The main issue with this simplification is the order in which withLatest is notified
   // In order to fully facilitate this change we would need to add an innerQue, but likewise can just have 3 streams
-  private outerQue: number[] = [];
+  // private outerQue: number[] = [];
   // The above approach is enhanced by a onChange dict
   constructor() {
     super();
@@ -292,7 +300,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan(title: string, stages: PartialStaging[], outer: boolean, inner: boolean): Plan {
+  protected createPlan(title: string, stages: PartialStaging[], space: number): Plan {
     const planId = this.planId;
     this.planId += 1;
     const staged: Staging[] = stages.map<Staging>(s => {
@@ -305,7 +313,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       };
     });
     const beat = staged[0].beat;
-    return {id: planId, outer, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    return {id: planId, space, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
   }
 
   protected initPlan(plan: Plan): StagePlanner {
@@ -324,15 +332,15 @@ export class UnifiedSubject extends Subject<Concepts> {
 
   // [TODO Unify Streams]
   innerPlan(title: string, stages: PartialStaging[]) {
-    return this.initPlan(this.createPlan(title, stages, false, true));
+    return this.initPlan(this.createPlan(title, stages, Inner));
   }
 
   outerPlan(title: string, stages: PartialStaging[]) {
-    return this.initPlan(this.createPlan(title, stages, true, false));
+    return this.initPlan(this.createPlan(title, stages, Outer));
   }
 
   plan(title: string, stages: Staging[]): StagePlanner {
-    return this.initPlan(this.createPlan(title, stages, false, false));
+    return this.initPlan(this.createPlan(title, stages, Base));
   }
 
   protected deletePlan(planId: number) {
@@ -369,7 +377,15 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected assemblePriorityQue() {
     let prioritize = false;
     const priorityMap: typeof this.priorityExists = new Map();
-    const newList: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[] = [];
+    const newList: {
+      inner: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[],
+      base: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[],
+      outer: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[]
+    } = {
+      inner: [],
+      base: [],
+      outer: []
+    };
     for (const [_, plan] of this.currentPlans) {
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
@@ -384,43 +400,82 @@ export class UnifiedSubject extends Subject<Concepts> {
           stage: plan.stage,
           selectors,
         };
-        newList.push(entry);
+        switch (plan.space) {
+        case Inner: {
+          newList.inner.push(entry);
+          break;
+        }
+        case Base: {
+          newList.base.push(entry);
+          break;
+        }
+        case Outer: {
+          newList.outer.push(entry);
+          break;
+        }
+        default: {
+          //
+        }
+        }
         this.priorityExists.set(key, true);
       }
     }
     if (!prioritize) {
-      this.priorityQue = [];
+      this.ques[Inner].priorityQue = [];
+      this.ques[Base].priorityQue = [];
+      this.ques[Outer].priorityQue = [];
     } else {
-      this.priorityQue = newList.sort((a, b) => b.priority - a.priority);
+      this.ques[Inner].priorityQue = newList.inner.sort((a, b) => b.priority - a.priority);
+      this.ques[Base].priorityQue = newList.inner.sort((a, b) => b.priority - a.priority);
+      this.ques[Outer].priorityQue = newList.inner.sort((a, b) => b.priority - a.priority);
     }
+    // This will cause an issue
     this.priorityExists = priorityMap;
     this.updateFrequencyMap();
   }
 
   protected assembleGeneralQues() {
-    const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
-    const outerMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
+    const generalMap: {
+      inner: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}>
+      base: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}>
+      outer: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}>
+    } = {
+      inner: new Map(),
+      base: new Map(),
+      outer: new Map()
+    };
     for (const [_, plan] of this.currentPlans) {
-      let map = generalMap;
-      if (plan.outer) {
-        map = outerMap;
-      }
+      // let map = generalMap;
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
+      let target = generalMap.inner;
+      switch (plan.space) {
+      case Base: {
+        target = generalMap.base;
+        break;
+      }
+      case Outer: {
+        target = generalMap.outer;
+        break;
+      }
+      default: {
+        //
+      }
+      }
       if (priority === undefined) {
         const prepareMap = (selector: KeyedSelector) => {
-          const entry = generalMap.get(selector.keys);
+          const entry = target.get(selector.keys);
           const frequency = this.frequencyMap.get(selector.keys);
           if (entry) {
             entry.planIDs.push(plan.id);
           } else if (frequency) {
-            map.set(selector.keys, {
+            target.set(selector.keys, {
               planIDs: [plan.id],
               priorityAggregate: frequency,
               selector: selector
             });
           } else {
-            map.set(selector.keys, {
+            target.set(selector.keys, {
               planIDs: [plan.id],
               priorityAggregate: 0,
               selector: selector
@@ -436,8 +491,15 @@ export class UnifiedSubject extends Subject<Concepts> {
         }
       }
     }
-    const generalIdMap: Map<number, number> = new Map();
-    const outerIdMap: Map<number, number> = new Map();
+    const generalIdMap: {
+      inner: Map<number, number>
+      base: Map<number, number>
+      outer: Map<number, number>
+    } = {
+      inner: new Map(),
+      base: new Map(),
+      outer: new Map()
+    };
     const handleSlice = (slice: {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}, map: Map<number, number>) => {
       slice.planIDs.forEach(id => {
         const priority = map.get(id);
@@ -448,11 +510,14 @@ export class UnifiedSubject extends Subject<Concepts> {
         }
       });
     };
-    generalMap.forEach((slice) => {
-      handleSlice(slice, generalIdMap);
+    generalMap.inner.forEach((slice) => {
+      handleSlice(slice, generalIdMap.inner);
     });
-    outerMap.forEach((slice) => {
-      handleSlice(slice, outerIdMap);
+    generalMap.base.forEach((slice) => {
+      handleSlice(slice, generalIdMap.base);
+    });
+    generalMap.outer.forEach((slice) => {
+      handleSlice(slice, generalIdMap.outer);
     });
     const flatten = (map: Map<number, number>) => {
       const flat = [];
@@ -463,8 +528,9 @@ export class UnifiedSubject extends Subject<Concepts> {
       // We should add a selector union
       return flat.map(([id, _]) => id);
     };
-    this.generalQue = flatten(generalIdMap);
-    this.outerQue = flatten(outerIdMap);
+    this.ques[Inner].generalQue = flatten(generalIdMap.inner);
+    this.ques[Base].generalQue = flatten(generalIdMap.base);
+    this.ques[Outer].generalQue = flatten(generalIdMap.outer);
   }
 
   protected manageQues() {
@@ -640,12 +706,6 @@ export class UnifiedSubject extends Subject<Concepts> {
       }
     }
 
-    try {
-      // console.log('CHECK AXIUM OPEN - Original: ', getAxiumState(this.concepts)?.open, 'Incoming: ', getAxiumState(concepts)?.open);
-    } catch (err) {
-      // console.error('CHECK ERROR', err, Object.keys(concepts)[0]);
-    }
-
     this.concepts = concepts;
     getAxiumState(this.concepts).actionConcepts$.next(this.concepts);
 
@@ -661,20 +721,35 @@ export class UnifiedSubject extends Subject<Concepts> {
       }
     };
 
-    for (const p of this.priorityQue) {
+    for (const p of this.ques[Inner].priorityQue) {
       notification(p.planID);
     }
-    for (const g of this.generalQue) {
+    for (const g of this.ques[Inner].generalQue) {
       notification(g);
     }
-    // if (axium.isOpen(concepts)) {
-    for (const o of this.outerQue) {
-      notification(o);
+    for (const p of this.ques[Base].priorityQue) {
+      notification(p.planID);
     }
-    // }
+    for (const g of this.ques[Base].generalQue) {
+      notification(g);
+    }
+    for (const p of this.ques[Outer].priorityQue) {
+      notification(p.planID);
+    }
+    for (const g of this.ques[Outer].generalQue) {
+      notification(g);
+    }
   }
 
   next(concepts: Concepts) {
+    if (!this.closed) {
+      this.handleChange(concepts);
+      // We notify subs last to encourage actions being acted upon observations
+      // Then by utilizing a set quality we may inform the next observation of the change
+      this.nextSubs();
+    }
+  }
+  nextBlocking(concepts: Concepts) {
     if (!this.closed) {
       this.handleChange(concepts);
       // We notify subs last to encourage actions being acted upon observations

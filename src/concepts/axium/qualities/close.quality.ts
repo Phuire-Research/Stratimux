@@ -25,7 +25,7 @@ export function axiumCloseReducer(state: AxiumState, _action: Action): AxiumStat
   state.stagePlanners.forEach(named => named.conclude());
   state.action$.complete();
   state.concepts$.complete();
-  state.innerConcepts$.complete();
+  state.actionConcepts$.complete();
   if (exit) {
     process.exit();
   }
