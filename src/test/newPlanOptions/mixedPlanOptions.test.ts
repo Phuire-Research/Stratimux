@@ -7,7 +7,7 @@ import { createAxium } from '../../model/axium';
 import { createStage } from '../../model/stagePlanner';
 import { selectSlice } from '../../model/selector';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
-import { experimentPlanOptionsReadySelector } from './priority.selector';
+import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 
 test('Mixed Plan Options Test', (done) => {

@@ -11,7 +11,7 @@ import { planOptionsSelect } from './newPlanOptions.selectors';
 import { experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
 import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
-import { experimentPlanOptionsReadySelector } from './priority.selector';
+import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 
 test('New Plan Options Selector Test', (done) => {
   const planNewStageSelectors = createAxium('Plan New Stage Selectors Test', [

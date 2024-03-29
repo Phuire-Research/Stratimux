@@ -27,7 +27,6 @@ export const axiumPrinciple: PrincipleFunction = (
   let allowRemove = true;
   const addConceptsPlan = concepts$.plan('Add Concepts Plan', [
     createStage((_concepts, dispatch) => {
-      console.log('Hitting Sub for Add Concept');
       const axiumState = _concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;

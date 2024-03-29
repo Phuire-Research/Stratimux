@@ -14,12 +14,11 @@ import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from '
 import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { getAxiumState, isAxiumOpen } from './axium';
+import { axium, getAxiumState, isAxiumOpen } from './axium';
 
 export type Plan = {
   id: number;
-  // [TODO Unify Streams]
-  // outer: boolean;
+  outer: boolean;
   title: string;
   stages: Staging[],
   stage: number;
@@ -38,6 +37,7 @@ export type Stage = (
 export type Staging = {
   stage: Stage;
   selectors: KeyedSelector[];
+  firstRun: boolean;
   priority?: number
   beat?: number,
 };
@@ -111,12 +111,14 @@ export const createStage = (stage: Stage, options?: { selectors?: KeyedSelector[
     return {
       stage,
       selectors: options.selectors ? options.selectors : [],
+      firstRun: true,
       priority: options.priority,
       beat: options.beat
     };
   } else {
     return {
       stage,
+      firstRun: true,
       selectors: []
     };
   }
@@ -243,7 +245,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   // [Experiment notes]: When attempting to unify all streams the chain test presented a ghost count repeating at 14 with both 0 and 2
   // [Punt]: The main issue with this simplification is the order in which withLatest is notified
   // In order to fully facilitate this change we would need to add an innerQue, but likewise can just have 3 streams
-  // private outerQue: number[] = [];
+  private outerQue: number[] = [];
   // The above approach is enhanced by a onChange dict
   constructor() {
     super();
@@ -290,23 +292,20 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan(title: string, stages: PartialStaging[]): Plan {
-  // [TODO Unify Streams]
-  // protected createPlan(title: string, stages: PartialStaging[], outer: boolean, beat?: number): Plan {
+  protected createPlan(title: string, stages: PartialStaging[], outer: boolean, inner: boolean): Plan {
     const planId = this.planId;
     this.planId += 1;
     const staged: Staging[] = stages.map<Staging>(s => {
       return {
         stage: s.stage,
         selectors: s.selectors ? s.selectors : [],
+        firstRun: true,
         priority: s.priority,
         beat: s.beat
       };
     });
     const beat = staged[0].beat;
-    return {id: planId, title, stages: staged, stage: 0, stageFailed: -1, beat: beat !== undefined ? beat : -1, offBeat: -1, timer: []};
-    // [TODO Unify Streams]
-    // return {id: planId, outer, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    return {id: planId, outer, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
   }
 
   protected initPlan(plan: Plan): StagePlanner {
@@ -324,14 +323,16 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   // [TODO Unify Streams]
-  // outerPlan(title: string, stages: PartialStaging[], beat?: number) {
-  //   return this.initPlan(this.createPlan(title, stages, true, beat));
-  // }
+  innerPlan(title: string, stages: PartialStaging[]) {
+    return this.initPlan(this.createPlan(title, stages, false, true));
+  }
+
+  outerPlan(title: string, stages: PartialStaging[]) {
+    return this.initPlan(this.createPlan(title, stages, true, false));
+  }
 
   plan(title: string, stages: Staging[]): StagePlanner {
-    // [TODO Unify Streams]
-    // return this.initPlan(this.createPlan(title, stages, false, beat));
-    return this.initPlan(this.createPlan(title, stages));
+    return this.initPlan(this.createPlan(title, stages, false, false));
   }
 
   protected deletePlan(planId: number) {
@@ -398,14 +399,12 @@ export class UnifiedSubject extends Subject<Concepts> {
 
   protected assembleGeneralQues() {
     const generalMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
-    // [TODO Unify Streams]
-    // const outerMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
+    const outerMap: Map<string, {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}> = new Map();
     for (const [_, plan] of this.currentPlans) {
-      const map = generalMap;
-      // [TODO Unify Streams]
-      // if (plan.outer) {
-      //   map = outerMap;
-      // }
+      let map = generalMap;
+      if (plan.outer) {
+        map = outerMap;
+      }
       const stage = plan.stages[plan.stage];
       const priority = stage.priority;
       if (priority === undefined) {
@@ -438,8 +437,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       }
     }
     const generalIdMap: Map<number, number> = new Map();
-    // [TODO Unify Streams]
-    // const outerIdMap: Map<number, number> = new Map();
+    const outerIdMap: Map<number, number> = new Map();
     const handleSlice = (slice: {selector: KeyedSelector, planIDs: number[], priorityAggregate: number}, map: Map<number, number>) => {
       slice.planIDs.forEach(id => {
         const priority = map.get(id);
@@ -453,10 +451,9 @@ export class UnifiedSubject extends Subject<Concepts> {
     generalMap.forEach((slice) => {
       handleSlice(slice, generalIdMap);
     });
-    // [TODO] Unify streams
-    // outerMap.forEach((slice) => {
-    //   handleSlice(slice, outerIdMap);
-    // });
+    outerMap.forEach((slice) => {
+      handleSlice(slice, outerIdMap);
+    });
     const flatten = (map: Map<number, number>) => {
       const flat = [];
       for (const [id, frequency] of map.entries()) {
@@ -467,8 +464,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       return flat.map(([id, _]) => id);
     };
     this.generalQue = flatten(generalIdMap);
-    // [TODO] Unify streams
-    // this.outerQue = flatten(outerIdMap);
+    this.outerQue = flatten(outerIdMap);
   }
 
   protected manageQues() {
@@ -577,14 +573,12 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
   }
 
-  // [TODO Update Stage Beat]
   protected nextPlan(plan: Plan, changes: KeyedSelector[]) {
     const index = plan.stage;
     if (index < plan.stages.length) {
-      const timer = plan.timer;
-      const now = Date.now();
-      // console.log('CHECK', plan.title, plan.beat);
       if (plan.beat > -1) {
+        const timer = plan.timer;
+        const now = Date.now();
         if (plan.offBeat < now) {
           plan.offBeat = Date.now() + plan.beat;
           this.execute(plan, index, changes);
@@ -646,6 +640,12 @@ export class UnifiedSubject extends Subject<Concepts> {
       }
     }
 
+    try {
+      // console.log('CHECK AXIUM OPEN - Original: ', getAxiumState(this.concepts)?.open, 'Incoming: ', getAxiumState(concepts)?.open);
+    } catch (err) {
+      // console.error('CHECK ERROR', err, Object.keys(concepts)[0]);
+    }
+
     this.concepts = concepts;
 
     const notification = (id: number) => {
@@ -653,6 +653,10 @@ export class UnifiedSubject extends Subject<Concepts> {
       const plan = this.currentPlans.get(id);
       if (plan && ready !== undefined) {
         this.nextPlan(plan as Plan, ready);
+      } else if (plan && plan.stages[plan.stage].firstRun) {
+        // console.log('FIRST RUN: ', plan.title);
+        plan.stages[plan.stage].firstRun = false;
+        this.nextPlan(plan as Plan, []);
       }
     };
 
@@ -662,11 +666,10 @@ export class UnifiedSubject extends Subject<Concepts> {
     for (const g of this.generalQue) {
       notification(g);
     }
-    // [TODO] Unify streams
     // if (axium.isOpen(concepts)) {
-    //   for (const o of this.outerQue) {
-    //     notification(o);
-    //   }
+    for (const o of this.outerQue) {
+      notification(o);
+    }
     // }
   }
 

@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { selectState } from '../model/selector';
+import { selectConcept, selectSlice, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
@@ -22,6 +22,7 @@ import { counterSetCount } from '../concepts/counter/qualities/setCount.quality'
 import { checkInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
 import { createStage } from '../model/stagePlanner';
+import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
@@ -73,7 +74,7 @@ test('Ownership Test', (done) => {
         const axiumState = cpts[0].state as AxiumState;
         const counter = selectState<CounterState>(cpts, counterName);
         if (counter) {
-          console.log('Stage 4', axiumState.lastStrategy, orderOfTopics);
+          console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(cpts, ownershipName)?.state);
           if (orderOfTopics.length === 2 && finalRun) {
             finalRun = false;
             // This will be the final test to be triggered by a log action.
