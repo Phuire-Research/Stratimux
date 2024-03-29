@@ -5,7 +5,7 @@ within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
 import { Subject, Subscription } from 'rxjs';
-import { Concept } from '../../model/concept';
+import { Concept, Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { axiumClosePrinciple } from './axium.close.principle';
@@ -65,6 +65,7 @@ export type AxiumState = {
   generalSubscribers: NamedSubscription[];
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
+  actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   innerConcepts$: UnifiedSubject;
   addConceptQue: Concept[],
@@ -98,6 +99,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     generalSubscribers: [] as NamedSubscription[],
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
+    actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
     innerConcepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],

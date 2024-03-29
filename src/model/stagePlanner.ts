@@ -647,6 +647,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
 
     this.concepts = concepts;
+    getAxiumState(this.concepts).actionConcepts$.next(this.concepts);
 
     const notification = (id: number) => {
       const ready = notifyIds.get(id);
