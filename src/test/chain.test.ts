@@ -7,10 +7,11 @@ import { Concepts } from '../model/concept';
 import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
-import { createChainConcept } from '../concepts/chain/chain.concept';
+import { ChainState, chainName, createChainConcept } from '../concepts/chain/chain.concept';
 import { chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
+import { chainEnd } from '../concepts/chain/qualities/chainEnd.quality';
 
 test('Axium Test', (done) => {
   const axium = createAxium('chainConceptTest', [createCounterConcept(), createChainConcept()], true, true);
@@ -22,6 +23,7 @@ test('Axium Test', (done) => {
       willDispatch = false;
       const primedAdd = primeAction(concepts, counterAdd());
       const primedSubtract = primeAction(concepts, counterSubtract());
+      const primedEnd = primeAction(concepts, chainEnd());
       const primedPrepareChain =
       primeAction(concepts,
         chainDispatchActions({
@@ -32,11 +34,12 @@ test('Axium Test', (done) => {
             primedAdd,
             primedSubtract,
             primedAdd,
+            primedEnd
           ]
         }));
       axium.dispatch(primedPrepareChain);
     }
-    else if (count === 7) {
+    else if (selectState<ChainState>(concepts, chainName)?.end) {
       const counter = selectState<CounterState>(concepts, counterName);
       expect(counter?.count).toBe(2);
       setTimeout(() => {done();}, 500);

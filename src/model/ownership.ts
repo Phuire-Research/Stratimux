@@ -35,7 +35,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
   // Quality Action no Keys, no Strategy
   if (qualityKeys && !actionSelectors && action.strategy === undefined) {
     for (let i = 0; i < qualityKeys.length; i++) {
-      if (ownershipLedger.has(`${qualityKeys[i].conceptName} ${qualityKeys[i].stateKeys}`)) {
+      if (ownershipLedger.has(qualityKeys[i].keys)) {
         shouldBlock = true;
         break;
       }
@@ -43,7 +43,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
   // ActionStrategy, with Keys
   } else if (actionSelectors && action.strategy && action.strategy.stubs === undefined) {
     for (let i = 0; i < actionSelectors.length; i++) {
-      if (ownershipLedger.has(`${actionSelectors[i].conceptName} ${actionSelectors[i].stateKeys}`)) {
+      if (ownershipLedger.has(actionSelectors[i].keys)) {
         shouldBlock = true;
         break;
       }
@@ -129,7 +129,7 @@ export const checkIn =
   if (strategy) {
     strategy.stubs = strategy.stubs ? strategy.stubs : [] as OwnershipTicketStub[];
     action.keyedSelectors?.forEach(keyed => {
-      const key = `${keyed.conceptName} ${keyed.stateKeys}`;
+      const key = keyed.keys;
       const entry = ownershipLedger.get(key);
       let found = false;
       if (entry && action.strategy?.stubs) {
@@ -215,7 +215,7 @@ const qualityAction = (concepts: Concepts, _action: Action): [Concepts, boolean]
 
   if (qualitySelectors) {
     for (const selector of qualitySelectors) {
-      const key = `${selector.conceptName} ${selector.stateKeys}`;
+      const key = selector.keys;
       if (ownershipLedger.get(key)) {
         readyToGo = false;
         break;
@@ -297,4 +297,15 @@ export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) 
   }
   return concepts;
 };
+
+export const ownership = ({
+  createOwnershipLedger,
+  ownershipShouldBlock,
+  clearStubs,
+  editStubs,
+  checkIn,
+  isActionReady,
+  areEqual,
+  updateAddToPendingActions,
+});
 /*#>*/

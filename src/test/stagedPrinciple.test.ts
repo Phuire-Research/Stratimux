@@ -9,8 +9,7 @@ import { PrincipleFunction } from '../model/principle';
 import { Action, ActionType, prepareActionCreator } from '../model/action';
 import { Subscriber } from 'rxjs';
 import { Concepts, createQuality } from '../model/concept';
-import { UnifiedSubject } from '../model/stagePlanner';
-import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 
 type ExperimentState = {
@@ -31,17 +30,9 @@ const experimentMockToTrueQuality = createQuality(experimentMockToTrueType, expe
 
 test('Axium Principle Stage', (done) => {
   const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concepts, concept$: UnifiedSubject) => {
-    const plan = concept$.stage('Experiment Principle', [
-      (___, dispatch) => {
-        dispatch(experimentMockToTrue(), {
-          iterateStage: true,
-          on: {
-            selector: axiumSelectOpen,
-            expected: true
-          },
-        });
-      },
-      (concepts, dispatch) => {
+    const plan = concept$.plan('Experiment Principle', [
+      stageWaitForOpenThenIterate(() => experimentMockToTrue()),
+      createStage((concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState?.mock) {
           expect(experimentState.mock).toBe(true);
@@ -51,10 +42,10 @@ test('Axium Principle Stage', (done) => {
           });
           plan.conclude();
         }
-      },
-      () => {
+      }),
+      createStage(() => {
         //
-      }
+      })
     ]);
   };
   createAxium('axiumStrategyTest', [

@@ -16,6 +16,7 @@ import {
 } from '../model/actionStrategy';
 import { createAxium, getAxiumState } from '../model/axium';
 import { selectSlice } from '../model/selector';
+import { createStage } from '../model/stagePlanner';
 
 export const yourStrategyStitch: ActionStrategyStitch = () => {
   const stepStitch = axium_createStitchNode();
@@ -59,30 +60,30 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
 test('Axium advanced usage: StrategyStitch', (done) => {
   const axium = createAxium('Test advanced usage', []);
   const strategy = yourComposingStrategy(yourStrategyStitch);
-  axium.stage('Test Stitch', [
-    (_, dispatch) => {
+  axium.plan('Test Stitch', [
+    createStage((_, dispatch) => {
       dispatch(strategyBegin(strategy), {
         iterateStage: true
       });
-    },
-    (concepts, _) => {
+    }),
+    createStage((concepts, _) => {
       const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
       if (lastTopic === strategy.topic) {
         expect(true).toBe(true);
         done();
       }
-    }
+    })
   ]);
 });
 
 test('Axium get axium state helper function', (done) => {
   const axium = createAxium('Test advanced usage', []);
-  axium.stage('Test getAxiumState', [
-    (concepts, _) => {
+  axium.plan('Test getAxiumState', [
+    createStage((concepts, _) => {
       if (getAxiumState(concepts)) {
         expect(true).toBe(true);
         done();
       }
-    },
+    }),
   ]);
 });

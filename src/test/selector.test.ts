@@ -4,10 +4,12 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { selectPayload, selectSlice, selectState } from '../model/selector';
+import { createUnifiedKeyedSelector, select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
+import { AxiumState } from '../concepts/axium/axium.concept';
+import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 
 test('Axium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -39,5 +41,47 @@ test('Axium Selector Payload Test', (done) => {
   const payload = selectPayload<CounterSetCountPayload>(setCount);
   expect(payload.newCount).toBe(10);
   done();
+});
+
+test('Axium Unified Selector Test', (done) => {
+  type SomeDeepObject = {
+    something : {
+      somethingElse: string,
+      somethingArray: string[]
+    },
+    else: boolean[]
+  }
+  type Deeper = {
+    anything : SomeDeepObject,
+    bool: boolean
+  }
+  const obj: Deeper = {
+    anything: {
+      else: [false],
+      something: {
+        somethingArray: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+        somethingElse: 'somethingElse'
+      }
+    },
+    bool: true
+  };
+  const experiment = createExperimentConcept(obj);
+  const concepts: Concepts = {
+    0: experiment
+  };
+  const selector = select.createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const conceptSelector = select.createConceptKeyedSelector<Deeper>(experimentName, 'anything.something.somethingElse');
+  if (selector) {
+    const slices = select.set<string[]>(concepts, selector);
+    console.log('CHECK SLICES', slices);
+    if (slices) {
+      expect(slices[0]).toBe('10');
+      expect(slices[1]).toBe('9');
+      expect(slices[2]).toBe('8');
+      expect(slices[3]).toBe('7');
+      expect(select.slice(concepts, conceptSelector)).toBe(obj.anything.something.somethingElse);
+      done();
+    }
+  }
 });
 /*#>*/

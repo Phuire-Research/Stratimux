@@ -3,12 +3,13 @@ For the graph programming framework Stratimux, generate a test to ensure the sta
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
-import { selectState } from '../model/selector';
+import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
+import { createStage } from '../model/stagePlanner';
 
 test('Axium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
@@ -26,15 +27,16 @@ test('Axium Stage Dispatch Options Test', (done) => {
       setTimeout(() => {done();}, 500);
     }
   });
-  const plan = axium.stage('Stage DispatchOptions Test',
+  const plan = axium.plan('Stage DispatchOptions Test',
     [
-      (concepts, dispatch) => {
+      createStage((concepts, dispatch) => {
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 1 ', counter, runCount);
         dispatch(counterAdd(), {
           iterateStage: true
         });
-      }, (concepts, dispatch) => {
+      }),
+      createStage((concepts, dispatch) => {
         runCount++;
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 2 ', counter, runCount);
@@ -43,17 +45,16 @@ test('Axium Stage Dispatch Options Test', (done) => {
           runOnce: true
         });
         // Will wait until count is set to 2, then set the Stage Explicitly to the third Step counting from 0.
-        dispatch(counterAdd(), {
-          setStage: 2,
-          on: {
-            selector: counterSelectCount,
-            expected: 2
-          },
-          // Requires throttle, because the previous action is of the same type, but runs only once.
-          throttle: 1
-        });
+        if (selectSlice(concepts, counterSelectCount) === 2) {
+          dispatch(counterAdd(), {
+            setStage: 2,
+            // Requires throttle, because the previous action is of the same type, but runs only once.
+            throttle: 1
+          });
+        }
         // }
-      }, (concepts, dispatch) => {
+      }),
+      createStage((concepts, dispatch) => {
         runCount++;
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Should run twice, Stage 3 ', counter, runCount);
@@ -69,7 +70,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
           'Will also run twice. 1st will be before "Stage Ran Away,"',
           'and after "Should run twice." The 2nd will be final console log output.'
         );
-      }
+      })
     ]);
 });
 /*#>*/

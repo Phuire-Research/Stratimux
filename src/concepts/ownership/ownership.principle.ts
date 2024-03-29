@@ -14,10 +14,9 @@ import { Action, areSemaphoresEqual, createAction, primeAction } from '../../mod
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
-import { UnifiedSubject  } from '../../model/stagePlanner';
+import { UnifiedSubject, createStage, stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate  } from '../../model/stagePlanner';
 import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
-import { axiumSelectOpen } from '../axium/axium.selector';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
 
 function denoteExpiredPending(action: Action): Action {
@@ -36,17 +35,9 @@ export const ownershipPrinciple: PrincipleFunction = (
 ) => {
   let initDispatch = false;
   let finalCheck = true;
-  const plan = concepts$.stage('ownership Principle Plan', [
-    (concepts, dispatch) => {
-      dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})), {
-        on: {
-          selector: axiumSelectOpen,
-          expected: true,
-        },
-        iterateStage: true
-      });
-    },
-    (cpts, _) => {
+  const plan = concepts$.plan('ownership Principle Plan', [
+    stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan}))),
+    createStage((cpts, _) => {
       let concepts = cpts;
       let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {
@@ -109,7 +100,7 @@ export const ownershipPrinciple: PrincipleFunction = (
           )
         );
       }
-    }
+    })
   ]);
 };
 /*#>*/
@@ -125,17 +116,9 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
   concepts$: UnifiedSubject,
   semaphore: number
 ) => {
-  const plan = concepts$.stage('ownership Principle Plan', [
-    (concepts, dispatch) => {
-      dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})), {
-        on: {
-          selector: axiumSelectOpen,
-          expected: true,
-        },
-        iterateStage: true
-      });
-    },
-    (cpts, __) => {
+  const plan = concepts$.plan('ownership Principle Plan', [
+    stageWaitForOwnershipThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan}))),
+    createStage((cpts, __) => {
       const concepts = cpts;
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {
@@ -161,7 +144,7 @@ export const ownershipExpirationPrinciple: PrincipleFunction = (
           concepts$.next(concepts);
         }
       }
-    }
+    })
   ]);
 };
 /*#>*/

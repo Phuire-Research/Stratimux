@@ -8,23 +8,26 @@ $>*/
 import { Action } from '../../index';
 import { createConcept } from '../../model/concept';
 import { chainPrinciple } from './chain.principle';
+import { chainEndQuality } from './qualities/chainEnd.quality';
 import { chainPrepareChainQuality } from './qualities/prepareChain.quality';
 
 export type ChainState = {
-    actionQue: Action[];
+  actionQue: Action[];
+  end: boolean;
 };
 
 export const chainName = 'chain';
 
 const initialChainState: ChainState = {
   actionQue: [],
+  end: false
 };
 
 export const createChainConcept = () => {
   return createConcept(
     chainName,
     initialChainState,
-    [chainPrepareChainQuality],
+    [chainPrepareChainQuality, chainEndQuality],
     [chainPrinciple],
   );
 };

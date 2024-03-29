@@ -212,4 +212,15 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
 export function areSemaphoresEqual(first: Action, second: Action) {
   return first.semaphore[0] === second.semaphore[0] && first.semaphore[1] === second.semaphore[1];
 }
+
+export const act = ({
+  prime: primeAction,
+  refresh: refreshAction,
+  getSemaphore,
+  createCacheSemaphores,
+  create: createAction,
+  prepareActionCreator,
+  prepareActionWithPayloadCreator,
+  areSemaphoresEqual,
+});
 /*#>*/

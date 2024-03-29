@@ -8,38 +8,43 @@ This is a combination of throttle and debounce.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
-import { selectState } from '../model/selector';
+import { selectSlice, selectState } from '../model/selector';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
+import { createStage } from '../model/stagePlanner';
+jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
   let timerActive = false;
   const axium = createAxium('axium test stage planner beat', [
     createCounterConcept()
   ], true, true);
-  const plan = axium.stage('Stage Planner Beat Test', [
-    (___, dispatch) => {
+  const beat = 105;
+  const plan = axium.plan('Stage Planner Beat Test', [
+    createStage((concepts, dispatch) => {
+      console.log('HIT 1');
       timerActive = true;
       setTimeout(() => {
+        console.log('FIRE');
         timerActive = false;
       }, 1000);
-      dispatch(axiumKick(), {
-        iterateStage: true,
-        on: {
-          selector: axiumSelectOpen,
-          expected: true
-        },
-      });
-    },
-    (___, dispatch) => {
+      if (selectSlice(concepts, axiumSelectOpen)) {
+        dispatch(axiumKick(), {
+          iterateStage: true,
+        });
+      }
+    }, {beat}),
+    createStage((___, dispatch) => {
+      console.log('HIT 2');
       dispatch(counterAdd(), {
         iterateStage: true
       });
-    },
-    (concepts, dispatch) => {
+    }, {beat}),
+    createStage((concepts, dispatch) => {
+      // console.log('HIT 3', timerActive, selectState<CounterState>(concepts, counterName));
       if (!timerActive) {
         const state = selectState<CounterState>(concepts, counterName);
         if (state) {
@@ -55,10 +60,11 @@ test('Stage Planner Beat Test', (done) => {
           throttle: 1
         });
       }
-    },
-    () => {
+    }, {beat}),
+    createStage(() => {
+      console.log('HIT 4');
       //
-    }
-  ], 105);
+    }, {beat})
+  ]);
 });
 /*#>*/

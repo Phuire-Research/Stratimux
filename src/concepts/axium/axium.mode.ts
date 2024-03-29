@@ -8,6 +8,7 @@ import { Action, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumBadActionPayload } from './qualities/badAction.quality';
+import { counterAdd } from '../counter/qualities/add.quality';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;
@@ -36,13 +37,23 @@ export const permissiveMode: Mode = (
         let subject: Subject<Action>;
         if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
           subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
+          if (action.strategy?.topic === 'Counting Strategy') {
+            console.log('Method Subject', action);
+          }
           subject.next(action);
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
-        const state = concepts[action.semaphore[0]].state;
-        concepts[action.semaphore[0]].state = reduce(state, action);
-        concepts$.next(concepts);
-        axiumState.subConcepts$.next(concepts);
+        const state = {...concepts[action.semaphore[0]].state};
+        const newState = reduce(state, action);
+        if (newState !== null) {
+          const newConcepts = {...concepts};
+          const newConcept = {...newConcepts[action.semaphore[0]]};
+          newConcepts[action.semaphore[0]] = newConcept;
+          newConcepts[action.semaphore[0]].state = newState;
+
+          concepts$.next(newConcepts);
+          axiumState.subConcepts$.next(newConcepts);
+        }
       } else {
         const nextAction = primeAction(concepts, action);
         // Logical Determination: axiumBadActionType
@@ -69,12 +80,21 @@ export const blockingMode: Mode = (
   if (isActionable(axiumState, action)) {
     if (action.semaphore[2] === axiumState.generation && action.expiration > Date.now()) {
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
-      const state = concepts[action.semaphore[0]].state;
-      concepts[action.semaphore[0]].state = reduce(state, action);
-      axiumState.innerConcepts$.next(concepts);
+      const state = {...concepts[action.semaphore[0]].state};
+      const newState = reduce(state, action);
+      if (newState !== null) {
+        const newConcepts = {...concepts};
+        const newConcept = {...newConcepts[action.semaphore[0]]};
+        newConcepts[action.semaphore[0]] = newConcept;
+        newConcepts[action.semaphore[0]].state = newState;
+        axiumState.innerConcepts$.next(newConcepts);
+      }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
+        // if (action.strategy?.topic === 'Counting Strategy') {
+        //   console.log('Method Subject', action);
+        // }
         subject.next(action);
       }
     } else {

@@ -11,7 +11,7 @@ export type {
   ActionStrategy,
   ActionStrategyParameters,
   ActionStrategyStitch,
-  ActionStrategyCreator
+  ActionStrategyCreator,
 } from './model/actionStrategy';
 export {
   createStrategy,
@@ -24,7 +24,8 @@ export {
   strategyPunt,
   strategySequence,
   strategyBackTrack,
-  strategyRecurse
+  strategyRecurse,
+  strategy
 } from './model/actionStrategy';
 export {
   failureConditions,
@@ -32,7 +33,8 @@ export {
   strategyData_selectFailureCondition,
   strategyData_clearFailureCondition,
   strategyData_select,
-  strategyData_unifyData
+  strategyData_unifyData,
+  strategyData
 } from './model/actionStrategyData';
 export {
   createMethod,
@@ -52,7 +54,8 @@ export {
   createMethodThrottleWithConcepts,
   createMethodDebounceWithConcepts,
   createAsyncMethodThrottleWithConcepts,
-  createAsyncMethodDebounceWithConcepts
+  createAsyncMethodDebounceWithConcepts,
+  method
 } from './model/method';
 export {
   debounceAction,
@@ -65,11 +68,13 @@ export {
   getSemaphore,
   prepareActionCreator,
   prepareActionWithPayloadCreator,
-  refreshAction
+  refreshAction,
+  act
 } from './model/action';
 export {
   createConcept,
   createQuality,
+  nullReducer,
   defaultReducer,
   defaultMethodCreator,
   isConceptLoaded,
@@ -79,7 +84,8 @@ export {
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  getUnifiedName
+  getUnifiedName,
+  concept
 } from './model/concept';
 export type {
   Concept,
@@ -100,13 +106,17 @@ export {
   selectUnifiedState,
   updateUnifiedKeyedSelector,
   createConceptKeyedSelector,
-  createUnifiedKeyedSelector
+  createUnifiedKeyedSelector,
+  createAdvancedKeys,
+  select,
+  DotPath
 } from './model/selector';
-export { PrincipleFunction } from './model/principle';
+export { PrincipleFunction, principle } from './model/principle';
+export { createActionController$, actionController } from './model/actionController';
 export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
-export { createActionController$ } from './model/actionController';
-export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate } from './model/stagePlanner';
+export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
+export { ownership } from './model/ownership';
 
 //** Concept Exports */
 // Axium
@@ -187,8 +197,9 @@ export { ChainState, chainName, createChainConcept } from './concepts/chain/chai
 export {
   chainDispatchActions,
   chainDispatchActionsType,
-  ChainDispatchActionsPayload
+  ChainDispatchActionsPayload,
 } from './concepts/chain/qualities/prepareChain.quality';
+export {chainEnd, chainEndType} from './concepts/chain/qualities/chainEnd.quality';
 
 // Ownership
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';

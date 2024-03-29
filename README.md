@@ -9,7 +9,9 @@
 * Action Oriented
 * Single Lock Graph Framework
 * Composable Strategies
-* Stage Planner
+* Stage Planner (Hierarchal Planning/Higher Order Reasoning)
+* Prioritization
+* Change Detection
 * Plain Text Dialog Output
 * Hot Loading
 * No Dependency Injection
@@ -42,6 +44,16 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### **BREAKING Update v0.1.4** *Update 3/28/24*
+* Removed the "on.expected" option from dispatch to reduce inner complexity of your stages
+* Renamed **axium.stage** to **axium.plan** to be in line with industry terminology
+  * The new plan set up requires a staging entity or the return from the new createStage helper function
+    * This new entity enables you to change the priority in which your stages are informed per state change
+  * You may now assign each stage its own separate beat versus the entire plan
+    * Removes beat from the overall plan and now needs to be performed atomically
+  * This overall change trims the total plans that are checked per state, but may still supply plans that trigger on all changes via empty array in entity or outright ignoring the value field via the createStage function
+* Added nullReducer to disallow excessive observations from being triggered
+* First pass updating StagePlanner documentation
 ### 3/05/24
 * Minor DX release, properly exporting Axium type for inclusion in other frameworks.
 ### 12/14/23
@@ -60,23 +72,7 @@ When in doubt simplify.
 * Action Payloads must extend type: Record<string, unknown>  
    * This change is to provide a guarantee of advanced functionality in the current UI Proof of Concept.
 
-## Working Branch: Carousel
-While I did not want to release a major API change after an initial release. Working on logixUX revealed that there is a need to reduce the inner time complexity within the Axium itself. Carousel, is a rework on how selectors function, as well as a larger refactor on how stages work.
 
-Effectively the UnifiedSubject will now memoize all potential state changes. And your stages will be able to pass selectors in creation to as a changed record. I'm taking my time with this update to ensure that everything is well tested within logixUX. Prior to breaking APIs.
-
-With this change, I will be able to call the underlying pattern a solution to what bothered me about ECS(Entity Component Systems). As I designed Stratimux and the Unified Turing Machine to act as the foundation for simulation in conjunction with AI. It just so happens that it is currently simulating data transformations and through logixUX a complete UI system.
-
-What I am currently addressing is something that has always bothered me in other frameworks and game engines. That once you have your system set up everything is always checked and has an inherit inefficiency built in due to such. With the above planned change, in O(n) I can determine what has changed and prune stages to what is needed. Likewise the same selectors keep the baseline complexity of accessing those changes to the same O(n). As selectors once defined, are a simple retrieval functions with no looping quality.
-
-* *Update 3/05/24*
-Releasing a minor update so that Stratimux can be introduced into other frameworks, as the reality of the current release. It that it is ready in a limited scale such as a simple state machine. The main issue with the current approach is a back pressure becomes an issue at higher complexity and starts interfering with branch prediction.
-* *Update 12/28/23*  
-Now that this branch is able to break implementations, the planned scope of this refactor has expanded to move allow this framework to be multithreaded out of the box. This new plan will take some time to implement and will be merged into main when ready.
-* *Update 2/14/24*
-On the working branch I have included a new nullReducer. This will allow for stratimux to be able to execute as state or stateless beyond initial set up.
-
-----
 ```bash
 npm i stratimux
 ```
@@ -197,7 +193,7 @@ export const uXqOfUXQuality = createQuality(
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
 //   qOfUXType,
-//   defaultReducer,
+//   defaultReducer(Informs)/nullReducer(Doesn't Inform),
 // The method is optional and is an advanced behavior
 //   defaultMethodCreator
 // );
@@ -222,7 +218,9 @@ import {
   getAxiumState,
   primeAction,
   selectUnifiedState,
-  strategyBegin
+  strategyBegin,
+  createStage,
+  stageWaitForOpenThenIterate
 } from 'stratimux';
 import { UXState, uXName } from './uX.concept';
 import { uXSomeStrategy, uXSomeStrategyTopic } from './strategies/uXSome.strategy';
@@ -233,33 +231,25 @@ export const uXPrinciple: PrincipleFunction = (
   concepts$: UnifiedSubject,
   semaphore: number
 ) => {
-  const plan = concepts$.stage('uX Plan', [
-    (concepts, dispatch) => {
-      // This will register this plan to the axium, this allows for the axium to close or remove your concept cleanly.
-      dispatch(primeAction(concepts, axiumRegisterStagePlanner({conceptName: uXName, stagePlanner: plan})), {
-        on: {
-          selector: axiumSelectOpen,
-          expected: true,
-        },
-        iterateStage: true
-      });
-    },
-    (concepts, dispatch) => {
+  // There always needs to be atleast one subscriber or plan for the Axium to be active.
+  const plan = concepts$.plan('uX Plan', [
+    // This will register this plan to the axium, this allows for the axium to close or remove your concept cleanly.
+    stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: uXName, stagePlanner: plan}))),
+    createStage((concepts, dispatch) => {
       const state = selectUnifiedState<UXState>(concepts, semaphore);
       if (state) {
         dispatch(strategyBegin(uXSomeStrategy()), {
           iterateStage: true
         });
       }
-    },
-    (concepts) => {
+    }, {beat: 30}),
+    createStage((concepts) => {
       const {lastStrategy} = getAxiumState(concepts);
       if (lastStrategy === uXSomeStrategyTopic) {
         plan.conclude();
       }
-    }
-  // There always needs to be atleast one subscriber or plan for the Axium to be active.
-  ], 30);
+    }, {beat: 30})
+  ]);
 };
 ```
 

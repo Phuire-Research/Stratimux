@@ -4,85 +4,262 @@ This file will contain a series of selectors that can be used to engage with dif
 $>*/
 /*<#*/
 import { Action } from './action';
-import { Concept, Concepts } from './concept';
+import { Concept, Concepts, createConcept } from './concept';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
  */
+export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {
   conceptName: string,
-  stateKeys: string
+  conceptSemaphore: number,
+  keys: string,
+  selector: SelectorFunction,
+  setKeys?: (number | string)[]
+  setSelector?: SelectorFunction
 };
-
 /**
- * For usage outside of the Axium, or when subscribed to other Axium'sl
+ * For usage outside of the Axium, or when subscribed to other Axiums
  */
 export const createConceptKeyedSelector =
-  (concepts: Concepts, conceptName: string, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
-    let exists = false;
-    const indexes = Object.keys(concepts).map(key => Number(key));
-    for (const index of indexes) {
-      if (concepts[index].name === conceptName) {
-        exists = true;
-        break;
-      }
+  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
+    const selectorBase = [conceptName, ...keys.split('.')];
+    if (setKeys) {
+      return {
+        conceptName,
+        conceptSemaphore: -1,
+        keys: conceptName + '.' + keys,
+        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        setKeys,
+        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+      };
     }
-    if (exists) {
-      const newSelector = {...keyedSelector};
-      keyedSelector.conceptName = conceptName;
-      return newSelector;
-    } else {
-      return undefined;
-    }
+    return {
+      conceptName,
+      conceptSemaphore: -1,
+      keys: conceptName + '.' + keys,
+      selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+      setKeys
+    };
   };
 
 /**
  * This will update a concepts KeyedSelector to its currently unified concept.
  * @Note Use this in place of createUnifiedSelector if you find yourself needing to lock deep values.
  */
-export const updateUnifiedKeyedSelector = (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector) => {
-  if (concepts[semaphore]) {
-    const newSelector = {...keyedSelector};
-    keyedSelector.conceptName = concepts[semaphore].name;
-    return newSelector;
-  } else {
-    return undefined;
-  }
-};
+export const updateUnifiedKeyedSelector =
+  (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
+    if (concepts[semaphore]) {
+      const selectorBase = keyedSelector.keys.split('.');
+      selectorBase[0] = concepts[semaphore].name;
+      const selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
+      if (keyedSelector.setKeys) {
+        return {
+          conceptName: concepts[semaphore].name,
+          conceptSemaphore: semaphore,
+          selector,
+          keys: selectorBase.join('.'),
+          setKeys: keyedSelector.setKeys,
+          setSelector: keyedSelector.setSelector
+        };
+      }
+      return {
+        conceptName: concepts[semaphore].name,
+        conceptSemaphore: semaphore,
+        selector,
+        keys: selectorBase.join('.')
+      };
+    } else {
+      return undefined;
+    }
+  };
 
+type Key = string | number | symbol;
+
+type Join<L extends Key | undefined, R extends Key | undefined> = L extends
+  | string
+  | number
+  ? R extends string | number
+    ? `${L}.${R}`
+    : L
+  : R extends string | number
+  ? R
+  : undefined;
+
+type Union<
+  L extends unknown | undefined,
+  R extends unknown | undefined
+> = L extends undefined
+  ? R extends undefined
+    ? undefined
+    : R
+  : R extends undefined
+  ? L
+  : L | R;
+
+// Use this type to define object types you want to skip (no path-scanning)
+type ObjectsToIgnore = { new(...parms: any[]): any } | Date | Array<any>
+
+type ValidObject<T> =  T extends object
+  ? T extends ObjectsToIgnore
+    ? false & 1
+    : T
+  : false & 1;
+
+export type DotPath<
+  T extends object,
+  Prev extends Key | undefined = undefined,
+  Path extends Key | undefined = undefined,
+  PrevTypes extends object = T
+> = string &
+  {
+    [K in keyof T]:
+    // T[K] is a type already checked?
+    T[K] extends PrevTypes | T
+      //  Return all previous paths.
+      ? Union<Union<Prev, Path>, Join<Path, K>>
+      : // T[K] is an object?.
+      Required<T>[K] extends ValidObject<Required<T>[K]>
+      ? // Continue extracting
+        DotPath<Required<T>[K], Union<Prev, Path>, Join<Path, K>, PrevTypes | T>
+      :  // Return all previous paths, including current key.
+      Union<Union<Prev, Path>, Join<Path, K>>;
+  }[keyof T];
 /**
  * Will create a new KeyedSelector during runtime, for usage within your principles.
  * @Note Will want to expand this later, so that we can select into objects and arrays.
  *  This would allow us to lock parts of such in later revisions, not an immediate concern.
  */
-export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
+export const createUnifiedKeyedSelector = <T extends object>(
   concepts: Concepts,
   semaphore: number,
-  key: keyof T
+  keys: DotPath<T>,
+  setKeys?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
-  if (concept) {
-    const name = concept.name;
-    return {
-      conceptName: name,
-      stateKeys: key as string,
-    };
+  try {
+    if (concept) {
+      const selectorBase = [concept.name, ...keys.split('.')];
+      if (setKeys) {
+        return {
+          conceptName: concept.name,
+          conceptSemaphore: semaphore,
+          selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          keys: concept.name + '.' + keys,
+          setKeys,
+          setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+        };
+      }
+      return {
+        conceptName: concept.name,
+        conceptSemaphore: semaphore,
+        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        keys: concept.name + '.' + keys,
+      };
+    }
+  } catch (err) {
+    console.error(err);
+    console.warn('ERROR AT: ', keys);
+  }
+  return undefined;
+};
+
+const recordReturn = (key: string, previous: SelectorFunction) => {
+  return (obj: Record<string, unknown>) => {
+    if (obj[key] !== undefined) {
+      return previous(obj[key] as Record<string, unknown>);
+    } else {
+      return undefined;
+    }
+  };
+};
+const finalReturn = (key: string) => {
+  return (obj: Record<string, unknown>) => {
+    if (obj[key] !== undefined) {
+      return obj[key];
+    } else {
+      return undefined;
+    }
+  };
+};
+const tupleReturn = (key: string | number, previous: SelectorFunction) => {
+  return (obj: Record<string | number, unknown>) => {
+    if (obj[key] !== undefined) {
+      const previousSet = previous(obj);
+      if (previousSet) {
+        return [obj[key], ...previous(obj) as unknown[]];
+      }
+      return [obj[key]];
+    } else {
+      return undefined;
+    }
+  };
+};
+const finalTupleReturn = (key: string | number) => {
+  return (obj: Record<string | number, unknown>) => {
+    if (obj[key] !== undefined) {
+      return [obj[key]];
+    } else {
+      return undefined;
+    }
+  };
+};
+
+const creation = (keys: string[], index: number, length: number, prev?: SelectorFunction | undefined): SelectorFunction | undefined => {
+  let previous: SelectorFunction | undefined = prev;
+  let i = index;
+  if (index === length - 1) {
+    previous = finalReturn(keys[i]);
+    i--;
+  }
+  if (i !== 0 && previous) {
+    previous = recordReturn(keys[i], previous);
+    return creation(keys, i - 1, length, previous);
+  } else if (previous) {
+    return previous;
   } else {
     return undefined;
   }
 };
 
-export function selectState<T>(concepts: Concepts, name: string): T | undefined {
-  let concept;
-  const conceptKeys = Object.keys(concepts);
-  for (const i of conceptKeys) {
-    const index = Number(i);
-    if (concepts[index].name === name) {
-      concept = concepts[index];
-      break;
+const setCreation =
+  (keys: (string | number)[], index: number, length: number, prev?: SelectorFunction | undefined): SelectorFunction | undefined => {
+    let previous: SelectorFunction | undefined = prev;
+    let i = index;
+    if (index === length - 1) {
+      previous = finalTupleReturn(keys[i]);
+      i--;
     }
-  }
-  return concept?.state as T | undefined;
+    if (i !== -1 && previous) {
+      previous = tupleReturn(keys[i], previous);
+      return setCreation(keys, i - 1, length, previous);
+    } else if (previous) {
+      return previous;
+    } else {
+      return undefined;
+    }
+  };
+
+// Temporary until there is a better means to create this form of deep selection
+//  As already I am having to go off script for specific array indexes, despite being able to assemble the logic
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const assembleDynamicSelection = (selection: unknown[]): any => {
+  return selection.join('.');
+};
+
+export function selectState<T>(concepts: Concepts, name: string): T | undefined {
+  const conceptKeys = Object.keys(concepts).map(key => Number(key));
+  const length = conceptKeys.length;
+  const select = (index: number): T | undefined => {
+    if (concepts[conceptKeys[index]].name === name) {
+      return concepts[index].state as T;
+    } else if (index < length - 1) {
+      return select(index + 1);
+    } else {
+      return undefined;
+    }
+  };
+  return select(0);
 }
 
 /**
@@ -95,53 +272,69 @@ export function selectPayload<T>(action: Action): T {
 // Note: The Concept Key within the selector has to be set Explicitly for now
 export function selectSlice<T>(
   concepts: Concepts,
-  selector: KeyedSelector): T | undefined {
-  let concept: Concept | undefined;
-  const conceptKey = selector.conceptName;
-  const conceptKeys = Object.keys(concepts);
-  for (const i of conceptKeys) {
-    const index = Number(i);
-    if (concepts[index].name === conceptKey) {
-      concept = concepts[index];
-      break;
-    } else if (index === conceptKeys.length - 1) {
-      return undefined;
+  keyed: KeyedSelector): T | undefined {
+  const concept: Concept | undefined = (() => {
+    if (keyed.conceptSemaphore === -1) {
+      const name = keyed.conceptName;
+      const conceptKeys = Object.keys(concepts);
+      const length = conceptKeys.length;
+      const select = (index: number): Concept | undefined => {
+        const i = Number(conceptKeys[index]);
+        const possible = concepts[i];
+        if (possible && possible.name === name) {
+          return concepts[i];
+        } else if (index < length) {
+          return select(index + 1);
+        } else {
+          return undefined;
+        }
+      };
+      return select(0);
+    } else {
+      return concepts[keyed.conceptSemaphore];
     }
-  }
-  const keys = selector.stateKeys.split(' ');
+  })();
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
-  let exists = false;
-  let previous = cast;
-  for (const k of keys) {
-    if (typeof previous === 'object' && previous[k] !== undefined) {
-      previous = previous[k];
-      exists = true;
-    } else {
-      exists = false;
-    }
-  }
-  if (exists) {
-    return previous as T;
-  } else {
-    return undefined;
-  }
+  return keyed.selector(cast) as T | undefined;
 }
 
-export function selectConcept(concepts: Concepts, name: string): Concept {
-  let concept;
+export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | undefined {
+  const state: T | undefined = selectSlice<T>(concepts, keyed);
+  if (keyed.setSelector) {
+    return (keyed.setSelector(state as Record<string | number, unknown>)) as T;
+  }
+  return undefined;
+}
+
+export function selectConcept(concepts: Concepts, name: string): Concept | undefined {
   const conceptKeys = Object.keys(concepts);
-  for (const i of conceptKeys) {
-    const index = Number(i);
-    if (concepts[index].name === name) {
-      concept = concepts[index];
-      break;
+  const length = conceptKeys.length;
+  const select = (index: number): Concept | undefined => {
+    const i = Number(conceptKeys[index]);
+    if (concepts[i] && concepts[i].name === name) {
+      return concepts[i];
+    } else if (index < length) {
+      return select(index + 1);
+    } else {
+      return undefined;
     }
-  }
-  return concept as Concept;
+  };
+  return select(0);
 }
 
+/**
+ * Advanced functionality, set a custom key path that may include array indexes.
+ * @example createAdvancedKeys('some', 1, 'once', 2, 'me', 7, 'world', 4) : some.1.once.2.m.7.world.4
+ * @param arr a series of keys that points to your targeted slice
+ * @returns DotPath<T extends object>
+ */
+export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T> {
+  return arr.join('.') as DotPath<T>;
+}
+
+createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
 /**
  * Allows for the Unification of Concepts and a form of Data Oriented Functional Inheritance.
  * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.
@@ -150,11 +343,23 @@ export function selectConcept(concepts: Concepts, name: string): Concept {
 
 // Either returns the current concept's unified state, or informs that the concept has been removed and the principles needs shutdown
 export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T | undefined {
-  const exists = Object.keys(concepts).includes(`${semaphore}`);
-  if (exists) {
+  if (concepts[semaphore]) {
     return concepts[semaphore].state as T;
   } else {
     return undefined;
   }
 }
+
+export const select = ({
+  createUnifiedKeyedSelector,
+  createConceptKeyedSelector,
+  createAdvancedKeys,
+  updateUnifiedKeyedSelector,
+  state: selectState,
+  set: selectSet,
+  payLoad: selectPayload,
+  slice: selectSlice,
+  concept: selectConcept,
+  unifiedState: selectUnifiedState,
+});
 /*#>*/
