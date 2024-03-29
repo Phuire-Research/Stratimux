@@ -281,9 +281,6 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {
       if (action.strategy) {
-        if (action.strategy.topic === 'Counting Strategy') {
-          console.log('Counting Strategy HIT!: ', action);
-        }
         return strategySuccess(action.strategy);
       }
       return {
