@@ -58,7 +58,6 @@ export const permissiveMode: Mode = (
           nextAction.payload = payload;
         }
         if (nextAction.semaphore[2] === axiumState.generation) {
-          console.log('Permissive Action Hit');
           action$.next(nextAction);
         }
       }
