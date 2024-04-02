@@ -44,10 +44,11 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### v0.1.5 4/02/24
+### **BREAKING** v0.1.5 4/02/24
 * Unified the internal concept streams and made a dedicated stream to inform most recent concepts
 * It is now a requirement you use the **stageWaitForOpenThenIterate** helper function in your plans if you are depending on the last strategyTopic property on the axium concept.
 * Added an addition logging property to reveal the internal action stream that can be set when creating your axium. This is separate from the prior logging feature.
+* Method now utilize an internal actionConcept stream of type Subject<Concepts>. Having method creators that utilize the UnifiedSubject will throw a type error and will need to be updated.
 ### **NOTE: Hold off on updating to v0.1.4 and instead use v0.1.2**
 See issue: [https://github.com/Phuire-Research/Stratimux/issues/188](https://github.com/Phuire-Research/Stratimux/issues/188)
 ### **BREAKING Update v0.1.4** 3/28/24
