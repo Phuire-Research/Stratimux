@@ -46,7 +46,6 @@ export const permissiveMode: Mode = (
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
           newConcepts[action.semaphore[0]].state = newState;
-          // console.log('CHECK NEW STATE', newState);
           axiumState.actionConcepts$.next(newConcepts);
           concepts$.next(newConcepts);
         }
@@ -89,10 +88,6 @@ export const blockingMode: Mode = (
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
-        // if (action.strategy?.topic === 'Counting Strategy') {
-        //   console.log('Method Subject', action);
-        // }
-        console.log('Action HIt');
         subject.next(action);
       }
     } else {

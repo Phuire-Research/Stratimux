@@ -62,13 +62,10 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data
     });
-    // setTimeout(() => {
-    console.log('APPEND', appendToDialog);
     setTimeout(() => {
       action$.next(appendToDialog);
       action$.next(action);
     }, 0);
-    // }, 0);
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType

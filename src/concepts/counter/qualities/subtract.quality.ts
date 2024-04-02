@@ -13,7 +13,6 @@ export const counterSubtractType: ActionType = 'Counter Subtract';
 export const counterSubtract = prepareActionCreator(counterSubtractType);
 
 function counterSubtractReducer(state: CounterState) {
-  console.log('SUBTRACT: Incoming', state.count, 'Outgoing', state.count - 1);
   return {
     ...state,
     count: state.count - 1
