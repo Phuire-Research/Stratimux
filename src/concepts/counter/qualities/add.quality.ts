@@ -12,7 +12,6 @@ export const counterAddType: ActionType = 'Counter Add';
 
 export const counterAdd = prepareActionCreator(counterAddType);
 function counterAddReducer(state: CounterState, _: Action) {
-  console.log('ADD: Incoming', state.count, 'Outgoing', state.count + 1);
   return {
     ...state,
     count: state.count + 1
