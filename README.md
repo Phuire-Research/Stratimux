@@ -50,7 +50,7 @@ When in doubt simplify.
 * It is now a requirement you use the **stageWaitForOpenThenIterate(() => action)** helper function in your plans if you are depending on the last strategyTopic property on the axium concept.
 * Added an addition logging property to reveal the internal action stream that can be set when creating your axium. This is separate from the prior logging feature.
 * Method now utilize an internal actionConcept$ stream of type Subject<Concepts>. Method creators that utilize the UnifiedSubject will throw a type error and will need to be updated.
-* **PATCH v0.1.51** Removed debugging logs
+* **PATCH v0.1.51** Removed debugging console.logs
 ### **BREAKING Update v0.1.4** 3/28/24
 * Removed the "on.expected" option from dispatch to reduce inner complexity of your stages
 * Renamed **axium.stage** to **axium.plan** to be in line with industry terminology
