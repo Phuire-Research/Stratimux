@@ -50,6 +50,7 @@ export type AxiumState = {
   exit: boolean;
   conceptCounter: number;
   logging: boolean;
+  logActionStream: boolean;
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
@@ -75,7 +76,7 @@ export type AxiumState = {
 
 export const axiumName = 'axium';
 
-const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean): AxiumState => {
+const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): AxiumState => {
   return {
     name,
     open: false,
@@ -83,6 +84,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     exit: false,
     conceptCounter: 0,
     logging: logging ? logging : false,
+    logActionStream: logActionStream ? logActionStream : false,
     dialog: '',
     storeDialog: storeDialog ? storeDialog : false,
     lastStrategy: '',

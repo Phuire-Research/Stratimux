@@ -632,7 +632,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
     }).bind(this)();
-    console.log('REALLY EXECUTE', plan.stages[index].stage.toString());
     plan.stages[index].stage(this.concepts, dispatcher, changes);
   }
 
@@ -643,7 +642,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   protected nextPlan(plan: Plan, changes: KeyedSelector[]) {
-    console.log('TRIGGER', plan);
     const index = plan.stage;
     if (index < plan.stages.length) {
       if (plan.beat > -1) {
@@ -660,7 +658,6 @@ export class UnifiedSubject extends Subject<Concepts> {
           }, plan.offBeat - Date.now()));
         }
       } else {
-        console.log('EXECUTE');
         this.execute(plan, index, changes);
       }
     }
@@ -683,7 +680,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected handleChange(concepts: Concepts, blocking = false) {
     const oldConcepts = this.concepts;
     this.concepts = concepts;
-    console.log('HITTING ON CHANGE');
     const notifyIds: Map<number, KeyedSelector[]> = new Map();
     for (const [_, slice] of this.selectors) {
       const {selector, ids} = slice;
@@ -725,7 +721,6 @@ export class UnifiedSubject extends Subject<Concepts> {
         this.nextPlan(plan as Plan, []);
       }
     };
-    console.log('CHECK QUES', this.ques);
     for (const p of this.ques[Inner].priorityQue) {
       notification(p.planID);
     }

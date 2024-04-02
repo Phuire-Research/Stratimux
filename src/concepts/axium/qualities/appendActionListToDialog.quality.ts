@@ -20,7 +20,6 @@ export const axiumAppendActionListToDialog =
 export function axiumAppendActionListToDialogReducer(state: AxiumState, action: Action): AxiumState {
   const payload = selectPayload<AppendActionListToDialogPayload>(action);
   let newDialog = '';
-  console.log('Store Dialog', action.payload);
   if (state.storeDialog) {
     payload.actionList.forEach(str => {newDialog += str + ' ';});
     if (state.logging) {
