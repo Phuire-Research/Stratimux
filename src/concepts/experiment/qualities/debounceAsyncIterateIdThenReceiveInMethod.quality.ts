@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 Then debounce the action via the qualities method that will then unify the state's id into the strategy's data.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -12,6 +12,7 @@ import { createAsyncMethodDebounceWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export type ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
@@ -23,7 +24,7 @@ export const experimentDebounceAsyncIterateIdThenReceiveInMethod
     experimentDebounceAsyncIterateIdThenReceiveInMethodType
   );
 
-const experimentDebounceAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentDebounceAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createAsyncMethodDebounceWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(action);

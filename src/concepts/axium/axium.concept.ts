@@ -5,7 +5,7 @@ within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
 import { Subject, Subscription } from 'rxjs';
-import { Concept } from '../../model/concept';
+import { Concept, Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { axiumClosePrinciple } from './axium.close.principle';
@@ -50,6 +50,7 @@ export type AxiumState = {
   exit: boolean;
   conceptCounter: number;
   logging: boolean;
+  logActionStream: boolean;
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
@@ -65,9 +66,8 @@ export type AxiumState = {
   generalSubscribers: NamedSubscription[];
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
+  actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
-  innerConcepts$: UnifiedSubject;
-  subConcepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   badPlans: Plan[];
@@ -76,7 +76,7 @@ export type AxiumState = {
 
 export const axiumName = 'axium';
 
-const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean): AxiumState => {
+const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): AxiumState => {
   return {
     name,
     open: false,
@@ -84,6 +84,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     exit: false,
     conceptCounter: 0,
     logging: logging ? logging : false,
+    logActionStream: logActionStream ? logActionStream : false,
     dialog: '',
     storeDialog: storeDialog ? storeDialog : false,
     lastStrategy: '',
@@ -99,9 +100,8 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     generalSubscribers: [] as NamedSubscription[],
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
+    actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
-    innerConcepts$: new UnifiedSubject(),
-    subConcepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     badPlans: [],

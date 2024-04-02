@@ -25,9 +25,8 @@ export const axiumPrinciple: PrincipleFunction = (
 ) => {
   let allowAdd = true;
   let allowRemove = true;
-  const addConceptsPlan = concepts$.plan('Add Concepts Plan', [
+  const addConceptsPlan = concepts$.innerPlan('Add Concepts Plan', [
     createStage((_concepts, dispatch) => {
-      console.log('Hitting Sub for Add Concept');
       const axiumState = _concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
@@ -84,7 +83,8 @@ export const axiumPrinciple: PrincipleFunction = (
         const newAxiumState = newConcepts[0].state as AxiumState;
         newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
 
-        axiumState.concepts$?.next(newConcepts);
+        axiumState.actionConcepts$.next(newConcepts);
+        axiumState.concepts$.next(newConcepts);
 
         dispatch(strategyBegin(addConceptsFromQueThenUnblockStrategy(newConcepts)), {
           throttle: 50
@@ -93,7 +93,7 @@ export const axiumPrinciple: PrincipleFunction = (
     }, { selectors: [axiumSelectAddConceptQue], priority: Infinity - 1}),
   ]);
 
-  const removeConceptsPlan = concepts$.plan('Remove Concepts Plan', [
+  const removeConceptsPlan = concepts$.innerPlan('Remove Concepts Plan', [
     createStage((_concepts, dispatch) => {
       const axiumState = _concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {
@@ -153,7 +153,6 @@ export const axiumPrinciple: PrincipleFunction = (
                   return caught;
                 }));
               const methodSub = quality.method.subscribe((action: Action) => {
-                console.log('HIT');
                 blockingMethodSubscription(axiumState.action$, action);
               }) as Subscriber<Action>;
               const _axiumState = newConcepts[0].state as AxiumState;
@@ -164,8 +163,8 @@ export const axiumPrinciple: PrincipleFunction = (
             }
           });
         });
+        axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
-
         dispatch(strategyBegin(
           removeConceptsViaQueThenUnblockStrategy(newConcepts)), {
           throttle: 50

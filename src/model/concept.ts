@@ -12,7 +12,6 @@ import { map } from 'rxjs';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
-import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -27,7 +26,8 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
+export type MethodCreator = (concept$?: Subject<Concepts>, semaphore?: number) => [Method, Subject<Action>];
+// export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
 export type Quality = {
   actionType: ActionType;
@@ -281,9 +281,6 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {
       if (action.strategy) {
-        if (action.strategy.topic === 'Counting Strategy') {
-          console.log('Counting Strategy HIT!: ', action);
-        }
         return strategySuccess(action.strategy);
       }
       return {

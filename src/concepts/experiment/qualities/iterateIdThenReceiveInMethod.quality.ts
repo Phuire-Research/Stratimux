@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 set the id supplied to the method into the strategy's data field.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -11,12 +11,13 @@ import { UnifiedSubject } from '../../../model/stagePlanner';
 import { createMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export const experimentIterateIdThenReceiveInMethodType = 'Experiment iterate ID then receive in Method via State';
 
 export const experimentIterateIdThenReceiveInMethod = prepareActionCreator(experimentIterateIdThenReceiveInMethodType);
 
-const experimentIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createMethodWithState<ExperimentState>((action, state) => {
     if (action.strategy) {
       const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});

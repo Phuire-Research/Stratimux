@@ -16,6 +16,7 @@ export const nullActionType: ActionType = 'null';
 const axiumConcludeType: ActionType = 'Conclude';
 const axiumBadActionType: ActionType = 'Axium received a Bad Action';
 const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
+const axiumOpenType: ActionType = 'Open Axium';
 
 export type ActionType = string;
 export type Action = {
@@ -156,6 +157,9 @@ function getSpecialSemaphore(type: ActionType) {
   case axiumSetBlockingModeType: {
     return 4;
   }
+  // case axiumOpenType: {
+  //   return 5;
+  // }
   default: {
     return 0;
   }

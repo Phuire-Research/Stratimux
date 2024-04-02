@@ -8,7 +8,6 @@ import { Action, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumBadActionPayload } from './qualities/badAction.quality';
-import { counterAdd } from '../counter/qualities/add.quality';
 
 export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
   let actionable = true;
@@ -37,9 +36,6 @@ export const permissiveMode: Mode = (
         let subject: Subject<Action>;
         if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
           subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<Action>;
-          if (action.strategy?.topic === 'Counting Strategy') {
-            console.log('Method Subject', action);
-          }
           subject.next(action);
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
@@ -50,9 +46,9 @@ export const permissiveMode: Mode = (
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
           newConcepts[action.semaphore[0]].state = newState;
-
+          // console.log('CHECK NEW STATE', newState);
+          axiumState.actionConcepts$.next(newConcepts);
           concepts$.next(newConcepts);
-          axiumState.subConcepts$.next(newConcepts);
         }
       } else {
         const nextAction = primeAction(concepts, action);
@@ -87,7 +83,8 @@ export const blockingMode: Mode = (
         const newConcept = {...newConcepts[action.semaphore[0]]};
         newConcepts[action.semaphore[0]] = newConcept;
         newConcepts[action.semaphore[0]].state = newState;
-        axiumState.innerConcepts$.next(newConcepts);
+        axiumState.actionConcepts$.next(newConcepts);
+        axiumState.concepts$.nextBlocking(newConcepts);
       }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
@@ -95,6 +92,7 @@ export const blockingMode: Mode = (
         // if (action.strategy?.topic === 'Counting Strategy') {
         //   console.log('Method Subject', action);
         // }
+        console.log('Action HIt');
         subject.next(action);
       }
     } else {

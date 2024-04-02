@@ -20,14 +20,12 @@ import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
-  axiumName,
 } from '../concepts/axium/axium.concept';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
-import { counterName } from '../concepts/counter/counter.concept';
 
 export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
   if (
@@ -64,17 +62,20 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data
     });
+    // setTimeout(() => {
+    console.log('APPEND', appendToDialog);
     setTimeout(() => {
       action$.next(appendToDialog);
       action$.next(action);
     }, 0);
+    // }, 0);
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
     setTimeout(() => {
-      action$?.next(action);
+      action$.next(action);
     }, 0);
   }
 };
@@ -122,7 +123,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
   }));
   axiumState.action$
     .pipe(
-      withLatestFrom(axiumState.innerConcepts$),
+      withLatestFrom(axiumState.actionConcepts$),
       // This will be where the Ownership Principle will be Loaded
       // As Such is a Unique Principle in the Scope of State Management
       // This will also allow for Actions to be added to the Stream to Update to most Recent Values
@@ -137,7 +138,9 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
-      // console.log('CHECK ACTION STREAM', action.type, action.strategy?.actionList, action.semaphore);
+      if (getAxiumState(_concepts).logActionStream) {
+        console.log('CHECK ACTION STREAM', action.type, action.payload, action.semaphore, action.strategy?.topic);
+      }
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
@@ -145,15 +148,8 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
 
   axiumState = concepts[0].state as AxiumState;
   const action$ = axiumState.action$;
-  const subConcepts$ = axiumState.subConcepts$;
-  const concepts$Sub = axiumState.concepts$.subscribe(_concepts => {
-    axiumState.innerConcepts$.next(_concepts);
-  });
-  axiumState.generalSubscribers.push({
-    name: axiumName,
-    subscription: concepts$Sub
-  });
-  axiumState.concepts$.next(concepts);
+  axiumState.actionConcepts$.next(concepts);
+  axiumState.concepts$.init(concepts);
   axiumState.action$.next(
     strategyBegin(initializationStrategy(concepts)),
   );
@@ -163,13 +159,13 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
     }));
   };
   return {
-    subscribe: subConcepts$.subscribe.bind(subConcepts$),
-    unsubscribe: subConcepts$.unsubscribe.bind(subConcepts$),
+    subscribe: axiumState.concepts$.subscribe.bind(axiumState.concepts$),
+    unsubscribe: axiumState.concepts$.unsubscribe.bind(axiumState.concepts$),
     close: close,
     dispatch: (action: Action) => {
       action$.next(action);
     },
-    plan: subConcepts$.plan.bind(subConcepts$),
+    plan: axiumState.concepts$.outerPlan.bind(axiumState.concepts$),
   };
 }
 

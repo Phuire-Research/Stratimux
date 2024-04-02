@@ -14,7 +14,7 @@ import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
-import { createStage } from '../model/stagePlanner';
+import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
@@ -24,6 +24,7 @@ test('Stage Planner Beat Test', (done) => {
   ], true, true);
   const beat = 105;
   const plan = axium.plan('Stage Planner Beat Test', [
+    stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((concepts, dispatch) => {
       console.log('HIT 1');
       timerActive = true;
