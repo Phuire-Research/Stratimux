@@ -15,6 +15,8 @@ import { Action, ActionType } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { getAxiumState, isAxiumOpen } from './axium';
+import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
+import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 
 export type Plan = {
   id: number;
@@ -82,7 +84,7 @@ export type StageDelimiter = {
 }
 
 export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
-  if (isAxiumOpen(concepts)) {
+  if (isAxiumOpen(concepts) && getAxiumState(concepts).lastStrategy === initializeTopic) {
     dispatch(func(), {
       iterateStage: true
     });
@@ -91,7 +93,7 @@ export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (cre
 
 export const stageWaitForOwnershipThenIterate =
   (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
-    if (selectSlice(concepts, ownershipSelectInitialized)) {
+    if (selectSlice(concepts, ownershipSelectInitialized) && getAxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
       });
