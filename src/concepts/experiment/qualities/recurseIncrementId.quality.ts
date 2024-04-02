@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 limited via a control variable that is an arbitrary string array that is shifted until depleted.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -12,6 +12,7 @@ import { createAsyncMethodWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export type ExperimentRecurseIterateId = {controlling: string[]};
 export const experimentRecurseIterateIdType
@@ -19,7 +20,7 @@ export const experimentRecurseIterateIdType
 
 export const experimentRecurseIterateId = prepareActionWithPayloadCreator<ExperimentRecurseIterateId>(experimentRecurseIterateIdType);
 
-const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentRecurseIterateIdCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<ExperimentRecurseIterateId>(action);

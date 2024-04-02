@@ -4,7 +4,7 @@ Then debounce the quality of actions within a range. To dispatch the most recent
 That will finally unify the state id and setId from the payload into the most recent strategies data field.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -13,6 +13,7 @@ import { createMethodDebounceWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;
@@ -25,7 +26,7 @@ export const experimentDebounceIterateIdThenReceiveInMethod =
     experimentDebounceIterateIdThenReceiveInMethodType
   );
 
-const experimentDebounceIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentDebounceIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createMethodDebounceWithState<ExperimentState>((action, state) => {
     const payload = selectPayload<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action);
     if (action.strategy) {

@@ -11,12 +11,15 @@ import {
 } from '../concepts/axium/strategies/removeConcept.strategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { forEachConcept } from '../model/concept';
-import { createStage } from '../model/stagePlanner';
+import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
+import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], true, true);
   const plan = axium.plan('Remove Concepts Stage',[
+    stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((concepts, dispatch) => {
+      console.log('REMOVE');
       dispatch(
         strategyBegin(
           addConceptsToRemovalQueThenBlockStrategy(concepts,[createCounterConcept()])
@@ -27,6 +30,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
     }),
     createStage((concepts) => {
       const axiumState = concepts[0].state as AxiumState;
+      console.log('VERIFY', axiumState.lastStrategy);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;
         forEachConcept(concepts, (concept => {

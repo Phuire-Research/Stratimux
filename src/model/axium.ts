@@ -20,7 +20,6 @@ import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
-  axiumName,
 } from '../concepts/axium/axium.concept';
 import {
   axiumAppendActionListToDialog,
@@ -63,17 +62,20 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data
     });
+    // setTimeout(() => {
+    console.log('APPEND', appendToDialog);
     setTimeout(() => {
       action$.next(appendToDialog);
       action$.next(action);
     }, 0);
+    // }, 0);
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
     setTimeout(() => {
-      action$?.next(action);
+      action$.next(action);
     }, 0);
   }
 };
@@ -136,7 +138,7 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       const modeIndex = _axiumState.modeIndex;
-      // console.log('CHECK ACTION STREAM', action.type, action.semaphore);
+      console.log('CHECK ACTION STREAM', action.type, action.semaphore, action.strategy?.topic, action.payload);
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
@@ -144,7 +146,8 @@ export function createAxium(name: string, initialConcepts: Concept[], logging?: 
 
   axiumState = concepts[0].state as AxiumState;
   const action$ = axiumState.action$;
-  axiumState.concepts$.next(concepts);
+  axiumState.actionConcepts$.next(concepts);
+  axiumState.concepts$.init(concepts);
   axiumState.action$.next(
     strategyBegin(initializationStrategy(concepts)),
   );

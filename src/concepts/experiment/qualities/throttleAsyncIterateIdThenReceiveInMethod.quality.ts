@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 asynchronously dispatch the next action in the incoming strategy, then throttle the quality for a period of time.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -12,6 +12,7 @@ import { createAsyncMethodThrottleWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export type ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
@@ -23,7 +24,7 @@ export const experimentThrottleAsyncIterateIdThenReceiveInMethod
     experimentThrottleAsyncIterateIdThenReceiveInMethodType
   );
 
-const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentThrottleAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createAsyncMethodThrottleWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       const payload = selectPayload<ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload>(action);

@@ -3,7 +3,7 @@ For the graph programming framework Stratimux and Experiment Concept, generate a
 Then its method will asynchronously unify the state's id value onto the strategy.
 $>*/
 /*<#*/
-import { MethodCreator } from '../../../model/concept';
+import { Concepts, MethodCreator } from '../../../model/concept';
 import { Action, prepareActionCreator } from '../../../model/action';
 import { createQuality } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
@@ -11,13 +11,14 @@ import { UnifiedSubject } from '../../../model/stagePlanner';
 import { createAsyncMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { Subject } from 'rxjs';
 
 export const experimentAsyncIterateIdThenReceiveInMethodType
   = 'Experiment asynchronously iterate ID then receive in Method via State';
 
 export const experimentAsyncIterateIdThenReceiveInMethod = prepareActionCreator(experimentAsyncIterateIdThenReceiveInMethodType);
 
-const experimentAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const experimentAsyncIterateIdThenReceiveInMethodCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
     setTimeout(() => {
       if (action.strategy) {

@@ -162,7 +162,7 @@ function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-const uXqOfUXCreator: MethodCreator = (concepts$?: UnifiedSubject, semaphore?: number) =>
+const uXqOfUXCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
   // Only if you need to access state, otherwise
   createMethodWithState<UXState>((action, state) => {
     if (action.strategy) {

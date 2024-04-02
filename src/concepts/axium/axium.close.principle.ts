@@ -18,7 +18,7 @@ export const axiumClosePrinciple: PrincipleFunction = (
   semaphore: number
 ) => {
   let init = false;
-  const plan = concepts$.plan('Plan Axium Close', [
+  const plan = concepts$.innerPlan('Plan Axium Close', [
     createStage((concepts, dispatch) => {
       const state = selectUnifiedState<AxiumState>(concepts, semaphore);
       if (!init && state?.prepareClose) {

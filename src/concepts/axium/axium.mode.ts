@@ -46,7 +46,8 @@ export const permissiveMode: Mode = (
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
           newConcepts[action.semaphore[0]].state = newState;
-
+          // console.log('CHECK NEW STATE', newState);
+          axiumState.actionConcepts$.next(newConcepts);
           concepts$.next(newConcepts);
         }
       } else {
@@ -57,6 +58,7 @@ export const permissiveMode: Mode = (
           nextAction.payload = payload;
         }
         if (nextAction.semaphore[2] === axiumState.generation) {
+          console.log('Permissive Action Hit');
           action$.next(nextAction);
         }
       }
@@ -82,6 +84,7 @@ export const blockingMode: Mode = (
         const newConcept = {...newConcepts[action.semaphore[0]]};
         newConcepts[action.semaphore[0]] = newConcept;
         newConcepts[action.semaphore[0]].state = newState;
+        axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.nextBlocking(newConcepts);
       }
       let subject: Subject<Action>;
@@ -90,6 +93,7 @@ export const blockingMode: Mode = (
         // if (action.strategy?.topic === 'Counting Strategy') {
         //   console.log('Method Subject', action);
         // }
+        console.log('Action HIt');
         subject.next(action);
       }
     } else {
