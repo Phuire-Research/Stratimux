@@ -77,9 +77,15 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
   }
 };
 
-export function createAxium(name: string, initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean): Axium {
+export function createAxium(
+  name: string,
+  initialConcepts: Concept[],
+  logging?: boolean,
+  storeDialog?: boolean,
+  logActionStream?: boolean
+): Axium {
   const concepts: Concepts = {};
-  const init = [createAxiumConcept(name, logging, storeDialog), ...initialConcepts];
+  const init = [createAxiumConcept(name, storeDialog, logging, logActionStream), ...initialConcepts];
   init.forEach((concept, i) => {
     concept.semaphore = i;
     concepts[i] = concept;
@@ -171,7 +177,7 @@ export type Axium = {
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action) => void;
-  plan: (title: string, stages: Staging[], beat?: number) => StagePlanner
+  plan: (title: string, stages: Staging[]) => StagePlanner
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);

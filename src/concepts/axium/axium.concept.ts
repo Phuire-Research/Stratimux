@@ -109,10 +109,10 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
   };
 };
 
-export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?: boolean): Concept =>  {
+export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): Concept =>  {
   return createConcept(
     axiumName,
-    createAxiumState(name, storeDialog, logging),
+    createAxiumState(name, storeDialog, logging, logActionStream),
     [
       axiumKickQuality,
       axiumOpenQuality,

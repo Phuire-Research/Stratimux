@@ -24,6 +24,7 @@ As in the scope of some rapid rise of generative information. This simplicity of
 export type Quality = {
   actionType: ActionType;
   reducer: Reducer;
+  toString: () => string;
   methodCreator?: MethodCreator;
   method?: Method;
   subject?: Subject<Action>;
@@ -34,6 +35,7 @@ export type Quality = {
 ```
 * actionType - Is the type of action and logical explanation of functionality
 * reducer - Alters the state of a concept
+* toString - Qualities are each assigned their own toString method to enable advanced configurations.
 * methodCreator - Creates a subject and method that utilizes the observer for additional control of flow. Including that of moving actions off premise, to be later remitted back into the action stream.
 * method - Is the implementation of the strategy pattern via to facilitate higher order functionality to enable additional composability.
 * subject - Used within the mode to inform the method of an action to be consumed.
@@ -46,6 +48,7 @@ export type Quality = {
 export type Concept = {
   name: string;
   state: unknown;
+  unified: string[];
   qualities: Quality[];
   principles?: PrincipleFunction[];
   mode?: Mode[];
@@ -54,6 +57,7 @@ export type Concept = {
 ```
 * name - The identifier of the concept to be used in conjunction with selection.
 * state - Is the state of the concept of properties identified by the programmer to achieve functionality.
+* unified - A simple list keeping track of what concepts have been unified to formalize the concept. Assigned via the unifyConcepts function.
 * qualities - Is a list of qualities that relay to the actions that mechanize the concept throughout your applications.
 * principles - Are observers of state of your application or that of external mechanisms. That emit some action into the axium based upon that observation.
 * mode - A mode is a function and point of recursion of the runtime that the concept may utilize to achieve a specific functionality necessary for that concept. This should rarely be expanded upon.
