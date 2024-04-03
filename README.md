@@ -296,10 +296,11 @@ import { createUXConcept } from './concepts/uX/uX.concept';
 
 (() => {
   const axiumName = 'Name of your axium';
-  // Sets logging to true and store dialog to true
-  //  This will log to the console the dialog of each successive ActionStrategy
-  //  And store the entire application context in the axium's dialog.
-  //  The final boolean will allow the action stream to be logged to console
+  // First boolean sets logging to true.
+  // Second set store dialog to true.
+  //  This will log to the console the dialog of each successive ActionStrategy.
+  //    And store the entire application context in the axium's dialog.
+  // The final boolean will allow the action stream to be logged to console for debugging purposes
   createAxium(axiumName, [createUXConcept()], true, true, true);
 })();
 ```
