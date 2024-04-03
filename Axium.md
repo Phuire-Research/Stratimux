@@ -7,11 +7,20 @@ There is much to be expanded upon this as a potential platform of doing. Where t
 
 ## Working with the Axium
 ```typescript
-export function createAxium(initialConcepts: Concept[], logging?: boolean, storeDialog?: boolean) : {
-  subscribe: () => {},
-  unsubscribe: () => {},
-  close: () => {},
-  dispatch: (action: Action) => {}
+export function createAxium(
+  name: string,
+  initialConcepts: Concept[],
+  logging?: boolean,
+  storeDialog?: boolean,
+  logActionStream?: boolean
+): Axium { }
+
+export type Axium = {
+  subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
+  unsubscribe: () => void;
+  close: (exit?: boolean) => void;
+  dispatch: (action: Action) => void;
+  plan: (title: string, stages: Staging[]) => StagePlanner
 }
 ```
 
@@ -20,51 +29,64 @@ Note here an additional departure of what would be supplied to the store is an a
 The design decision here allows us to forgo the need for dependency injection. And later we will discuss axium qualities that would allow the change of concepts loaded or generated into the axium at run time. Which if one chooses to alter the composition of the Axium, the generation is iterated upon. This accomplishes one of the primary qualities that satisfies the specification laid out by the Unified Turing Machine. Where by the finite symbol reference table is of a logical selection and permitting some testable ability to halt. Is the logical deterministic means of solving the halting problem of the classical turing machine. But this is only if we accept that concepts and their qualities have an amount of completeness towards their ability to halt. That the inability to halt, is a specific design choice or consequence of the machine at some point of scale, not yet accounted for, or done so on purpose. For example: while(true). As the axium in reality is just a recursive self transforming function, that removes the need for a loop.
 
 ```typescript
-export type AxiumState {
+export type AxiumState = {
   name: string;
   open: boolean;
+  prepareClose: boolean;
   exit: boolean;
+  conceptCounter: number;
   logging: boolean;
+  logActionStream: boolean;
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
   lastStrategyData: unknown;
   lastStrategyDialog: string;
   generation: number;
+  cachedSemaphores: Map<string,Map<string,[number,number,number, number]>>
   modeIndex: number;
   defaultModeIndex: number;
   modeNames: string[]
-  methodSubscribers: NamedSubscribers[];
-  generalSubscribers: NamedSubscribers[];
+  methodSubscribers: NamedSubscription[];
+  principleSubscribers: NamedSubscription[];
+  generalSubscribers: NamedSubscription[];
+  stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
+  actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
-  innerConcepts$: UnifiedSubject;
-  subConcepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
+  badPlans: Plan[];
+  badActions: Action[];
 }
 ```
 * name - This should be set to a unique network identifier, and/or the concept of your system.
-* open - This is utilized by principles and external subscribers to denote when they should initialize their functionality. 
+* open - This is utilized by principles and external subscribers to denote when they should initialize their functionality.
+* prepareClose - Flag to signal the axium's internal close principle to initialize shut down process.
 * exit - Controls whether close will have the process exit.
+* conceptCounter - Simple counter to keep track of what numbered identifiers are safe to assign to concepts.
 * logging - controls whether the Stratimux dialog paragraphs are emitted upon strategy completion. In addition to other debugging procedures.
+* logActionStream - Forces the axium to log each action incoming from the action$ stream.
 * dialog - Is the internal representation of the strategies that the axium has ran.
 * storeDialog - This is set to false by default to save on memory, but if true will store each dialog, and allows such to be subscribed to.
 * lastStrategy - Informs specifically the of the last ActionStrategy topic to have ran through the system. This is used via testing or the deployment of addition strategies upon completion.
 * lastStrategyData - Paired with lastStrategy. Use to access thee last data of the previous strategy.
 * lastStrategyDialog - Will only store the lastStrategy actionList as a dialog if storeDialog is set to true for performance reasons. This allows access of your strategies final action list as a verbose dialog.
 * generation - This iterates each time the Set of Concepts is transformed. And if an action is received of the wrong generation. Will be primed at run time, if not found this will emit a badAction that if logging is set to True. Will be emitted to the console alongside the invalidated action as payload.
+* cachedSemaphores - For internal use, is recalculated each time a concept is loaded or removed.
 * modeIndex - This determines which Mode is currently being ran from the lists of modes stored on the axium concept.
 * defaultModeIndex - This determines what mode will be set by setDefaultMode. Of importance for adding and removing strategies.
 * modeNames - Is the paring of a name that correspond to mode and their respective index that allow for the mode to altered at run time without string comparison.
 * methodSubscribers - Accumulates all method subscriptions for their manipulation at run time.
+* principleSubscribers - Aggregator that registers the subscription assigned to each loaded principle, this subscription passes actions directly to the action$ stream.
 * generalSubscribers - Same as method subscribers, but a catch all including that of principles and their internal subscriptions that would ordinarily leave principles as hot and active in memory if not concluded upon removal or close.
-* action$ - Is the internal action stream.  
-* concepts$ - Is the internal Concepts stream that methods and principles have access to, will not be notified in blocking mode.
-* innerConcepts$ - Internal Concepts stream that only the Axium principles have access to.
-* subConcepts$ - This is the outer subscription that other axiums or applications may have access to. While in blocking mode, these subscriptions are not updated.
+* action$ - Is the internal action stream.
+* actionConcepts$ - A simple subject that ensures that reducers, methods, and principles each have access to the most recent concepts.
+* concepts$ - Is the internal concepts stream that informs plans and subscriptions to the axium of changes to the loaded concepts, will not be notified in blocking mode.
 * addConceptQue - The current pattern to allow for principles to effect the concepts within the application. Rather than a direct subscription to the action$, they listen to state properties to control what actions they emit into the stream. In this case a set of concepts to be loaded into the axium.
 * removeConceptQue - The inverse of the above to remove concepts.
+* badPlans - Stores plans that have experienced action overflow.
+* badActions - Keeps track of all actions that cannot be registered via the cachedSemaphores property.
 
 ## The Anatomy of an Axium
 * Action - Is a dumb object that is supplied some data as payload or performs some transformation of state based on its semaphore which is inferred via its type. Is the messaging protocol of an axium.
@@ -115,5 +137,5 @@ Note these strategies can be broken into two parts responsibly, one to be ran vi
 *Note* That the addition of the axium concept itself is an addition departure from the FLUX architecture. This will be refined over time as specifics needs grow and should be seen as a work in progress. But, this should also be limited in its functionality to allow for the addition of concepts to expand the total functionality of the Axium paradigm.
 
 ## Axium Modes
-* Default Mode - This Mode uses the simple trick of setTimeout(() => {}, 0) to allow for the axium to have some non blocking behavior. As this functionality directly engages with the event loop. In addition this mode will emit the internal concepts to the outer subConcept$ stream.
-* Blocking Mode - This would be the synchronous mode behavior of the axium in order to allow for internal modifications of the axium's set of concepts. While blocking the potential of outside subscriptions to be notified of additional state changes of the application. And thus potential conflicts of dispatched actions during these changes. Even if dispatched and the concepts are removed, these actions would be invalidated due to the internal semaphore behavior.
+* Permissive Mode - This Mode uses the simple trick of setTimeout(() => {}, 0) to allow for the axium to have some non blocking behavior. As this functionality directly engages with the event loop. In addition this mode will emit the internal concepts to the base and outer plans.
+* Blocking Mode - This would be the synchronous mode behavior of the axium in order to allow for internal modifications of the axium's set of concepts. While blocking the potential of outside subscriptions to be notified of additional state changes of the application. And thus potential conflicts of dispatched actions during these changes. Even if dispatched and the concepts are removed, these actions will added to the badActions list.

@@ -70,7 +70,7 @@ export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?:
 };
 
 export class UnifiedSubject extends Subject<Concepts> {
-  plan(title: string, stages: PartialStaging[], beat?: number): StagePlanner {}
+  plan(title: string, stages: PartialStaging[]): StagePlanner {}
 }
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
