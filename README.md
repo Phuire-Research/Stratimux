@@ -18,6 +18,7 @@
 
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
+* [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
 * [logixUX](https://github.com/Phuire-Research/logixUX) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
 
 ### Advice when Encountering Branch Prediction Errors.
@@ -27,7 +28,7 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
-### [TS Documentation](https://tsdocs.dev/docs/stratimux/0.1.1)
+### [TS Documentation](https://tsdocs.dev/docs/stratimux/0.1.52)
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Axium](https://github.com/Phuire-Research/Stratimux/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
