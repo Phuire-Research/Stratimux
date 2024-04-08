@@ -18,6 +18,7 @@
 
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
+* [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
 * [logixUX](https://github.com/Phuire-Research/logixUX) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
 
 ### Advice when Encountering Branch Prediction Errors.
