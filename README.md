@@ -28,6 +28,7 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
+### [Stratimux is a Function as Operating System](https://dev.to/phuire/stratimux-is-a-function-as-operating-system-50ik)
 ### [TS Documentation](https://tsdocs.dev/docs/stratimux/0.1.52)
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
