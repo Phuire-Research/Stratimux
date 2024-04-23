@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Counter Concept, generate a quality that will increment the state's count by one.
+For the asynchronous graph programming framework Stratimux and Counter Concept, generate a quality that will increment the state's count by one.
 $>*/
 /*<#*/
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';

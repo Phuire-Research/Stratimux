@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept,
+For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a quality that will set the Axium's mode to blocking. While in this mode
 the Axium operates in a synchronous behavior to quickly modify the Axium's conceptual set.
 $>*/

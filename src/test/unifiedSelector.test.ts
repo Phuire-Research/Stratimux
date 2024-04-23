@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux,
+For the asynchronous graph programming framework Stratimux,
 generate a test that ensures that the functionality of different state selector consumer functions.
 That specifically you can utilize the incoming semaphore to create new KeyedSelectors, or update old ones.
 $>*/

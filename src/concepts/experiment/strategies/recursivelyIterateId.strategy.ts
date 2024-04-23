@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a strategy that will cursively iterate the Experiment's state ID,
 that is limited by an incoming array of strings.
 $>*/

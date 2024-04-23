@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept,
+For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate a quality clear pending actions of the provided ActionStrategy topic.
 $>*/
 /*<#*/

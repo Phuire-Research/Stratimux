@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test that logs how a concept would be parsed to a stream to the console.
+For the asynchronous graph programming framework Stratimux, generate a test that logs how a concept would be parsed to a stream to the console.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';

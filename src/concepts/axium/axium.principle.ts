@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept,
+For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a principle that will allow for the modification of the Axium's loaded concepts.
 $>*/
 /*<#*/

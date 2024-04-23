@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Principle model file.
+For the asynchronous graph programming framework Stratimux, define the Principle model file.
 This file allows for user to define Principle Functions, as well as for the axium to initialize those functions
 within its recursive run time.
 $>*/

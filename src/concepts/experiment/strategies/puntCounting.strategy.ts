@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a strategy that will punt a counting strategy in favor of a new
 strategy that will check in the punted strategy into an actionQue. That will later be dispatched via a principle.
 $>*/

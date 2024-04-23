@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a tests and demonstrates how debouncing methods perform their functionality.
+For the asynchronous graph programming framework Stratimux, generate a tests and demonstrates how debouncing methods perform their functionality.
 $>*/
 /*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';

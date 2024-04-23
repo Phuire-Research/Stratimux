@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Action Controller model file.
+For the asynchronous graph programming framework Stratimux, define the Action Controller model file.
 This file defines the asynchronous functionality for Methods.
 That will utilize an Action's expiration as a means to invalidate an Action if the asynchronous functionality has
 reached its expiration. Emitting a Strategy Failed if the Action was a Strategy, or bad action if the strategy was

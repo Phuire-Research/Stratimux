@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux,
+For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/

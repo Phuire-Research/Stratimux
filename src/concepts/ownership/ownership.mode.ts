@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept,
+For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate mode that will govern the ownership system.
 This mode will pay attention to an ActionStrategy's assigned KeyedSelector and if it currently does not have
 ownership of the value that the selector would return via the selectSlice helper function.

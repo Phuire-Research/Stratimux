@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept, generate an ActionStrategy that will dispatch the
+For the asynchronous graph programming framework Stratimux and Experiment Concept, generate an ActionStrategy that will dispatch the
 async iterate id that will later notify the Axium of its conclusion.
 $>*/
 /*<#*/

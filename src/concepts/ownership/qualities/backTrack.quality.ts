@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept, generate a quality that will back track the provided strategy.
+For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a quality that will back track the provided strategy.
 $>*/
 /*<#*/
 import { MethodCreator, createQuality, defaultReducer, nullReducer } from '../../../model/concept';

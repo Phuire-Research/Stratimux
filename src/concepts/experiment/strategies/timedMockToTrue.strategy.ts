@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a strategy that will eventually set the Experiment's mock property
 to true. This is accomplished via a timer emit action quality. That will then finally dispatch the setting action.
 $>*/

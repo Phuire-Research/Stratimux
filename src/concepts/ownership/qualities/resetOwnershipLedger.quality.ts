@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept, generate a quality that hard resets the current ownership ledger.
+For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a quality that hard resets the current ownership ledger.
 $>*/
 /*<#*/
 import { createQuality, defaultMethodCreator } from '../../../model/concept';

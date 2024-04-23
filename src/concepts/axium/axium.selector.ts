@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a series of KeyedSelectors for the AxiumState.
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a series of KeyedSelectors for the AxiumState.
 $>*/
 /*<#*/
 import { KeyedSelector, createConceptKeyedSelector } from '../../model/selector';

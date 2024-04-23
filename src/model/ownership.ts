@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Ownership model file.
+For the asynchronous graph programming framework Stratimux, define the Ownership model file.
 This file will dictate functionality used within the Ownership Concept to engage in its functionality.
 $>*/
 /*<#*/

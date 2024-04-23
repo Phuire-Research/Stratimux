@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and a Experiment PlanOptions Concept, generate both possible selectors
+For the asynchronous graph programming framework Stratimux and a Experiment PlanOptions Concept, generate both possible selectors
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';

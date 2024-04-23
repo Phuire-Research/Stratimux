@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure that actions are being created as intended.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that actions are being created as intended.
 $>*/
 /*<#*/
 import { createAction } from '../model/action';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Axium's mode to Ownership.
+For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Axium's mode to Ownership.
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';

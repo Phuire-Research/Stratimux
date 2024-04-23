@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux generate the Experiment Concept that will be used in testing to confirm
+For the asynchronous graph programming framework Stratimux generate the Experiment Concept that will be used in testing to confirm
 different configurations of Stratimux to be provably terminating.
 $>*/
 /*<#*/

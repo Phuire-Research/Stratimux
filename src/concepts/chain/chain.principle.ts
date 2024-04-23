@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Chain Concept,
+For the asynchronous graph programming framework Stratimux and Chain Concept,
 generate a principle that observes the chain's actionQue and dispatches
 those actions in order upon each state notification.
 $>*/

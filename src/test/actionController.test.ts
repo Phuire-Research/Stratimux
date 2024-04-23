@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure that the ActionController model is working as intended.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that the ActionController model is working as intended.
 $>*/
 /*<#*/
 import { ActionController, createActionController$ } from '../model/actionController';

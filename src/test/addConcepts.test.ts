@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test that ensures that the Axium can add concepts into its conceptual sets.
+For the asynchronous graph programming framework Stratimux, generate a test that ensures that the Axium can add concepts into its conceptual sets.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Counter Concept, generate a quality that will decrement the state count by one.
+For the asynchronous graph programming framework Stratimux and Counter Concept, generate a quality that will decrement the state count by one.
 $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/concept';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';

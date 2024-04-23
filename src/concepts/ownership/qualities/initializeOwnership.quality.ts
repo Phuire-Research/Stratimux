@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept,
+For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate a quality that will simply set ownership's initialized property to true.
 $>*/
 /*<#*/

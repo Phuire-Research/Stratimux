@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the
+For the asynchronous graph programming framework Stratimux and Experiment Concept, generate a quality that will asynchronously dispatch the
 next action in the ActionStrategy via a timeout. While appending to the strategy's data field the current mock value from state.
 $>*/
 /*<#*/

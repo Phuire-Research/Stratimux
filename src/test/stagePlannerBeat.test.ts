@@ -1,6 +1,6 @@
 
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure that you can create a stage planner that sets the beat parameter
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner that sets the beat parameter
 of the plan. The beat will ensure that within a span of time the first notification of state change will be observed.
 But any new additional changes to state will be debounced for the beat duration.
 But if the beat has not been notified for a period. The first notification will go through and start this process over again.
