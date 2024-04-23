@@ -11,7 +11,7 @@ import { ownershipMode } from './ownership.mode';
 import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
-import { backTrackQuality } from './qualities/backTrack.quality';
+import { ownershipBackTrackQuality } from './qualities/backTrack.quality';
 import { clearPayloadStubsQuality } from './qualities/clearPayloadStubs.quality';
 import { clearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
 import { clearPendingActionsQuality } from './qualities/clearPendingActions.quality';
@@ -44,7 +44,7 @@ export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
     [
       initializeOwnershipQuality,
-      backTrackQuality,
+      ownershipBackTrackQuality,
       clearPayloadStubsQuality,
       clearStrategyStubsFromLedgerAndSelfQuality,
       clearPendingActionsQuality,

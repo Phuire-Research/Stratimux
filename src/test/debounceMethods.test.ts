@@ -9,12 +9,12 @@ import { ExperimentState, createExperimentConcept, createExperimentState, experi
 import {
   experimentDebounceAsyncIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
-import { asyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
+import { experimentAsyncDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
 import {
   ExperimentDebounceIterateIdThenReceiveInMethodPayload,
   experimentDebounceIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
-import { debounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
+import { experimentDebounceNextActionNodeQuality } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
 import { experimentAsyncDebounceAddOneStrategy } from '../concepts/experiment/strategies/asyncDebounceAddOne.strategy';
 import { experimentDebounceAddOneStrategy } from '../concepts/experiment/strategies/debounceAddOne.strategy';
 import {
@@ -31,7 +31,7 @@ import { selectSlice, selectState } from '../model/selector';
 import { createStage } from '../model/stagePlanner';
 
 test('Debounce method prevent excess count', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [debounceNextActionNodeQuality]);
+  const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
   const plan = axium.plan('Experiment debounce add one', [
     createStage((_, dispatch) => {
@@ -63,7 +63,7 @@ test('Debounce method prevent excess count', (done) => {
 });
 
 test('Async debounce method prevent excess count', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [asyncDebounceNextActionNodeQuality]);
+  const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncDebounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
   const plan = axium.plan('Experiment async debounce add one', [
     createStage((_, dispatch) => {

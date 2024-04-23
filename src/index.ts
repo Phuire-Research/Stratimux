@@ -97,6 +97,10 @@ export type {
   Mode,
   MethodCreator,
 } from './model/concept';
+export {
+  createQualitySet,
+  createQualitySetWithPayload
+} from './model/quality';
 export type { KeyedSelector } from './model/selector';
 export {
   selectState,
@@ -195,9 +199,10 @@ export {
 export { ChainState, chainName, createChainConcept } from './concepts/chain/chain.concept';
 // Qualities
 export {
-  chainDispatchActions,
-  chainDispatchActionsType,
-  ChainDispatchActionsPayload,
+  chainPrepareChain,
+  chainPrepareChainType,
+  ChainPrepareChainPayload,
+  chainPrepareChainQuality
 } from './concepts/chain/qualities/prepareChain.quality';
 export {chainEnd, chainEndType} from './concepts/chain/qualities/chainEnd.quality';
 
@@ -235,7 +240,7 @@ export {
   experimentName
 } from './concepts/experiment/experiment.concept';
 export {
-  checkInStrategyQuality,
+  experimentCheckInStrategyQuality,
   experimentCheckInStrategy,
   experimentCheckInStrategyType
 } from './concepts/experiment/qualities/checkInStrategy.quality';

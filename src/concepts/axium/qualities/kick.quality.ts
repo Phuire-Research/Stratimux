@@ -5,15 +5,11 @@ Likewise this quality is used to kick the axium into gear if currently resting d
 $>*/
 /*<#*/
 import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { ActionType, prepareActionCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
+import { createQualitySet } from '../../../model/quality';
 
-export const axiumKickType: ActionType = 'Kick Axium';
-export const axiumKick = prepareActionCreator(axiumKickType);
-
-export const axiumKickQuality = createQuality(
-  axiumKickType,
-  defaultReducer,
-  defaultMethodCreator
-);
+export const [axiumKick, axiumKickType, axiumKickQuality] = createQualitySet({
+  type: 'Kick Axium',
+  reducer: defaultReducer,
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

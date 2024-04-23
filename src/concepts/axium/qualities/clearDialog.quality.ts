@@ -3,23 +3,22 @@ For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a quality that will clear the state's dialog.
 $>*/
 /*<#*/
-import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionCreator } from '../../../model/action';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
+import { createQualitySet } from '../../../model/quality';
 
-export const axiumClearDialogType: ActionType = 'clear Axium Dialog';
-export const axiumClearDialog = prepareActionCreator(axiumClearDialogType);
-
-export function axiumClearDialogReducer(state: AxiumState, action: Action) {
-  return {
-    ...state,
-    dialog: '',
-  };
-}
-
-export const axiumClearDialogQuality = createQuality(
+export const [
+  axiumClearDialog,
   axiumClearDialogType,
-  axiumClearDialogReducer,
-  defaultMethodCreator,
-);
+  axiumClearDialogQuality
+] = createQualitySet({
+  type: 'clear Axium Dialog',
+  reducer: (state: AxiumState) => {
+    return {
+      ...state,
+      dialog: '',
+    };
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

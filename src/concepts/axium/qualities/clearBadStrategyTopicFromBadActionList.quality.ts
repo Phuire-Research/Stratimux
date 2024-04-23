@@ -4,36 +4,34 @@ generate a quality that will remove a strategies topic from state's badAction li
 This allows for an Artificial Intelligence that is embodying Stratimux to correct generated strategies on the fly.
 $>*/
 /*<#*/
-import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type AxiumClearBadStrategyTopicFromBadActionListPayload = {
   topic: string
 };
-export const axiumClearBadStrategyTopicFromBadActionListType: ActionType = 'clear Strategy Topic from Axium\'s badAction list';
-export const axiumClearBadStrategyTopicFromBadActionList =
-  prepareActionWithPayloadCreator<AxiumClearBadStrategyTopicFromBadActionListPayload>(axiumClearBadStrategyTopicFromBadActionListType);
-
-function axiumClearBadStrategyTopicFromBadActionListReducer(state: AxiumState, action: Action): AxiumState {
-  const strategyTopic = selectPayload<AxiumClearBadStrategyTopicFromBadActionListPayload>(action).topic;
-  const badActions = state.badActions.filter(act => {
-    if (act.strategy && act.strategy.topic !== strategyTopic) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  return {
-    ...state,
-    badActions,
-  };
-}
-
-export const axiumClearBadStrategyTopicFromBadActionListQuality = createQuality(
+export const [
+  axiumClearBadStrategyTopicFromBadActionList,
   axiumClearBadStrategyTopicFromBadActionListType,
-  axiumClearBadStrategyTopicFromBadActionListReducer,
-  defaultMethodCreator,
-);
+  axiumClearBadStrategyTopicFromBadActionListQuality
+] = createQualitySetWithPayload<AxiumClearBadStrategyTopicFromBadActionListPayload>({
+  type: 'clear Strategy Topic from Axium\'s badAction list',
+  reducer: (state: AxiumState, action) => {
+    const {topic} = selectPayload<AxiumClearBadStrategyTopicFromBadActionListPayload>(action);
+    const badActions = state.badActions.filter(act => {
+      if (act.strategy && act.strategy.topic !== topic) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return {
+      ...state,
+      badActions,
+    };
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/
