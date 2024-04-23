@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Chain Concept, generate a test ensure that chain is working as intended.
+For the asynchronous graph programming framework Stratimux and Chain Concept, generate a test ensure that chain is working as intended.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Chain Concept, generate a quality will set the chain end property to false
+For the asynchronous graph programming framework Stratimux and Chain Concept, generate a quality will set the chain end property to false
 $>*/
 /*<#*/
 import { Action, ActionType, prepareActionCreator } from '../../../model/action';

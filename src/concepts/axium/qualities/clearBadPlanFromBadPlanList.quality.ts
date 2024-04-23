@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept,
+For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a quality that will clear a specified plan from the badPlan list on state.
 This allows for generated plans via an embodied artificial intelligence to error correct on the fly for any poorly generated plans.
 $>*/

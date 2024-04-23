@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux,
+For the asynchronous graph programming framework Stratimux,
 generate a test to that selectSlice is capable of performing shallow and deep state selections.
 $>*/
 /*<#*/

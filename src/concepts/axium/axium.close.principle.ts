@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a principle that will manage the Axium's close process.
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a principle that will manage the Axium's close process.
 $>*/
 import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';

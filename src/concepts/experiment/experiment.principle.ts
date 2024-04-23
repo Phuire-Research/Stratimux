@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a principle that observes the experiment's actionQue and dispatches
 in sequence upon each observation of state.
 $>*/

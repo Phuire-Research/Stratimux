@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a quality that will trigger the axium's closing process via
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a quality that will trigger the axium's closing process via
 its close principle that is observing the prepareClose state property.
 $>*/
 /*<#*/

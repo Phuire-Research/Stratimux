@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux generate a test that ensures that users can set new selectors for their stages and another
+For the asynchronous graph programming framework Stratimux generate a test that ensures that users can set new selectors for their stages and another
 test to ensure that they can change the priority of their stages and again for beat
 $>*/
 /*<#*/

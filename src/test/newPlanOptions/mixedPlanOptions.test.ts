@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the axium
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';

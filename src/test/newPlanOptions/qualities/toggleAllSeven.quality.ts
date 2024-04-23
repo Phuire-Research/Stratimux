@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and based on the Experiment Concept, generate a quality set a five property to true
+For the asynchronous graph programming framework Stratimux and based on the Experiment Concept, generate a quality set a five property to true
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';

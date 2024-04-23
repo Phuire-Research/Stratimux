@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the ActionStrategy model file.
+For the asynchronous graph programming framework Stratimux, define the ActionStrategy model file.
 This file is what allows for Stratimux to be provably terminating.
 As each strategy constitutes a finite set of symbols that must reach a conclusion.
 Using this data structure we can constrain the Axium's recursive functionality to the length

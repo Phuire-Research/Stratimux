@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a model file that includes a create stitch node helper function.
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a model file that includes a create stitch node helper function.
 This function allows for Strategy Stitches to be composed of only one action node.
 While calling the axium's stitch quality to silently move to the next node assigned to the end of that stitch.
 $>*/

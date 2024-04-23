@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Action model file.
+For the asynchronous graph programming framework Stratimux, define the Action model file.
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/

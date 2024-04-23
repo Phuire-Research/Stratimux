@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a strategy that will take ownership of the Counter's count state property.
 Then proceed to increment and decrement the count over a sequence that in total only increments to count by one.
 $>*/
@@ -80,7 +80,7 @@ export function experimentCountingStrategy(): ActionStrategy {
 }
 /*#>*/
 /*<$
-For the graph programming framework Stratimux and Experiment Concept,
+For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a strategy that will take ownership of the Counter's count state property.
 Then prime each step to avoid a semaphore look up at run time. That will then increment and decrement the count over a sequence that
 in total only increments to count by one. But only if it has ownership of the Counter's count state property.

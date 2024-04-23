@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure the Axium's ability to stitch strategies together and likewise
+For the asynchronous graph programming framework Stratimux, generate a test to ensure the Axium's ability to stitch strategies together and likewise
 for the getAxiumState helper function to properly return the current axium state.
 $>*/
 /*<#*/

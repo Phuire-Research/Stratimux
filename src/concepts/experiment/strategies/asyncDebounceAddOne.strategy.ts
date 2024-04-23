@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept, generate a strategy that will debounce next action to be dispatched.
+For the asynchronous graph programming framework Stratimux and Experiment Concept, generate a strategy that will debounce next action to be dispatched.
 Then when the debounce time expires enacts the counter add one quality.
 $>*/
 /*<#*/

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Experiment Concept, generate a quality that will check in the next action
+For the asynchronous graph programming framework Stratimux and Experiment Concept, generate a quality that will check in the next action
 in the current strategy to the state's actionQue.
 $>*/
 /*<#*/

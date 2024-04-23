@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Axium model file.
+For the asynchronous graph programming framework Stratimux, define the Axium model file.
 This file dictates the creation of the Axium itself and engages all necessary parts to ensure its functionality
 as a provably recursive terminating function.
 $>*/

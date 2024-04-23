@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a strategy that will safely remove concepts
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a strategy that will safely remove concepts
 from the Axium's concepts state property.
 $>*/
 /*<#*/

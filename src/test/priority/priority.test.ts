@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux generate a test that ensures that the priority aspect of the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that the priority aspect of the axium
 is managing plan notifications as intended.
 $>*/
 /*<#*/

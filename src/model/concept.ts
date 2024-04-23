@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Concept model file.
+For the asynchronous graph programming framework Stratimux, define the Concept model file.
 This file defines the Concept abstraction that the Axium uses to Transform its functionality.
 A concept is composed of name, unified, state, qualities, semaphore, principles, and some meta attributes if necessary.
 $>*/

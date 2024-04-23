@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux generate the Axium Concept that will manage Stratimux's functionality.
+For the asynchronous graph programming framework Stratimux generate the Axium Concept that will manage Stratimux's functionality.
 The Axium is a set of concepts that create a greater whole via their associations
 within strategies, plans, modes, qualities, and principles.
 $>*/

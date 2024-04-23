@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test that ensures that throttle method helper functions are working as intended.
+For the asynchronous graph programming framework Stratimux, generate a test that ensures that throttle method helper functions are working as intended.
 $>*/
 /*<#*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test to ensure that the axium can properly remove concepts from its current load.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that the axium can properly remove concepts from its current load.
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Action Strategy Data model file.
+For the asynchronous graph programming framework Stratimux, define the Action Strategy Data model file.
 This file is what allows for the ActionStrategy data pattern to be a Universal Transformer of Data.
 As each strategy is able to carry with it some set of attributes in its data field that may be
 a combination of any number of properties. Creating a final data output that is the cumulation of all

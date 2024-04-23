@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Method model file.
+For the asynchronous graph programming framework Stratimux, define the Method model file.
 This file hold a series of helper functions that enable users to quickly create specific provably terminating methods
 within their own defined qualities.
 $>*/

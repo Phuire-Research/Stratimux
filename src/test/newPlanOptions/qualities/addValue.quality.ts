@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and based on the Experiment Concept, generate a quality that will Add a value property from
+For the asynchronous graph programming framework Stratimux and based on the Experiment Concept, generate a quality that will Add a value property from
 the incoming action's payload
 $>*/
 /*<#*/

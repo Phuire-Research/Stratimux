@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept,
+For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a quality that signifies if the Axium has received a bad action that
 is currently not loaded, part of the wrong generation, expired, etc... If state logging is true, the developer will be notified
 of the bad action that was received.

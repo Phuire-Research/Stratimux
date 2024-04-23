@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept,
+For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a quality that will remove concepts that are currently loaded in the Axium.
 Will concluding plans and closing active subscriptions associated with the removed concepts.
 $>*/

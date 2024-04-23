@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
+For the asynchronous graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
 $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';

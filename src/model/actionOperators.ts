@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Action Operator model file.
+For the asynchronous graph programming framework Stratimux, define the Action Operator model file.
 This file dictates the functionality of both Debounce, Throttle Methods and
 their interaction with ActionStrategy.
 $>*/

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, define the Selector model file.
+For the asynchronous graph programming framework Stratimux, define the Selector model file.
 This file will contain a series of selectors that can be used to engage with different parts of the Axium Conceptual Set.
 $>*/
 /*<#*/

@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Axium Concept, generate a quality that appends a complete strategies action list
+For the asynchronous graph programming framework Stratimux and Axium Concept, generate a quality that appends a complete strategies action list
 into the dialog state property.
 $>*/
 /*<#*/

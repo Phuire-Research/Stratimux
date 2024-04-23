@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux and Ownership Concept,
+For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate a quality that will clear the provided stubs from the current Ownership Ledger.
 If no tickets exist within a line, delete that line from the ledger.
 $>*/

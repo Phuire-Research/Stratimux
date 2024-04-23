@@ -1,5 +1,5 @@
 /*<$
-For the graph programming framework Stratimux, generate a test that ensures that unified concepts inherit their unified names as intended.
+For the asynchronous graph programming framework Stratimux, generate a test that ensures that unified concepts inherit their unified names as intended.
 $>*/
 /*<#*/
 import { createConcept, unifyConcepts } from '../model/concept';
