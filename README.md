@@ -47,7 +47,7 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### v0.1.53
+### v0.1.53 4/23/24
 * Added createQualitySet and createQualitySetWithPayload to reduce some boilerplate.
 ### v0.1.52 Patch 4/03/24
 * Quick pass updating documentation
