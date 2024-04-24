@@ -47,9 +47,10 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### v0.1.54 4/24/24
+### v0.1.55 4/24/24
 * Changed ActionNodeOptions to allow for successNode and failureNode to be left absent. Continued effort towards decreasing boilerplate.
 * Refined original paper.
+* Properly exporting the new ActionCreator and ActionCreatorWithPayload for specific createQualitySetX creator functions
 ### v0.1.53 4/23/24
 * Added createQualitySet and createQualitySetWithPayload to reduce some boilerplate.
 ### v0.1.52 Patch 4/03/24
