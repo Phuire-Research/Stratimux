@@ -207,7 +207,6 @@ export const yourStrategyStitch: ActionStrategyStitch = () => {
   const stepStitch = axium_createStitchNode();
   const stepOne = createActionNode(someAction, {
     successNode: stepStitch,
-    failureNode: null
   })
   return [stepStitch, createStrategy({
     topic: 'Your strategy\'s topic',
@@ -216,10 +215,7 @@ export const yourStrategyStitch: ActionStrategyStitch = () => {
 };
 
 export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrategy => {
-  const stepFinal = createActionNode(someAction, {
-    successNode: null,
-    failureNode: null
-  })
+  const stepFinal = createActionNode(someAction)
 
   const [
     stitchEnd,
@@ -231,7 +227,6 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
 
   const stepOne = createActionNode(someAction, {
     successNode: stitchHead,
-    failureNode: null
   });
 
   return createStrategy({
