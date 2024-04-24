@@ -5,31 +5,28 @@ by the action's payload.
 $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/concept';
-import { Action, prepareActionWithPayloadCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { selectPayload } from '../../../model/selector';
-
-export const counterSetCountType = 'Counter set Count';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type CounterSetCountPayload = {
   newCount: number
 }
-export const counterSetCount = prepareActionWithPayloadCreator<CounterSetCountPayload>(counterSetCountType);
-
-function counterSetCountReducer(state: CounterState, action: Action) {
-  const payload = selectPayload<CounterSetCountPayload>(action);
-  return {
-    ...state,
-    count: payload.newCount
-  };
-}
-
-export const counterSetCountQuality = createQuality(
+export const [
+  counterSetCount,
   counterSetCountType,
-  counterSetCountReducer,
-  defaultMethodCreator,
-  [counterSelectCount]
-);
+  counterSetCountQuality
+] = createQualitySetWithPayload<CounterSetCountPayload>({
+  type: 'Counter set Count',
+  reducer: (state: CounterState, action) => {
+    const {newCount} = selectPayload<CounterSetCountPayload>(action);
+    return {
+      ...state,
+      count: newCount
+    };
+  },
+  methodCreator: defaultMethodCreator,
+  keyedSelectors: [counterSelectCount]
+});
 /*#>*/

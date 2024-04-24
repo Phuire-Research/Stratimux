@@ -3,37 +3,36 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 generate a quality clear pending actions of the provided ActionStrategy topic.
 $>*/
 /*<#*/
-import { createQuality, defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
+import { Action } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { ActionStrategyTopic } from '../../../model/actionStrategy';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type OwnershipClearPendingActionsOfStrategyPayload = {
   topic: ActionStrategyTopic
 };
-export const ownershipClearPendingActionsOfStrategyType: ActionType = 'clear Ownership\'s Pending Actions of Strategy Topic';
-export const ownershipClearPendingActionsOfStrategy =
-  prepareActionWithPayloadCreator<OwnershipClearPendingActionsOfStrategyPayload>(ownershipClearPendingActionsOfStrategyType);
 
-function ownershipClearPendingActionsOfStrategyReducer(state: OwnershipState, action: Action): OwnershipState {
-  const topic = selectPayload<OwnershipClearPendingActionsOfStrategyPayload>(action).topic;
-  const newPendingActions: Action[] = [];
-  for (const act of state.pendingActions) {
-    if (act.strategy?.topic) {
-      if (act.strategy.topic !== topic) {
-        newPendingActions.push(act);
+export const [
+  ownershipClearPendingActionsOfStrategy,
+  ownershipClearPendingActionsOfStrategyType,
+  ownershipClearPendingActionsOfStrategyQuality
+] = createQualitySetWithPayload<OwnershipClearPendingActionsOfStrategyPayload>({
+  type: 'clear Ownership\'s Pending Actions of Strategy Topic',
+  reducer: (state: OwnershipState, action) => {
+    const {topic} = selectPayload<OwnershipClearPendingActionsOfStrategyPayload>(action);
+    const newPendingActions: Action[] = [];
+    for (const act of state.pendingActions) {
+      if (act.strategy?.topic) {
+        if (act.strategy.topic !== topic) {
+          newPendingActions.push(act);
+        }
       }
     }
+    return {
+      ...state,
+      pendingActions: newPendingActions
+    };
   }
-  return {
-    ...state,
-    pendingActions: newPendingActions
-  };
-}
-export const clearPendingActionsOfStrategyQuality = createQuality(
-  ownershipClearPendingActionsOfStrategyType,
-  ownershipClearPendingActionsOfStrategyReducer,
-  defaultMethodCreator
-);
+});
 /*#>*/

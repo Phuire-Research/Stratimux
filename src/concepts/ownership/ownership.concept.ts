@@ -8,15 +8,15 @@ $>*/
 import { createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
-import { initializeOwnershipQuality } from './qualities/initializeOwnership.quality';
+import { ownershipInitializeOwnershipQuality } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
-import { backTrackQuality } from './qualities/backTrack.quality';
-import { clearPayloadStubsQuality } from './qualities/clearPayloadStubs.quality';
-import { clearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
-import { clearPendingActionsQuality } from './qualities/clearPendingActions.quality';
-import { clearPendingActionsOfStrategyQuality } from './qualities/clearPendingActionsOfStrategy.quality';
-import { resetOwnershipLedgerQuality } from './qualities/resetOwnershipLedger.quality';
+import { ownershipBackTrackQuality } from './qualities/backTrack.quality';
+import { ownershipClearPayloadStubsQuality } from './qualities/clearPayloadStubs.quality';
+import { ownershipClearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
+import { ownershipClearPendingActionsQuality } from './qualities/clearPendingActions.quality';
+import { ownershipClearPendingActionsOfStrategyQuality } from './qualities/clearPendingActionsOfStrategy.quality';
+import { ownershipResetOwnershipLedgerQuality } from './qualities/resetOwnershipLedger.quality';
 
 export type OwnershipState = {
   initialized: boolean;
@@ -43,13 +43,13 @@ export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
     [
-      initializeOwnershipQuality,
-      backTrackQuality,
-      clearPayloadStubsQuality,
-      clearStrategyStubsFromLedgerAndSelfQuality,
-      clearPendingActionsQuality,
-      clearPendingActionsOfStrategyQuality,
-      resetOwnershipLedgerQuality
+      ownershipInitializeOwnershipQuality,
+      ownershipBackTrackQuality,
+      ownershipClearPayloadStubsQuality,
+      ownershipClearStrategyStubsFromLedgerAndSelfQuality,
+      ownershipClearPendingActionsQuality,
+      ownershipClearPendingActionsOfStrategyQuality,
+      ownershipResetOwnershipLedgerQuality
     ],
     [
       ownershipPrinciple,

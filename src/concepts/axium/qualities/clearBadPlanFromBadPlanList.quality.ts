@@ -4,29 +4,28 @@ generate a quality that will clear a specified plan from the badPlan list on sta
 This allows for generated plans via an embodied artificial intelligence to error correct on the fly for any poorly generated plans.
 $>*/
 /*<#*/
-import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySet } from '../../../model/quality';
 
 export type AxiumClearBadPlanFromBadPlanListPayload = {
   title: string
 };
-export const axiumClearBadPlanFromBadPlanListType: ActionType = 'clear Plan Topic from Axium\'s badPlan list';
-export const axiumClearBadPlanFromBadPlanList =
-  prepareActionWithPayloadCreator<AxiumClearBadPlanFromBadPlanListPayload>(axiumClearBadPlanFromBadPlanListType);
 
-function axiumClearBadPlanFromBadPlanListReducer(state: AxiumState, action: Action): AxiumState {
-  const title = selectPayload<AxiumClearBadPlanFromBadPlanListPayload>(action).title;
-  return {
-    ...state,
-    badPlans: state.badPlans.filter(act => act.title !== title),
-  };
-}
-
-export const axiumClearBadPlanFromBadPlanListQuality = createQuality(
-  axiumClearBadPlanFromBadPlanListType,
-  axiumClearBadPlanFromBadPlanListReducer,
-  defaultMethodCreator,
-);
+export const [
+  axiumClearBadPlanFromBadPlanList,
+  axiumClearBadPlanFromBadPlanListQualityType,
+  axiumClearBadPlanFromBadPlanListQuality
+] = createQualitySet({
+  type: 'clear Plan Topic from Axium\'s badPlan list',
+  reducer: (state: AxiumState, action) => {
+    const {title} = selectPayload<AxiumClearBadPlanFromBadPlanListPayload>(action);
+    return {
+      ...state,
+      badPlans: state.badPlans.filter(act => act.title !== title),
+    };
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

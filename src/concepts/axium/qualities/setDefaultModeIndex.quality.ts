@@ -4,27 +4,28 @@ generate a quality that will set the default mode index to what is specified by
 the action's payload.
 $>*/
 /*<#*/
-import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type AxiumSetDefaultModeIndexPayload = {
   index: number;
 };
-export const axiumSetDefaultModeIndexType: ActionType = 'set Axium\'s Default Mode Index';
-export const axiumSetDefaultModeIndex = prepareActionWithPayloadCreator<AxiumSetDefaultModeIndexPayload>(axiumSetDefaultModeIndexType);
 
-export function axiumSetDefaultModeIndexReducer(state: AxiumState, action: Action) {
-  const payload = selectPayload<AxiumSetDefaultModeIndexPayload>(action);
-  return {
-    ...state,
-    defaultModeIndex: payload.index,
-  } as AxiumState;
-}
-export const axiumSetDefaultModeIndexQuality = createQuality(
+export const [
+  axiumSetDefaultModeIndex,
   axiumSetDefaultModeIndexType,
-  axiumSetDefaultModeIndexReducer,
-  defaultMethodCreator
-);
+  axiumSetDefaultModeIndexQuality
+] = createQualitySetWithPayload<AxiumSetDefaultModeIndexPayload>({
+  type: 'set Axium\'s Default Mode Index',
+  reducer: (state: AxiumState, action) => {
+    const payload = selectPayload<AxiumSetDefaultModeIndexPayload>(action);
+    return {
+      ...state,
+      defaultModeIndex: payload.index,
+    } as AxiumState;
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

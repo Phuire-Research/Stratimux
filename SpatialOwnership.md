@@ -41,8 +41,8 @@ export type OwnershipState = {
 * backTrack - To be used within an ActionStrategy's failureNode. This will allow your strategy to return to the previous node while appending the designated failure message to the action list, without setting its own.
 * clearPayloadStubs - To be used within your own qualities and utilized within a strategy if it no longer requires a specific lock. Setting some stubs to the payload of this action will clear those stubs from the ownershipLedger. Note that you would have to clear these stubs from your strategy if present.
 * clearStrategyStubsFromLedgerAndSelf - To be used within a strategy, this will clear the current strategies stubs from the ledger and set its current stubs to undefined.
-* clearPendingActions - Will simply clear the pendingAction list. Note that the stubs would still exist and one should use this in combination with clearPayloadStubs to avoid having to wait for expiration.
-* clearPendingActionsOfStrategyTopic - Will clear any ActionStrategies of a set payload topic string from pendingAction.
+* ownershipClearPendingActions - Will simply clear the pendingAction list. Note that the stubs would still exist and one should use this in combination with clearPayloadStubs to avoid having to wait for expiration.
+* ownershipClearPendingActionsOfStrategyTopic - Will clear any ActionStrategies of a set payload topic string from pendingAction.
 * resetOwnershipLedger - This will do a dumb reset of the currently loaded ownershipLedger
 
 ### Internal Ownership Qualities

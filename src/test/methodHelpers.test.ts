@@ -10,9 +10,9 @@ import {
   experimentAsyncIterateIdThenReceiveInMethodQuality
 } from '../concepts/experiment/qualities/asyncIterateIdThenReceiveInMethod.quality';
 import { experimentIterateIdThenReceiveInMethodQuality } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
-import { mockToTrueQuality } from '../concepts/experiment/qualities/mockTrue.quality';
-import { timerEmitActionQuality } from '../concepts/experiment/qualities/timerEmitAction.quality';
-import { timerEmitActionWithStateQuality } from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
+import { experimentMockToTrueQuality } from '../concepts/experiment/qualities/mockToTrue.quality';
+import { experimentTimerEmitActionQuality } from '../concepts/experiment/qualities/timerEmitAction.quality';
+import { experimentTimerEmitActionWithStateQuality } from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
 import {
   experimentAsyncIterateIdThenAddToData,
   experimentAsyncIterateIdThenAddToDataTopic
@@ -32,7 +32,7 @@ import { selectSlice, selectState } from '../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 
 test('Async Method Test', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [timerEmitActionQuality, mockToTrueQuality]);
+  const experiment = createExperimentConcept(createExperimentState(), [experimentTimerEmitActionQuality, experimentMockToTrueQuality]);
   const axium = createAxium('Experiment async method creator', [experiment]);
   const plan = axium.plan('timed mock to true', [
     stageWaitForOpenThenIterate(() => axiumKick()),
@@ -79,7 +79,7 @@ test('Async Method Plain Iterate Id Test', (done) => {
 });
 
 test('Async Method with State Test', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [timerEmitActionWithStateQuality, mockToTrueQuality]);
+  const experiment = createExperimentConcept(createExperimentState(), [experimentTimerEmitActionWithStateQuality, experimentMockToTrueQuality]);
   const axium = createAxium('Experiment async method creator with State', [experiment]);
   const plan = axium.plan('timed mock to true', [
     stageWaitForOpenThenIterate(() => axiumKick()),

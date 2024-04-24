@@ -2,22 +2,21 @@
 For the asynchronous graph programming framework Stratimux and Chain Concept, generate a quality will set the chain end property to false
 $>*/
 /*<#*/
-import { Action, ActionType, prepareActionCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
+import { createQualitySet } from '../../../model/quality';
 import { ChainState } from '../chain.concept';
 
-export const chainEndType: ActionType = 'set chain end property to true';
-export const chainEnd = prepareActionCreator(chainEndType);
-
-function chainPrepareChainReducer(state: ChainState, action: Action) {
-  return {
-    ...state,
-    end: true
-  };
-}
-
-export const chainEndQuality = createQuality(
+export const [
+  chainEnd,
   chainEndType,
-  chainPrepareChainReducer,
-);
+  chainEndQuality
+] = createQualitySet({
+  type: 'set chain end property to true',
+  reducer: (state: ChainState, action) => {
+    return {
+      ...state,
+      end: true
+    };
+  }
+});
+
 /*#>*/

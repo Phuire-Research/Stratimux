@@ -4,53 +4,50 @@ generate a quality that will clear the current strategies stubs from the
 ownership ledger. This is to afford for strategies to relieve their ownership prior to their conclusion.
 $>*/
 /*<#*/
-import { MethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionCreator } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket } from '../../../model/ownership';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { createMethod } from '../../../model/method';
+import { createMethodDebounce } from '../../../model/method';
+import { createQualitySet } from '../../../model/quality';
 
-export const ownershipClearStrategyStubsFromLedgerAndSelfType: ActionType = 'clear current Strategy Stubs from Ownership Ledger and Itself';
-export const ownershipClearStrategyStubsFromLedgerAndSelf = prepareActionCreator(ownershipClearStrategyStubsFromLedgerAndSelfType);
-
-const ownershipClearStrategyStubsFromLedgerAndSelfMethodCreator: MethodCreator = () => createMethod((action) => {
-  if (action.strategy) {
-    action.strategy.stubs = undefined;
-    return strategySuccess(action.strategy);
-  }
-  return action;
-});
-
-function ownershipClearStrategyStubsFromLedgerAndSelfReducer(state: OwnershipState, action: Action): OwnershipState {
-  const stubs = action?.strategy?.stubs;
-  const ownershipLedger = state.ownershipLedger;
-  if (action.strategy && stubs) {
-    stubs.forEach(ticketStub => {
-      const line = ownershipLedger.get(ticketStub.key);
-      if (line) {
-        const newLine = [] as OwnershipTicket[];
-        for (const stub of line) {
-          if (stub.ticket !== ticketStub.ticket) {
-            newLine.push(stub);
+export const [
+  ownershipClearStrategyStubsFromLedgerAndSelf,
+  ownershipClearStrategyStubsFromLedgerAndSelfType,
+  ownershipClearStrategyStubsFromLedgerAndSelfQuality
+] = createQualitySet({
+  type: 'clear current Strategy Stubs from Ownership Ledger and Itself',
+  reducer: (state: OwnershipState, action) => {
+    const stubs = action?.strategy?.stubs;
+    const ownershipLedger = state.ownershipLedger;
+    if (action.strategy && stubs) {
+      stubs.forEach(ticketStub => {
+        const line = ownershipLedger.get(ticketStub.key);
+        if (line) {
+          const newLine = [] as OwnershipTicket[];
+          for (const stub of line) {
+            if (stub.ticket !== ticketStub.ticket) {
+              newLine.push(stub);
+            }
+          }
+          if (newLine.length === 0) {
+            ownershipLedger.delete(ticketStub.key);
+          } else {
+            ownershipLedger.set(ticketStub.key, newLine);
           }
         }
-        if (newLine.length === 0) {
-          ownershipLedger.delete(ticketStub.key);
-        } else {
-          ownershipLedger.set(ticketStub.key, newLine);
-        }
-      }
-    });
-  }
-  return {
-    ...state,
-    ownershipLedger: ownershipLedger
-  };
-}
-export const clearStrategyStubsFromLedgerAndSelfQuality = createQuality(
-  ownershipClearStrategyStubsFromLedgerAndSelfType,
-  ownershipClearStrategyStubsFromLedgerAndSelfReducer,
-  ownershipClearStrategyStubsFromLedgerAndSelfMethodCreator
-);
+      });
+    }
+    return {
+      ...state,
+      ownershipLedger: ownershipLedger
+    };
+  },
+  methodCreator: () => createMethodDebounce((action) => {
+    if (action.strategy) {
+      action.strategy.stubs = undefined;
+      return strategySuccess(action.strategy);
+    }
+    return action;
+  }, 10)
+});
 /*#>*/

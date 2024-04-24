@@ -5,35 +5,33 @@ This allows for the closing of hot observables if the concept they are associate
 $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
-import { createQuality } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
 import { StagePlanner } from '../../../model/stagePlanner';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type AxiumRegisterStagePlannerPayload = {
     stagePlanner: StagePlanner;
     conceptName: string;
 }
-export const axiumRegisterStagePlannerType: ActionType = 'register Stage Planner to Axium\'s Named Stage Planner list';
-export const axiumRegisterStagePlanner =
-  prepareActionWithPayloadCreator<AxiumRegisterStagePlannerPayload>(axiumRegisterStagePlannerType);
 
-function axiumRegisterSubscriberReducer(state: AxiumState, action: Action): AxiumState {
-  const payload = selectPayload<AxiumRegisterStagePlannerPayload>(action);
-  const stagePlanners = state.stagePlanners;
-  const stagePlanner = payload.stagePlanner;
-  const name = payload.conceptName;
-  stagePlanners.push({name, ...stagePlanner});
-  return {
-    ...state,
-    stagePlanners,
-  };
-}
-
-export const axiumRegisterStagePlannerQuality = createQuality(
+export const [
+  axiumRegisterStagePlanner,
   axiumRegisterStagePlannerType,
-  axiumRegisterSubscriberReducer,
-  defaultMethodCreator
-);
+  axiumRegisterStagePlannerQuality
+] = createQualitySetWithPayload<AxiumRegisterStagePlannerPayload>({
+  type: 'register Stage Planner to Axium\'s Named Stage Planner list',
+  reducer: (state: AxiumState, action) => {
+    const payload = selectPayload<AxiumRegisterStagePlannerPayload>(action);
+    const stagePlanners = state.stagePlanners;
+    const stagePlanner = payload.stagePlanner;
+    const name = payload.conceptName;
+    stagePlanners.push({name, ...stagePlanner});
+    return {
+      ...state,
+      stagePlanners,
+    };
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

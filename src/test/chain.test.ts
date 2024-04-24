@@ -8,7 +8,7 @@ import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { ChainState, chainName, createChainConcept } from '../concepts/chain/chain.concept';
-import { chainDispatchActions } from '../concepts/chain/qualities/prepareChain.quality';
+import { chainPrepareChain } from '../concepts/chain/qualities/prepareChain.quality';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
 import { chainEnd } from '../concepts/chain/qualities/chainEnd.quality';
@@ -26,7 +26,7 @@ test('Axium Test', (done) => {
       const primedEnd = primeAction(concepts, chainEnd());
       const primedPrepareChain =
       primeAction(concepts,
-        chainDispatchActions({
+        chainPrepareChain({
           actions: [
             primedAdd,
             primedAdd,

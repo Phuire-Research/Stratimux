@@ -3,33 +3,30 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 in the current strategy to the state's actionQue.
 $>*/
 /*<#*/
-import { Action, prepareActionCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
 import { ExperimentState } from '../experiment.concept';
+import { createQualitySet } from '../../../model/quality';
 
-export const experimentCheckInStrategyType = 'Experiment Check in Action';
-
-export const experimentCheckInStrategy = prepareActionCreator(experimentCheckInStrategyType);
-
-function experimentCheckInStrategyReducer(state: ExperimentState, action: Action): ExperimentState {
-  if (action.strategy) {
-    const nextAction = strategySuccess(action.strategy);
-    if (nextAction.type !== axiumConcludeType) {
-      return {
-        ...state,
-        actionQue: [... state.actionQue, nextAction]
-      };
-    }
-  }
-  return {
-    ...state
-  };
-}
-
-export const checkInStrategyQuality = createQuality(
+export const [
+  experimentCheckInStrategy,
   experimentCheckInStrategyType,
-  experimentCheckInStrategyReducer,
-);
+  experimentCheckInStrategyQuality
+] = createQualitySet({
+  type: 'Experiment check in Action',
+  reducer: (state: ExperimentState, action) => {
+    if (action.strategy) {
+      const nextAction = strategySuccess(action.strategy);
+      if (nextAction.type !== axiumConcludeType) {
+        return {
+          ...state,
+          actionQue: [... state.actionQue, nextAction]
+        };
+      }
+    }
+    return {
+      ...state
+    };
+  }
+});
 /*#>*/

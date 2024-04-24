@@ -187,6 +187,13 @@ export function createAction<T extends Record<string, unknown>>(
   };
 }
 
+export type ActionCreator = (
+    conceptSemaphore?: number,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    qualitySemaphore?: [number, number, number, number]
+  ) => Action;
+
 export function prepareActionCreator(actionType: ActionType) {
   return (
     conceptSemaphore?: number,
@@ -197,6 +204,7 @@ export function prepareActionCreator(actionType: ActionType) {
     return createAction(actionType, undefined, keyedSelectors, agreement, qualitySemaphore, conceptSemaphore);
   };
 }
+
 export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(actionType: ActionType) {
   return (
     payload: T,
@@ -204,10 +212,17 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
     semaphore?: [number, number, number, number]
-  ) => {
+  ): Action => {
     return createAction(actionType, payload, keyedSelectors, agreement, semaphore, conceptSemaphore);
   };
 }
+export type ActionCreatorWithPayload<T> = (
+    payload: T,
+    conceptSemaphore?: number,
+    keyedSelectors?: KeyedSelector[],
+    agreement?: number,
+    semaphore?: [number, number, number, number]
+  ) => Action;
 
 /**
  * Should only be used after if you can logically determine that the semaphores have been primed.

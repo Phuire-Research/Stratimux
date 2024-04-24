@@ -5,28 +5,28 @@ currently in blocking mode. This allows for subscribers to be notified of any ne
 Or simply that the axium is ready to receive actions.
 $>*/
 /*<#*/
-import { defaultMethodCreator, createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
+import { defaultMethodCreator } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 export type OpenPayload = {
   open: boolean
 };
 
-export const axiumOpenType: ActionType = 'Open Axium';
-export const axiumOpen = prepareActionWithPayloadCreator<OpenPayload>(axiumOpenType);
-
-export function axiumOpenReducer(state: AxiumState, action: Action): AxiumState {
-  const open = selectPayload<OpenPayload>(action).open;
-  return {
-    ...state,
-    open,
-  };
-}
-export const axiumOpenQuality = createQuality(
+export const [
+  axiumOpen,
   axiumOpenType,
-  axiumOpenReducer,
-  defaultMethodCreator
-);
+  axiumOpenQuality
+] = createQualitySetWithPayload<OpenPayload>({
+  type: 'Open Axium',
+  reducer: (state: AxiumState, action) => {
+    const {open} = selectPayload<OpenPayload>(action);
+    return {
+      ...state,
+      open
+    };
+  },
+  methodCreator: defaultMethodCreator
+});
 /*#>*/

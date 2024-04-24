@@ -3,27 +3,25 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 This is used to trouble shoot strategies or simply notify the log of different states.
 $>*/
 /*<#*/
-import { MethodCreator, defaultReducer, nullReducer } from '../../../model/concept';
-import { ActionType, prepareActionCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
+import { nullReducer } from '../../../model/concept';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
+import { createQualitySet } from '../../../model/quality';
 
-export const axiumLogType: ActionType = 'logged a message passed to Axium';
-export const axiumLog = prepareActionCreator(axiumLogType);
-
-export const axiumLogMethodCreator: MethodCreator = () => createMethod((action) => {
-  console.log('Logging: ', action);
-  if (action.strategy) {
-    return strategySuccess(action.strategy);
-  } else {
-    return action;
-  }
-});
-
-export const axiumLogQuality = createQuality(
+export const [
+  axiumLog,
   axiumLogType,
-  nullReducer,
-  axiumLogMethodCreator,
-);
+  axiumLogQuality
+] = createQualitySet({
+  type: 'logged a message passed to Axium',
+  reducer: nullReducer,
+  methodCreator: () => createMethod((action) => {
+    console.log('Logging: ', action);
+    if (action.strategy) {
+      return strategySuccess(action.strategy);
+    } else {
+      return action;
+    }
+  })
+});
 /*#>*/

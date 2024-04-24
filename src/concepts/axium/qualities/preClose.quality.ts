@@ -3,10 +3,9 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 its close principle that is observing the prepareClose state property.
 $>*/
 /*<#*/
-import { createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 /**
  * @parm exit - If set to true, will exit the current process.
@@ -14,19 +13,18 @@ import { selectPayload } from '../../../model/selector';
 export type AxiumPreClosePayload = {
   exit: boolean
 };
-export const axiumPreCloseType: ActionType = 'Prepare Close Axium';
-export const axiumPreClose = prepareActionWithPayloadCreator<AxiumPreClosePayload>(axiumPreCloseType);
-
-export function axiumCloseReducer(state: AxiumState, _action: Action): AxiumState {
-  return {
-    ...state,
-    prepareClose: true,
-    exit: selectPayload<AxiumPreClosePayload>(_action).exit
-  };
-}
-
-export const axiumPreCloseQuality = createQuality(
+export const [
+  axiumPreClose,
   axiumPreCloseType,
-  axiumCloseReducer
-);
+  axiumPreCloseQuality
+] = createQualitySetWithPayload<AxiumPreClosePayload>({
+  type: 'Prepare Close Axium',
+  reducer: (state: AxiumState, action) => {
+    return {
+      ...state,
+      prepareClose: true,
+      exit: selectPayload<AxiumPreClosePayload>(action).exit
+    };
+  }
+});
 /*#>*/

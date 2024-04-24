@@ -47,6 +47,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### v0.1.53 4/23/24
+* Added createQualitySet and createQualitySetWithPayload to reduce some boilerplate.
 ### v0.1.52 Patch 4/03/24
 * Quick pass updating documentation
 * Synced up createAxium, etc... To properly allow for the axium to log actions incoming in the action stream if set.
@@ -150,7 +152,7 @@ import {
   MethodCreator,
   Action,
   prepareActionCreator,
-  createQuality,
+  createQualitySetWithPayload,
   UnifiedSubject,
   createMethodWithState,
   strategySuccess,
@@ -159,17 +161,19 @@ import {
 } from 'stratimux';
 import { UXState } from '../uX.concept';
 
-export const uXqOfUXType = 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction';
-export const uXqOfUX = prepareActionCreator(uXqOfUXType);
-export type uXqOfUxField = {
-  state: UXState
-};
-
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-const uXqOfUXCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?: number) =>
+export type uXqOfUxField = {
+  state: UXState
+};
+
+// [ActionCreator/ActionCreatorWithPayload, ActionType, Quality]
+export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualitySetWithPayload<uXqOfUxField>({
+  type: 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
+  reducer: (state: UXState) => ({...state}),
+  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
   // Only if you need to access state, otherwise
   createMethodWithState<UXState>((action, state) => {
     if (action.strategy) {
@@ -186,24 +190,13 @@ const uXqOfUXCreator: MethodCreator = (concepts$?: Subject<Concepts>, semaphore?
       }
     }
     return action;
-  }, concepts$ as UnifiedSubject, semaphore as number);
-
-function uXqOfUXReducer(state: UXState, _: Action): UXState {
-  return {
-    ...state,
-  };
-}
-
-export const uXqOfUXQuality = createQuality(
-  uXqOfUXType,
-  uXqOfUXReducer,
-  uXqOfUXCreator
-);
+  }, concepts$ as UnifiedSubject, semaphore as number)
+});
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
 //   qOfUXType,
 //   defaultReducer(Informs)/nullReducer(Doesn't Inform),
-// The method is optional and is an advanced behavior
+// The method is optional and is an advanced behavior enabling the quality to be used in an ActionStrategy
 //   defaultMethodCreator
 // );
 ```

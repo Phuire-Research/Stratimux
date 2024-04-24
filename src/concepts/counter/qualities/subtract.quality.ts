@@ -4,25 +4,22 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/concept';
 import { CounterState } from '../counter.concept';
-import { ActionType, prepareActionCreator } from '../../../model/action';
-import { createQuality } from '../../../model/concept';
 import { counterSelectCount } from '../counter.selector';
+import { createQualitySet } from '../../../model/quality';
 
-export const counterSubtractType: ActionType = 'Counter Subtract';
-
-export const counterSubtract = prepareActionCreator(counterSubtractType);
-
-function counterSubtractReducer(state: CounterState) {
-  return {
-    ...state,
-    count: state.count - 1
-  };
-}
-
-export const counterSubtractQuality = createQuality(
+export const [
+  counterSubtract,
   counterSubtractType,
-  counterSubtractReducer,
-  defaultMethodCreator,
-  [counterSelectCount]
-);
+  counterSubtractQuality
+] = createQualitySet({
+  type: 'Counter Subtract',
+  reducer: (state: CounterState, action) => {
+    return {
+      ...state,
+      count: state.count - 1
+    };
+  },
+  methodCreator: defaultMethodCreator,
+  keyedSelectors: [counterSelectCount]
+});
 /*#>*/
