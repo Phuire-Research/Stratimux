@@ -20,12 +20,10 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
 
   const stepThree: ActionNode = createActionNode(axiumOpen({open: true}), {
     semaphore: openSemaphore,
-    successNode: null,
     successNotes: {
       preposition: 'Finally',
       denoter: 'to Notify Subscribers of State changes.'
     },
-    failureNode: null,
   });
   const stepTwo: ActionNode = createActionNode(axiumSetDefaultMode({concepts}), {
     semaphore: setDefaultModeSemaphore,
@@ -33,7 +31,6 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
     successNotes: {
       preposition: 'Then'
     },
-    failureNode: null,
   });
   const stepOne: ActionNode = createActionNode(axiumInitializePrinciples({concepts}),{
     semaphore: initSemaphore,
@@ -41,7 +38,6 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
     successNotes: {
       preposition: 'Begin with'
     },
-    failureNode: null,
   });
 
   const params: ActionStrategyParameters = {

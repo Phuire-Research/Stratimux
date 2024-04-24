@@ -12,16 +12,9 @@ import {
 
 export const experimentThrottleAsyncIterateIdThenAddToDataTopic = 'Throttle Async iterate experiment ID then add to strategy data';
 export function experimentThrottleAsyncIterateIdThenAddToData(setId: number): ActionStrategy {
-  const stepOne = createActionNode(experimentThrottleAsyncIterateIdThenReceiveInMethod({setId}), {
-    successNode: null,
-    failureNode: null,
-  });
-
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentThrottleAsyncIterateIdThenAddToDataTopic,
-    initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+    initialNode: createActionNode(experimentThrottleAsyncIterateIdThenReceiveInMethod({setId}))
+  });
 }
 /*#>*/

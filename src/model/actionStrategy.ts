@@ -68,9 +68,9 @@ export interface ActionNodeOptions {
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
   decisionNotes?: ActionNotes;
-  successNode: ActionNode | null;
+  successNode?: ActionNode | null;
   successNotes?: ActionNotes;
-  failureNode: ActionNode | null;
+  failureNode?: ActionNode | null;
   failureNotes?: ActionNotes;
   lastActionNode?: ActionNode;
 }
@@ -91,20 +91,28 @@ export type ActionStrategyCreator = (...arg0: unknown[]) => ActionStrategy;
  * @param options successNode and failureNodes are always required. If using decisionNodes, set both to null.
  * @returns ActionNode
  */
-export function createActionNode(action: Action, options: ActionNodeOptions): ActionNode {
+export function createActionNode(action: Action, options?: ActionNodeOptions): ActionNode {
+  if (options) {
+    return {
+      actionType: action.type,
+      payload: action.payload,
+      keyedSelectors: action.keyedSelectors ? action.keyedSelectors : options.keyedSelectors,
+      agreement: action.agreement ? action.agreement : options.agreement,
+      semaphore: action.semaphore ? action.semaphore : options.semaphore,
+      successNode: options.successNode ? options.successNode : null,
+      successNotes: options.successNotes,
+      failureNode: options.failureNode ? options.failureNode : null,
+      failureNotes: options.failureNotes,
+      decisionNodes: options.decisionNodes,
+      decisionNotes: options.decisionNotes,
+      lastActionNode: options.lastActionNode
+    };
+  }
   return {
     actionType: action.type,
     payload: action.payload,
-    keyedSelectors: action.keyedSelectors ? action.keyedSelectors : options.keyedSelectors,
-    agreement: action.agreement ? action.agreement : options.agreement,
-    semaphore: action.semaphore ? action.semaphore : options.semaphore,
-    successNode: options.successNode,
-    successNotes: options.successNotes,
-    failureNode: options.failureNode,
-    failureNotes: options.failureNotes,
-    decisionNodes: options.decisionNodes,
-    decisionNotes: options.decisionNotes,
-    lastActionNode: options.lastActionNode
+    successNode: null,
+    failureNode: null
   };
 }
 

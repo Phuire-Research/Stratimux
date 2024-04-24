@@ -10,12 +10,10 @@ import { experimentAsyncDebounceNextActionNode } from '../qualities/debounceAsyn
 export const experimentAsyncDebounceAddOneTopic = 'Async debounce add one';
 export function experimentAsyncDebounceAddOneStrategy(): ActionStrategy {
   const stepTwo = createActionNode(counterAdd(), {
-    successNode: null,
     successNotes: {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
     agreement: 1000,
   });
   const stepOne = createActionNode(experimentAsyncDebounceNextActionNode(), {
@@ -24,7 +22,6 @@ export function experimentAsyncDebounceAddOneStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
     agreement: 1000,
   });
 

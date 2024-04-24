@@ -16,12 +16,8 @@ import { ownershipName } from '../../ownership/ownership.concept';
 
 export const experimentCountingTopic = 'Counting Strategy';
 export function experimentCountingStrategy(): ActionStrategy {
-  const backTrack = createActionNode(ownershipBackTrack(), {
-    successNode: null,
-    failureNode: null,
-  });
+  const backTrack = createActionNode(ownershipBackTrack());
   const stepFive = createActionNode(counterSubtract(),{
-    successNode: null,
     successNotes: {
       preposition: 'and finally',
       denoter: 'One.',
@@ -71,12 +67,10 @@ export function experimentCountingStrategy(): ActionStrategy {
     keyedSelectors: [counterSelectCount]
   });
 
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentCountingTopic,
     initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+  });
 }
 /*#>*/
 /*<$

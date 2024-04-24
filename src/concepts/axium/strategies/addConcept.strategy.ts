@@ -21,7 +21,6 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConc
     successNotes: {
       preposition: 'Then Safely'
     },
-    failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumAppendConceptsToAddQueType),
   });
   const stepOne = createActionNode(axiumSetBlockingMode({concepts}), {
@@ -29,7 +28,6 @@ export function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConc
     successNotes: {
       preposition: 'Immediately'
     },
-    failureNode: null,
     semaphore: getSemaphore(concepts, axiumName, axiumSetBlockingModeType),
   });
 
@@ -52,7 +50,6 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
       preposition: 'Reinstate',
       denoter: 'State.'
     },
-    failureNode: null,
     semaphore: openSemaphore,
   });
   const stepTwo = createActionNode(axiumSetDefaultMode({concepts: conceptualSet}), {
@@ -61,7 +58,6 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
     successNotes: {
       preposition: 'Then'
     },
-    failureNode: null,
   });
   const stepOne = createActionNode(axiumAddConceptFromQue(),{
     semaphore: addConceptsFromQueSemaphore,
@@ -69,7 +65,6 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
     successNotes: {
       preposition: 'First'
     },
-    failureNode: null,
   });
 
   const params: ActionStrategyParameters = {

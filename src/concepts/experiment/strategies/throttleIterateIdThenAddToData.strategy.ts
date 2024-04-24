@@ -6,21 +6,14 @@ unify the the ID the method has received onto the strategy's state field. Then f
 strategy's conclusion.
 $>*/
 /*<#*/
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { experimentThrottleIterateIdThenReceiveInMethod } from '../qualities/throttleIterateIdThenReceiveInMethod.quality';
 
 export const experimentThrottleIterateIdThenAddToDataTopic = 'Throttle iterate experiment ID then add to strategy data';
 export function experimentThrottleIterateIdThenAddToData(setId: number): ActionStrategy {
-  const stepOne = createActionNode(experimentThrottleIterateIdThenReceiveInMethod({setId}), {
-    successNode: null,
-    failureNode: null,
-  });
-
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentThrottleIterateIdThenAddToDataTopic,
-    initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+    initialNode: createActionNode(experimentThrottleIterateIdThenReceiveInMethod({setId}))
+  });
 }
 /*#>*/

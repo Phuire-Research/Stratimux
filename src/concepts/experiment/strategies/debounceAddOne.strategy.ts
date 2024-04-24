@@ -10,12 +10,10 @@ import { experimentDebounceNextActionNode } from '../qualities/debounceNextActio
 export const experimentDebounceAddOneTopic = 'Debounce add one';
 export function experimentDebounceAddOneStrategy(): ActionStrategy {
   const stepTwo = createActionNode(counterAdd(), {
-    successNode: null,
     successNotes: {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
     agreement: 1000,
   });
   const stepOne = createActionNode(experimentDebounceNextActionNode(), {
@@ -24,15 +22,12 @@ export function experimentDebounceAddOneStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
     agreement: 1000,
   });
 
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentDebounceAddOneTopic,
     initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+  });
 }
 /*#>*/

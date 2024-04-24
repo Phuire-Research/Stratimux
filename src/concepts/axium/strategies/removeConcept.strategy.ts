@@ -20,13 +20,10 @@ export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concepts, tar
 
   const stepTwo = createActionNode(axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
     semaphore: appendConceptsToRemoveQueSemaphore,
-    successNode: null,
-    failureNode: null,
   });
   const stepOne = createActionNode(axiumSetBlockingMode({concepts}), {
     semaphore: setBlockingModeSemaphore,
     successNode: stepTwo,
-    failureNode: null,
   });
   const params: ActionStrategyParameters = {
     topic: addConceptsToRemovalQueThenBlockTopic,
@@ -43,12 +40,10 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
 
   const stepThree = createActionNode(axiumOpen({open: true}), {
     semaphore: openSemaphore,
-    successNode: null,
     successNotes: {
       preposition: 'Reinstate',
       denoter: 'State.'
     },
-    failureNode: null,
   });
   const stepTwo = createActionNode(axiumSetDefaultMode({concepts}), {
     semaphore: setDefaultModeSemaphore,
@@ -56,7 +51,6 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
     successNotes: {
       preposition: 'Then'
     },
-    failureNode: null,
   });
   const stepOne = createActionNode(axiumRemoveConceptsViaQue(), {
     semaphore: removeConceptsViaQueSemaphore,
@@ -64,7 +58,6 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
     successNotes: {
       preposition: 'To Begin'
     },
-    failureNode: null,
   });
 
   const params: ActionStrategyParameters = {
