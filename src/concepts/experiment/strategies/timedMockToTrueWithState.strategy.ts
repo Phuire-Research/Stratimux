@@ -12,20 +12,14 @@ import { experimentTimerEmitActionWithState } from '../qualities/timerEmitAction
 export const experimentTimedMockToTrueWithStateTopic =
   'This will use a async method to eventually set mock to True via State and append mock to strategy data.';
 export function timedMockToTrueWithState(): ActionStrategy {
-  const stepTwo = createActionNode(experimentMockToTrue(), {
-    successNode: null,
-    failureNode: null,
-  });
+  const stepTwo = createActionNode(experimentMockToTrue());
   const stepOne = createActionNode(experimentTimerEmitActionWithState(), {
     successNode: stepTwo,
-    failureNode: null,
   });
 
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentTimedMockToTrueWithStateTopic,
     initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+  });
 }
 /*#>*/

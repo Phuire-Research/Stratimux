@@ -14,12 +14,10 @@ import { counterName } from '../counter.concept';
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy(): ActionStrategy {
   const stepFive = createActionNode(counterSubtract(), {
-    successNode: null,
     successNotes: {
       preposition: 'and finally',
       denoter: 'One.',
     },
-    failureNode: null,
   });
   const stepFour = createActionNode(counterAdd(), {
     successNode: stepFive,
@@ -27,7 +25,6 @@ export function countingStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
   });
   const stepThree = createActionNode(counterAdd(), {
     successNode: stepFour,
@@ -35,7 +32,6 @@ export function countingStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
   });
   const stepTwo = createActionNode(counterSubtract(), {
     successNode: stepThree,
@@ -43,7 +39,6 @@ export function countingStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
   });
   const stepOne = createActionNode(counterAdd(), {
     successNode: stepTwo,
@@ -51,7 +46,6 @@ export function countingStrategy(): ActionStrategy {
       preposition: '',
       denoter: 'One;',
     },
-    failureNode: null,
   });
 
   const params: ActionStrategyParameters = {

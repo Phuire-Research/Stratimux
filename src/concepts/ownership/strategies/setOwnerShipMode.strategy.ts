@@ -24,11 +24,9 @@ export function ownershipSetOwnershipModeStrategy(concepts: Concepts, modeName: 
 
   const stepThree = createActionNode(ownershipInitializeOwnership(), {
     semaphore: initializeOwnershipSemaphore,
-    successNode: null,
     successNotes: {
       preposition: 'Set',
     },
-    failureNode: null,
   });
   const stepTwo = createActionNode(axiumSetDefaultModeIndex({
     index: ownershipModeIndex
@@ -37,7 +35,6 @@ export function ownershipSetOwnershipModeStrategy(concepts: Concepts, modeName: 
     successNotes: {
       preposition: 'Then'
     },
-    failureNode: null
   });
   const stepOne = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
     semaphore: setModeSemaphore,
@@ -45,13 +42,11 @@ export function ownershipSetOwnershipModeStrategy(concepts: Concepts, modeName: 
     successNotes: {
       preposition: 'Successfully'
     },
-    failureNode: null,
   });
-  const params: ActionStrategyParameters = {
+
+  return createStrategy({
     topic: ownershipSetOwnerShipModeTopic,
     initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+  });
 }
 /*#>*/

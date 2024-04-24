@@ -8,16 +8,9 @@ import { experimentDebounceIterateIdThenReceiveInMethod } from '../qualities/deb
 
 export const experimentDebounceIterateIdThenAddToDataTopic = 'Debounce iterate experiment ID then add to strategy data';
 export function experimentDebounceIterateIdThenAddToData(setId: number): ActionStrategy {
-  const stepOne = createActionNode(experimentDebounceIterateIdThenReceiveInMethod({setId}), {
-    successNode: null,
-    failureNode: null,
-  });
-
-  const params: ActionStrategyParameters = {
+  return createStrategy({
     topic: experimentDebounceIterateIdThenAddToDataTopic,
-    initialNode: stepOne,
-  };
-
-  return createStrategy(params);
+    initialNode: createActionNode(experimentDebounceIterateIdThenReceiveInMethod({setId}))
+  });
 }
 /*#>*/

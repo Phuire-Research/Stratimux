@@ -47,9 +47,9 @@ export interface ActionNodeOptions {
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
   decisionNotes?: ActionNotes;
-  successNode: ActionNode | null;
+  successNode?: ActionNode | null;
   successNotes?: ActionNotes;
-  failureNode: ActionNode | null;
+  failureNode?: ActionNode | null;
   failureNotes?: ActionNotes;
   lastActionNode?: ActionNode;
 }

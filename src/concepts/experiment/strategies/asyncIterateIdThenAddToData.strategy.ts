@@ -8,14 +8,9 @@ import { experimentAsyncIterateIdThenReceiveInMethod } from '../qualities/asyncI
 
 export const experimentAsyncIterateIdThenAddToDataTopic = 'Async iterate experiment ID then add to strategy data';
 export function experimentAsyncIterateIdThenAddToData(): ActionStrategy {
-  const stepOne = createActionNode(experimentAsyncIterateIdThenReceiveInMethod(), {
-    successNode: null,
-    failureNode: null,
-  });
-
   const params: ActionStrategyParameters = {
     topic: experimentAsyncIterateIdThenAddToDataTopic,
-    initialNode: stepOne,
+    initialNode: createActionNode(experimentAsyncIterateIdThenReceiveInMethod())
   };
 
   return createStrategy(params);
