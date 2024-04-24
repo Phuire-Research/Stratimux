@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { selectConcept, selectSlice, selectState } from '../model/selector';
+import { selectConcept, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
@@ -19,10 +19,9 @@ import {
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { checkInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
+import { experimentCheckInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
 import { createStage } from '../model/stagePlanner';
-import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
@@ -30,7 +29,7 @@ test('Ownership Test', (done) => {
   const axium = createAxium('ownershipTest', [
     createOwnershipConcept(),
     createCounterConcept(),
-    createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
+    createExperimentConcept(createExperimentState(), [experimentCheckInStrategyQuality], [experimentActionQuePrinciple])
   ], true, true);
   const plan = axium.plan(
     'Testing Ownership Staging', [
