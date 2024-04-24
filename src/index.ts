@@ -61,7 +61,7 @@ export {
   debounceAction,
   throttleAction
 } from './model/actionOperators';
-export type { Action, ActionType } from './model/action';
+export type { Action, ActionType, ActionCreator, ActionCreatorWithPayload } from './model/action';
 export {
   primeAction,
   createAction,
