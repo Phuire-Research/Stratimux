@@ -4,10 +4,12 @@
 **Features:**
 * Universal Transformer
 * Autonomous Baseline Intelligence (ABI)
+* Function as a Operating System
 * Halting Complete
 * Concept Libraries
 * Action Oriented
-* Single Lock Graph Framework
+* Single Network Lock (Mutex as Ownership)
+* Asynchronous Graph Framework
 * Composable Strategies
 * Stage Planner (Hierarchal Planning/Higher Order Reasoning)
 * Prioritization
@@ -19,7 +21,7 @@
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
-* [logixUX](https://github.com/Phuire-Research/logixUX) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
+* [Huirth](https://github.com/Phuire-Research/Huirth) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
 * [Stratimux Assistant](https://chat.openai.com/g/g-Io9NDT4Z0-stratimux-assistant) Work in progress GPT, rough sketch supplied information on this repository and a few articles about the project. Will flesh out more in the future.
 
 ### Advice when Encountering Branch Prediction Errors.
@@ -84,7 +86,7 @@ When in doubt simplify.
 * Added a new experimental parameter to staging. Beat, which is a duration that will "Throttle and debounce," state notifications to that specific plan.
 ### 11/26/23
 * Updated naming conventions throughout. Counter is now CounterState. Strategies now export with their associated concept's prepended.
-* Added parsing tokens. If curious about this functionality see the logixUX project. These tokens in combination with that project will upon its release. Allow for the ease of parsing Stratimux or other TypeScript projects into high quality training data.
+* Added parsing tokens. If curious about this functionality see the Huirth project. These tokens in combination with that project will upon its release. Allow for the ease of parsing Stratimux or other TypeScript projects into high quality training data.
 ### 11/17/23
 * selectSlice now performing deep selections.
 ### 11/15/23
@@ -150,7 +152,7 @@ export const createUXConcept = (
 ### uXqOfUx.quality.ts
 This isolates all the parts necessary for your actions to have impact within this system. Be mindful of your types, as even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are not setting the semaphore ahead of time.
 
-The semaphore is the method of quality selection within the Axium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Axium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [logixUX](https://github.com/Phuire-Research/logixUX). In addition to other scaffolding improvements, AI assistance, and more.
+The semaphore is the method of quality selection within the Axium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Axium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [Huirth](https://github.com/Phuire-Research/Huirth). In addition to other scaffolding improvements, AI assistance, and more.
 ```typescript
 import {
   createQualitySetWithPayload,
