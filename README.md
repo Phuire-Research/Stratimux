@@ -49,6 +49,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### v0.1.56 5/01/24
+* May now properly update each plans intended KeyedSelectors to control when they are ran.
 ### v0.1.55 4/24/24
 * Changed ActionNodeOptions to allow for successNode and failureNode to be left absent. Continued effort towards decreasing boilerplate.
 * Refined original paper.

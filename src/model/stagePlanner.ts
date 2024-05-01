@@ -211,25 +211,26 @@ const handleStageDelimiter =
     ];
   };
 
-const handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
-  let evaluate = false;
-  if (options.newPriority) {
-    plan.stages[plan.stage].priority = options.newPriority;
-    evaluate = true;
-  }
-  if (options.newSelectors) {
-    plan.stages[plan.stage].selectors = options.newSelectors;
-    evaluate = true;
-  }
-  if (options.newBeat) {
-    plan.stages[plan.stage].beat = options.newBeat;
-    if (next === -1) {
-      plan.beat = options.newBeat;
-    }
-    evaluate = true;
-  }
-  return evaluate;
-};
+// const handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
+//   let evaluate = false;
+//   if (options.newPriority) {
+//     plan.stages[plan.stage].priority = options.newPriority;
+//     evaluate = true;
+//   }
+//   if (options.newSelectors) {
+//     plan.stages[plan.stage].selectors = options.newSelectors;
+//     // this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+//     evaluate = true;
+//   }
+//   if (options.newBeat) {
+//     plan.stages[plan.stage].beat = options.newBeat;
+//     if (next === -1) {
+//       plan.beat = options.newBeat;
+//     }
+//     evaluate = true;
+//   }
+//   return evaluate;
+// };
 
 const Inner = 0;
 const Base = 1;
@@ -273,6 +274,28 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
     selectors.forEach(selector => this.addSelector(selector, id));
   }
+
+  protected handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
+    let evaluate = false;
+    if (options.newPriority) {
+      plan.stages[plan.stage].priority = options.newPriority;
+      evaluate = true;
+    }
+    if (options.newSelectors) {
+      this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
+      plan.stages[plan.stage].selectors = options.newSelectors;
+      this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
+      evaluate = true;
+    }
+    if (options.newBeat) {
+      plan.stages[plan.stage].beat = options.newBeat;
+      if (next === -1) {
+        plan.beat = options.newBeat;
+      }
+      evaluate = true;
+    }
+    return evaluate;
+  };
 
   protected addSelector(selector: KeyedSelector, id: number) {
     const s = this.selectors.get(selector.keys);
@@ -576,6 +599,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       this.stageDelimiters.set(plan.id, stageDelimiter);
       if (!throttle && run) {
         let next = -1;
+        const evaluate = this.handleNewStageOptions(plan, options, next);
         if (options?.iterateStage) {
           next = plan.stage + 1;
           // this.updatePlanSelector(plan, plan.stage, next < plan.stages.length ? next : undefined);
@@ -590,10 +614,10 @@ export class UnifiedSubject extends Subject<Concepts> {
             this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
           }
           plan.stage = next;
-          this.manageQues();
           if (plan.stages[plan.stage]) {
             this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
           }
+          this.manageQues();
           const beat = plan.stages[plan.stage].beat;
           plan.beat = beat !== undefined ? beat : -1;
           stageDelimiter.prevActions = [];
@@ -601,10 +625,7 @@ export class UnifiedSubject extends Subject<Concepts> {
           stageDelimiter.runOnceMap = new Map();
           this.stageDelimiters.set(plan.id, stageDelimiter);
         }
-        const evaluate = handleNewStageOptions(plan, options, next);
         if (evaluate && next === -1) {
-          this.handleRemoveSelector(plan.stages[plan.stage].selectors, plan.id);
-          this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
           this.manageQues();
         }
         // Horrifying
@@ -709,7 +730,6 @@ export class UnifiedSubject extends Subject<Concepts> {
         });
       }
     }
-
     const notification = (id: number) => {
       const ready = notifyIds.get(id);
       const plan = this.currentPlans.get(id);
