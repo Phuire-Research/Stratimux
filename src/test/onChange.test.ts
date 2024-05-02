@@ -16,13 +16,13 @@ import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
 import { Concepts } from '../model/concept';
 
-test('Axium Counting Strategy Test', (done) => {
+test('Axium onChange Test', (done) => {
   const selectorRouter = {
     [axiumSelectLastStrategy.keys]: (concepts: Concepts) =>
       console.log('CHECK: ', selectSlice(concepts, axiumSelectLastStrategy))
   };
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], true, true);
-  const plan = axium.plan('Counting Strategy Stage',
+  const plan = axium.plan('Counting Strategy Plan with selectors',
     [
       createStage((concepts, dispatch) => {
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {

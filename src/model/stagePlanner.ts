@@ -66,9 +66,21 @@ export type NamedStagePlanner = {
 
 export type dispatchOptions = {
   runOnce?: boolean;
+  throttle?: number;
   iterateStage?: boolean;
   setStage?: number;
-  throttle?: number;
+  setStageSelectors?: {
+    stage: number,
+    selectors: KeyedSelector[]
+  };
+  setStagePriority?: {
+    stage: number,
+    priority: number
+  };
+  setStageBeat?: {
+    stage: number,
+    beat: number
+  };
   newSelectors?: KeyedSelector[];
   newPriority?: number;
   newBeat?: number;
@@ -83,6 +95,9 @@ export type StageDelimiter = {
   runOnceMap: Map<string, boolean>
 }
 
+/**
+ * Used in principle plans that are loaded during axium initialization
+ */
 export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
   if (isAxiumOpen(concepts) && getAxiumState(concepts).lastStrategy === initializeTopic) {
     dispatch(func(), {
@@ -211,27 +226,6 @@ const handleStageDelimiter =
     ];
   };
 
-// const handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
-//   let evaluate = false;
-//   if (options.newPriority) {
-//     plan.stages[plan.stage].priority = options.newPriority;
-//     evaluate = true;
-//   }
-//   if (options.newSelectors) {
-//     plan.stages[plan.stage].selectors = options.newSelectors;
-//     // this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
-//     evaluate = true;
-//   }
-//   if (options.newBeat) {
-//     plan.stages[plan.stage].beat = options.newBeat;
-//     if (next === -1) {
-//       plan.beat = options.newBeat;
-//     }
-//     evaluate = true;
-//   }
-//   return evaluate;
-// };
-
 const Inner = 0;
 const Base = 1;
 const Outer = 2;
@@ -295,6 +289,18 @@ export class UnifiedSubject extends Subject<Concepts> {
       evaluate = true;
     }
     return evaluate;
+  };
+
+  protected handleSetStageOptions = (plan: Plan, options: dispatchOptions) => {
+    if (options.setStageSelectors && plan.stages[options.setStageSelectors.stage]) {
+      plan.stages[options.setStageSelectors.stage].selectors = options.setStageSelectors.selectors;
+    }
+    if (options.setStagePriority && plan.stages[options.setStagePriority.stage]) {
+      plan.stages[options.setStagePriority.stage].priority = options.setStagePriority.priority;
+    }
+    if (options.setStageBeat && plan.stages[options.setStageBeat.stage]) {
+      plan.stages[options.setStageBeat.stage].beat = options.setStageBeat.beat;
+    }
   };
 
   protected addSelector(selector: KeyedSelector, id: number) {
@@ -600,6 +606,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       if (!throttle && run) {
         let next = -1;
         const evaluate = this.handleNewStageOptions(plan, options, next);
+        this.handleSetStageOptions(plan, options);
         if (options?.iterateStage) {
           next = plan.stage + 1;
           // this.updatePlanSelector(plan, plan.stage, next < plan.stages.length ? next : undefined);
