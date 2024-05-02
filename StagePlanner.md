@@ -25,9 +25,24 @@ export type Plan = {
 ```typescript
 export type dispatchOptions = {
   runOnce?: boolean;
+  iterateStage?: boolean;
+  setStage?: number;
+  setStageSelectors?: {
+    stage: number,
+    selectors: KeyedSelector[]
+  };
+  setStagePriority?: {
+    stage: number,
+    priority: number
+  };
+  setStageBeat?: {
+    stage: number,
+    beat: number
+  };
   throttle?: number;
-  setStep?: number;
-  iterateStep?: boolean;
+  newSelectors?: KeyedSelector[];
+  newPriority?: number;
+  newBeat?: number;
 }
 
 ```
@@ -36,7 +51,18 @@ export type dispatchOptions = {
 * throttle - Required to prevent the stage to be considered bad if rerunning the same action within the same stage, specific use case is tracking some position over time. If on is part of options, this will only come into play after that action is first dispatched.
 * incrementStage - Will increment to the next stage index, this should be your default option for dispatching actions or strategies to prevent action overflow.
 * setStage - This will set the stage to a specific stage index, useful if some strategy failed and the staging needs to be reset to prepare for that strategy again. This will always override iterateStage.
- 
+* setStageSelectors/Priority/Beat - This will set a specific stage's selectors, but will not trigger a cache of the current priority selector order que. This likewise applies to Priority/Beat
+* newSelectors/Priority/Beat - Will set the current stage's selectors/priority/beat
+
+#### Stage Selectors
+This utilizes Stratimux's KeyedSelectors to control when a stage would run as a built in form of change detection. Noting that once a stage is incremented or set, it will always run the first time. But may not receive the specific changes that the selector is actively looking for. The strength of this approach allows us to move beyond ECS into a system that is reactive and atomic that likewise allows for Stratimux to function as a FaaOS(Function as a Operating System).
+
+#### Stage Priority
+Of the the main issues with utilizing a single point of observation, is that some plans you might devise should take precedence over others. For example the Axium's own close principle has the highest priority of all observations and will force a shutdown of the entire Axium upon observation. We have likewise provided the set and new stage options for the priority value to allow some intelligence to be at play, keeping in mind Stratimux is designed to act as a form of logical embodiment for this generation's probabilistic AI.
+
+#### Stage Beat
+The beat value each stage may have, is a new concept similar to the throttle and debounce found in reactive programming. Except here the first observation will run, and any subsequent observations will be delayed until just have the beat value expires. This ensures a constant stream of observations, while allowing for gaps of time that will instantly resume once the observation becomes relevant again. Think Frames Per Second (FPS).
+
 ### Stage Planner Internals
 ```typescript
 export type Dispatcher = (action: Action, options: dispatchOptions) => void;
