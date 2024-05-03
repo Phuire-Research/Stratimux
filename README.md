@@ -1,5 +1,5 @@
 ![Stratimux](https://github.com/Phuire-Research/Stratimux/blob/main/Stratimux.png?raw=true)
-### *The Unified Turing Machine - Plain Text Intelligence of Doing, that solves the **impossible halting problem** of classic turing machines, in the Spirit of the Open Internet*
+### *The Unified Turing Machine - The Mythical Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
 
 **Features:**
 * Universal Transformer
