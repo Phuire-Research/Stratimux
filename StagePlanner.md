@@ -25,6 +25,7 @@ export type Plan = {
 ```typescript
 export type dispatchOptions = {
   runOnce?: boolean;
+  throttle?: number;
   iterateStage?: boolean;
   setStage?: number;
   setStageSelectors?: {
@@ -39,7 +40,6 @@ export type dispatchOptions = {
     stage: number,
     beat: number
   };
-  throttle?: number;
   newSelectors?: KeyedSelector[];
   newPriority?: number;
   newBeat?: number;
@@ -61,7 +61,7 @@ This utilizes Stratimux's KeyedSelectors to control when a stage would run as a 
 Of the the main issues with utilizing a single point of observation, is that some plans you might devise should take precedence over others. For example the Axium's own close principle has the highest priority of all observations and will force a shutdown of the entire Axium upon observation. We have likewise provided the set and new stage options for the priority value to allow some intelligence to be at play, keeping in mind Stratimux is designed to act as a form of logical embodiment for this generation's probabilistic AI.
 
 #### Stage Beat
-The beat value each stage may have, is a new concept similar to the throttle and debounce found in reactive programming. Except here the first observation will run, and any subsequent observations will be delayed until just have the beat value expires. This ensures a constant stream of observations, while allowing for gaps of time that will instantly resume once the observation becomes relevant again. Think Frames Per Second (FPS).
+The beat value each stage may have, is a new concept similar to the throttle and debounce found in reactive programming. Except here the first observation will run, and any subsequent observations will be delayed until just have the beat value expires. This ensures a constant stream of observations, while allowing for gaps of time that will instantly resume once the observation becomes relevant again, aggregating all changes that occurred between beats. Think Frames Per Second (FPS).
 
 ### Stage Planner Internals
 ```typescript

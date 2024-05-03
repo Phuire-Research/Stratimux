@@ -6,7 +6,7 @@ $>*/
 import { createAxium, getAxiumState } from '../../model/axium';
 import { createStage } from '../../model/stagePlanner';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
-import { createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
+import { beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
 import { initializeTopic } from '../../concepts/axium/strategies/initialization.strategy';
 import { strategyBegin } from '../../model/actionStrategy';
 import {
@@ -18,15 +18,15 @@ import {
   beatSelectorChangesSelectCountThree,
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
-import { selectSlice } from '../../model/selector';
+import { selectSlice, selectState } from '../../model/selector';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
-  const beat = 3000;
+  const beat = 7000;
   const [tally, strategy, topic] = generateRandomCountingStrategy();
   const axium = createAxium('Beat Selector Changes properly defers accumulated changes', [
     createBeatSelectorChangesConcept()
   ]);
-  axium.plan('Prolonged Counting Strategy', [
+  const plan = axium.plan('Prolonged Counting Strategy', [
     createStage((concepts, dispatch) => {
       if (getAxiumState(concepts).lastStrategy === initializeTopic) {
         dispatch(strategyBegin(strategy), {
@@ -44,6 +44,11 @@ test('Deferred Beat Selector Changes Test', (done) => {
         expect(selectSlice(concepts, beatSelectorChangesSelectCountSix)).toBe(tally[5]);
         expect(selectSlice(concepts, beatSelectorChangesSelectCountSeven)).toBe(tally[6]);
         expect(changes?.length).toBe(tally.length);
+        setTimeout(() => {
+          plan.conclude();
+          axium.close();
+          done();
+        }, 500);
       }
     }, {
       beat,

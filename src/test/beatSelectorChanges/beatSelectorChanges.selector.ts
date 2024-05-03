@@ -7,17 +7,17 @@ import { KeyedSelector, createConceptKeyedSelector } from '../../model/selector'
 import { BeatSelectorChangesState } from './beatSelectorChanges.concept';
 
 export const beatSelectorChangesSelectCountOne: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countOne');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countOne');
 export const beatSelectorChangesSelectCountTwo: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countTwo');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countTwo');
 export const beatSelectorChangesSelectCountThree: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countThree');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countThree');
 export const beatSelectorChangesSelectCountFour: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countFour');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countFour');
 export const beatSelectorChangesSelectCountFive: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countFive');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countFive');
 export const beatSelectorChangesSelectCountSix: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countSix');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countSix');
 export const beatSelectorChangesSelectCountSeven: KeyedSelector =
-  createConceptKeyedSelector<BeatSelectorChangesState>('BeatSelectorChanges', 'countSeven');
+  createConceptKeyedSelector<BeatSelectorChangesState>('beatSelectorChanges', 'countSeven');
 /*#>*/

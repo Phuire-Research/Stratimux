@@ -32,18 +32,18 @@ export const generateRandomCountingStrategy = (): [
     beatSelectorChangesAddToCountSix,
     beatSelectorChangesAddToCountSeven,
   ];
-  let selection = Math.round(getRandomRange(0, 7));
+  let selection = Math.floor(getRandomRange(0, 6));
   let previousStep: ActionNode =
-    createActionNode(variants[Math.round(selection)](), {
+    createActionNode(variants[selection](), {
       successNode: null,
       failureNode: null
     });
   const stepFirst = previousStep;
   variantTally[selection]++;
   for (let i = 0; i < steps; i++) {
-    selection = Math.round(getRandomRange(0, 7));
+    selection = Math.round(getRandomRange(0, 6));
     const newStep: ActionNode =
-      createActionNode(variants[Math.round(selection)](), {
+      createActionNode(variants[selection](), {
         successNode: null,
         failureNode: null
       });
