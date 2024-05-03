@@ -27,7 +27,8 @@ export type Plan = {
   stageFailed: number;
   beat: number;
   offBeat: number;
-  timer: NodeJS.Timeout[]
+  timer: NodeJS.Timeout[];
+  changeAggregator: Record<string, KeyedSelector>;
 }
 
 export type Stage = (
@@ -344,7 +345,18 @@ export class UnifiedSubject extends Subject<Concepts> {
       };
     });
     const beat = staged[0].beat;
-    return {id: planId, space, title, stages: staged, stage: 0, stageFailed: -1, beat: beat ? beat : -1, offBeat: -1, timer: []};
+    return {
+      id: planId,
+      space,
+      title,
+      stages: staged,
+      stage: 0,
+      stageFailed: -1,
+      beat: beat ? beat : -1,
+      offBeat: -1,
+      timer: [],
+      changeAggregator: {}
+    };
   }
 
   protected initPlan(plan: Plan): StagePlanner {
@@ -630,6 +642,7 @@ export class UnifiedSubject extends Subject<Concepts> {
           stageDelimiter.prevActions = [];
           stageDelimiter.unionExpiration = [];
           stageDelimiter.runOnceMap = new Map();
+          plan.changeAggregator = {};
           this.stageDelimiters.set(plan.id, stageDelimiter);
         }
         if (evaluate && next === -1) {
@@ -679,11 +692,21 @@ export class UnifiedSubject extends Subject<Concepts> {
           plan.offBeat = Date.now() + plan.beat;
           this.execute(plan, index, changes);
         } else if (timer.length === 0 && plan.offBeat > now) {
+          // Logic to push changes into aggregator
+          changes.forEach(key => {
+            plan.changeAggregator[key.keys] = key;
+          });
           timer.push(setTimeout(() => {
+            const changeAggregation = Object.keys(plan.changeAggregator).map(k => plan.changeAggregator[k]);
+            plan.changeAggregator = {};
             plan.timer = [];
             plan.offBeat = Date.now() + plan.beat;
-            this.execute(plan, index, changes);
+            this.execute(plan, index, changeAggregation);
           }, plan.offBeat - Date.now()));
+        } else {
+          changes.forEach(key => {
+            plan.changeAggregator[key.keys] = key;
+          });
         }
       } else {
         this.execute(plan, index, changes);
