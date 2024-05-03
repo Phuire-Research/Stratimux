@@ -49,6 +49,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### v0.1.58 5/03/24
+* Ensured that changes that happen between a stage's beat interval are accumulated
 ### v0.1.57 5/02/24
 * Added the ability to set specific stages of their selectors, priority, and beat values.
   * Note that by setting these values, this will not force the internal priority selector cache mechanism to trigger. Use set for stages your are iterating to or changing due to some circumstance. The new stage options will force the priority selector cache to trigger.
