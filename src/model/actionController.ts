@@ -10,7 +10,7 @@ import { Action, axiumBadAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
-export class ActionController extends Subject<Action> {
+export class ActionController extends Subject<[Action, boolean]> {
   expiration: number;
   expired: boolean;
   timer: NodeJS.Timeout | undefined;
@@ -27,18 +27,18 @@ export class ActionController extends Subject<Action> {
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
-        this.next(axiumBadAction({badActions: [this.action]}));
+        this.next([axiumBadAction({badActions: [this.action]}), true]);
       }
     } else {
       this.timer = setTimeout(() => {
         this.expired = true;
         if (this.action.strategy) {
-          this.next(strategyFailed(
+          this.next([strategyFailed(
             this.action.strategy,
             strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
-          ));
+          ), true]);
         } else {
-          this.next(axiumBadAction({badActions: [this.action]}));
+          this.next([axiumBadAction({badActions: [this.action]}), true]);
         }
       }, this.expiration - Date.now());
     }
@@ -47,8 +47,8 @@ export class ActionController extends Subject<Action> {
    * Next fires once and then completes.
    * In case someone uses next over fire.
    */
-  next(action: Action) {
-    this.fire(action);
+  next(union: [Action, boolean]) {
+    this.fire(union[0]);
   }
   /**
    * Fires once and then completes.
@@ -62,7 +62,7 @@ export class ActionController extends Subject<Action> {
       const { observers } = this;
       const len = observers.length;
       for (let i = 0; i < len; i++) {
-        observers[i].next(action);
+        observers[i].next([action, true]);
       }
       this.complete();
     }

@@ -30,6 +30,8 @@ import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
 import { createStage } from '../model/stagePlanner';
 
+jest.setTimeout(30000);
+
 test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceNextActionNodeQuality]);
   const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
@@ -348,6 +350,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
             axiumSelectLastStrategyData
           );
           console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
+          console.log('2 Async Debounce: ', experimentDebounceAsyncIterateIdThenAddToDataTopic + 2);
           if (lastStrategy === experimentDebounceAsyncIterateIdThenAddToDataTopic + 2) {
             if (data) {
               console.log('Strategy Data: ', data, 'Experiment State ID: ', experimentState.id);

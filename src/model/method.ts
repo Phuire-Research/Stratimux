@@ -23,7 +23,7 @@ type Action = {
     expiration: number;
     axium?: string;
 };
-type Method = Observable<Action> & {toString: () => string};
+type Method = Observable<[Action, boolean]> & {toString: () => string};
 
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {
@@ -32,13 +32,13 @@ export const createMethod =
       map((action: Action) => {
         const methodAction = method(action);
         if (methodAction.strategy) {
-          return methodAction;
+          return [methodAction, false];
         }
         const conclude = axiumConclude();
-        return {
+        return [{
           ...action,
           ...conclude,
-        };
+        }, false];
       }),
     );
     defaultMethod.toString = () => ('Method');
@@ -57,13 +57,13 @@ export const createMethodWithState =
       map(([act, state] : [Action, T]) => {
         const methodAction = methodWithState(act, state);
         if (methodAction.strategy) {
-          return methodAction;
+          return [methodAction, false];
         }
         const conclude = axiumConclude();
-        return {
+        return [{
           ...act,
           ...conclude,
-        };
+        }, false];
       }),
     );
     defaultMethod.toString = () => ('Method with State');
@@ -108,15 +108,15 @@ export const createMethodDebounce =
         if (action.semaphore[3] !== 3) {
           const methodAction = method(action);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, true];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...action,
             ...conclude,
-          };
+          }, false];
         } else {
-          return action;
+          return [action, true];
         }
       }),
     );
@@ -136,15 +136,15 @@ export const createMethodDebounceWithState =
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithState(act, state);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, true];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...act,
             ...conclude,
-          };
+          }, true];
         } else {
-          return act;
+          return [act, true];
         }
       }),
     );
@@ -192,15 +192,15 @@ export const createMethodThrottle =
         if (action.semaphore[3] !== 3) {
           const methodAction = method(action);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, false];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...action,
             ...conclude,
-          };
+          }, false];
         } else {
-          return action;
+          return [action, false];
         }
       }),
     );
@@ -220,15 +220,15 @@ export const createMethodThrottleWithState =
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithState(act, state);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, false];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...act,
             ...conclude,
-          };
+          }, false];
         } else {
-          return act;
+          return [act, false];
         }
       }),
     );
@@ -278,13 +278,13 @@ export const createMethodWithConcepts =
       map(([act, concepts] : [Action, Concepts]) => {
         const methodAction = methodWithConcepts(act, concepts, semaphore);
         if (methodAction.strategy) {
-          return methodAction;
+          return [methodAction, false];
         }
         const conclude = axiumConclude();
-        return {
+        return [{
           ...act,
           ...conclude,
-        };
+        }, false];
       }),
     );
     defaultMethod.toString = () => ('Method with Concepts');
@@ -322,15 +322,15 @@ export const createMethodDebounceWithConcepts =
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithConcepts(act, concepts, semaphore);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, true];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...act,
             ...conclude,
-          };
+          }, false];
         } else {
-          return act;
+          return [act, true];
         }
       }),
     );
@@ -369,15 +369,15 @@ export const createMethodThrottleWithConcepts =
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithConcepts(act, concepts, semaphore);
           if (methodAction.strategy) {
-            return methodAction;
+            return [methodAction, false];
           }
           const conclude = axiumConclude();
-          return {
+          return [{
             ...act,
             ...conclude,
-          };
+          }, false];
         } else {
-          return act;
+          return [act, false];
         }
       }),
     );

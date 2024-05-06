@@ -16,7 +16,7 @@ import { UnifiedSubject } from './stagePlanner';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
 
-export type Method = Observable<Action>;
+export type Method = Observable<[Action, boolean]>;
 export type Principle = Observable<Action>;
 
 export type Mode = ([action, concept, action$, concepts$]: [
@@ -281,12 +281,12 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   const defaultMethod: Method = defaultSubject.pipe(
     map((action: Action) => {
       if (action.strategy) {
-        return strategySuccess(action.strategy);
+        return [strategySuccess(action.strategy), false];
       }
-      return {
+      return [{
         ...action,
         type: axiumConcludeType
-      };
+      }, false];
     }),
   );
 

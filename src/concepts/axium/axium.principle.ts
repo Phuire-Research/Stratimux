@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a principle that will allow for the modification of the Axium's loaded concepts.
 $>*/
 /*<#*/
-import { Observable, Subject, Subscriber, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
@@ -62,16 +62,16 @@ export const axiumPrinciple: PrincipleFunction = (
             if (quality.methodCreator) {
               [quality.method, quality.subject] = quality.methodCreator(getAxiumState(concepts).concepts$, concept.semaphore);
               quality.method.pipe(
-                catchError((err: unknown, caught: Observable<Action>) => {
+                catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
                   if (getAxiumState(concepts).logging) {
                     console.error('METHOD ERROR', err);
                   }
                   return caught;
                 }));
               quality.toString = qualityToString(quality);
-              const methodSub = quality.method.subscribe((act: Action) => {
-                const action$ = getAxiumState(concepts).action$ as Subject<Action>;
-                blockingMethodSubscription(action$, act);
+              const methodSub = quality.method.subscribe(([act, _]) => {
+                const tail = getAxiumState(concepts).tail;
+                blockingMethodSubscription(tail, act);
               }) as Subscriber<Action>;
               getAxiumState(concepts).methodSubscribers.push({name: concept.name, subscription: methodSub});
             }
@@ -146,14 +146,14 @@ export const axiumPrinciple: PrincipleFunction = (
               quality.method = method;
               quality.subject = subject;
               quality.method.pipe(
-                catchError((err: unknown, caught: Observable<Action>) => {
+                catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
                   if (axiumState.logging) {
                     console.error('METHOD ERROR', err);
                   }
                   return caught;
                 }));
-              const methodSub = quality.method.subscribe((action: Action) => {
-                blockingMethodSubscription(axiumState.action$, action);
+              const methodSub = quality.method.subscribe(([action, _]) => {
+                blockingMethodSubscription(axiumState.tail, action);
               }) as Subscriber<Action>;
               const _axiumState = newConcepts[0].state as AxiumState;
               _axiumState.methodSubscribers.push({

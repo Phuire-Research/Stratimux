@@ -4,7 +4,7 @@ generate a quality that will set the Axium's mode to blocking. While in this mod
 the Axium operates in a synchronous behavior to quickly modify the Axium's conceptual set.
 $>*/
 /*<#*/
-import { Subject, Subscriber } from 'rxjs';
+import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
 import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
@@ -32,9 +32,9 @@ export const [
     forEachConcept(concepts, (concept => {
       concept.qualities.forEach(quality => {
         if (quality.method) {
-          const sub = quality.method.subscribe(action => {
-            const action$ = state.action$ as Subject<Action>;
-            blockingMethodSubscription(action$, action);
+          const sub = quality.method.subscribe(([action, _]) => {
+            const tail = state.tail;
+            blockingMethodSubscription(tail, action);
           });
           methodSubscribers.push({
             name: concept.name,

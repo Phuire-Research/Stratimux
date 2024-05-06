@@ -15,6 +15,7 @@ test('Axium Counting Strategy Test', (done) => {
   const plan = axium.plan('Counting Strategy Plan',
     [
       createStage((_, dispatch) => {
+        console.log('HIT!!!');
         dispatch(strategyBegin(countingStrategy()), {
           iterateStage: true
         });
