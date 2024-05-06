@@ -159,7 +159,7 @@ export function createAxium(
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
       const nextAction = getAxiumState(concepts).tail.shift();
       if (nextAction) {
-        console.log('CHECK NEXT ACTION', nextAction, getAxiumState(concepts).tail);
+        // console.log('CHECK NEXT ACTION', nextAction, getAxiumState(concepts).tail);
         getAxiumState(concepts).action$.next(nextAction);
       }
     });
