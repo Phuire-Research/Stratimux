@@ -32,103 +32,103 @@ import { createStage } from '../model/stagePlanner';
 
 jest.setTimeout(30000);
 
-// test('Debounce method prevent excess count', (done) => {
-//   const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceNextActionNodeQuality]);
-//   const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
-//   const plan = axium.plan('Experiment debounce add one', [
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((concepts, _) => {
-//       const counterState = selectState<CounterState>(concepts, counterName);
-//       console.log('Debounce HIT 4', counterState);
-//       if (counterState?.count === 1) {
-//         console.log('Final Debounce HIT 4', counterState);
-//         expect(counterState.count).toBe(1);
-//         plan.conclude();
-//         done();
-//       }
-//     })
-//   ]);
-// });
+test('Debounce method prevent excess count', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceNextActionNodeQuality]);
+  const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
+  const plan = axium.plan('Experiment debounce add one', [
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((concepts, _) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      console.log('Debounce HIT 4', counterState);
+      if (counterState?.count === 1) {
+        console.log('Final Debounce HIT 4', counterState);
+        expect(counterState.count).toBe(1);
+        plan.conclude();
+        done();
+      }
+    })
+  ]);
+});
 
-// test('Async debounce method prevent excess count', (done) => {
-//   const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncDebounceNextActionNodeQuality]);
-//   const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
-//   const plan = axium.plan('Experiment async debounce add one', [
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((_, dispatch) => {
-//       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//         iterateStage: true
-//       });
-//     }),
-//     createStage((concepts, _) => {
-//       const counterState = selectState<CounterState>(concepts, counterName);
-//       console.log('Async Debounce HIT 4', counterState);
-//       if (counterState?.count === 1) {
-//         console.log('FINAL Async Debounce HIT 4', counterState);
-//         expect(counterState.count).toBe(1);
-//         plan.conclude();
-//       }
-//     })
-//   ]);
-//   setTimeout(() => {
-//     const secondPlan = axium.plan('Second experiment async debounce add one', [
-//       createStage((_, dispatch) => {
-//         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//           iterateStage: true
-//         });
-//       }),
-//       createStage((_, dispatch) => {
-//         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//           iterateStage: true
-//         });
-//       }),
-//       createStage((_, dispatch) => {
-//         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
-//           iterateStage: true
-//         });
-//       }),
-//       createStage((concepts, _) => {
-//         const counterState = selectState<CounterState>(concepts, counterName);
-//         console.log('Async 2 Debounce HIT 4', counterState);
-//         if (counterState?.count === 2) {
-//           console.log('FINAL Async 2 Debounce HIT 4', counterState);
-//           expect(counterState.count).toBe(2);
-//           secondPlan.conclude();
-//           axium.close();
-//           setTimeout(() => {
-//             done();
-//           }, 500);
-//         }
-//       })
-//     ]);
-//     // Axium must be primed, therefore we kick it back into gear.
-//     // Downside of halting quality.
-//     axium.dispatch(axiumKick());
-//   }, 1000);
-// });
+test('Async debounce method prevent excess count', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncDebounceNextActionNodeQuality]);
+  const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
+  const plan = axium.plan('Experiment async debounce add one', [
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((_, dispatch) => {
+      dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+        iterateStage: true
+      });
+    }),
+    createStage((concepts, _) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      console.log('Async Debounce HIT 4', counterState);
+      if (counterState?.count === 1) {
+        console.log('FINAL Async Debounce HIT 4', counterState);
+        expect(counterState.count).toBe(1);
+        plan.conclude();
+      }
+    })
+  ]);
+  setTimeout(() => {
+    const secondPlan = axium.plan('Second experiment async debounce add one', [
+      createStage((_, dispatch) => {
+        dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+          iterateStage: true
+        });
+      }),
+      createStage((_, dispatch) => {
+        dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+          iterateStage: true
+        });
+      }),
+      createStage((_, dispatch) => {
+        dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
+          iterateStage: true
+        });
+      }),
+      createStage((concepts, _) => {
+        const counterState = selectState<CounterState>(concepts, counterName);
+        console.log('Async 2 Debounce HIT 4', counterState);
+        if (counterState?.count === 2) {
+          console.log('FINAL Async 2 Debounce HIT 4', counterState);
+          expect(counterState.count).toBe(2);
+          secondPlan.conclude();
+          axium.close();
+          setTimeout(() => {
+            done();
+          }, 500);
+        }
+      })
+    ]);
+    // Axium must be primed, therefore we kick it back into gear.
+    // Downside of halting quality.
+    axium.dispatch(axiumKick());
+  }, 1000);
+});
 
 test('Debounce Method Test with State id comparison', (done) => {
   const experiment = createExperimentConcept(createExperimentState(), [experimentDebounceIterateIdThenReceiveInMethodQuality]);

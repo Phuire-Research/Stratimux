@@ -26,6 +26,7 @@ import {
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
+import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 export const blockingMethodSubscription = (tail: Action[], action: Action) => {
   if (
@@ -63,14 +64,12 @@ export const defaultMethodSubscription = (tail: Action[], action$: Subject<Actio
       strategyData: action.strategy.data
     });
     // setTimeout(() => {
+    tail.push(appendToDialog);
+    tail.push(action);
     if (async) {
       setTimeout(() => {
-        tail.push(action);
-        action$.next(appendToDialog);
+        action$.next(axiumKick());
       }, 0);
-    } else {
-      tail.push(appendToDialog);
-      tail.push(action);
     }
     // }, 0);
   } else if (
@@ -78,9 +77,12 @@ export const defaultMethodSubscription = (tail: Action[], action$: Subject<Actio
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
-    // setTimeout(() => {
     tail.push(action);
-    // }, 0);
+    if (async) {
+      setTimeout(() => {
+        action$.next(axiumKick());
+      }, 0);
+    }
   }
 };
 
@@ -153,7 +155,7 @@ export function createAxium(
       }
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
-      console.log('STREAM', action, mode);
+      // console.log('STREAM', action, mode);
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
       const nextAction = getAxiumState(concepts).tail.shift();
       if (nextAction) {

@@ -49,6 +49,11 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### Strong Fast **BREAKING** v0.1.59 5/06/24
+* Removed the setTimeout trick in favor of a new tail property added to the axium concept, this paves the way for this pattern to be completely responsible for its own implementation.
+  * **BREAKING** Method Subjects are now a tuple of [action: Action, async: Boolean]. This allows for the old setTimeout trick to be used in case the action stream isn't kicked into gear.
+    * This change is only breaking if you have implemented your own custom methods, please see src/model/method.ts for reference.
+* Ensured that plans that conclude with an active beat, will have their timers removed.
 ### v0.1.58 5/03/24
 * Ensured that changes that happen between a stage's beat interval are accumulated
 ### v0.1.57 5/02/24

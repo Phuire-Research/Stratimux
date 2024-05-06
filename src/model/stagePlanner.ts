@@ -392,6 +392,8 @@ export class UnifiedSubject extends Subject<Concepts> {
   protected deletePlan(planId: number) {
     const plan = this.currentPlans.get(planId);
     if (plan) {
+      plan.timer.forEach(timer => clearTimeout(timer));
+      plan.timer = [];
       this.currentPlans.delete(planId);
       const selectors = plan.stages[plan.stage]?.selectors;
       if (selectors) {
