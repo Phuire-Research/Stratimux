@@ -7,7 +7,7 @@ import { Subject, Subscriber } from 'rxjs';
 import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
-import { defaultMethodSubscription } from '../../../model/axium';
+import { defaultMethodSubscription, getAxiumState } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload } from '../../../model/quality';
 
@@ -30,9 +30,9 @@ export const [
     forEachConcept(concepts, (concept => {
       concept.qualities.forEach(quality => {
         if (quality.method) {
-          const sub = quality.method.subscribe(action => {
-            const action$ = state.action$ as Subject<Action>;
-            defaultMethodSubscription(action$, action);
+          const sub = quality.method.subscribe(([action, async]) => {
+            const tail = state.tail;
+            defaultMethodSubscription(tail, getAxiumState(concepts).action$, action, async);
           });
           methodSubscribers.push({
             name: concept.name,

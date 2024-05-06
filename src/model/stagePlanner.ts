@@ -366,6 +366,9 @@ export class UnifiedSubject extends Subject<Concepts> {
     const conclude = () => {
       this.deletePlan(plan.id);
     };
+    setTimeout(() => {
+      this.next(this.concepts);
+    }, 0);
     return {
       title: plan.title,
       planId: plan.id,
@@ -760,6 +763,7 @@ export class UnifiedSubject extends Subject<Concepts> {
         });
       }
     }
+    console.log('CHECK BLOCKING', blocking, this.ques);
     const notification = (id: number) => {
       const ready = notifyIds.get(id);
       const plan = this.currentPlans.get(id);
@@ -794,6 +798,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   next(concepts: Concepts) {
+    console.log('NEXT', getAxiumState(concepts).tail);
     if (!this.closed) {
       this.handleChange(concepts);
       // We notify subs last to encourage actions being acted upon observations

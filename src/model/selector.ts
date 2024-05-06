@@ -22,7 +22,7 @@ export type KeyedSelector = {
  * For usage outside of the Axium, or when subscribed to other Axiums
  */
 export const createConceptKeyedSelector =
-  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
+  <T extends Record<string, unknown>>(conceptName: string, keys: string, setKeys?: (number|string)[]): KeyedSelector => {
     const selectorBase = [conceptName, ...keys.split('.')];
     if (setKeys) {
       return {
@@ -133,7 +133,7 @@ export type DotPath<
 export const createUnifiedKeyedSelector = <T extends object>(
   concepts: Concepts,
   semaphore: number,
-  keys: DotPath<T>,
+  keys: string,
   setKeys?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
@@ -330,8 +330,8 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
  * @param arr a series of keys that points to your targeted slice
  * @returns DotPath<T extends object>
  */
-export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T> {
-  return arr.join('.') as DotPath<T>;
+export function createAdvancedKeys<T extends object>(arr: unknown[]): string {
+  return arr.join('.') as string;
 }
 
 createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);

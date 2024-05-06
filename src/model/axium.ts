@@ -27,7 +27,7 @@ import {
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
 
-export const blockingMethodSubscription = (action$: Subject<Action>, action: Action) => {
+export const blockingMethodSubscription = (tail: Action[], action: Action) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -39,18 +39,18 @@ export const blockingMethodSubscription = (action$: Subject<Action>, action: Act
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data,
     });
-    action$.next(appendToDialog);
-    action$.next(action);
+    tail.push(appendToDialog);
+    tail.push(action);
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
-    action$.next(action);
+    tail.push(action);
   }
 };
 
-export const defaultMethodSubscription = (action$: Subject<Action>, action: Action) => {
+export const defaultMethodSubscription = (tail: Action[], action$: Subject<Action>, action: Action, async: boolean) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -62,18 +62,25 @@ export const defaultMethodSubscription = (action$: Subject<Action>, action: Acti
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data
     });
-    setTimeout(() => {
-      action$.next(appendToDialog);
-      action$.next(action);
-    }, 0);
+    // setTimeout(() => {
+    if (async) {
+      setTimeout(() => {
+        tail.push(action);
+        action$.next(appendToDialog);
+      }, 0);
+    } else {
+      tail.push(appendToDialog);
+      tail.push(action);
+    }
+    // }, 0);
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
-    setTimeout(() => {
-      action$.next(action);
-    }, 0);
+    // setTimeout(() => {
+    tail.push(action);
+    // }, 0);
   }
 };
 
@@ -97,15 +104,15 @@ export function createAxium(
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator(axiumState.concepts$, semaphore);
         quality.method.pipe(
-          catchError((err: unknown, caught: Observable<Action>) => {
+          catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
             if (axiumState.logging) {
               console.error('METHOD ERROR', err);
             }
             return caught;
           }));
         quality.toString = qualityToString(quality);
-        const methodSub = quality.method.subscribe((action: Action) => {
-          blockingMethodSubscription(axiumState.action$, action);
+        const methodSub = quality.method.subscribe(([action, _]) => {
+          blockingMethodSubscription(axiumState.tail, action);
         }) as Subscriber<Action>;
         axiumState = concepts[0].state as AxiumState;
         axiumState.methodSubscribers.push({
@@ -146,7 +153,13 @@ export function createAxium(
       }
       const modes = _concepts[0].mode as Mode[];
       const mode = modes[modeIndex] as Mode;
+      console.log('STREAM', action, mode);
       mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
+      const nextAction = getAxiumState(concepts).tail.shift();
+      if (nextAction) {
+        console.log('CHECK NEXT ACTION', nextAction, getAxiumState(concepts).tail);
+        getAxiumState(concepts).action$.next(nextAction);
+      }
     });
 
   axiumState = concepts[0].state as AxiumState;
