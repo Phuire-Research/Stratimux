@@ -101,7 +101,7 @@ export type StageDelimiter = {
  * Used in principle plans that are loaded during axium initialization
  */
 export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
-  if (isAxiumOpen(concepts) && getAxiumState(concepts).lastStrategy === initializeTopic) {
+  if (isAxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true
     });
