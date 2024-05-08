@@ -30,7 +30,7 @@ const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: n
   if (axiumState.tailTimer.length === 0) {
     axiumState.tailTimer.push(setTimeout(() => {
       axiumState.action$.next(createAction('Kick Axium'));
-    }, 10));
+    }, 3));
   }
 };
 

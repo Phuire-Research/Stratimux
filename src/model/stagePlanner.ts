@@ -35,7 +35,7 @@ export type Plan = {
 export type Stage = (
   concepts: Concepts,
   dispatch: (action: Action, options: dispatchOptions, ) => void,
-  changes?: KeyedSelector[]
+  changes: KeyedSelector[]
 ) => void;
 
 export type Staging = {
