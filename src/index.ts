@@ -113,7 +113,7 @@ export {
   createUnifiedKeyedSelector,
   createAdvancedKeys,
   select,
-  DotPath
+  // DotPath
 } from './model/selector';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/actionController';

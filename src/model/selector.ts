@@ -4,7 +4,7 @@ This file will contain a series of selectors that can be used to engage with dif
 $>*/
 /*<#*/
 import { Action } from './action';
-import { Concept, Concepts, createConcept } from './concept';
+import { Concept, Concepts } from './concept';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
@@ -19,29 +19,69 @@ export type KeyedSelector = {
   setSelector?: SelectorFunction
 };
 /**
- * For usage outside of the Axium, or when subscribed to other Axiums
+ * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage
+ * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
+ * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
  */
-export const createConceptKeyedSelector =
-  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
-    const selectorBase = [conceptName, ...keys.split('.')];
-    if (setKeys) {
-      return {
-        conceptName,
-        conceptSemaphore: -1,
-        keys: conceptName + '.' + keys,
-        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-        setKeys,
-        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
-      };
-    }
+export const createConceptKeyedSelector = (conceptName: string, keys: string, setKeys?: (number|string)[]): KeyedSelector => {
+  const selectorBase = [conceptName, ...keys.split('.')];
+  if (setKeys) {
     return {
       conceptName,
       conceptSemaphore: -1,
       keys: conceptName + '.' + keys,
       selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-      setKeys
+      setKeys,
+      setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
     };
+  }
+  return {
+    conceptName,
+    conceptSemaphore: -1,
+    keys: conceptName + '.' + keys,
+    selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+    setKeys
   };
+};
+
+/**
+ * Will create a new KeyedSelector during runtime, for usage throughout Stratimux
+ * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
+ * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
+ */
+export const createUnifiedKeyedSelector = (
+  concepts: Concepts,
+  semaphore: number,
+  keys: string,
+  setKeys?: (number | string)[]
+): KeyedSelector | undefined => {
+  const concept = concepts[semaphore];
+  try {
+    if (concept) {
+      const selectorBase = [concept.name, ...keys.split('.')];
+      if (setKeys) {
+        return {
+          conceptName: concept.name,
+          conceptSemaphore: semaphore,
+          selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          keys: concept.name + '.' + keys,
+          setKeys,
+          setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+        };
+      }
+      return {
+        conceptName: concept.name,
+        conceptSemaphore: semaphore,
+        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        keys: concept.name + '.' + keys,
+      };
+    }
+  } catch (err) {
+    console.error(err);
+    console.warn('ERROR AT: ', keys);
+  }
+  return undefined;
+};
 
 /**
  * This will update a concepts KeyedSelector to its currently unified concept.
@@ -73,96 +113,6 @@ export const updateUnifiedKeyedSelector =
       return undefined;
     }
   };
-
-type Key = string | number | symbol;
-
-type Join<L extends Key | undefined, R extends Key | undefined> = L extends
-  | string
-  | number
-  ? R extends string | number
-    ? `${L}.${R}`
-    : L
-  : R extends string | number
-  ? R
-  : undefined;
-
-type Union<
-  L extends unknown | undefined,
-  R extends unknown | undefined
-> = L extends undefined
-  ? R extends undefined
-    ? undefined
-    : R
-  : R extends undefined
-  ? L
-  : L | R;
-
-// Use this type to define object types you want to skip (no path-scanning)
-type ObjectsToIgnore = { new(...parms: any[]): any } | Date | Array<any>
-
-type ValidObject<T> =  T extends object
-  ? T extends ObjectsToIgnore
-    ? false & 1
-    : T
-  : false & 1;
-
-export type DotPath<
-  T extends object,
-  Prev extends Key | undefined = undefined,
-  Path extends Key | undefined = undefined,
-  PrevTypes extends object = T
-> = string &
-  {
-    [K in keyof T]:
-    // T[K] is a type already checked?
-    T[K] extends PrevTypes | T
-      //  Return all previous paths.
-      ? Union<Union<Prev, Path>, Join<Path, K>>
-      : // T[K] is an object?.
-      Required<T>[K] extends ValidObject<Required<T>[K]>
-      ? // Continue extracting
-        DotPath<Required<T>[K], Union<Prev, Path>, Join<Path, K>, PrevTypes | T>
-      :  // Return all previous paths, including current key.
-      Union<Union<Prev, Path>, Join<Path, K>>;
-  }[keyof T];
-/**
- * Will create a new KeyedSelector during runtime, for usage within your principles.
- * @Note Will want to expand this later, so that we can select into objects and arrays.
- *  This would allow us to lock parts of such in later revisions, not an immediate concern.
- */
-export const createUnifiedKeyedSelector = <T extends object>(
-  concepts: Concepts,
-  semaphore: number,
-  keys: DotPath<T>,
-  setKeys?: (number | string)[]
-): KeyedSelector | undefined => {
-  const concept = concepts[semaphore];
-  try {
-    if (concept) {
-      const selectorBase = [concept.name, ...keys.split('.')];
-      if (setKeys) {
-        return {
-          conceptName: concept.name,
-          conceptSemaphore: semaphore,
-          selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-          keys: concept.name + '.' + keys,
-          setKeys,
-          setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
-        };
-      }
-      return {
-        conceptName: concept.name,
-        conceptSemaphore: semaphore,
-        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-        keys: concept.name + '.' + keys,
-      };
-    }
-  } catch (err) {
-    console.error(err);
-    console.warn('ERROR AT: ', keys);
-  }
-  return undefined;
-};
 
 const recordReturn = (key: string, previous: SelectorFunction) => {
   return (obj: Record<string, unknown>) => {
@@ -326,12 +276,12 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
 
 /**
  * Advanced functionality, set a custom key path that may include array indexes.
- * @example createAdvancedKeys('some', 1, 'once', 2, 'me', 7, 'world', 4) : some.1.once.2.m.7.world.4
+ * @example createAdvancedKeys(['some', 1, 'once', 2, 'me', 7, 'world', 4]) : some.1.once.2.m.7.world.4
  * @param arr a series of keys that points to your targeted slice
  * @returns DotPath<T extends object>
  */
-export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T> {
-  return arr.join('.') as DotPath<T>;
+export function createAdvancedKeys(arr: unknown[]): string {
+  return arr.join('.') as string;
 }
 
 //createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);

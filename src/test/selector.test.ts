@@ -52,11 +52,11 @@ test('Axium Unified Selector Test', (done) => {
     },
     else: boolean[]
   }
-  type Deeper = {
+  type DeepNested = {
     anything : SomeDeepObject,
     bool: boolean
   }
-  const obj: Deeper = {
+  const obj: DeepNested = {
     anything: {
       else: [false],
       something: {
@@ -70,8 +70,8 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment
   };
-  const selector = select.createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
-  const conceptSelector = select.createConceptKeyedSelector<Deeper>(experimentName, 'anything.something.somethingElse');
+  const selector = select.createUnifiedKeyedSelector(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const conceptSelector = select.createConceptKeyedSelector(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);
     console.log('CHECK SLICES', slices);
