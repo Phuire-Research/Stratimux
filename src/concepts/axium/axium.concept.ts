@@ -75,8 +75,8 @@ export type AxiumState = {
   removeConceptQue: Concept[],
   badPlans: Plan[];
   badActions: Action[];
-  timer: NodeJS.Timer[];
-  tailTimer: NodeJS.Timer[];
+  timer: NodeJS.Timeout[];
+  tailTimer: NodeJS.Timeout[];
   timerLedger: Map<number, [(() => Action)[], number]>
 }
 
