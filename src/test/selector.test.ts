@@ -4,11 +4,10 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { createUnifiedKeyedSelector, select, selectPayload, selectSlice, selectState } from '../model/selector';
+import { select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { AxiumState } from '../concepts/axium/axium.concept';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 
 test('Axium Selector Test', (done) => {
