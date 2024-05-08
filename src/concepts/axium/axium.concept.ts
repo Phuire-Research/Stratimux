@@ -4,7 +4,7 @@ The Axium is a set of concepts that create a greater whole via their association
 within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Concept, Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
