@@ -53,6 +53,7 @@ When in doubt simplify.
 * Devised a means to ensure a lock step execution of incoming actions
   * Due to each stage being ran once regardless of their selector being changed, some plans may receive the wrong value if not determining if that stage has been ran for the first time. See priority.test.ts for the example: if (changes.length > 0) {//}
   * This also impacted the *axiumWaitForOpenThenIterate* helper function, but now works as intended via no longer checking for the latest lastStrategy change.
+  * *Note* Removed CI checks for 14.x and 16.x due to updating dependencies.
 ### Strong Fast Time v0.1.61
 * Created the new *axiumTimeOut* helper function
   * This will add a specified action to the axium tail property after some specified time.
