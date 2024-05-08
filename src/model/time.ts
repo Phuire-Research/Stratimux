@@ -27,7 +27,7 @@ const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: n
       axiumState.timer.push(setTimeout(() => handleTimedRun(axiumState, slot[0], slot[1]), someTime >= 0 ? someTime : 0));
     }
   }
-  if (axiumState.lastRun < Date.now() && axiumState.tailTimer.length === 0) {
+  if (axiumState.tailTimer.length === 0) {
     axiumState.tailTimer.push(setTimeout(() => {
       axiumState.action$.next(createAction('Kick Axium'));
     }, 10));

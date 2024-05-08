@@ -35,6 +35,7 @@ test('Ownership Test', (done) => {
     'Testing Ownership Staging', [
       createStage((cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
+        console.log(axiumState.lastStrategy);
         if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(cpts, ownershipName);
           if (ownership) {

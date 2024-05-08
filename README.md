@@ -49,6 +49,10 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### **BREAKING** Strong Fast Lock Step v0.1.62
+* Devised a means to ensure a lock step execution of incoming actions
+  * Due to each stage being ran once regardless of their selector being changed, some plans may receive the wrong value if not determining if that stage has been ran for the first time. See priority.test.ts for details.
+  * This also impacted the *axiumWaitForOpenThenIterate* helper function, but now works as intended via no longer checking for the latest lastStrategy change.
 ### Strong Fast Time v0.1.61
 * Created the new *axiumTimeOut* helper function
   * This will add a specified action to the axium tail property after some specified time.

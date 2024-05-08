@@ -18,6 +18,8 @@ import { UnifiedSubject, createStage, stageWaitForOpenThenIterate, stageWaitForO
 import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { isAxiumOpen } from '../../model/axium';
+import { axiumSelectOpen } from '../axium/axium.selector';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -36,8 +38,9 @@ export const ownershipPrinciple: PrincipleFunction = (
   let initDispatch = false;
   let finalCheck = true;
   const plan = concepts$.plan('ownership Principle Plan', [
-    stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan}))),
+    stageWaitForOpenThenIterate(() => axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})),
     createStage((cpts, _) => {
+      console.log('HIT');
       let concepts = cpts;
       let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {

@@ -18,6 +18,7 @@ test('Axium Test', (done) => {
   let count = 0;
   let willDispatch = true;
   const sub = axium.subscribe((concepts: Concepts) => {
+    console.log(selectState<ChainState>(concepts, chainName));
     count++;
     if (willDispatch) {
       willDispatch = false;
