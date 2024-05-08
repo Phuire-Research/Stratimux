@@ -155,7 +155,7 @@ export function createAxium(
         if (_axiumState.tailTimer.length > 0) {
           const timer = _axiumState.tailTimer.shift();
           if (timer) {
-            clearTimeout(timer);
+            clearTimeout(timer as NodeJS.Timeout);
           }
         }
         const modeIndex = _axiumState.modeIndex;
