@@ -80,8 +80,8 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
   ) {
     tail.push(action);
     if (async) {
-      setTimeout(() => {
-        action$.next(axiumKick());
+      axiumTimeOut(concepts, () => {
+        return axiumKick();
       }, 0);
     }
   }
@@ -151,6 +151,12 @@ export function createAxium(
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
       _axiumState.lastRun = Date.now();
+      if (_axiumState.tailTimer.length > 0) {
+        const timer = _axiumState.tailTimer.shift();
+        if (timer) {
+          clearTimeout(timer);
+        }
+      }
       const modeIndex = _axiumState.modeIndex;
       if (getAxiumState(_concepts).logActionStream) {
         console.log('CHECK ACTION STREAM', action.type, action.payload, action.semaphore, action.strategy?.topic);

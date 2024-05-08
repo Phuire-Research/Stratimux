@@ -10,12 +10,6 @@ import { Concepts } from './concept';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: number) => {
-  if (axiumState.tailTimer.length > 0) {
-    const timer = axiumState.tailTimer.shift();
-    if (timer) {
-      clearTimeout(timer);
-    }
-  }
   func.forEach(f => {
     const action = f();
     if (action.type !== 'Conclude') {
