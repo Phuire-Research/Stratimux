@@ -334,7 +334,7 @@ export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T>
   return arr.join('.') as DotPath<T>;
 }
 
-createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
+//createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
 /**
  * Allows for the Unification of Concepts and a form of Data Oriented Functional Inheritance.
  * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.

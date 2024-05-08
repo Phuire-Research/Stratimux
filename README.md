@@ -49,6 +49,10 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### Strong Fast Time v0.1.61
+* Created the new *axiumTimeOut* helper function
+  * This will add a specified action to the axium tail property after some specified time.
+  * This is used internally to handle the majority of asynchronous interactions
 ### Strong Fast **BREAKING** v0.1.59 5/06/24
 * Removed the setTimeout trick in favor of a new tail property added to the axium concept, this paves the way for this pattern to be completely responsible for its own implementation.
   * **BREAKING** Method Subjects are now a tuple of [action: Action, async: Boolean]. This allows for the old setTimeout trick to be used in case the action stream isn't kicked into gear.

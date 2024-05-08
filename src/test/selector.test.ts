@@ -16,11 +16,12 @@ test('Axium Selector Test', (done) => {
   const counterState = counter.state as CounterState;
   counterState.count = 10;
   const axium = createAxium('axiumSelectorTest', [counter], true, true);
-  axium.subscribe((concepts: Concepts) => {
+  const sub = axium.subscribe((concepts: Concepts) => {
     const state = selectState<CounterState>(concepts, counterName);
     console.log('CHECK COUNT', state?.count);
     expect(state?.count).toBe(10);
     done();
+    sub.unsubscribe();
   });
 });
 

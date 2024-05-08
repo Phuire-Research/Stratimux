@@ -121,6 +121,7 @@ export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStage
 export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
+export { axiumTimeOut } from './model/time';
 
 //** Concept Exports */
 // Axium

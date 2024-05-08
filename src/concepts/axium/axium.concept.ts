@@ -4,7 +4,7 @@ The Axium is a set of concepts that create a greater whole via their association
 within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Concept, Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
@@ -67,12 +67,16 @@ export type AxiumState = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
   tail: Action[];
+  lastRun: number;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   badPlans: Plan[];
   badActions: Action[];
+  timer: NodeJS.Timer[];
+  tailTimer: NodeJS.Timer[];
+  timerLedger: Map<number, [(() => Action)[], number]>
 }
 
 export const axiumName = 'axium';
@@ -102,12 +106,16 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     tail: [],
+    lastRun: Date.now(),
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     badPlans: [],
-    badActions: []
+    badActions: [],
+    timer: [],
+    tailTimer: [],
+    timerLedger: new Map()
   };
 };
 
