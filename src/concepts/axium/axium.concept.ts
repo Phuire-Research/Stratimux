@@ -69,7 +69,6 @@ export type AxiumState = {
   head: Action[];
   body: Action[];
   tail: Action[];
-  lastRun: number;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
@@ -110,7 +109,6 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     head: [],
     body: [],
     tail: [],
-    lastRun: Date.now(),
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],

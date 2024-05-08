@@ -152,7 +152,6 @@ export function createAxium(
       const _axiumState = _concepts[0].state as AxiumState;
       if (_axiumState.head.length === 0) {
         _axiumState.head.push(action);
-        _axiumState.lastRun = Date.now();
         if (_axiumState.tailTimer.length > 0) {
           const timer = _axiumState.tailTimer.shift();
           if (timer) {
