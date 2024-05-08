@@ -10,6 +10,12 @@ import { Concepts } from './concept';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: number) => {
+  if (axiumState.tailTimer.length > 0) {
+    const timer = axiumState.tailTimer.shift();
+    if (timer) {
+      clearTimeout(timer);
+    }
+  }
   func.forEach(f => {
     const action = f();
     if (action.type !== 'Conclude') {
@@ -27,7 +33,9 @@ const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: n
     }
   }
   if (axiumState.lastRun < Date.now()) {
-    axiumState.action$.next(createAction('Kick Axium'));
+    axiumState.tailTimer.push(setTimeout(() => {
+      axiumState.action$.next(createAction('Kick Axium'));
+    }, 10));
   }
 };
 

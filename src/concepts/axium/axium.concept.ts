@@ -75,6 +75,7 @@ export type AxiumState = {
   badPlans: Plan[];
   badActions: Action[];
   timer: NodeJS.Timer[];
+  tailTimer: NodeJS.Timer[];
   timerLedger: Map<number, [(() => Action)[], number]>
 }
 
@@ -113,6 +114,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     badPlans: [],
     badActions: [],
     timer: [],
+    tailTimer: [],
     timerLedger: new Map()
   };
 };
