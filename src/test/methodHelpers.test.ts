@@ -70,9 +70,9 @@ test('Async Method Plain Iterate Id Test', (done) => {
         expect(experimentState.id).toBe(1);
         setTimeout(() => {
           plan.conclude();
+          done();
           axium.close();
         }, 50);
-        done();
       }
     })
   ]);

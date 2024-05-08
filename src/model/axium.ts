@@ -27,6 +27,7 @@ import {
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
+import { axiumTimeOut } from './time';
 
 export const blockingMethodSubscription = (tail: Action[], action: Action) => {
   if (
@@ -51,7 +52,7 @@ export const blockingMethodSubscription = (tail: Action[], action: Action) => {
   }
 };
 
-export const defaultMethodSubscription = (tail: Action[], action$: Subject<Action>, action: Action, async: boolean) => {
+export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], action$: Subject<Action>, action: Action, async: boolean) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -67,8 +68,8 @@ export const defaultMethodSubscription = (tail: Action[], action$: Subject<Actio
     tail.push(appendToDialog);
     tail.push(action);
     if (async) {
-      setTimeout(() => {
-        action$.next(axiumKick());
+      axiumTimeOut(concepts, () => {
+        return axiumKick();
       }, 0);
     }
     // }, 0);
@@ -149,6 +150,7 @@ export function createAxium(
     .subscribe(([action, _concepts]: [Action, Concepts]) => {
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
+      _axiumState.lastRun = Date.now();
       const modeIndex = _axiumState.modeIndex;
       if (getAxiumState(_concepts).logActionStream) {
         console.log('CHECK ACTION STREAM', action.type, action.payload, action.semaphore, action.strategy?.topic);

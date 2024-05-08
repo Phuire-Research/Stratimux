@@ -60,7 +60,7 @@ export const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrat
 test('Axium advanced usage: StrategyStitch', (done) => {
   const axium = createAxium('Test advanced usage', []);
   const strategy = yourComposingStrategy(yourStrategyStitch);
-  axium.plan('Test Stitch', [
+  const plan = axium.plan('Test Stitch', [
     createStage((_, dispatch) => {
       dispatch(strategyBegin(strategy), {
         iterateStage: true
@@ -70,6 +70,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
       const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
       if (lastTopic === strategy.topic) {
         expect(true).toBe(true);
+        plan.conclude();
         done();
       }
     })
@@ -78,10 +79,11 @@ test('Axium advanced usage: StrategyStitch', (done) => {
 
 test('Axium get axium state helper function', (done) => {
   const axium = createAxium('Test advanced usage', []);
-  axium.plan('Test getAxiumState', [
+  const plan = axium.plan('Test getAxiumState', [
     createStage((concepts, _) => {
       if (getAxiumState(concepts)) {
         expect(true).toBe(true);
+        plan.conclude();
         done();
       }
     }),

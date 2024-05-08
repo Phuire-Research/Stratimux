@@ -32,7 +32,7 @@ export const [
         if (quality.method) {
           const sub = quality.method.subscribe(([action, async]) => {
             const tail = state.tail;
-            defaultMethodSubscription(tail, getAxiumState(concepts).action$, action, async);
+            defaultMethodSubscription(payload.concepts, tail, getAxiumState(concepts).action$, action, async);
           });
           methodSubscribers.push({
             name: concept.name,

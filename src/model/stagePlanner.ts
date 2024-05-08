@@ -11,12 +11,13 @@ import { Subject } from 'rxjs';
 import { Concepts } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
-import { Action, ActionType } from './action';
+import { Action, ActionType, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { getAxiumState, isAxiumOpen } from './axium';
 import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
+import { axiumTimeOut } from './time';
 
 export type Plan = {
   id: number;
@@ -366,8 +367,9 @@ export class UnifiedSubject extends Subject<Concepts> {
     const conclude = () => {
       this.deletePlan(plan.id);
     };
-    setTimeout(() => {
+    axiumTimeOut(this.concepts, () => {
       this.next(this.concepts);
+      return createAction('Conclude');
     }, 0);
     return {
       title: plan.title,
@@ -376,7 +378,6 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   }
 
-  // [TODO Unify Streams]
   innerPlan(title: string, stages: PartialStaging[]) {
     return this.initPlan(this.createPlan(title, stages, Inner));
   }

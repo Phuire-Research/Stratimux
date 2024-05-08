@@ -67,12 +67,15 @@ export type AxiumState = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
   tail: Action[];
+  lastRun: number;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   badPlans: Plan[];
   badActions: Action[];
+  timer: NodeJS.Timer[];
+  timerLedger: Map<number, [(() => Action)[], number]>
 }
 
 export const axiumName = 'axium';
@@ -102,12 +105,15 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     tail: [],
+    lastRun: Date.now(),
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
     addConceptQue: [] as Concept[],
     removeConceptQue: [] as Concept[],
     badPlans: [],
-    badActions: []
+    badActions: [],
+    timer: [],
+    timerLedger: new Map()
   };
 };
 
