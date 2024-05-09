@@ -113,8 +113,10 @@ export {
   createUnifiedKeyedSelector,
   createAdvancedKeys,
   select,
-  // DotPath
 } from './model/selector';
+export type {
+  DotPath
+} from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/actionController';
 export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';

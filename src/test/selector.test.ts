@@ -69,8 +69,8 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment
   };
-  const selector = select.createUnifiedKeyedSelector(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
-  const conceptSelector = select.createConceptKeyedSelector(experimentName, 'anything.something.somethingElse');
+  const selector = select.createUnifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const conceptSelector = select.createConceptKeyedSelector<DeepNested>(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);
     console.log('CHECK SLICES', slices);

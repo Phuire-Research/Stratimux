@@ -5,6 +5,7 @@ $>*/
 /*<#*/
 import { Action } from './action';
 import { Concept, Concepts } from './concept';
+import { DotPath } from './dotPath';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
@@ -18,41 +19,43 @@ export type KeyedSelector = {
   setKeys?: (number | string)[]
   setSelector?: SelectorFunction
 };
+
 /**
  * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage
  * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
  * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
  */
-export const createConceptKeyedSelector = (conceptName: string, keys: string, setKeys?: (number|string)[]): KeyedSelector => {
-  const selectorBase = [conceptName, ...keys.split('.')];
-  if (setKeys) {
+export const createConceptKeyedSelector =
+  <T extends object>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
+    const selectorBase = [conceptName, ...keys.split('.')];
+    if (setKeys) {
+      return {
+        conceptName,
+        conceptSemaphore: -1,
+        keys: conceptName + '.' + keys,
+        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        setKeys,
+        setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+      };
+    }
     return {
       conceptName,
       conceptSemaphore: -1,
       keys: conceptName + '.' + keys,
       selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-      setKeys,
-      setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+      setKeys
     };
-  }
-  return {
-    conceptName,
-    conceptSemaphore: -1,
-    keys: conceptName + '.' + keys,
-    selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
-    setKeys
   };
-};
 
 /**
  * Will create a new KeyedSelector during runtime, for usage throughout Stratimux
  * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
  * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
  */
-export const createUnifiedKeyedSelector = (
+export const createUnifiedKeyedSelector = <T extends object>(
   concepts: Concepts,
   semaphore: number,
-  keys: string,
+  keys: DotPath<T>,
   setKeys?: (number | string)[]
 ): KeyedSelector | undefined => {
   const concept = concepts[semaphore];
@@ -280,8 +283,8 @@ export function selectConcept(concepts: Concepts, name: string): Concept | undef
  * @param arr a series of keys that points to your targeted slice
  * @returns DotPath<T extends object>
  */
-export function createAdvancedKeys(arr: unknown[]): string {
-  return arr.join('.') as string;
+export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T> {
+  return arr.join('.') as DotPath<T>;
 }
 
 //createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
