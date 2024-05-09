@@ -26,7 +26,7 @@ export type KeyedSelector = {
  * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
  */
 export const createConceptKeyedSelector =
-  <T extends object>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
+  <T extends Record<string, unknown>>(conceptName: string, keys: DotPath<T>, setKeys?: (number|string)[]): KeyedSelector => {
     const selectorBase = [conceptName, ...keys.split('.')];
     if (setKeys) {
       return {
@@ -52,7 +52,7 @@ export const createConceptKeyedSelector =
  * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
  * Originally used a DotPath<T> parameter to ease the developer experience, but recent versions made the approach unfeasible
  */
-export const createUnifiedKeyedSelector = <T extends object>(
+export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
   concepts: Concepts,
   semaphore: number,
   keys: DotPath<T>,
