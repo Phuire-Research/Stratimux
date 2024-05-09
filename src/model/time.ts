@@ -45,7 +45,7 @@ export const axiumTimeOut = (concepts: Concepts, func: () => Action, timeOut: nu
     // If timer exists, first index of timerList would exist
     const timerList = Object.keys(ledger).map(t => Number(t)).sort((a, b) => a - b);
     if (timerList[0] > timed) {
-      clearTimeout(timer as NodeJS.Timeout);
+      clearTimeout(timer);
       axiumState.timer.shift();
       const slot = axiumState.timerLedger.get(timed);
       if (slot) {
