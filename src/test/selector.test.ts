@@ -4,11 +4,10 @@ $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { createUnifiedKeyedSelector, select, selectPayload, selectSlice, selectState } from '../model/selector';
+import { select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { AxiumState } from '../concepts/axium/axium.concept';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 
 test('Axium Selector Test', (done) => {
@@ -52,11 +51,11 @@ test('Axium Unified Selector Test', (done) => {
     },
     else: boolean[]
   }
-  type Deeper = {
+  type DeepNested = {
     anything : SomeDeepObject,
     bool: boolean
   }
-  const obj: Deeper = {
+  const obj: DeepNested = {
     anything: {
       else: [false],
       something: {
@@ -70,8 +69,8 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment
   };
-  const selector = select.createUnifiedKeyedSelector<Deeper>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
-  const conceptSelector = select.createConceptKeyedSelector<Deeper>(experimentName, 'anything.something.somethingElse');
+  const selector = select.createUnifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const conceptSelector = select.createConceptKeyedSelector<DeepNested>(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);
     console.log('CHECK SLICES', slices);
