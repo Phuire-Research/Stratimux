@@ -657,7 +657,13 @@ export class UnifiedSubject extends Subject<Concepts> {
         // Horrifying
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
         if (plan.stageFailed === -1) {
-          action$.next(action);
+          // Will set a the current stage's priority if no priority is set.
+          if (plan.stages[plan.stage].priority && action.priority === undefined) {
+            action.priority = plan.stages[plan.stage].priority;
+            action$.next(action);
+          } else {
+            action$.next(action);
+          }
         }
       }
     } else if (

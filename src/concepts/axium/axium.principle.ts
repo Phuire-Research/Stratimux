@@ -71,7 +71,7 @@ export const axiumPrinciple: PrincipleFunction = (
               quality.toString = qualityToString(quality);
               const methodSub = quality.method.subscribe(([act, _]) => {
                 const tail = getAxiumState(concepts).tail;
-                blockingMethodSubscription(tail, act);
+                blockingMethodSubscription(concepts, tail, act);
               }) as Subscriber<Action>;
               getAxiumState(concepts).methodSubscribers.push({name: concept.name, subscription: methodSub});
             }
@@ -153,7 +153,7 @@ export const axiumPrinciple: PrincipleFunction = (
                   return caught;
                 }));
               const methodSub = quality.method.subscribe(([action, _]) => {
-                blockingMethodSubscription(axiumState.tail, action);
+                blockingMethodSubscription(newConcepts, axiumState.tail, action);
               }) as Subscriber<Action>;
               const _axiumState = newConcepts[0].state as AxiumState;
               _axiumState.methodSubscribers.push({

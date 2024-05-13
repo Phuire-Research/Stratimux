@@ -29,20 +29,26 @@ ActionNode represents some node that is capable of being turned into some action
 export interface ActionNode {
   action?: Action;
   actionType: ActionType;
-  payload?: unknown;
+  payload?: Record<string, unknown>;
+  conceptSemaphore?: number;
+  priority?: number;
   keyedSelectors?: KeyedSelector[];
-  semaphore?: [number, number, number];
+  semaphore?: [number, number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
+  decisionNotes?: ActionNotes;
   successNode: ActionNode | null;
+  successNotes?: ActionNotes;
   failureNode: ActionNode | null;
-  preposition?: string;
-  denoter?: string;
+  failureNotes?: ActionNotes;
+  lastActionNode?: ActionNode;
 }
 
 // Used via the createActionNode function.
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
+  conceptSemaphore?: number;
+  priority?: number;
   semaphore?: [number, number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
@@ -54,16 +60,24 @@ export interface ActionNodeOptions {
   lastActionNode?: ActionNode;
 }
 
+export interface ActionNotes {
+  preposition?: string;
+  denoter?: string;
+}
 ```
 * action - Is an union data pattern to bind the functionality of the ActionNode, ActionStrategy, and Action. This allows for each part to be responsible for itself and to allow for additional functionality at runtime.
 * actionType - Is merely the type of action to be created at runtime, these should be verbose as to their intended effect as it informs the Stratimux sentence structure's body.
 * payload - Is set to unknown to allow for the explicit typecasting during consumption, reducer, method, or principle. Be sure to import actions directly to ensure payload type safety in the reducer. This is a logical determination in line with Javascript core functionality.
+* conceptSemaphore - Used when dispatching to a foreign Axium. Where the effecting action will trigger on some unified concept on such that the current axium has observation of.
+* priority - By default all action's dispatched via quality observations will be pushed to the end of the tail que on the Axium. By setting this value, it will force the handlePriority internal function to trigger and assign the action to the determined slot on the body que instead.
 * keyedSelectors - An Array of KeyedSelector that locks some property during the life time of the created action.
 * semaphore - First is concept's index, second is the quality's index, and the final is the generation of the sets of concepts currently stored on the Axium. *Explicitly setting this value, denotes a primed action without additional look up at runtime.*
 * agreement - Is time in milliseconds of the lock's expiration time. Default is currently 5000, but such will be reduced upon testing and feedback.
 * decisionNodes - Is a record of all possible decisions that the ActionNode may take depending upon some test. And should be seen as a replacement for SuccessNode if utilized. This is what makes the ActionStrategy capable of complexity beyond squared.
 * successNode - Is the default chain of actions. Can be replaced by decisionNodes to enable additional behaviors.
 * failureNode - Is the default failure mode of each action. And will be called if ownership is loaded in an axium. If null the ActionStrategy will conclude which will free the current lock supplied. Otherwise it will be added to the pendingActions que. 
+
+**ActionNotes**
 * preposition - Coincides with the Stratimux sentence structure. And is the logical linking between the previous sentences and the current ActionType.
 * denoter - Also enhances the Stratimux sentence as either a punctuation mark or additional description of the ActionType's intended effect.
 *NOTE: Just like all optional fields, except action, these are designed to be set at runtime if dynamic or can be prefilled if the values are known prior.*

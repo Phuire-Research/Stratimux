@@ -34,7 +34,7 @@ export const [
         if (quality.method) {
           const sub = quality.method.subscribe(([action, _]) => {
             const tail = state.tail;
-            blockingMethodSubscription(tail, action);
+            blockingMethodSubscription(concepts, tail, action);
           });
           methodSubscribers.push({
             name: concept.name,

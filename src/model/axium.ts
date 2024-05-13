@@ -13,7 +13,7 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, createAction, createCacheSemaphores } from './action';
+import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
@@ -28,8 +28,9 @@ import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
+import { handlePriority, isPriorityValid } from './priority';
 
-export const blockingMethodSubscription = (tail: Action[], action: Action) => {
+export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], action: Action) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -42,7 +43,11 @@ export const blockingMethodSubscription = (tail: Action[], action: Action) => {
       strategyData: action.strategy.data,
     });
     tail.push(appendToDialog);
-    tail.push(action);
+    if (isPriorityValid(action)) {
+      handlePriority(getAxiumState(concepts), action);
+    } else {
+      tail.push(action);
+    }
   } else if (
     action.strategy &&
     // Logical Determination: axiumBadType
@@ -66,7 +71,11 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
     });
     // setTimeout(() => {
     tail.push(appendToDialog);
-    tail.push(action);
+    if (isPriorityValid(action)) {
+      handlePriority(getAxiumState(concepts), action);
+    } else {
+      tail.push(action);
+    }
     if (async) {
       axiumTimeOut(concepts, () => {
         return axiumKick();
@@ -115,7 +124,7 @@ export function createAxium(
           }));
         quality.toString = qualityToString(quality);
         const methodSub = quality.method.subscribe(([action, _]) => {
-          blockingMethodSubscription(axiumState.tail, action);
+          blockingMethodSubscription(concepts, axiumState.tail, action);
         }) as Subscriber<Action>;
         axiumState = concepts[0].state as AxiumState;
         axiumState.methodSubscribers.push({
@@ -150,6 +159,7 @@ export function createAxium(
     .subscribe(([action, _concepts]: [Action, Concepts]) => {
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
+      // console.log('CHECK QUES', _axiumState.head, _axiumState.body, _axiumState.tail);
       if (_axiumState.head.length === 0) {
         _axiumState.head.push(action);
         if (_axiumState.tailTimer.length > 0) {
@@ -178,6 +188,10 @@ export function createAxium(
             getAxiumState(concepts).action$.next(nextAction);
           }
         }
+      // An action dispatched from a priority stage, with a priority set to 0
+      // Will override the need to handle priority
+      } else if (isPriorityValid(action)) {
+        handlePriority(_axiumState, action);
       } else {
         _axiumState.body.push(action);
       }

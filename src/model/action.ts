@@ -29,6 +29,7 @@ export type Action = {
     agreement?: number;
     expiration: number;
     axium?: string;
+    priority?: number;
 };
 
 const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
@@ -172,7 +173,8 @@ export function createAction<T extends Record<string, unknown>>(
   keyedSelectors?: KeyedSelector[],
   agreement?: number,
   _semaphore?: [number, number, number, number],
-  conceptSemaphore?: number
+  conceptSemaphore?: number,
+  priority?: number
 ): Action {
   const special = getSpecialSemaphore(type);
   const semaphore = _semaphore !== undefined ? _semaphore : [0, 0, -1, special] as [number, number, number, number];
@@ -183,7 +185,8 @@ export function createAction<T extends Record<string, unknown>>(
     keyedSelectors,
     agreement,
     expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
-    conceptSemaphore
+    conceptSemaphore,
+    priority
   };
 }
 
@@ -199,9 +202,18 @@ export function prepareActionCreator(actionType: ActionType) {
     conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    qualitySemaphore?: [number, number, number, number]
+    qualitySemaphore?: [number, number, number, number],
+    priority?: number
   ) => {
-    return createAction(actionType, undefined, keyedSelectors, agreement, qualitySemaphore, conceptSemaphore);
+    return createAction(
+      actionType,
+      undefined,
+      keyedSelectors,
+      agreement,
+      qualitySemaphore,
+      conceptSemaphore,
+      priority
+    );
   };
 }
 
@@ -211,9 +223,12 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    semaphore?: [number, number, number, number]
+    semaphore?: [number, number, number, number],
+    priority?: number
   ): Action => {
-    return createAction(actionType, payload, keyedSelectors, agreement, semaphore, conceptSemaphore);
+    return createAction(
+      actionType,
+      payload, keyedSelectors, agreement, semaphore, conceptSemaphore, priority);
   };
 }
 export type ActionCreatorWithPayload<T> = (
@@ -221,7 +236,8 @@ export type ActionCreatorWithPayload<T> = (
     conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    semaphore?: [number, number, number, number]
+    semaphore?: [number, number, number, number],
+    priority?: number
   ) => Action;
 
 /**
