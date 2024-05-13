@@ -66,9 +66,6 @@ export type AxiumState = {
   generalSubscribers: NamedSubscription[];
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
-  head: Action[];
-  body: Action[];
-  tail: Action[];
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
@@ -76,8 +73,11 @@ export type AxiumState = {
   badPlans: Plan[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
-  tailTimer: NodeJS.Timeout[];
   timerLedger: Map<number, [(() => Action)[], number]>
+  head: Action[];
+  body: Action[];
+  tail: Action[];
+  tailTimer: NodeJS.Timeout[];
 }
 
 export const axiumName = 'axium';

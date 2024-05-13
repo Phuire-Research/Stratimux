@@ -196,3 +196,27 @@ const plan = concept$.plan('Principle Stage Example', [
   })
 ]);
 ```
+## How Stage Priority effects Actions
+Whenever an action is dispatched into the action stream. They are checked into an action que system. By default any priority assigned to a stage, will likewise associate that to an action. This assumes that the stage itself is taking priority in observation and action when set.
+
+If you require a high priority observation, but want the action ques to deplete accordingly without effecting such. Set the action's priority to 0. This will cause the internal checks to skip over handling that action's priority. Otherwise if such is set to undefined, then the dispatching stage's priority will once again be set.
+
+```typescript
+// Will have high observation priority, but no action priority.
+createStage((_, dispatch) => {
+  const action = axiumKick();
+  action.priority = 0;
+  dispatch(action, {
+    iterateStage: true
+  });
+}, {priority: 100})
+
+// No observation priority, but high action priority.
+createStage((_, dispatch) => {
+  const action = axiumKick();
+  action.priority = 100;
+  dispatch(action, {
+    iterateStage: true
+  });
+})
+```

@@ -24,6 +24,8 @@ const fillBucket = (body: Action[], bucket: Action[], action: Action, _added = f
       bucket.push(action);
       bucket.push(drop);
       added = true;
+    } else {
+      bucket.push(drop);
     }
     fillBucket(body, bucket, action, added);
   } else if (!added) {

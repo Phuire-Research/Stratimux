@@ -236,7 +236,8 @@ export type ActionCreatorWithPayload<T> = (
     conceptSemaphore?: number,
     keyedSelectors?: KeyedSelector[],
     agreement?: number,
-    semaphore?: [number, number, number, number]
+    semaphore?: [number, number, number, number],
+    priority?: number
   ) => Action;
 
 /**

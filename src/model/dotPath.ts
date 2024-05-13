@@ -157,27 +157,28 @@ type DotPathSix<
       :
       Required<T>[K] extends ValidObject<Required<T>[K]>
       ?
-        DotPathSevenEnd<Required<T>[K], Union<Prev, Path>, Join<Path, K>, PrevTypes | T>
-      :
-      Union<Union<Prev, Path>, Join<Path, K>>;
-  }[keyof T];
-
-// Beyond this point will trigger TS excessively deep error or circular reference.
-type DotPathSevenEnd<
-  T extends object,
-  Prev extends Key | undefined = undefined,
-  Path extends Key | undefined = undefined,
-  PrevTypes extends object = T
-> = string &
-  {
-    [K in keyof T]:
-    T[K] extends PrevTypes | T
-      ? Union<Union<Prev, Path>, Join<Path, K>>
-      :
-      Required<T>[K] extends ValidObject<Required<T>[K]>
-      ?
+        // DotPathSevenEnd<Required<T>[K], Union<Prev, Path>, Join<Path, K>, PrevTypes | T>
       Union<Union<Prev, Path>, Join<Path, K>>
       :
       Union<Union<Prev, Path>, Join<Path, K>>;
   }[keyof T];
+// Beyond this point Typescript massively slows down during type checking.
+// // After this point will trigger TS excessively deep error and can no longer use DotPath as circular reference.
+// type DotPathSevenEnd<
+//   T extends object,
+//   Prev extends Key | undefined = undefined,
+//   Path extends Key | undefined = undefined,
+//   PrevTypes extends object = T
+// > = string &
+//   {
+//     [K in keyof T]:
+//     T[K] extends PrevTypes | T
+//       ? Union<Union<Prev, Path>, Join<Path, K>>
+//       :
+//       Required<T>[K] extends ValidObject<Required<T>[K]>
+//       ?
+//       Union<Union<Prev, Path>, Join<Path, K>>
+//       :
+//       Union<Union<Prev, Path>, Join<Path, K>>;
+//   }[keyof T];
 /*#>*/

@@ -30,6 +30,7 @@ The design decision here allows us to forgo the need for dependency injection. A
 
 ```typescript
 export type AxiumState = {
+  // Would be unique identifier on a network
   name: string;
   open: boolean;
   prepareClose: boolean;
@@ -58,6 +59,12 @@ export type AxiumState = {
   removeConceptQue: Concept[],
   badPlans: Plan[];
   badActions: Action[];
+  timer: NodeJS.Timeout[];
+  timerLedger: Map<number, [(() => Action)[], number]>
+  head: Action[];
+  body: Action[];
+  tail: Action[];
+  tailTimer: NodeJS.Timeout[];
 }
 ```
 * name - This should be set to a unique network identifier, and/or the concept of your system.
@@ -87,6 +94,12 @@ export type AxiumState = {
 * removeConceptQue - The inverse of the above to remove concepts.
 * badPlans - Stores plans that have experienced action overflow.
 * badActions - Keeps track of all actions that cannot be registered via the cachedSemaphores property.
+* timer - This internal timer is set via the timerLedger, each subsequent call creating a new timer that is held as the only entry in this array.
+* timerLedger - Is modified when using axiumTimeOut, that will assign a callback function that returns an action to be used in a single setTimeout function.
+* head - A single action is allowed to exist in the head and ensures that the axium performs a lock step sequence of actions.
+* body - Mostly updated via plans. Taking precedent to actions that are issued via ActionStrategies or the axiumTimeOut functionality unless the correlated actions have some priority. Then such are assigned to the body que, ordering the body according to each action's priority or prior placement.
+* tail - The final que to be called when body has been depleted. This is a low priority que that is informed via qualities via the axiumTimeOut method.
+* tailTimer - This timer will be enabled each time a tail entry has been assigned, but will be cleared each time an action enters the action stream.
 
 ## The Anatomy of an Axium
 * Action - Is a dumb object that is supplied some data as payload or performs some transformation of state based on its semaphore which is inferred via its type. Is the messaging protocol of an axium.

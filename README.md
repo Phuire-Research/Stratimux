@@ -51,6 +51,8 @@ When in doubt simplify.
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### v0.1.64 5/13/2024
 * Added Action Priority: This will allow action's assigned a priority of not 0 to be placed accordingly into the action ques.
+* Adjusted DotPath type to improve type checking performance. Massively degrades with an additional level.
+* Updated documentation to reflect recent changes
 ### Patch v0.1.62 5/09/2024
 * Restored DotPath, a type used in the selector creators used to guide the creation of a dot path string.
 ### **BREAKING** Strong Fast Lock Step v0.1.62 5/08/2024

@@ -96,8 +96,6 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
   }
 };
 
-
-
 export function createAxium(
   name: string,
   initialConcepts: Concept[],
@@ -192,7 +190,7 @@ export function createAxium(
         }
       // An action dispatched from a priority stage, with a priority set to 0
       // Will override the need to handle priority
-      } else if (action.priority && action.priority !== 0) {
+      } else if (action.priority !== undefined && action.priority !== 0) {
         handlePriority(_axiumState, action);
       } else {
         _axiumState.body.push(action);
