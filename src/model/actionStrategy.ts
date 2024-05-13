@@ -22,6 +22,7 @@ import { KeyedSelector } from './selector';
  * @param payload - `optional` Will set the payload of the action.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
  * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
@@ -35,6 +36,7 @@ export interface ActionNode {
   actionType: ActionType;
   payload?: Record<string, unknown>;
   conceptSemaphore?: number;
+  priority?: number;
   keyedSelectors?: KeyedSelector[];
   semaphore?: [number, number, number, number];
   agreement?: number;
@@ -53,6 +55,7 @@ export interface ActionNode {
  * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
  * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
@@ -64,6 +67,7 @@ export interface ActionNode {
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
   conceptSemaphore?: number;
+  priority?: number;
   semaphore?: [number, number, number, number];
   agreement?: number;
   decisionNodes?: Record<string, ActionNode>;
@@ -97,6 +101,8 @@ export function createActionNode(action: Action, options?: ActionNodeOptions): A
       actionType: action.type,
       payload: action.payload,
       keyedSelectors: action.keyedSelectors ? action.keyedSelectors : options.keyedSelectors,
+      conceptSemaphore: action.conceptSemaphore ? action.conceptSemaphore : options.conceptSemaphore,
+      priority: action.priority ? action.priority : options.priority,
       agreement: action.agreement ? action.agreement : options.agreement,
       semaphore: action.semaphore ? action.semaphore : options.semaphore,
       successNode: options.successNode ? options.successNode : null,
@@ -133,7 +139,8 @@ export const createActionNodeFromStrategy = (strategy: ActionStrategy): ActionNo
       currentNode.keyedSelectors,
       currentNode.agreement,
       currentNode.semaphore,
-      currentNode.conceptSemaphore
+      currentNode.conceptSemaphore,
+      currentNode.priority
     );
   }
   return createActionNode(action, {

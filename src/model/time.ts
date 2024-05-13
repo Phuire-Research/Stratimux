@@ -7,13 +7,18 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { Action, createAction } from './action';
 import { getAxiumState } from './axium';
 import { Concepts } from './concept';
+import { handlePriority } from './priority';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: number) => {
   func.forEach(f => {
     const action = f();
     if (action.type !== 'Conclude') {
-      axiumState.tail.push(action);
+      if (action.priority !== undefined) {
+        handlePriority(axiumState, action);
+      } else {
+        axiumState.tail.push(action);
+      }
     }
   });
   axiumState.timer.shift();
