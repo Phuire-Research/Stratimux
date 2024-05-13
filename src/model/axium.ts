@@ -13,7 +13,7 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, createAction, createCacheSemaphores } from './action';
+import { Action, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
@@ -28,7 +28,7 @@ import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { StagePlanner, Staging } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
-import { handlePriority } from './priority';
+import { handlePriority, isPriorityValid } from './priority';
 
 export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], action: Action) => {
   if (
@@ -43,7 +43,7 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
       strategyData: action.strategy.data,
     });
     tail.push(appendToDialog);
-    if (action.priority !== undefined) {
+    if (isPriorityValid(action)) {
       handlePriority(getAxiumState(concepts), action);
     } else {
       tail.push(action);
@@ -71,7 +71,7 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
     });
     // setTimeout(() => {
     tail.push(appendToDialog);
-    if (action.priority !== undefined) {
+    if (isPriorityValid(action)) {
       handlePriority(getAxiumState(concepts), action);
     } else {
       tail.push(action);
@@ -190,7 +190,7 @@ export function createAxium(
         }
       // An action dispatched from a priority stage, with a priority set to 0
       // Will override the need to handle priority
-      } else if (action.priority !== undefined && action.priority !== 0) {
+      } else if (isPriorityValid(action)) {
         handlePriority(_axiumState, action);
       } else {
         _axiumState.body.push(action);

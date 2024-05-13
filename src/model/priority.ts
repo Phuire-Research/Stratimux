@@ -54,4 +54,6 @@ export const handlePriority = (axiumState: AxiumState, action: Action) => {
     body.push(action);
   }
 };
+
+export const isPriorityValid = (action: Action) => (action.priority !== undefined && action.priority !== 0);
 /*#>*/
