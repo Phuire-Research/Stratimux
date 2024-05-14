@@ -30,7 +30,7 @@ test('Ownership Test', (done) => {
     createOwnershipConcept(),
     createCounterConcept(),
     createExperimentConcept(createExperimentState(), [experimentCheckInStrategyQuality], [experimentActionQuePrinciple])
-  ], true, true);
+  ], {logging: true, storeDialog: true});
   const plan = axium.plan(
     'Testing Ownership Staging', [
       createStage((cpts, dispatch) => {

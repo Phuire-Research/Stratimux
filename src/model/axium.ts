@@ -99,12 +99,20 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
 export function createAxium(
   name: string,
   initialConcepts: Concept[],
-  logging?: boolean,
-  storeDialog?: boolean,
-  logActionStream?: boolean
+  options?: {
+    logging?: boolean,
+    storeDialog?: boolean,
+    logActionStream?: boolean
+  }
 ): Axium {
   const concepts: Concepts = {};
-  const init = [createAxiumConcept(name, storeDialog, logging, logActionStream), ...initialConcepts];
+  const init = [
+    createAxiumConcept(
+      name,
+      options?.storeDialog,
+      options?.logging,
+      options?.logActionStream
+    ), ...initialConcepts];
   init.forEach((concept, i) => {
     concept.semaphore = i;
     concepts[i] = concept;

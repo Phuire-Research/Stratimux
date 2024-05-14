@@ -14,7 +14,7 @@ import { counterSubtract } from '../concepts/counter/qualities/subtract.quality'
 import { chainEnd } from '../concepts/chain/qualities/chainEnd.quality';
 
 test('Axium Test', (done) => {
-  const axium = createAxium('chainConceptTest', [createCounterConcept(), createChainConcept()], true, true);
+  const axium = createAxium('chainConceptTest', [createCounterConcept(), createChainConcept()], {logging: true, storeDialog: true});
   let count = 0;
   let willDispatch = true;
   const sub = axium.subscribe((concepts: Concepts) => {

@@ -49,11 +49,12 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### **BREAKING** v0.1.66 5/13/2024
+### **BREAKING** v0.1.67 5/13/2024
 * Revamped the Action Creator Functions to follow behind the current creator with an **options** parameter design choice.
   * Note pure action creators will not provide an option for payload
 * Cascaded priority to ActionStrategies to allow for planning priority ahead of time.
 * Updated the PrincipleFunction documentation to have the semaphore parameter to now be conceptSemaphore. This allows for an easy drop in into the options parameter.
+* Made createAxium utilize the same **options** design pattern.
 ### v0.1.65 5/13/2024
 * Removed one more level of deepness from DotPath(6 levels now), projects should now compile without the excessively deep error.
 ### v0.1.64 5/13/2024

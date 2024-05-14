@@ -32,7 +32,7 @@ test('Priority Action Test', (done) => {
 
   const priorityTest = createAxium('Priority Test', [
     createExperimentPriorityConcept()
-  ], true, true, true);
+  ], {logging: true, storeDialog: true, logActionStream: true});
 
   const firstStage = (name: string, priority: number) => createStage((concepts, dispatch, changes) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
