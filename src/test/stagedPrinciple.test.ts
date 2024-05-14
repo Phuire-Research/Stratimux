@@ -50,6 +50,6 @@ test('Axium Principle Stage', (done) => {
   };
   createAxium('axiumStrategyTest', [
     createExperimentConcept(createExperimentState(), [experimentMockToTrueQuality], [experimentPrinciple])
-  ], true, true);
+  ], {logging: true, storeDialog: true});
 });
 /*#>*/

@@ -19,7 +19,7 @@ import { createStage } from '../model/stagePlanner';
 test('Unified Selector Test', (done) => {
   const axium = createAxium('Selector Test via Counter', [
     createCounterConcept()
-  ], true, true);
+  ], {logging: true, storeDialog: true});
   const plan = axium.plan('Plan: Counter Selector', [
     createStage((concepts, _) => {
       console.log('FIRED!!!');

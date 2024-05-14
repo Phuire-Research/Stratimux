@@ -14,7 +14,7 @@ import { createStage } from '../model/stagePlanner';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 
 test('Axium add Concepts Strategy Test', (done) => {
-  const axium = createAxium('axiumAddConceptTest',[], true, true);
+  const axium = createAxium('axiumAddConceptTest',[], {logging: true, storeDialog: true});
   const plan = axium.plan('Add Concepts Stage',[
     createStage((concepts, dispatch) => {
       console.log('Add Counter Concept');
