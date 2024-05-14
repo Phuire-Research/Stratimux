@@ -23,7 +23,7 @@ export type KeyedSelector = {
 /**
  * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage
  * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
- * @tutorial *Note* This will only extend 7 levels into a deeply nested record.
+ * @tutorial *Note* This will only extend 6 levels into a deeply nested record.
  * @tutorial **Use createAdvancedKeys** function in place of keys if attempted to scaffold into through arrays
  */
 export const createConceptKeyedSelector =
@@ -52,7 +52,7 @@ export const createConceptKeyedSelector =
  * Will create a new KeyedSelector during runtime, for usage throughout Stratimux
  * @param keys - type string - Format is 'key0.key1.key3' for deep nested key values
  * Uses type DotPath<T> to enable some DX in the IDE to quickly create the desired string format.
- * @tutorial *Note* This will only extend 7 levels into a deeply nested record.
+ * @tutorial *Note* This will only extend 6 levels into a deeply nested record.
  * @tutorial **Use createAdvancedKeys** function in place of keys if attempted to scaffold into through arrays
  */
 export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
