@@ -7,7 +7,7 @@ import { axiumBadActionType  } from '../concepts/axium/qualities/badAction.quali
 import { axiumLog, axiumLogType } from '../concepts/axium/qualities/log.quality';
 
 test('ActionController Expired Test', (done) => {
-  const act = axiumLog(undefined, undefined, 200);
+  const act = axiumLog({agreement: 200});
   const cont = new ActionController(act);
   cont.subscribe(union => {
     expect(union[0].type).toBe(axiumBadActionType);
@@ -16,7 +16,7 @@ test('ActionController Expired Test', (done) => {
 });
 
 test('ActionController Next Test', (done) => {
-  const act = axiumLog(undefined, undefined, 200);
+  const act = axiumLog({agreement: 200});
   const cont = new ActionController(act);
   cont.subscribe(union => {
     expect(union[0].type).toBe(axiumLogType);
@@ -26,7 +26,7 @@ test('ActionController Next Test', (done) => {
 });
 
 test('ActionController createActionController$ Test', (done) => {
-  const act = axiumLog(undefined, undefined, 200);
+  const act = axiumLog({agreement: 200});
   const cont = createActionController$(act, (controller, action) => {
     controller.fire(action);
   });

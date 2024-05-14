@@ -32,6 +32,29 @@ export type Action = {
     priority?: number;
 };
 
+export type ActionOptions = {
+    semaphore?: [number, number, number, number];
+    conceptSemaphore?: number;
+    strategy?: ActionStrategy;
+    keyedSelectors?: KeyedSelector[];
+    agreement?: number;
+    expiration?: number;
+    axium?: string;
+    priority?: number;
+};
+
+export type ActionWithPayloadOptions = {
+    semaphore?: [number, number, number, number];
+    conceptSemaphore?: number;
+    payload?: Record<string, unknown>;
+    strategy?: ActionStrategy;
+    keyedSelectors?: KeyedSelector[];
+    agreement?: number;
+    expiration?: number;
+    axium?: string;
+    priority?: number;
+};
+
 const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
 
 export function primeAction(concepts: Concepts, action: Action): Action {
@@ -167,52 +190,50 @@ function getSpecialSemaphore(type: ActionType) {
   }
 }
 
-export function createAction<T extends Record<string, unknown>>(
+export function createAction(
   type: ActionType,
-  payload?: T,
-  keyedSelectors?: KeyedSelector[],
-  agreement?: number,
-  _semaphore?: [number, number, number, number],
-  conceptSemaphore?: number,
-  priority?: number
+  options?: ActionWithPayloadOptions,
 ): Action {
   const special = getSpecialSemaphore(type);
-  const semaphore = _semaphore !== undefined ? _semaphore : [0, 0, -1, special] as [number, number, number, number];
-  return {
-    type,
-    semaphore,
-    payload,
-    keyedSelectors,
-    agreement,
-    expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
-    conceptSemaphore,
-    priority
-  };
+  const semaphore = options?.semaphore !== undefined ? options.semaphore : [0, 0, -1, special] as [number, number, number, number];
+  if (options) {
+    const {
+      payload,
+      keyedSelectors,
+      agreement,
+      conceptSemaphore,
+      priority
+    } = options;
+    return {
+      type,
+      semaphore,
+      payload,
+      keyedSelectors,
+      agreement,
+      expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
+      conceptSemaphore,
+      priority
+    };
+  } else {
+    return {
+      type,
+      semaphore,
+      expiration: Date.now() + 5000,
+    };
+  }
 }
 
 export type ActionCreator = (
-    conceptSemaphore?: number,
-    keyedSelectors?: KeyedSelector[],
-    agreement?: number,
-    qualitySemaphore?: [number, number, number, number]
+    options?: ActionOptions
   ) => Action;
 
 export function prepareActionCreator(actionType: ActionType) {
   return (
-    conceptSemaphore?: number,
-    keyedSelectors?: KeyedSelector[],
-    agreement?: number,
-    qualitySemaphore?: [number, number, number, number],
-    priority?: number
+    options?: ActionOptions
   ) => {
     return createAction(
       actionType,
-      undefined,
-      keyedSelectors,
-      agreement,
-      qualitySemaphore,
-      conceptSemaphore,
-      priority
+      options
     );
   };
 }
@@ -220,24 +241,21 @@ export function prepareActionCreator(actionType: ActionType) {
 export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(actionType: ActionType) {
   return (
     payload: T,
-    conceptSemaphore?: number,
-    keyedSelectors?: KeyedSelector[],
-    agreement?: number,
-    semaphore?: [number, number, number, number],
-    priority?: number
+    options?: ActionOptions
   ): Action => {
+    const opt: ActionWithPayloadOptions = {
+      ...options,
+      payload
+    };
     return createAction(
       actionType,
-      payload, keyedSelectors, agreement, semaphore, conceptSemaphore, priority);
+      opt
+    );
   };
 }
 export type ActionCreatorWithPayload<T> = (
     payload: T,
-    conceptSemaphore?: number,
-    keyedSelectors?: KeyedSelector[],
-    agreement?: number,
-    semaphore?: [number, number, number, number],
-    priority?: number
+    options?: ActionWithPayloadOptions
   ) => Action;
 
 /**

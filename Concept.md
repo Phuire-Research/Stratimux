@@ -69,14 +69,14 @@ export type PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concepts,
   concept$: UnifiedSubject,
-  semaphore: number
+  conceptSemaphore: number
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concepts,
   concepts$: UnifiedSubject,
-  semaphore: number
+  conceptSemaphore: number
 ): Observable<Action>;
 ```
 Concept's principle, governs a specific set of instructions that would allow for the functionality of other libraries not designed specifically for this system. Otherwise these act as action emitters of some value being watched off premise or subscribed to within the axium.
@@ -91,7 +91,7 @@ As this functionality lacks the addition of some abstraction to hand hold the us
 
 Later we may create specific types of principles to handle the nuances of repeating the same functionality over and over again. But likewise that is not the scope of this release.
 
-*Note the semaphore is specifically in utilization with "selectUnifiedState(concepts, semaphore)" to select your Concept's state regardless of its current state of unification.*
+*Note the concept semaphore is specifically in utilization with "selectUnifiedState(concepts, semaphore)" to select your Concept's state regardless of its current state of unification.*
 
 ## Mode - The point of Recursion
 ```typescript

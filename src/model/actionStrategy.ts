@@ -135,12 +135,14 @@ export const createActionNodeFromStrategy = (strategy: ActionStrategy): ActionNo
   } else {
     action = createAction(
       currentNode.actionType,
-      currentNode.payload,
-      currentNode.keyedSelectors,
-      currentNode.agreement,
-      currentNode.semaphore,
-      currentNode.conceptSemaphore,
-      currentNode.priority
+      {
+        payload: currentNode.payload,
+        keyedSelectors: currentNode.keyedSelectors,
+        agreement: currentNode.agreement,
+        semaphore: currentNode.semaphore,
+        conceptSemaphore: currentNode.conceptSemaphore,
+        priority: currentNode.priority
+      }
     );
   }
   return createActionNode(action, {
@@ -235,11 +237,17 @@ export function createStrategy(
 }
 
 export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, unknown>): Action => {
+  const currentNode = strategy.currentNode;
   strategy.currentNode.action = createAction(
-    strategy.currentNode.actionType,
-    strategy.currentNode.payload,
-    strategy.currentNode.keyedSelectors,
-    strategy.currentNode.agreement
+    currentNode.actionType,
+    {
+      payload: currentNode.payload,
+      keyedSelectors: currentNode.keyedSelectors,
+      agreement: currentNode.agreement,
+      semaphore: currentNode.semaphore,
+      conceptSemaphore: currentNode.conceptSemaphore,
+      priority: currentNode.priority
+    }
   );
   strategy.currentNode.action.strategy = {
     ...strategy,
@@ -273,11 +281,14 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
     const nextNode = strategy.currentNode.successNode;
     nextAction = createAction(
       nextNode.actionType,
-      nextNode.payload,
-      nextNode.keyedSelectors,
-      nextNode.agreement,
-      nextNode.semaphore,
-      nextNode.conceptSemaphore
+      {
+        payload: nextNode.payload,
+        keyedSelectors: nextNode.keyedSelectors,
+        agreement: nextNode.agreement,
+        semaphore: nextNode.semaphore,
+        conceptSemaphore: nextNode.conceptSemaphore,
+        priority: nextNode.priority
+      }
     );
     nextNode.action = nextAction;
     nextNode.lastActionNode = strategy.currentNode;
@@ -343,11 +354,14 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
     const nextNode = strategy.currentNode.failureNode;
     nextAction = createAction(
       nextNode.actionType,
-      nextNode.payload,
-      nextNode.keyedSelectors,
-      nextNode.agreement,
-      nextNode.semaphore,
-      nextNode.conceptSemaphore
+      {
+        payload: nextNode.payload,
+        keyedSelectors: nextNode.keyedSelectors,
+        agreement: nextNode.agreement,
+        semaphore: nextNode.semaphore,
+        conceptSemaphore: nextNode.conceptSemaphore,
+        priority: nextNode.priority
+      }
     );
     nextNode.action = nextAction;
     nextNode.lastActionNode = strategy.currentNode;
@@ -424,11 +438,14 @@ export const strategyDecide = (
       const nextNode = decisionNodes[decideKey];
       nextAction = createAction(
         nextNode.actionType,
-        nextNode.payload,
-        nextNode.keyedSelectors,
-        nextNode.agreement,
-        nextNode.semaphore,
-        nextNode.conceptSemaphore
+        {
+          payload: nextNode.payload,
+          keyedSelectors: nextNode.keyedSelectors,
+          agreement: nextNode.agreement,
+          semaphore: nextNode.semaphore,
+          conceptSemaphore: nextNode.conceptSemaphore,
+          priority: nextNode.priority
+        }
       );
       nextNode.action = nextAction;
       nextNode.lastActionNode = strategy.currentNode;

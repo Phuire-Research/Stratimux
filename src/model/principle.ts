@@ -21,10 +21,10 @@ export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concepts,
   concepts$: UnifiedSubject,
-  semaphore: number,
+  conceptSemaphore: number,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
-    principleFunc(obs, concepts, concepts$, semaphore);
+    principleFunc(obs, concepts, concepts$, conceptSemaphore);
   });
 }
 
