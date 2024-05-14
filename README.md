@@ -332,6 +332,6 @@ import { createUXConcept } from './concepts/uX/uX.concept';
   //  This will log to the console the dialog of each successive ActionStrategy.
   //    And store the entire application context in the axium's dialog.
   // The final boolean will allow the action stream to be logged to console for debugging purposes
-  createAxium(axiumName, [createUXConcept()], true, true, true);
+  createAxium(axiumName, [createUXConcept()], {logging: true, storeDialog: true, logActionStream: true});
 })();
 ```
