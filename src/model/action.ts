@@ -43,10 +43,10 @@ export type ActionOptions = {
     priority?: number;
 };
 
-export type ActionWithPayloadOptions = {
+export type ActionWithPayloadOptions<T extends Record<string, unknown>> = {
     semaphore?: [number, number, number, number];
     conceptSemaphore?: number;
-    payload?: Record<string, unknown>;
+    payload?: T;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
@@ -190,9 +190,9 @@ function getSpecialSemaphore(type: ActionType) {
   }
 }
 
-export function createAction(
+export function createAction<T extends Record<string, unknown>>(
   type: ActionType,
-  options?: ActionWithPayloadOptions,
+  options?: ActionWithPayloadOptions<T>,
 ): Action {
   const special = getSpecialSemaphore(type);
   const semaphore = options?.semaphore !== undefined ? options.semaphore : [0, 0, -1, special] as [number, number, number, number];
@@ -243,7 +243,7 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     payload: T,
     options?: ActionOptions
   ): Action => {
-    const opt: ActionWithPayloadOptions = {
+    const opt: ActionWithPayloadOptions<T> = {
       ...options,
       payload
     };
@@ -253,9 +253,9 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     );
   };
 }
-export type ActionCreatorWithPayload<T> = (
+export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
     payload: T,
-    options?: ActionWithPayloadOptions
+    options?: ActionWithPayloadOptions<T>
   ) => Action;
 
 /**
