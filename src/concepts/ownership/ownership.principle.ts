@@ -82,7 +82,7 @@ export const ownershipPrinciple: PrincipleFunction = (
               }
             }
             if (payload.badActions.length > 0) {
-              newAction = createAction(axiumBadActionType, payload);
+              newAction = createAction(axiumBadActionType, {payload});
               ownershipState.pendingActions = newPending;
               concepts$.next(concepts);
               observer.next(newAction);

@@ -123,16 +123,16 @@ test('Priority Action Manual Test', (done) => {
     body.push(kick);
     const one = counterSetCount({
       newCount: 1
-    }, undefined, undefined, undefined, undefined, 100);
+    }, {priority: 100});
     const two = counterSetCount({
       newCount: 2
-    }, undefined, undefined, undefined, undefined, 50);
+    }, {priority: 50});
     const three = counterSetCount({
       newCount: 3
-    }, undefined, undefined, undefined, undefined, 75);
+    }, {priority: 75});
     const four = counterSetCount({
       newCount: 4
-    }, undefined, undefined, undefined, undefined, 25);
+    }, {priority: 25});
     handlePriority(axiumState, one);
     expect(body[0].type).toBe(one.type);
     expect(body[1].type).toBe(kick.type);
@@ -162,16 +162,16 @@ test('Priority Action Close Test', (done) => {
     body.push(kick);
     const one = counterSetCount({
       newCount: 1
-    }, undefined, undefined, undefined, undefined, 100);
+    }, {priority: 100});
     const two = counterSetCount({
       newCount: 2
-    }, undefined, undefined, undefined, undefined, 50);
+    }, {priority: 50});
     const three = counterSetCount({
       newCount: 3
-    }, undefined, undefined, undefined, undefined, 75);
+    }, {priority: 75});
     const four = counterSetCount({
       newCount: 4
-    }, undefined, undefined, undefined, undefined, 25);
+    }, {priority: 25});
     handlePriority(axiumState, one);
     expect(body[0].type).toBe(one.type);
     expect(body[1].type).toBe(kick.type);

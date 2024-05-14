@@ -21,7 +21,7 @@ export const axiumPrinciple: PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concepts,
   concepts$: UnifiedSubject,
-  semaphore: number
+  conceptSemaphore: number
 ) => {
   let allowAdd = true;
   let allowRemove = true;
@@ -174,8 +174,9 @@ export const axiumPrinciple: PrincipleFunction = (
   ]);
   observer.next(strategy.begin(strategy.create({
     topic: 'Register Axium Add/Remove Plans',
-    initialNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}, semaphore), {
-      successNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}, semaphore), {
+    initialNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}, {conceptSemaphore}), {
+      successNode:
+      createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}, {conceptSemaphore}), {
         successNode: null,
         failureNode: null
       }),

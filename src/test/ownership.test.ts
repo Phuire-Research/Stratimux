@@ -56,7 +56,7 @@ test('Ownership Test', (done) => {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         if (ownership) {
           console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
-          dispatch(counterSetCount({newCount: 1000}, undefined, undefined, 7000), { iterateStage: true});
+          dispatch(counterSetCount({newCount: 1000}, {agreement: 7000} ), { iterateStage: true});
         }
       }),
       createStage((cpts, dispatch) => {
