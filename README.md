@@ -49,6 +49,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### v0.1.65 5/13/2024
+* Removed one more level of deepness from DotPath(6 levels now), projects should now compile without the excessively deep error.
 ### v0.1.64 5/13/2024
 * Added Action Priority: This will allow action's assigned a priority of not 0 to be placed accordingly into the action ques.
 * Adjusted DotPath type to improve type checking performance. Massively degrades with an additional level.
