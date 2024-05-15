@@ -1,5 +1,6 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, generate a test that ensures that ActionStrategies are working as intended.
+For the asynchronous graph programming framework Stratimux, generate a test that ensures that ActionStrategies
+with priority are working as intended.
 $>*/
 /*<#*/
 import { createAxium, getAxiumState, isAxiumOpen } from '../model/axium';
