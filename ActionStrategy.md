@@ -91,16 +91,19 @@ As this is an enhancement to the traditional understanding of higher order funct
 ```typescript
 export interface ActionStrategyParameters {
   topic: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   initialNode: ActionNode;
+  priority?: number;
 }
 export interface ActionStrategy {
   topic: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
   currentNode: ActionNode;
   actionList: Array<string>;
-  lastActionNode: ActionNode;
   puntedStrategy?: ActionStrategy[];
+  stubs?: OwnershipTicketStub[];
+  priority?: number;
+  step?: number;
 }
 ```
 * topic - The topic string or the beginning sentence of a Stratimux dialog paragraph. Also stores itself temporarily upon strategy completion on the Axium as **lastStrategy**. We suggest using this field to determine when your strategies of concluding during testing, or when to dispatch some other strategy.
@@ -110,6 +113,8 @@ export interface ActionStrategy {
 * lastActionNode - Primarily functions to clear ownership upon each successive action from the strategy. Likewise can be used to determine the current decision, or preposition of the current ActionNode at runtime.
 * puntedStrategy - This allows for strategies to be successively chained into one another by first in, first Out principle upon each strategy conclusion.
 * initialNode via ActionStrategyParameters - The initial node that is the head that is ran by the strategyBegin consumer function.
+* priority - This will assign a default priority to each action issued from a strategy, but allows for actions to have their own atomically.
+* step - Mainly for trouble shooting purposes, but likewise may be used via some analytics for insight.
 
 ## Consumer Functions
 ```typescript

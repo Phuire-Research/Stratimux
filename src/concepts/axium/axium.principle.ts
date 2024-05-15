@@ -38,7 +38,6 @@ export const axiumPrinciple: PrincipleFunction = (
         forEachConcept(concepts, (concept, s) => {
           newConcepts[Number(s)] = concept;
         });
-
         axiumState.addConceptQue.forEach((concept, _index) => {
           concept.semaphore = axiumState.conceptCounter;
           if (concept.mode !== undefined) {

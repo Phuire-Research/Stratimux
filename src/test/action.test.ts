@@ -8,6 +8,10 @@ import { counterAdd, counterAddType } from '../concepts/counter/qualities/add.qu
 test('Axium add Concepts Strategy Test', (done) => {
   const something = createAction('something');
   expect(something.type).toBe('something');
+  const somethingElse = createAction('somethingElse', {payload: {
+    name: 'somethingElse'
+  }});
+  expect(somethingElse.payload?.name).toBe('somethingElse');
   const add = counterAdd();
   expect(add.type).toBe(counterAddType);
   console.log(add.type);
