@@ -42,10 +42,13 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data,
     });
-    tail.push(appendToDialog);
     if (isPriorityValid(action)) {
-      handlePriority(getAxiumState(concepts), action);
+      const state = getAxiumState(concepts);
+      handlePriority(state, action);
+      appendToDialog.priority = action.priority;
+      handlePriority(state, appendToDialog);
     } else {
+      tail.push(appendToDialog);
       tail.push(action);
     }
   } else if (
@@ -53,6 +56,11 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
+    if (isPriorityValid(action)) {
+      handlePriority(getAxiumState(concepts), action);
+    } else {
+      tail.push(action);
+    }
     tail.push(action);
   }
 };
@@ -70,10 +78,13 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
       strategyData: action.strategy.data
     });
     // setTimeout(() => {
-    tail.push(appendToDialog);
     if (isPriorityValid(action)) {
-      handlePriority(getAxiumState(concepts), action);
+      const state = getAxiumState(concepts);
+      handlePriority(state, action);
+      appendToDialog.priority = action.priority;
+      handlePriority(state, appendToDialog);
     } else {
+      tail.push(appendToDialog);
       tail.push(action);
     }
     if (async) {
@@ -87,7 +98,11 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
     // Logical Determination: axiumBadType
     action.semaphore[3] !== 1
   ) {
-    tail.push(action);
+    if (isPriorityValid(action)) {
+      handlePriority(getAxiumState(concepts), action);
+    } else {
+      tail.push(action);
+    }
     if (async) {
       axiumTimeOut(concepts, () => {
         return axiumKick();
@@ -120,6 +135,7 @@ export function createAxium(
   let axiumState = concepts[0].state as AxiumState;
   axiumState.cachedSemaphores = createCacheSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
+    axiumState.conceptCounter += 1;
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator(axiumState.concepts$, semaphore);

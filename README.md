@@ -49,6 +49,10 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### Strategy Priority v0.1.68 5/15/2024
+* Added priority to strategies, this priority will be assigned to each step issued by such.
+  * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
+  * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 ### **BREAKING** v0.1.67 5/13/2024
 * Revamped the Action Creator Functions to follow behind the current creator with an **options** parameter design choice.
   * Note pure action creators will not provide an option for payload
