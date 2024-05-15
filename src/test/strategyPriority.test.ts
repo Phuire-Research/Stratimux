@@ -17,10 +17,13 @@ import { handlePriority } from '../model/priority';
 test('Axium Counting Strategy Priority Test', (done) => {
   const concluded = [false, false, false];
   const [count1, strategy1] = generateRandomCountingStrategy(0);
+  strategy1.topic += 1;
   strategy1.priority = 100;
   const [count2, strategy2] = generateRandomCountingStrategy(0);
+  strategy1.topic += 2;
   const [count3, strategy3] = generateRandomCountingStrategy(0);
   strategy3.priority = 50;
+  strategy1.topic += 3;
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy with Priority Plan',
     [

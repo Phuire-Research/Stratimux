@@ -63,6 +63,7 @@ export function removeConceptsViaQueThenUnblockStrategy(concepts: Concepts): Act
   const params: ActionStrategyParameters = {
     topic: removeConceptsViaQueThenUnblockTopic,
     initialNode: stepOne,
+    priority: Infinity
   };
 
   return createStrategy(params);

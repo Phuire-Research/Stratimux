@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test that the setStageOption derivatives.are functioning as intended
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { createAxium, isAxiumOpen } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
@@ -19,7 +19,7 @@ test('Axium setStageSelectors Test', (done) => {
   const plan = axium.plan('Counting Strategy Plan using setStageSelectors',
     [
       createStage((concepts, dispatch) => {
-        if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
+        if (isAxiumOpen(concepts)) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
             setStageSelectors: {
@@ -54,7 +54,7 @@ test('Axium setStageBeat Test', (done) => {
   const plan = axium.plan('Counting Strategy Plan using setStageBeat',
     [
       createStage((concepts, dispatch) => {
-        if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
+        if (isAxiumOpen(concepts)) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
             setStageBeat: {

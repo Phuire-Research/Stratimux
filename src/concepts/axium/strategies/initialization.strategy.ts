@@ -43,6 +43,7 @@ export function initializationStrategy(concepts: Concepts): ActionStrategy {
   const params: ActionStrategyParameters = {
     topic: initializeTopic,
     initialNode: stepOne,
+    priority: Infinity
   };
 
   return createStrategy(params);

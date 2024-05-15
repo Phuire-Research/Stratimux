@@ -180,7 +180,8 @@ export const axiumPrinciple: PrincipleFunction = (
         failureNode: null
       }),
       failureNode: null
-    })
+    }),
+    priority: Infinity
   })));
 };
 /*#>*/

@@ -43,13 +43,13 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
       strategyData: action.strategy.data,
     });
     if (isPriorityValid(action)) {
+      appendToDialog.priority = action.priority;
       const state = getAxiumState(concepts);
       handlePriority(state, action);
-      appendToDialog.priority = action.priority;
       handlePriority(state, appendToDialog);
     } else {
-      tail.push(appendToDialog);
       tail.push(action);
+      tail.push(appendToDialog);
     }
   } else if (
     action.strategy &&
@@ -61,7 +61,6 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
     } else {
       tail.push(action);
     }
-    tail.push(action);
   }
 };
 
@@ -84,8 +83,8 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
       appendToDialog.priority = action.priority;
       handlePriority(state, appendToDialog);
     } else {
-      tail.push(appendToDialog);
       tail.push(action);
+      tail.push(appendToDialog);
     }
     if (async) {
       axiumTimeOut(concepts, () => {

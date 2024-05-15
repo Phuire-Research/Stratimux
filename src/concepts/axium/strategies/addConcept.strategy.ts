@@ -70,6 +70,7 @@ export function addConceptsFromQueThenUnblockStrategy(conceptualSet: Concepts): 
   const params: ActionStrategyParameters = {
     topic: addConceptsFromQueThenUnblockTopic,
     initialNode: stepOne,
+    priority: Infinity
   };
 
   return createStrategy(params);
