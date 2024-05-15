@@ -25,6 +25,7 @@ test('Axium onChange Test', (done) => {
   const plan = axium.plan('Counting Strategy Plan with selectors',
     [
       createStage((concepts, dispatch) => {
+        console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true

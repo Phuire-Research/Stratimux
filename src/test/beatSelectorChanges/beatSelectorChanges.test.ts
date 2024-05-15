@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 utilizing the provided BeatSelectorChanges concept
 $>*/
 /*<#*/
-import { createAxium, getAxiumState } from '../../model/axium';
+import { createAxium, getAxiumState, isAxiumOpen } from '../../model/axium';
 import { createStage } from '../../model/stagePlanner';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
 import { beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
@@ -28,7 +28,7 @@ test('Deferred Beat Selector Changes Test', (done) => {
   ]);
   const plan = axium.plan('Prolonged Counting Strategy', [
     createStage((concepts, dispatch) => {
-      if (getAxiumState(concepts).lastStrategy === initializeTopic) {
+      if (isAxiumOpen(concepts)) {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });

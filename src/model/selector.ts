@@ -208,7 +208,7 @@ export function selectState<T>(concepts: Concepts, name: string): T | undefined 
   const length = conceptKeys.length;
   const select = (index: number): T | undefined => {
     if (concepts[conceptKeys[index]].name === name) {
-      return concepts[index].state as T;
+      return concepts[conceptKeys[index]].state as T;
     } else if (index < length - 1) {
       return select(index + 1);
     } else {

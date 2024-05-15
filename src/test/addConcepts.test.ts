@@ -10,12 +10,14 @@ import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategi
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { forEachConcept } from '../model/concept';
-import { createStage } from '../model/stagePlanner';
+import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], {logging: true, storeDialog: true});
   const plan = axium.plan('Add Concepts Stage',[
+    stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((concepts, dispatch) => {
       console.log('Add Counter Concept');
       dispatch(
@@ -48,7 +50,9 @@ test('Axium add Concepts Strategy Test', (done) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);
       if (axiumState.lastStrategy === countingTopic) {
+        console.log('CHECK CONCEPTS', concepts);
         const counter = selectState<CounterState>(concepts, counterName);
+        console.log('SHOULD HIT, but isn\'t');
         expect(counter?.count).toBe(1);
         setTimeout(() => {done();}, 500);
         plan.conclude();
