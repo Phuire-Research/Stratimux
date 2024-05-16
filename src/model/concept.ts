@@ -26,7 +26,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-export type MethodCreator = (concept$?: Subject<Concepts>, semaphore?: number) => [Method, Subject<Action>];
+export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
 export type Quality = {
@@ -325,7 +325,7 @@ export const areConceptsLoaded = (concepts: Concepts, conceptNames: string[]): b
   return allExists;
 };
 
-export const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore?: number) => void) => {
+export const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);
