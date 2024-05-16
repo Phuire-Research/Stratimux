@@ -83,6 +83,43 @@ export const createActionController$ = (act: Action, controlling: (controller: A
   return ctrl;
 };
 
+export class ActionControllerForEach extends Subject<Action> {
+  constructor(actions: Action[]) {
+    super();
+    setTimeout(() => {
+      actions.forEach(action => {
+        if (action.expiration < Date.now()) {
+          this.fire(action);
+        } else if (action.strategy) {
+          this.fire(
+            strategyFailed(action.strategy,
+              strategyData_appendFailure(action.strategy, failureConditions.axiumExpired)));
+        } else {
+          this.fire(action);
+        }
+      });
+      this.complete();
+    }, 0);
+  }
+  // next(action: Action[]) {
+
+  // }
+  fire(action: Action) {
+    if (!this.closed) {
+      const { observers } = this;
+      const len = observers.length;
+      for (let i = 0; i < len; i++) {
+        observers[i].next(action);
+      }
+    }
+  }
+}
+
+export const createActionControllerForEach$ = (acts: Action[]) => {
+  const ctrl = new ActionControllerForEach(acts);
+  return ctrl;
+};
+
 export const actionController = ({
   create$: createActionController$
 });

@@ -40,7 +40,6 @@ export const ownershipPrinciple: PrincipleFunction = (
   const plan = concepts$.plan('ownership Principle Plan', [
     stageWaitForOpenThenIterate(() => axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})),
     createStage((cpts, _) => {
-      console.log('HIT');
       let concepts = cpts;
       let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
       if (ownershipState?.initialized) {

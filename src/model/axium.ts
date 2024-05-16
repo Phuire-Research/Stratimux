@@ -182,7 +182,6 @@ export function createAxium(
     .subscribe(([action, _concepts]: [Action, Concepts]) => {
       // Would be notifying methods
       const _axiumState = _concepts[0].state as AxiumState;
-      // console.log('CHECK QUES', _axiumState.head, _axiumState.body, _axiumState.tail);
       if (_axiumState.head.length === 0) {
         _axiumState.head.push(action);
         if (_axiumState.tailTimer.length > 0) {
@@ -193,11 +192,10 @@ export function createAxium(
         }
         const modeIndex = _axiumState.modeIndex;
         if (getAxiumState(_concepts).logActionStream) {
-          console.log('CHECK ACTION STREAM', action.type, action.payload, action.semaphore, action.strategy?.topic);
+          console.log('ACTION STREAM: ', action.type, action.payload, action.semaphore, action.strategy?.topic);
         }
         const modes = _concepts[0].mode as Mode[];
         const mode = modes[modeIndex] as Mode;
-        // console.log('STREAM', action, mode);
         mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
         _axiumState.head.shift();
         if (_axiumState.body.length === 0) {

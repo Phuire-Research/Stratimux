@@ -11,7 +11,6 @@ export const experimentPriorityIsReadyType = 'experimentPriority is ready';
 export const experimentPriorityIsReady = act.prepareActionCreator(experimentPriorityIsReadyType);
 
 function experimentPriorityIsReadyReducer(state: ExperimentPriorityState, action: Action): ExperimentPriorityState {
-  console.log('EXPERIMENT IS READY!!!');
   return {
     ...state,
     ready: true

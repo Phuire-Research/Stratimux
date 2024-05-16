@@ -772,14 +772,12 @@ export class UnifiedSubject extends Subject<Concepts> {
         });
       }
     }
-    // console.log('CHECK BLOCKING', blocking, this.ques);
     const notification = (id: number) => {
       const ready = notifyIds.get(id);
       const plan = this.currentPlans.get(id);
       if (plan && ready !== undefined) {
         this.nextPlan(plan as Plan, ready);
       } else if (plan && plan.stages[plan.stage].firstRun) {
-        // console.log('FIRST RUN: ', plan.title);
         plan.stages[plan.stage].firstRun = false;
         this.nextPlan(plan as Plan, []);
       }
@@ -807,7 +805,6 @@ export class UnifiedSubject extends Subject<Concepts> {
   }
 
   next(concepts: Concepts) {
-    // console.log('NEXT', getAxiumState(concepts).tail);
     if (!this.closed) {
       this.handleChange(concepts);
       // We notify subs last to encourage actions being acted upon observations

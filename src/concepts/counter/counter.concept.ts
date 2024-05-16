@@ -6,6 +6,7 @@ import { counterAddQuality } from './qualities/add.quality';
 import { counterSubtractQuality } from './qualities/subtract.quality';
 import { counterSetCountQuality } from './qualities/setCount.quality';
 import { createConcept } from '../../model/concept';
+import { counterMultiplyQuality } from './qualities/multiply.quality';
 export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
 export type CounterState = {
@@ -25,7 +26,8 @@ export const createCounterConcept = () => {
     [
       counterAddQuality,
       counterSubtractQuality,
-      counterSetCountQuality
+      counterSetCountQuality,
+      counterMultiplyQuality
     ]
   );
 };

@@ -4,9 +4,9 @@ This file hold a series of helper functions that enable users to quickly create 
 within their own defined qualities.
 $>*/
 /*<#*/
-import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
+import { Observable, Subject, bufferTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
 import { Concepts } from './concept';
-import { ActionController, createActionController$ } from './actionController';
+import { ActionController, createActionController$, createActionControllerForEach$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector, selectUnifiedState } from './selector';
 import { debounceAction, throttleAction } from './actionOperators';
@@ -96,6 +96,143 @@ export const createAsyncMethodWithState =
       })),
     );
     defaultMethod.toString = () => ('Async Method with State');
+    return [defaultMethod, defaultSubject];
+  };
+export const createMethodBuffer =
+  (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      filter(actions => actions.length > 0),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      map((action: Action) => {
+        // Logically Determined axiumConclude
+        if (action.semaphore[3] !== 3) {
+          const methodAction = method(action);
+          if (methodAction.strategy) {
+            return [methodAction, true];
+          }
+          const conclude = axiumConclude();
+          return [{
+            ...action,
+            ...conclude,
+          }, false];
+        } else {
+          return [action, true];
+        }
+      }),
+    );
+    defaultMethod.toString = () => ('Debounce Method');
+    return [defaultMethod, defaultSubject];
+  };
+export const createMethodBufferWithState =
+  <T>(methodWithState:
+    (action: Action, state: T) => Action, concepts$: Subject<Concepts>, semaphore: number, duration: number): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      withLatestFrom(concepts$),
+      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
+      map(([act, state] : [Action, T]) => {
+        // Logically Determined axiumConclude
+        if (act.semaphore[3] !== 3) {
+          const methodAction = methodWithState(act, state);
+          if (methodAction.strategy) {
+            return [methodAction, true];
+          }
+          const conclude = axiumConclude();
+          return [{
+            ...act,
+            ...conclude,
+          }, true];
+        } else {
+          return [act, true];
+        }
+      }),
+    );
+    defaultMethod.toString = () => ('Buffer Method with State');
+    return [defaultMethod, defaultSubject];
+  };
+export const createMethodBufferWithConcepts =
+  (
+    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action, concepts$: Subject<Concepts>,
+    semaphore: number,
+    duration: number
+  ) : [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      withLatestFrom(concepts$),
+      map(([act, concepts] : [Action, Concepts]) => {
+        // Logically Determined axiumConclude
+        if (act.semaphore[3] !== 3) {
+          const methodAction = methodWithConcepts(act, concepts, semaphore);
+          if (methodAction.strategy) {
+            return [methodAction, true];
+          }
+          const conclude = axiumConclude();
+          return [{
+            ...act,
+            ...conclude,
+          }, false];
+        } else {
+          return [act, true];
+        }
+      }),
+    );
+    defaultMethod.toString = () => ('Buffer Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodBuffer =
+  (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      mergeMap((act) => {
+        return createActionController$(act, (controller: ActionController, action: Action) => {
+          asyncMethod(controller, action);
+        });
+      }),
+    );
+    defaultMethod.toString = () => ('Async Buffer Method');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodBufferWithState =
+  <T>(asyncMethodWithState: (controller: ActionController, action: Action, state: T) =>
+    void, concepts$: Subject<Concepts>, semaphore: number, duration: number, ): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      withLatestFrom(concepts$),
+      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
+      mergeMap(([act, state] : [Action, T]) => {
+        return createActionController$(act, (controller: ActionController, action: Action) => {
+          asyncMethodWithState(controller, action, state);
+        });
+      })
+    );
+    defaultMethod.toString = () => ('Async Buffer Method with State');
+    return [defaultMethod, defaultSubject];
+  };
+export const createAsyncMethodBufferWithConcepts =
+  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) =>
+    void, concepts$: Subject<Concepts>, semaphore: number, duration: number, ): [Method, Subject<Action>] => {
+    const defaultSubject = new Subject<Action>();
+    const defaultMethod: Method = defaultSubject.pipe(
+      bufferTime(duration),
+      switchMap(actions => createActionControllerForEach$(actions)),
+      withLatestFrom(concepts$),
+      mergeMap(([act, concepts] : [Action, Concepts]) => {
+        return createActionController$(act, (controller: ActionController, action: Action) => {
+          asyncMethodWithConcepts(controller, action, concepts, semaphore);
+        });
+      }),
+    );
+    defaultMethod.toString = () => ('Async Buffer Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodDebounce =
@@ -418,5 +555,11 @@ export const method = ({
   createAsyncThrottle: createAsyncMethodThrottle,
   createAsyncThrottleWithState: createAsyncMethodThrottleWithState,
   createAsyncThrottleWithConcepts: createAsyncMethodThrottleWithConcepts,
+  createBuffer: createMethodBuffer,
+  createBufferWithState: createMethodBufferWithState,
+  createMethodBufferWithConcepts: createMethodBufferWithConcepts,
+  createAsyncBuffer: createAsyncMethodBuffer,
+  createAsyncBufferWithState: createAsyncMethodBufferWithState,
+  createAsyncBufferWithConcepts: createAsyncMethodBufferWithConcepts
 });
 /*#>*/

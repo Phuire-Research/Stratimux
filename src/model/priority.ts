@@ -8,7 +8,6 @@ import { Action } from './action';
 
 // Is only called if action has priority
 const fillBucket = (body: Action[], bucket: Action[], action: Action, _added = false) => {
-  // console.log('FILL BUCKET', body, bucket, action, _added);
   let added = _added;
   const drop = body.shift();
   if (drop) {
@@ -43,7 +42,6 @@ const emptyBucket = (body: Action[], bucket: Action[]) => {
 
 export const handlePriority = (axiumState: AxiumState, action: Action) => {
   const body = axiumState.body;
-  // console.log('HIT HANDLE PRIORITY', body[0],);
   if (body[0] && body[0].priority !== undefined) {
     const bucket: Action[] = [];
     fillBucket(body, bucket, action);
