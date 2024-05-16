@@ -1,3 +1,6 @@
+# STASH BUFFER
+Noting that this feature works in isolation and tests. But when placed into a complex stratimux environment. Simply stops working in the same manner as having to utilize some beat timer from stopping a plan from crashing the application. In a strong fast environment, this would not be a problem. **This is the limit of our current modern computers.**
+
 ![Stratimux](https://github.com/Phuire-Research/Stratimux/blob/main/Stratimux.png?raw=true)
 ### *The Unified Turing Machine - The Mythical Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
 
