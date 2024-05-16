@@ -4,7 +4,7 @@ This file hold a series of helper functions that enable users to quickly create 
 within their own defined qualities.
 $>*/
 /*<#*/
-import { Observable, Subject, bufferTime, map, scan, single, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { Observable, Subject, bufferTime, filter, map, scan, single, switchMap, take, tap, withLatestFrom } from 'rxjs';
 import { Concepts } from './concept';
 import { ActionController, createActionController$, createActionControllerForEach$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
@@ -103,6 +103,7 @@ export const createMethodBuffer =
     const defaultSubject = new Subject<Action>();
     const defaultMethod: Method = defaultSubject.pipe(
       bufferTime(duration),
+      filter(actions => actions.length > 0),
       switchMap(actions => createActionControllerForEach$(actions)),
       map((action: Action) => {
         // Logically Determined axiumConclude
@@ -121,7 +122,7 @@ export const createMethodBuffer =
         }
       }),
     );
-    defaultMethod.toString = () => ('Buffer Method with State');
+    defaultMethod.toString = () => ('Debounce Method');
     return [defaultMethod, defaultSubject];
   };
 export const createMethodBufferWithState =

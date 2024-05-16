@@ -86,16 +86,24 @@ export const createActionController$ = (act: Action, controlling: (controller: A
 export class ActionControllerForEach extends Subject<Action> {
   constructor(actions: Action[]) {
     super();
-    actions.forEach(action => {
-      if (action.expiration < Date.now()) {
-        this.fire(action);
-      } else if (action.strategy) {
-        this.fire(
-          strategyFailed(action.strategy,
-            strategyData_appendFailure(action.strategy, failureConditions.axiumExpired)));
-      }
-    });
+    setTimeout(() => {
+      actions.forEach(action => {
+        if (action.expiration < Date.now()) {
+          this.fire(action);
+        } else if (action.strategy) {
+          this.fire(
+            strategyFailed(action.strategy,
+              strategyData_appendFailure(action.strategy, failureConditions.axiumExpired)));
+        } else {
+          this.fire(action);
+        }
+      });
+      this.complete();
+    }, 0);
   }
+  // next(action: Action[]) {
+
+  // }
   fire(action: Action) {
     if (!this.closed) {
       const { observers } = this;
@@ -103,7 +111,6 @@ export class ActionControllerForEach extends Subject<Action> {
       for (let i = 0; i < len; i++) {
         observers[i].next(action);
       }
-      this.complete();
     }
   }
 }
