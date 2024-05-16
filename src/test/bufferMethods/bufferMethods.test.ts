@@ -11,7 +11,14 @@ import { createExperimentConcept, createExperimentState } from '../../concepts/e
 import { createAxium } from '../../model/axium';
 import { selectState } from '../../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
-import { experimentBufferMultiplyByCountFromConcepts, experimentBufferMultiplyByCountFromConceptsQuality } from './qualities/bufferMultiplyByCountFromConceptsAction.quality';
+import {
+  experimentAsyncBufferMultiplyByCountFromConcepts,
+  experimentAsyncBufferMultiplyByCountFromConceptsQuality
+} from './qualities/asyncBufferMultiplyByCountFromConceptsAction.quality';
+import {
+  experimentBufferMultiplyByCountFromConcepts,
+  experimentBufferMultiplyByCountFromConceptsQuality
+} from './qualities/bufferMultiplyByCountFromConceptsAction.quality';
 import { experimentBufferNextAction, experimentBufferNextActionQuality } from './qualities/bufferSomeAction.quality';
 
 test('Buffer method periodic count', (done) => {
@@ -118,5 +125,62 @@ test('Buffer method with concept towards final multiply of count', (done) => {
       plan.conclude();
     })
   ]);
+});
+
+test('Buffer method with concept towards final multiply of count', (done) => {
+  const experiment = createExperimentConcept(createExperimentState(), [experimentAsyncBufferMultiplyByCountFromConceptsQuality]);
+  const axium = createAxium('Experiment method buffer defer multiply', [createCounterConcept(), experiment], {
+    // logActionStream: true
+  });
+  const plan = axium.plan('Experiment buffer multiply by 2 from concept state after 10ms', [
+    stageWaitForOpenThenIterate(() => axiumKick()),
+    createStage((_, dispatch) => {
+      dispatch(counterSetCount({
+        newCount: 2
+      }), {
+        iterateStage: true,
+      });
+    }),
+    createStage((concepts, dispatch) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      expect(counterState?.count).toBe(2);
+      dispatch(experimentAsyncBufferMultiplyByCountFromConcepts(), {
+        iterateStage: true,
+      });
+    }),
+    createStage((concepts, dispatch) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      expect(counterState?.count).toBe(2);
+      dispatch(experimentAsyncBufferMultiplyByCountFromConcepts(), {
+        iterateStage: true,
+      });
+    }),
+    createStage((concepts, dispatch) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      expect(counterState?.count).toBe(2);
+      dispatch(experimentAsyncBufferMultiplyByCountFromConcepts(), {
+        iterateStage: true,
+      });
+    }),
+    createStage((concepts, _dispatch, changes) => {
+      const counterState = selectState<CounterState>(concepts, counterName);
+      console.log('CHECK STATE', counterState);
+      if (changes.length > 0) {
+        expect(counterState?.count).toBe(16);
+        setTimeout(() => {
+          plan.conclude();
+          axium.close();
+          done();
+        }, 10);
+      }
+    }, {selectors: [counterSelectCount], beat: 200}),
+    createStage(() => {
+      plan.conclude();
+    })
+  ]);
+  // axium.subscribe(c => {
+  //   const s = getAxiumState(c);
+  //   console.log(s.head, s.body, s.tail);
+  // });
 });
 /*#>*/

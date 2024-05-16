@@ -3,12 +3,11 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 the dispatch of an action assigned to payload.
 $>*/
 /*<#*/
-import { defaultReducer, nullReducer } from '../../../model/concept';
-import { createMethodBuffer, createMethodBufferWithConcepts } from '../../../model/method';
+import { defaultReducer } from '../../../model/concept';
+import { createMethodBufferWithConcepts } from '../../../model/method';
 import { createActionNode, createStrategy, strategyBegin, } from '../../../model/actionStrategy';
-import { createQualitySet, createQualitySetWithPayload } from '../../../model/quality';
-import { Action } from '../../../model/action';
-import { selectPayload, selectState } from '../../../model/selector';
+import { createQualitySet } from '../../../model/quality';
+import { selectState } from '../../../model/selector';
 import { CounterState, counterName } from '../../../concepts/counter/counter.concept';
 import { counterMultiply } from '../../../concepts/counter/qualities/multiply.quality';
 

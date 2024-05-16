@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 the dispatch of an action assigned to payload.
 $>*/
 /*<#*/
-import { defaultReducer, nullReducer } from '../../../model/concept';
+import { defaultReducer } from '../../../model/concept';
 import { createMethodBuffer } from '../../../model/method';
 import { createActionNode, createStrategy, strategyBegin, } from '../../../model/actionStrategy';
 import { createQualitySetWithPayload } from '../../../model/quality';
@@ -19,7 +19,7 @@ export const [
   experimentBufferNextActionType,
   experimentBufferNextActionQuality
 ] = createQualitySetWithPayload<ExperimentBufferNextActionPayload>({
-  type: 'Experiment will debounce incoming actions within set duration',
+  type: 'Experiment will buffer incoming actions for a set duration',
   reducer: defaultReducer,
   methodCreator: () => createMethodBuffer((action) => {
     const act = selectPayload<ExperimentBufferNextActionPayload>(action).action;

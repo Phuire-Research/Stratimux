@@ -4,7 +4,7 @@ This file hold a series of helper functions that enable users to quickly create 
 within their own defined qualities.
 $>*/
 /*<#*/
-import { Observable, Subject, bufferTime, filter, map, scan, single, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { Observable, Subject, bufferTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
 import { Concepts } from './concept';
 import { ActionController, createActionController$, createActionControllerForEach$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
@@ -191,7 +191,7 @@ export const createAsyncMethodBuffer =
     const defaultMethod: Method = defaultSubject.pipe(
       bufferTime(duration),
       switchMap(actions => createActionControllerForEach$(actions)),
-      switchMap((act) => {
+      mergeMap((act) => {
         return createActionController$(act, (controller: ActionController, action: Action) => {
           asyncMethod(controller, action);
         });
@@ -209,7 +209,7 @@ export const createAsyncMethodBufferWithState =
       switchMap(actions => createActionControllerForEach$(actions)),
       withLatestFrom(concepts$),
       map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      switchMap(([act, state] : [Action, T]) => {
+      mergeMap(([act, state] : [Action, T]) => {
         return createActionController$(act, (controller: ActionController, action: Action) => {
           asyncMethodWithState(controller, action, state);
         });
@@ -226,11 +226,15 @@ export const createAsyncMethodBufferWithConcepts =
       bufferTime(duration),
       switchMap(actions => createActionControllerForEach$(actions)),
       withLatestFrom(concepts$),
-      switchMap(([act, concepts] : [Action, Concepts]) => {
+      mergeMap(([act, concepts] : [Action, Concepts]) => {
         return createActionController$(act, (controller: ActionController, action: Action) => {
           asyncMethodWithConcepts(controller, action, concepts, semaphore);
         });
-      })
+      }),
+      // map(([action, boolean], i) => {
+      //   console.log('CHECK THIS MAP', action, boolean, i);
+      //   return [action, boolean];
+      // }),
     );
     defaultMethod.toString = () => ('Async Buffer Method with Concepts');
     return [defaultMethod, defaultSubject];

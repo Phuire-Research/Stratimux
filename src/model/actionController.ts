@@ -8,7 +8,7 @@ $>*/
 /*<#*/
 import { Action, axiumBadAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
-import { failureConditions, strategyData_appendFailure, strategyData_unifyData } from './actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
 export class ActionController extends Subject<[Action, boolean]> {
   expiration: number;
@@ -54,6 +54,7 @@ export class ActionController extends Subject<[Action, boolean]> {
    * Fires once and then completes.
    */
   fire(action: Action) {
+    console.log('FIRE!', action.type);
     if (!this.closed) {
       if (!this.expired && this.timer) {
         clearTimeout(this.timer);

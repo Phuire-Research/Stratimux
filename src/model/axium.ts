@@ -65,6 +65,7 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
 };
 
 export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], action$: Subject<Action>, action: Action, async: boolean) => {
+  console.log('HITTING', action, async);
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType

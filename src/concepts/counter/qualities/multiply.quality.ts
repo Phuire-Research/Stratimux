@@ -20,6 +20,7 @@ export const [
   type: 'Counter Multiply',
   reducer: (state: CounterState, action) => {
     const {by} = selectPayload<CounterMultiplyPayload>(action);
+    console.log(state.count, 'by', by);
     return {
       ...state,
       count: state.count * by
