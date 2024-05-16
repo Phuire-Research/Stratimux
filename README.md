@@ -49,10 +49,9 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### Consistency Update v0.1.70 5/16/2024
-* Added new buffer method series that will delay the dispatch of some possible set of actions for a period of time.
-  * **NOTE CURRENTLY INVESTIGATING WHY BUFFER WORKS IN ISOLATION, BUT NOT IN A COMPLEX SET UP**
-* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts. 
+### Consistency Update v0.1.71 5/16/2024
+* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts.
+* Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
 ### v0.1.69 5/15/2024
 * Added priority to axium strategies.
 * Improved consistency of logic due the above change.
