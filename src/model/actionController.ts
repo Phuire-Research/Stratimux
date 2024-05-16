@@ -8,7 +8,7 @@ $>*/
 /*<#*/
 import { Action, axiumBadAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
-import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+import { failureConditions, strategyData_appendFailure, strategyData_unifyData } from './actionStrategyData';
 
 export class ActionController extends Subject<[Action, boolean]> {
   expiration: number;
@@ -80,6 +80,36 @@ export const createActionController$ = (act: Action, controlling: (controller: A
       controlling(ctrl, act);
     }
   }, 0);
+  return ctrl;
+};
+
+export class ActionControllerForEach extends Subject<Action> {
+  constructor(actions: Action[]) {
+    super();
+    actions.forEach(action => {
+      if (action.expiration < Date.now()) {
+        this.fire(action);
+      } else if (action.strategy) {
+        this.fire(
+          strategyFailed(action.strategy,
+            strategyData_appendFailure(action.strategy, failureConditions.axiumExpired)));
+      }
+    });
+  }
+  fire(action: Action) {
+    if (!this.closed) {
+      const { observers } = this;
+      const len = observers.length;
+      for (let i = 0; i < len; i++) {
+        observers[i].next(action);
+      }
+      this.complete();
+    }
+  }
+}
+
+export const createActionControllerForEach$ = (acts: Action[]) => {
+  const ctrl = new ActionControllerForEach(acts);
   return ctrl;
 };
 

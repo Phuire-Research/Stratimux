@@ -49,6 +49,8 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### Consistency Update v0.1.70 5/16/2024
+* Added new buffer method series that will delay the dispatch of some possible set of actions for a period of time.
 ### v0.1.69 5/15/2024
 * Added priority to axium strategies.
 * Improved consistency of logic due the above change.

@@ -182,7 +182,16 @@ export const createAsyncMethodThrottle =
 export const createAsyncMethodThrottleWithState =
   (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
     void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
-
+export const createMethodBuffer =
+  (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
+export const createMethodBufferWithState =
+  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
+    : [Method, Subject<Action>] => {}
+export const createAsyncMethodBuffer =
+  (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
+export const createAsyncMethodBufferWithState =
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
+    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 ```
 * createMethod - Your standard method, be sure to handle the action.strategy via one of the strategy decision functions, in addition to passing the action if there is no attached strategy.
 * createMethodWithState - This will allow your method to have the most recent state to be accessed via the asyncMethod function.
@@ -198,6 +207,7 @@ export const createAsyncMethodThrottleWithState =
 * createMethodThrottleWithState- Fires the first action, alongside the most recent state, then filters rest as conclude.
 * createAsyncMethodThrottle - Asynchronously fires the first action, will filtering the rest for the set duration as conclude.
 * createAsyncMethodThrottleWithState - Fires the first action asynchronously with the most recent state, and filters action during the duration as conclude to remove stale tickers from ownership if loaded.
+* **Buffer Series** similar to debounce method series, but will issue each possible action that encounters the quality for a length of time. Note these will fail ActionStrategies whose time has expired.
 
 ## "Creator Functions"
 Note here this is merely a guideline to inform the creation of your strategies.
