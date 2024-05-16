@@ -55,12 +55,6 @@ export {
   createMethodDebounceWithConcepts,
   createAsyncMethodThrottleWithConcepts,
   createAsyncMethodDebounceWithConcepts,
-  createMethodBuffer,
-  createMethodBufferWithState,
-  createMethodBufferWithConcepts,
-  createAsyncMethodBuffer,
-  createAsyncMethodBufferWithConcepts,
-  createAsyncMethodBufferWithState,
   method
 } from './model/method';
 export {
