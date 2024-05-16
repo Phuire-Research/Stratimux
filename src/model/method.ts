@@ -231,10 +231,6 @@ export const createAsyncMethodBufferWithConcepts =
           asyncMethodWithConcepts(controller, action, concepts, semaphore);
         });
       }),
-      // map(([action, boolean], i) => {
-      //   console.log('CHECK THIS MAP', action, boolean, i);
-      //   return [action, boolean];
-      // }),
     );
     defaultMethod.toString = () => ('Async Buffer Method with Concepts');
     return [defaultMethod, defaultSubject];

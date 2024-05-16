@@ -20,7 +20,6 @@ export const [
   reducer: defaultReducer,
   methodCreator: (c, s) => createAsyncMethodBufferWithConcepts((controller, _, concepts) => {
     setTimeout(() => {
-      console.log('TIMEOUT ASYNC');
       const counterState = selectState<CounterState>(concepts, counterName);
       controller.fire(strategyBegin(createStrategy({
         initialNode: createActionNode(counterMultiply({

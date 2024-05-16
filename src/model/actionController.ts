@@ -54,7 +54,6 @@ export class ActionController extends Subject<[Action, boolean]> {
    * Fires once and then completes.
    */
   fire(action: Action) {
-    console.log('FIRE!', action.type);
     if (!this.closed) {
       if (!this.expired && this.timer) {
         clearTimeout(this.timer);

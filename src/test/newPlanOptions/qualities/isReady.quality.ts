@@ -11,7 +11,6 @@ export const experimentPlanOptionsIsReadyType = 'experimentPlanOptions is ready'
 export const experimentPlanOptionsIsReady = act.prepareActionCreator(experimentPlanOptionsIsReadyType);
 
 function experimentPlanOptionsIsReadyReducer(state: ExperimentPlanOptionsState, action: Action): ExperimentPlanOptionsState {
-  console.log('EXPERIMENT IS READY!!!');
   return {
     ...state,
     ready: true

@@ -65,7 +65,6 @@ export const ownershipMode: Mode = (
             finalMode([nextAction, concepts, action$, concepts$]);
           } else {
           // This assumes that the Strategy is accounting for the Block
-            // console.log('Check Action Failed1', action);
             [concepts, action] = checkIn(concepts, action);
             const nextAction = strategyFailed(
               strategy,
