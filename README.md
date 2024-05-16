@@ -51,6 +51,7 @@ When in doubt simplify.
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### Consistency Update v0.1.70 5/16/2024
 * Added new buffer method series that will delay the dispatch of some possible set of actions for a period of time.
+  * **NOTE CURRENTLY INVESTIGATING WHY BUFFER WORKS IN ISOLATION, BUT NOT IN A COMPLEX SET UP**
 * Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts. 
 ### v0.1.69 5/15/2024
 * Added priority to axium strategies.
