@@ -171,15 +171,25 @@ export {
   AxiumRegisterStagePlannerPayload,
   axiumRegisterStagePlannerType
 } from './concepts/axium/qualities/registerStagePlanner.quality';
-export { axiumClearDialog, axiumClearDialogType } from './concepts/axium/qualities/clearDialog.quality';
-export { axiumSetDefaultMode,
+export {
+  axiumClearDialog,
+  axiumClearDialogType
+} from './concepts/axium/qualities/clearDialog.quality';
+export {
+  axiumSetDefaultMode,
   axiumSetDefaultModeType,
   AxiumSetDefaultModePayload
 } from './concepts/axium/qualities/setDefaultMode.quality';
-export { axiumSetBlockingMode,
+export {
+  axiumSetBlockingMode,
   axiumSetBlockingModeType,
   AxiumSetBlockingModePayload
 } from './concepts/axium/qualities/setBlockingMode.quality';
+export {
+  axiumRegisterTimeOut,
+  AxiumRegisterTimeOutPayload,
+  axiumRegisterTimeOutType
+} from './concepts/axium/qualities/registerTimeOut.quality';
 // Strategies
 export {
   addConceptsToAddQueThenBlockStrategy,
@@ -189,7 +199,6 @@ export {
   addConceptsToRemovalQueThenBlockStrategy,
   addConceptsToRemovalQueThenBlockTopic
 } from './concepts/axium/strategies/removeConcept.strategy';
-
 // Counter
 export { CounterState, counterName, createCounterConcept } from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';

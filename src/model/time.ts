@@ -23,13 +23,16 @@ const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: n
   });
   axiumState.timer.shift();
   axiumState.timerLedger.delete(timed);
-  const timerKeys = Object.keys(axiumState.timerLedger);
+  const timerKeys: number[] = [];
+  axiumState.timerLedger.forEach((_, key) => {
+    timerKeys.push(key);
+  });
   if (timerKeys.length > 0) {
-    const timerList = timerKeys.map(t => Number(t)).sort((a, b) => a - b);
+    const timerList = timerKeys.sort((a, b) => a - b);
     const slot = axiumState.timerLedger.get(timerList[0]);
     if (slot) {
-      const someTime = slot[1] - Date.now();
-      axiumState.timer.push(setTimeout(() => handleTimedRun(axiumState, slot[0], slot[1]), someTime >= 0 ? someTime : 0));
+      const someTime = timerList[0] - Date.now();
+      axiumState.timer.push(setTimeout(() => handleTimedRun(axiumState, slot, timerList[0]), someTime >= 0 ? someTime : 0));
     }
   }
   if (axiumState.tailTimer.length === 0) {
@@ -48,35 +51,43 @@ export const axiumTimeOut = (concepts: Concepts, func: () => Action, timeOut: nu
   const timer = axiumState.timer.length > 0 ? axiumState.timer[0] : undefined;
   if (timer) {
     // If timer exists, first index of timerList would exist
-    const timerList = Object.keys(ledger).map(t => Number(t)).sort((a, b) => a - b);
+    const timerKeys: number[] = [];
+    axiumState.timerLedger.forEach((_, key) => {
+      timerKeys.push(key);
+    });
+    const timerList = timerKeys.sort((a, b) => a - b);
     if (timerList[0] > timed) {
       clearTimeout(timer);
       axiumState.timer.shift();
       const slot = axiumState.timerLedger.get(timed);
       if (slot) {
-        slot[0].push(func);
-        ledger.set(timed, [slot[0], timed]);
+        slot.push(func);
         axiumState.timer.push(setTimeout(() => {
-          handleTimedRun(axiumState, slot[0], timed);
+          handleTimedRun(axiumState, slot, timed);
         }, timeOut));
       } else {
-        ledger.set(timed, [[func], timed]);
+        ledger.set(timed, [func]);
+        const slotted = ledger.get(timed) as (() => Action)[];
         axiumState.timer.push(setTimeout(() => {
-          handleTimedRun(axiumState, [func], timed);
+          handleTimedRun(axiumState, slotted, timed);
         }, timeOut));
       }
     } else {
       const slot = axiumState.timerLedger.get(timed);
       if (slot) {
-        slot[0].push(func);
-        ledger.set(timed, [slot[0], timed]);
+        slot.push(func);
+        ledger.set(timed, slot);
+      } else {
+        ledger.set(timed, [func]);
       }
     }
   } else {
-    ledger.set(timed, [[func], timed]);
+    ledger.set(timed, [func]);
+    const slotted = ledger.get(timed) as (() => Action)[];
     axiumState.timer.push(setTimeout(() => {
-      handleTimedRun(axiumState, [func], timed);
+      handleTimedRun(axiumState, slotted, timed);
     }, timeOut));
   }
 };
+
 /*#>*/

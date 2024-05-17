@@ -112,31 +112,32 @@ export type AxiumState = {
 
 ## Axium Qualities for Internal Use
 Please avoid using these qualities, but are providing explanations to understand the inner workings of the axium.
-* addConceptsFromQue - This will be ran from the internal axium principle and take all concepts added to said que to include within the axium and increment the current generation.
-* appendActionListToDialog - Takes the final output of a strategy and appends such into a Stratimux dialog if storeDialog is set to True.
-* badAction - If logging is set to true, this will log any BadAction via its payload of the invalidated action that is created from the primeAction() helper function.
-* conclude - This is a pure action that has no reducer or method. And will only be issued upon the conclusion of an ActionStrategy. If ownership is part of the concept load. This allows for the conclude to clear the final action's locks via its OwnershipLedger Entries.
-* initializePrinciples - Is a delayed action to allow for the internal set up of the axium at run time.
-* open - Similar to conclude, notifies principles when the axium is open to their emissions. Part of the initialization, addConcept, and removeConcept strategies.
-* close - This will will cancel all internal subscriptions that the axium has access to. As well as all Steams will be completed. The external close() function that the createAxium supplies, dispatches this action. Or can be ran specially via an internal principle towards its governing axium or that of another axium that it is subscribed to.
-* removeConceptsViaQue - This will run via the internal axium principle. Whenever there is an addition to this remove que.
+* axiumAddConceptsFromQue - This will be ran from the internal axium principle and take all concepts added to said que to include within the axium and increment the current generation.
+* axiumAppendActionListToDialog - Takes the final output of a strategy and appends such into a Stratimux dialog if storeDialog is set to True.
+* axiumBadAction - If logging is set to true, this will log any BadAction via its payload of the invalidated action that is created from the primeAction() helper function.
+* axiumConclude - This is a pure action that has no reducer or method. And will only be issued upon the conclusion of an ActionStrategy. If ownership is part of the concept load. This allows for the conclude to clear the final action's locks via its OwnershipLedger Entries.
+* axiumInitializePrinciples - Is a delayed action to allow for the internal set up of the axium at run time.
+* axiumOpen - Similar to conclude, notifies principles when the axium is open to their emissions. Part of the initialization, addConcept, and removeConcept strategies.
+* axiumClose - This will will cancel all internal subscriptions that the axium has access to. As well as all Steams will be completed. The external close() function that the createAxium supplies, dispatches this action. Or can be ran specially via an internal principle towards its governing axium or that of another axium that it is subscribed to.
+* axiumRemoveConceptsViaQue - This will run via the internal axium principle. Whenever there is an addition to this remove que.
 
 ## Use With Care
 *These are part of the add and remove concept strategies. And while internal could be used if required.*
-* setBlockingMode - Sets the mode to blocking and open to False. This would notify any principles to cease detecting for changes. This is part of the add and remove concept strategies. And while internal could be used if required.
-* setDefaultMode - Sets the modeIndex to the defaultModeIndex and open to True. This informs principles that it is clear to detect changes.
+* axiumSetBlockingMode - Sets the mode to blocking and open to False. This would notify any principles to cease detecting for changes. This is part of the add and remove concept strategies. And while internal could be used if required.
+* axiumSetDefaultMode - Sets the modeIndex to the defaultModeIndex and open to True. This informs principles that it is clear to detect changes.
 
 ## Useful Axium Qualities
-* open - Sets axium open property by default to True if no payload is supplied. Must be used after setBlockingMode in a strategy to reenable functionality of principles and external subscribers.
-* log - Merely Logs the action, is useful for debugging ActionStrategies as it logs attached Strategy, its current ActionList, and any addition action qualities.
-* preClose - Will prompt the axium to close and disengage all active subscriptions, while notifying subscribers that their concept has been removed.
-* setMode - If your concept requires a specific modification to the functionality of the stream. This will set the mode index to that stream. Specifically this shouldn't have to be used. But is left to the developer if they run into such a case.
-* setDefaultModeIndex - Should be used if your mode is to be considered the default mode of your application. For utilization within a strategy after setMode. Be sure to a run time search for your concept name and mode, after your concept is added via the addConcept strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the last go To for your applications functionality.
-* clearDialog - Clears the currently stored Stratimux dialog, may be used within a strategy.
-* clearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
-* clearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
-* clearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.plan(). Via their topic as payload and clears such.
-* kick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of Stratimux's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
+* axiumOpen - Sets axium open property by default to True if no payload is supplied. Must be used after setBlockingMode in a strategy to reenable functionality of principles and external subscribers.
+* axiumLog - Merely Logs the action, is useful for debugging ActionStrategies as it logs attached Strategy, its current ActionList, and any addition action qualities.
+* axiumPreClose - Will prompt the axium to close and disengage all active subscriptions, while notifying subscribers that their concept has been removed.
+* axiumSetMode - If your concept requires a specific modification to the functionality of the stream. This will set the mode index to that stream. Specifically this shouldn't have to be used. But is left to the developer if they run into such a case.
+* axiumSetDefaultModeIndex - Should be used if your mode is to be considered the default mode of your application. For utilization within a strategy after setMode. Be sure to a run time search for your concept name and mode, after your concept is added via the addConcept strategy found below. Be mindful that modeName is just your Concept Name and the creation of new Modes should be the last go To for your applications functionality.
+* axiumClearDialog - Clears the currently stored Stratimux dialog, may be used within a strategy.
+* axiumClearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
+* axiumClearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
+* axiumClearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.plan(). Via their topic as payload and clears such.
+* axiumKick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of Stratimux's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
+* axiumRegisterTimeOut - This will call the axiumTimeOut function on the incoming payload's act and timeOut properties. Then will succeed a strategy if present.
 
 ## Axium Strategies Concept Set Transformation
 ```typescript
