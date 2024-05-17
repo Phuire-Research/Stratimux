@@ -36,6 +36,7 @@ import { axiumRegisterStagePlannerQuality } from './qualities/registerStagePlann
 import { axiumKickQuality } from './qualities/kick.quality';
 import { axiumPreCloseQuality } from './qualities/preClose.quality';
 import { axiumStitchQuality } from './qualities/stitch.quality';
+import { axiumRegisterTimeOutQuality } from './qualities/registerTimeOut.quality';
 
 export type NamedSubscription = {
   name: string;
@@ -73,7 +74,7 @@ export type AxiumState = {
   badPlans: Plan[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
-  timerLedger: Map<number, [(() => Action)[], number]>
+  timerLedger: Map<number, (() => Action)[]>
   head: Action[];
   body: Action[];
   tail: Action[];
@@ -148,7 +149,8 @@ export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?
       axiumClearBadActionTypeFromBadActionListQuality,
       axiumClearBadStrategyTopicFromBadActionListQuality,
       axiumClearBadPlanFromBadPlanListQuality,
-      axiumStitchQuality
+      axiumStitchQuality,
+      axiumRegisterTimeOutQuality
     ],
     [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]
