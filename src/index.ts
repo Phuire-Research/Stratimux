@@ -80,10 +80,6 @@ export {
 } from './model/action';
 export {
   createConcept,
-  createQuality,
-  nullReducer,
-  defaultReducer,
-  defaultMethodCreator,
   isConceptLoaded,
   areConceptsLoaded,
   unifyConcepts,
@@ -106,7 +102,11 @@ export type {
 } from './model/concept';
 export {
   createQualitySet,
-  createQualitySetWithPayload
+  createQualitySetWithPayload,
+  defaultReducer,
+  nullReducer,
+  defaultMethodCreator,
+  quality
 } from './model/quality';
 export type { KeyedSelector } from './model/selector';
 export {

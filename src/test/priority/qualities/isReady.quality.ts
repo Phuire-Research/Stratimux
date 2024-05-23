@@ -4,6 +4,7 @@ $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
 import { concept } from '../../../model/concept';
+import { quality } from '../../../model/quality';
 import { ExperimentPriorityState } from '../priority.concept';
 
 export const experimentPriorityIsReadyType = 'experimentPriority is ready';
@@ -17,7 +18,7 @@ function experimentPriorityIsReadyReducer(state: ExperimentPriorityState, action
   };
 }
 
-export const experimentPriorityIsReadyQuality = concept.createQuality(
+export const experimentPriorityIsReadyQuality = quality.create(
   experimentPriorityIsReadyType,
   experimentPriorityIsReadyReducer,
 );

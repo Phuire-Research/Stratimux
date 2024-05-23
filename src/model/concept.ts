@@ -247,52 +247,6 @@ export const getConceptSemaphore = (concepts: Concepts, conceptName: string): nu
   return -1;
 };
 
-export function createQuality(
-  actionType: ActionType,
-  reducer: Reducer,
-  methodCreator?: MethodCreator,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyedSelectors?: KeyedSelector[],
-  meta?: Record<string,unknown>,
-  analytics?: Record<string,unknown>,
-): Quality {
-  return {
-    actionType,
-    reducer,
-    methodCreator,
-    keyedSelectors,
-    meta,
-    analytics
-  };
-}
-
-export function defaultReducer(state: unknown, _: Action) {
-  return state;
-}
-defaultReducer.toString = () => ('Default Reducer');
-
-export function nullReducer(_: unknown, __: Action) {
-  return null;
-}
-nullReducer.toString = () => ('Null Reducer');
-
-export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
-  const defaultSubject = new Subject<Action>();
-  const defaultMethod: Method = defaultSubject.pipe(
-    map((action: Action) => {
-      if (action.strategy) {
-        return [strategySuccess(action.strategy), false];
-      }
-      return [{
-        ...action,
-        type: axiumConcludeType
-      }, false];
-    }),
-  );
-
-  defaultMethod.toString = () => ('Default Method');
-  return [defaultMethod, defaultSubject];
-};
 
 export const isConceptLoaded = (concepts: Concepts, conceptName: string): boolean => {
   const conceptKeys = Object.keys(concepts);
@@ -390,9 +344,6 @@ export const qualityToString = (quality: Quality) => () => {
 export const concept = {
   create: createConcept,
   unify: unifyConcepts,
-  createQuality,
-  defaultReducer,
-  defaultMethodCreator,
   isLoaded: isConceptLoaded,
   areLoaded: areConceptsLoaded,
   forEach: forEachConcept,
