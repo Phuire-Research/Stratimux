@@ -6,25 +6,28 @@ $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concepts } from './concept';
-import { Action, primeAction } from './action';
+import { Action, Actions, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
+import { KeyedSelectors } from './selector';
 
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concepts,
   concept$: UnifiedSubject,
-  semaphore: number,
+  actions: Actions,
+  keyedSelectors: KeyedSelectors
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concepts,
   concepts$: UnifiedSubject,
-  conceptSemaphore: number,
+  actions: Actions,
+  keyedSelectors: KeyedSelectors
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
-    principleFunc(obs, concepts, concepts$, conceptSemaphore);
+    principleFunc(obs, concepts, concepts$, actions, keyedSelectors);
   });
 }
 

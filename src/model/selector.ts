@@ -19,6 +19,7 @@ export type KeyedSelector = {
   setKeys?: (number | string)[]
   setSelector?: SelectorFunction
 };
+export type KeyedSelectors =  Record<string, KeyedSelector>;
 
 /**
  * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage

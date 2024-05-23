@@ -33,6 +33,8 @@ export type Action = {
     origin?: string;
 };
 
+export type Actions = Record<string, ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>>;
+
 export type ActionOptions = {
     semaphore?: [number, number, number, number];
     conceptSemaphore?: number;

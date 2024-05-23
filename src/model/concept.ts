@@ -60,7 +60,7 @@ export function createConcept(
   qualities?: Quality[],
   principles?: PrincipleFunction[],
   mode?: Mode[],
-  meta?: Record<string,unknown>
+  meta?: Record<string,unknown>,
 ): Concept {
   if (mode) {
     mode.forEach((m, i) => {
