@@ -88,6 +88,9 @@ export const HandleOrigin = (state: AxiumState, action: Action) => {
 };
 
 export const HandleHardOrigin = (state: AxiumState, action: Action) => {
+  // Fill Bucket
+  // Empty Bucket
+  // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
   const {
     body,
     tail
@@ -96,7 +99,7 @@ export const HandleHardOrigin = (state: AxiumState, action: Action) => {
   const origin = action.origin?.split('+')[0];
   for (const [i, a] of body.entries()) {
     const aOrigin = a.origin?.split('+')[0];
-    if (aOrigin && a.origin === origin) {
+    if (aOrigin !== undefined && aOrigin === origin) {
       body[i] = action;
       found = true;
       break;
@@ -105,7 +108,7 @@ export const HandleHardOrigin = (state: AxiumState, action: Action) => {
   if (!found) {
     for (const [i, a] of tail.entries()) {
       const aOrigin = a.origin?.split('+')[0];
-      if (aOrigin && aOrigin === action.origin) {
+      if (aOrigin !== undefined && aOrigin === action.origin) {
         body[i] = action;
         found = true;
         break;
@@ -273,13 +276,7 @@ export function createAxium(
       // Would be notifying methods
       if (getAxiumState(_concepts).logActionStream) {
         console.log(
-          'ACTION STREAM: ',
-          ' type: ', action.type,
-          ' payload: ', action.payload,
-          ' semaphore: ', action.semaphore,
-          ' expiration:', action.expiration,
-          ' priority: ', action.priority,
-          ' origin: ', action.origin,
+          'ACTION STREAM: ', action,
           ' topic: ', action.strategy?.topic
         );
       }
