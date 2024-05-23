@@ -4,7 +4,7 @@ generate a quality that will clear the provided stubs from the current Ownership
 If no tickets exist within a line, delete that line from the ledger.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
 import { selectPayload } from '../../../model/selector';

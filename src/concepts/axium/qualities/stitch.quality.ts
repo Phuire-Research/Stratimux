@@ -4,7 +4,7 @@ generate a quality that will silently start the next step in the strategy graph.
 $>*/
 /*<#*/
 import { strategySuccess } from '../../../model/actionStrategy';
-import { defaultReducer } from '../../../model/concept';
+import { defaultReducer } from '../../../model/quality';
 import { createMethod } from '../../../model/method';
 import { createQualitySet } from '../../../model/quality';
 

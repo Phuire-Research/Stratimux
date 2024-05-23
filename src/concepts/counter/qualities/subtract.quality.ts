@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux and Counter Concept, generate a quality that will decrement the state count by one.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { createQualitySet } from '../../../model/quality';

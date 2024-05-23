@@ -4,8 +4,7 @@ This quality is used to signify the next step within a plan if no state change i
 Likewise this quality is used to kick the axium into gear if currently resting due to its own halting behavior.
 $>*/
 /*<#*/
-import { defaultMethodCreator, defaultReducer } from '../../../model/concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualitySet, defaultMethodCreator, defaultReducer } from '../../../model/quality';
 
 export const [axiumKick, axiumKickType, axiumKickQuality] = createQualitySet({
   type: 'Kick Axium',

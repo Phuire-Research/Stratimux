@@ -4,7 +4,7 @@ generate a quality that set the state property count to the new count provided
 by the action's payload.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { selectPayload } from '../../../model/selector';

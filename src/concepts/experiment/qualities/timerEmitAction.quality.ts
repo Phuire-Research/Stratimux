@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 action in the incoming strategy via an inner timer.
 $>*/
 /*<#*/
-import { nullReducer } from '../../../model/concept';
+import { nullReducer } from '../../../model/quality';
 import { createAsyncMethod } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConclude } from '../../axium/qualities/conclude.quality';

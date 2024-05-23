@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { quality } from '../../../model/quality';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
 export const experimentToggleAllSevenType = 'experimentPriority Add value';
@@ -23,7 +23,7 @@ function experimentToggleAllSevenReducer(state: ExperimentPlanOptionsState, acti
   };
 }
 
-export const experimentToggleAllSevenQuality = concept.createQuality(
+export const experimentToggleAllSevenQuality = quality.create(
   experimentToggleAllSevenType,
   experimentToggleAllSevenReducer,
 );

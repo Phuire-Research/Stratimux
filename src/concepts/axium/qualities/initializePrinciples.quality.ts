@@ -4,13 +4,13 @@ generate a quality that will initialize principles loaded into the Axium's conce
 $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';
-import { Concept, Concepts, defaultMethodCreator, forEachConcept  } from '../../../model/concept';
+import { Concept, Concepts, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action, } from '../../../model/action';
 import { AxiumState, axiumName } from '../axium.concept';
 import { UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumInitializePrinciplesPayload = {
     concepts: Concepts;

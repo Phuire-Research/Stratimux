@@ -3,7 +3,6 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
 import { quality } from '../../../model/quality';
 import { ExperimentPriorityState } from '../priority.concept';
 

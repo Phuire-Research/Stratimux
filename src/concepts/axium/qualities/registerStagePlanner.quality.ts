@@ -4,7 +4,7 @@ generate a quality that will append a stage planner to the stagePlanners state p
 This allows for the closing of hot observables if the concept they are associated with is removed, or the axium itself is closed.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { StagePlanner } from '../../../model/stagePlanner';

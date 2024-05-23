@@ -4,7 +4,7 @@ generate a quality that will clear a specified plan from the badPlan list on sta
 This allows for generated plans via an embodied artificial intelligence to error correct on the fly for any poorly generated plans.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySet } from '../../../model/quality';

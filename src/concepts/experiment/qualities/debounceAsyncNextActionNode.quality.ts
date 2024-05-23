@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 in the ongoing strategy.
 $>*/
 /*<#*/
-import { defaultReducer } from '../../../model/concept';
+import { defaultReducer } from '../../../model/quality';
 import { createAsyncMethodDebounce } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createQualitySet } from '../../../model/quality';

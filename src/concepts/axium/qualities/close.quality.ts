@@ -4,11 +4,9 @@ generate a quality that will close the axium, if exit is set to true.
 This will also exit the current process.
 $>*/
 /*<#*/
-import { createQuality } from '../../../model/concept';
-import { Action, ActionType, prepareActionWithPayloadCreator } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySet, createQualitySetWithPayload } from '../../../model/quality';
+import { createQualitySetWithPayload } from '../../../model/quality';
 
 /**
  * @parm exit - If set to true, will exit the current process.

@@ -4,7 +4,7 @@ the incoming action's payload
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
 import { ExperimentPriorityState } from '../priority.concept';
 
@@ -30,7 +30,7 @@ function experimentPriorityAddValueReducer(state: ExperimentPriorityState, actio
   };
 }
 
-export const experimentPriorityAddValueQuality = concept.createQuality(
+export const experimentPriorityAddValueQuality = quality.create(
   experimentPriorityAddValueType,
   experimentPriorityAddValueReducer,
 );

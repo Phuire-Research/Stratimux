@@ -4,7 +4,7 @@ generate a quality that will remove a strategies topic from state's badAction li
 This allows for an Artificial Intelligence that is embodying Stratimux to correct generated strategies on the fly.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload } from '../../../model/quality';

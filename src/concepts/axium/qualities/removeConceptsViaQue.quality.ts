@@ -4,7 +4,7 @@ generate a quality that will remove concepts that are currently loaded in the Ax
 Will concluding plans and closing active subscriptions associated with the removed concepts.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { NamedSubscription } from '../axium.concept';
 import { AxiumState } from '../axium.concept';
 import { NamedStagePlanner } from '../../../model/stagePlanner';

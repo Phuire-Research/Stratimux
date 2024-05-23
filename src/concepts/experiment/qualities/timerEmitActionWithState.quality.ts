@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 next action in the ActionStrategy via a timeout. While appending to the strategy's data field the current mock value from state.
 $>*/
 /*<#*/
-import { Concepts, nullReducer } from '../../../model/concept';
+import { Concepts }  from '../../../model/concept';
 import { createAsyncMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConclude } from '../../axium/qualities/conclude.quality';
@@ -11,7 +11,7 @@ import { UnifiedSubject } from '../../../model/stagePlanner';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 import { ExperimentState } from '../experiment.concept';
 import { Subject } from 'rxjs';
-import { createQualitySet } from '../../../model/quality';
+import { createQualitySet, nullReducer } from '../../../model/quality';
 
 export const [
   experimentTimerEmitActionWithState,

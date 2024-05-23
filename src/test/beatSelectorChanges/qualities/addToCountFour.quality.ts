@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and BeatSelectorChang
 generate a quality that will increment the state's countFour by one.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { BeatSelectorChangesState } from '../beatSelectorChanges.concept';
 import { createQualitySet } from '../../../model/quality';
 

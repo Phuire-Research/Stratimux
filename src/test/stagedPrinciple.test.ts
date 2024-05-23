@@ -6,11 +6,12 @@ import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
-import { Action, ActionType, prepareActionCreator } from '../model/action';
+import { Action } from '../model/action';
 import { Subscriber } from 'rxjs';
-import { Concepts, createQuality } from '../model/concept';
+import { Concepts } from '../model/concept';
 import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
+import { createQualitySet } from '../model/quality';
 
 type ExperimentState = {
   mock: boolean;
@@ -18,15 +19,17 @@ type ExperimentState = {
 
 const createExperimentState = (): ExperimentState => ({ mock: false });
 
-const experimentMockToTrueType: ActionType = 'Experiment set mock to True';
-const experimentMockToTrue = prepareActionCreator(experimentMockToTrueType);
 function experimentMockToTrueReducer(state: ExperimentState, action: Action): ExperimentState {
   return {
     ...state,
     mock: true
   };
 }
-const experimentMockToTrueQuality = createQuality(experimentMockToTrueType, experimentMockToTrueReducer);
+const [
+  experimentMockToTrue,
+  experimentMockToTrueType,
+  experimentMockToTrueQuality
+] = createQualitySet({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
 
 test('Axium Principle Stage', (done) => {
   const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concepts, concept$: UnifiedSubject) => {

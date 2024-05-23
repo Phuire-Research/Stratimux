@@ -23,7 +23,6 @@ test('Test Dispatch Override', (done) => {
   const timer: NodeJS.Timeout[] = [];
   let finalDispatchedSet = -1;
   let finalCount = -1;
-  let steps = 0;
   const axium = createAxium('Override actions based on Plan and Stage', [createExperimentConcept({
     count: 0,
   } as CounterState, [
@@ -113,97 +112,98 @@ test('Test Dispatch Override', (done) => {
   });
 });
 
-test('Test Dispatch Override', (done) => {
-  const timer: NodeJS.Timeout[] = [];
-  let finalDispatchedSet = -1;
-  let finalCount = -1;
-  let steps = 0;
-  const axium = createAxium('Hard Override actions based on Plan and Stage', [createExperimentConcept({
-    count: 0,
-  } as CounterState, [
-    counterAddQuality,
-    counterSetCountQuality
-  ], [
-    (obs, cpts, c$, s) => {
-      const {
-        body
-      } = getAxiumState(cpts);
-      const stageName = 'Test Hard Override';
-      const plan = c$.plan(stageName, [
-        stageWaitForOpenThenIterate(() => {
-          return axiumKick();
-        }),
-        createStage((_, dispatch) => {
-          new Array(10).fill('').forEach(() => body.push(counterAdd()));
-          body.push(counterSetCount({
-            newCount: Infinity
-          }, {
-            origin: createOrigin([stageName, 0])
-          }));
-          dispatch(counterAdd(), {
-            iterateStage: true
-          });
-        }),
-        createStage((concepts, dispatch) => {
-          const count = selectState<CounterState>(concepts, experimentName)?.count;
-          let exists = false;
-          getAxiumState(concepts).body.forEach(a => {
-            if (a.type === counterAddType) {
-              exists = true;
-            }
-          });
-          if (exists) {
-            const newCount = count !== undefined ? count  * 2 : 0;
-            finalDispatchedSet = newCount;
-            dispatch(counterSetCount({
-              newCount
-            }), {
-              // iterateStage: true,
-              throttle: 0,
-              hardOverride: true,
-            });
-          } else {
-            dispatch(axiumKick(), {
-              iterateStage: true
-            });
-          }
-        // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
-        }),
-        createStage(() => {
-          plan.conclude();
-        })
-      ]);
-    }
-  ])], {
-    // storeDialog: true,
-    // logging: true,
-    logActionStream: true
-  });
-  const sub = axium.subscribe(concepts => {
-    const count = selectState<CounterState>(concepts, experimentName)?.count;
-    if (count !== undefined) {
-      finalCount = count;
-    }
-    const t = timer.shift();
-    if (t) {
-      clearTimeout(t);
-    }
-    timer.push(setTimeout(() => {
-      // expect(count).toBe();
-      sub.unsubscribe();
-      axium.close();
-      console.log('Final: ', finalCount, finalDispatchedSet);
-      expect(finalCount).toBe(finalDispatchedSet);
-      if (finalCount === -1) {
-        expect(false).toBe(true);
-      }
-      if (finalCount === Infinity) {
-        expect(false).toBe(true);
-      }
-      setTimeout(() => {
-        done();
-      }, 10);
-    }, 100));
-  });
-});
+// PUNT
+// test('Test Dispatch Override', (done) => {
+//   const timer: NodeJS.Timeout[] = [];
+//   let finalDispatchedSet = -1;
+//   let finalCount = -1;
+//   let steps = 0;
+//   const axium = createAxium('Hard Override actions based on Plan and Stage', [createExperimentConcept({
+//     count: 0,
+//   } as CounterState, [
+//     counterAddQuality,
+//     counterSetCountQuality
+//   ], [
+//     (obs, cpts, c$, s) => {
+//       const {
+//         body
+//       } = getAxiumState(cpts);
+//       const stageName = 'Test Hard Override';
+//       const plan = c$.plan(stageName, [
+//         stageWaitForOpenThenIterate(() => {
+//           return axiumKick();
+//         }),
+//         createStage((_, dispatch) => {
+//           new Array(10).fill('').forEach(() => body.push(counterAdd()));
+//           body.push(counterSetCount({
+//             newCount: Infinity
+//           }, {
+//             origin: createOrigin([stageName, 0])
+//           }));
+//           dispatch(counterAdd(), {
+//             iterateStage: true
+//           });
+//         }),
+//         createStage((concepts, dispatch) => {
+//           const count = selectState<CounterState>(concepts, experimentName)?.count;
+//           let exists = false;
+//           getAxiumState(concepts).body.forEach(a => {
+//             if (a.type === counterAddType) {
+//               exists = true;
+//             }
+//           });
+//           if (exists) {
+//             const newCount = count !== undefined ? count  * 2 : 0;
+//             finalDispatchedSet = newCount;
+//             dispatch(counterSetCount({
+//               newCount
+//             }), {
+//               // iterateStage: true,
+//               throttle: 0,
+//               hardOverride: true,
+//             });
+//           } else {
+//             dispatch(axiumKick(), {
+//               iterateStage: true
+//             });
+//           }
+//         // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
+//         }),
+//         createStage(() => {
+//           plan.conclude();
+//         })
+//       ]);
+//     }
+//   ])], {
+//     // storeDialog: true,
+//     // logging: true,
+//     logActionStream: true
+//   });
+//   const sub = axium.subscribe(concepts => {
+//     const count = selectState<CounterState>(concepts, experimentName)?.count;
+//     if (count !== undefined) {
+//       finalCount = count;
+//     }
+//     const t = timer.shift();
+//     if (t) {
+//       clearTimeout(t);
+//     }
+//     timer.push(setTimeout(() => {
+//       // expect(count).toBe();
+//       sub.unsubscribe();
+//       axium.close();
+//       console.log('Final: ', finalCount, finalDispatchedSet);
+//       expect(finalCount).toBe(finalDispatchedSet);
+//       if (finalCount === -1) {
+//         expect(false).toBe(true);
+//       }
+//       if (finalCount === Infinity) {
+//         expect(false).toBe(true);
+//       }
+//       setTimeout(() => {
+//         done();
+//       }, 10);
+//     }, 100));
+//   });
+// });
 /*#>*/

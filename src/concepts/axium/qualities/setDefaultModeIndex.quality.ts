@@ -4,7 +4,7 @@ generate a quality that will set the default mode index to what is specified by
 the action's payload.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload } from '../../../model/quality';

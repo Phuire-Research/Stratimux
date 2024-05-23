@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 This is used to trouble shoot strategies or simply notify the log of different states.
 $>*/
 /*<#*/
-import { nullReducer } from '../../../model/concept';
+import { nullReducer } from '../../../model/quality';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
 import { createQualitySet } from '../../../model/quality';

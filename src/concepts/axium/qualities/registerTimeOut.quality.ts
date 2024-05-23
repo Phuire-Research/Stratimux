@@ -4,9 +4,8 @@ generate a quality that will register a subscription to the concepts$ stream.
 This allows for the clean closure of concepts that are removed or when the axium itself exits.
 $>*/
 /*<#*/
-import { defaultReducer, nullReducer } from '../../../model/concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualitySetWithPayload, defaultReducer } from '../../../model/quality';
 import { createMethodWithConcepts } from '../../../model/method';
 import { axiumTimeOut } from '../../../model/time';
 import { Action } from '../../../model/action';

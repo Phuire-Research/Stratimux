@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a quality that will back track the provided strategy.
 $>*/
 /*<#*/
-import { nullReducer } from '../../../model/concept';
+import { nullReducer } from '../../../model/quality';
 import { strategyBackTrack } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
 import { createQualitySet } from '../../../model/quality';

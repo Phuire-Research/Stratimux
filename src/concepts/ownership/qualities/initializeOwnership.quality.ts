@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 generate a quality that will simply set ownership's initialized property to true.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { createQualitySet } from '../../../model/quality';
 

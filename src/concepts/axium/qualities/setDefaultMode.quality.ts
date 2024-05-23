@@ -4,12 +4,12 @@ This mode likewise can be specified by changing the defaultModeIndex state prope
 $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';
-import { Concepts, defaultMethodCreator, forEachConcept } from '../../../model/concept';
+import { Concepts, forEachConcept } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { defaultMethodSubscription, getAxiumState } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumSetDefaultModePayload = {
     concepts: Concepts

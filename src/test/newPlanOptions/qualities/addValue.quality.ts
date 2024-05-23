@@ -4,7 +4,7 @@ the incoming action's payload
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
@@ -30,7 +30,7 @@ function experimentPlanOptionsAddValueReducer(state: ExperimentPlanOptionsState,
   };
 }
 
-export const experimentPlanOptionsAddValueQuality = concept.createQuality(
+export const experimentPlanOptionsAddValueQuality = quality.create(
   experimentPlanOptionsAddValueType,
   experimentPlanOptionsAddValueReducer,
 );

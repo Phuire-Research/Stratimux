@@ -5,7 +5,7 @@ This allows for the clean closure of concepts that are removed or when the axium
 $>*/
 /*<#*/
 import { Subscription } from 'rxjs';
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload } from '../../../model/quality';

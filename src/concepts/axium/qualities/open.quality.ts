@@ -5,7 +5,7 @@ currently in blocking mode. This allows for subscribers to be notified of any ne
 Or simply that the axium is ready to receive actions.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload } from '../../../model/quality';
