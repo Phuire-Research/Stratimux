@@ -14,8 +14,7 @@ import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from '
 import { Action, ActionType, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { getAxiumState, isAxiumOpen } from './axium';
-import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
+import { HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
 
@@ -67,6 +66,8 @@ export type NamedStagePlanner = {
 }
 
 export type dispatchOptions = {
+  override?: boolean;
+  hardOverride?: boolean;
   runOnce?: boolean;
   throttle?: number;
   iterateStage?: boolean;
@@ -658,11 +659,21 @@ export class UnifiedSubject extends Subject<Concepts> {
         // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
         if (plan.stageFailed === -1) {
           // Will set a the current stage's priority if no priority is set.
+          action.origin = createOrigin([plan.title, plan.stage]);
+          const settleOrigin = () => {
+            if (options.hardOverride) {
+              HandleHardOrigin(axiumState, action);
+            } else if (options.override) {
+              HandleOrigin(axiumState, action);
+            } else {
+              action$.next(action);
+            }
+          };
           if (plan.stages[plan.stage].priority && action.priority === undefined) {
             action.priority = plan.stages[plan.stage].priority;
-            action$.next(action);
+            settleOrigin();
           } else {
-            action$.next(action);
+            settleOrigin();
           }
         }
       }

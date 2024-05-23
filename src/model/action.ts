@@ -28,8 +28,9 @@ export type Action = {
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
     expiration: number;
-    axium?: string;
     priority?: number;
+    axium?: string;
+    origin?: string;
 };
 
 export type ActionOptions = {
@@ -39,8 +40,9 @@ export type ActionOptions = {
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
     expiration?: number;
-    axium?: string;
     priority?: number;
+    axium?: string;
+    origin?: string;
 };
 
 export type ActionWithPayloadOptions<T extends Record<string, unknown>> = {
@@ -51,8 +53,9 @@ export type ActionWithPayloadOptions<T extends Record<string, unknown>> = {
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
     expiration?: number;
-    axium?: string;
     priority?: number;
+    axium?: string;
+    origin?: string;
 };
 
 const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
@@ -202,7 +205,8 @@ export function createAction<T extends Record<string, unknown>>(
       keyedSelectors,
       agreement,
       conceptSemaphore,
-      priority
+      priority,
+      origin
     } = options;
     return {
       type,
@@ -212,7 +216,8 @@ export function createAction<T extends Record<string, unknown>>(
       agreement,
       expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
       conceptSemaphore,
-      priority
+      priority,
+      origin
     };
   } else {
     return {

@@ -293,6 +293,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
   );
   if (strategy.currentNode.successNode !== null) {
     const nextNode = strategy.currentNode.successNode;
+    const origin = strategy.currentNode.action?.origin;
     let priority;
     if (nextNode.priority) {
       priority = nextNode.priority;
@@ -307,7 +308,8 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
         agreement: nextNode.agreement,
         semaphore: nextNode.semaphore,
         conceptSemaphore: nextNode.conceptSemaphore,
-        priority
+        priority,
+        origin
       }
     );
     nextNode.action = nextAction;
@@ -338,8 +340,12 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
 
       nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-      return strategyBegin(nextStrategy);
+
+      const act = strategyBegin(nextStrategy);
+      act.origin = strategy.currentNode.action?.origin;
+      return act;
     }
+    const origin = strategy.currentNode.action?.origin;
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
       successNode: null,
@@ -347,7 +353,9 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
       lastActionNode: strategy.currentNode,
       priority: strategy.priority
     };
-    conclude.action = createAction(conclude.actionType);
+    conclude.action = createAction(conclude.actionType, {
+      origin
+    });
     conclude.action.priority = strategy.priority;
     conclude.action.strategy = {
       ...strategy,
@@ -376,6 +384,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
     strategy.currentNode.failureNode !== null
   ) {
     const nextNode = strategy.currentNode.failureNode;
+    const origin = strategy.currentNode.action?.origin;
     let priority;
     if (nextNode.priority) {
       priority = nextNode.priority;
@@ -390,7 +399,8 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
         agreement: nextNode.agreement,
         semaphore: nextNode.semaphore,
         conceptSemaphore: nextNode.conceptSemaphore,
-        priority
+        priority,
+        origin
       }
     );
     nextNode.action = nextAction;
@@ -423,7 +433,9 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
 
       nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-      return strategyBegin(nextStrategy);
+      const act = strategyBegin(nextStrategy);
+      act.origin = strategy.currentNode.action?.origin;
+      return act;
     }
     const conclude: ActionNode = {
       actionType: axiumConcludeType,
@@ -470,6 +482,7 @@ export const strategyDecide = (
       decisionNodes[decideKey] !== null
     ) {
       const nextNode = decisionNodes[decideKey];
+      const origin = strategy.currentNode.action?.origin;
       let priority;
       if (nextNode.priority) {
         priority = nextNode.priority;
@@ -484,7 +497,8 @@ export const strategyDecide = (
           agreement: nextNode.agreement,
           semaphore: nextNode.semaphore,
           conceptSemaphore: nextNode.conceptSemaphore,
-          priority
+          priority,
+          origin
         }
       );
       nextNode.action = nextAction;
@@ -516,7 +530,10 @@ export const strategyDecide = (
     ];
     nextStrategy.stubs = strategy.stubs;
     nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-    return strategyBegin(nextStrategy);
+
+    const act = strategyBegin(nextStrategy);
+    act.origin = strategy.currentNode.action?.origin;
+    return act;
   }
   const conclude: ActionNode = {
     actionType: axiumConcludeType,
@@ -525,7 +542,8 @@ export const strategyDecide = (
     lastActionNode: strategy.currentNode,
     priority: strategy.priority
   };
-  conclude.action = createAction(conclude.actionType);
+  const origin = strategy.currentNode.action?.origin;
+  conclude.action = createAction(conclude.actionType, {origin});
   conclude.action.priority = strategy.priority;
   conclude.action.strategy = {
     ...strategy,
@@ -575,9 +593,9 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
       ];
       strategy.step = strategy.step ? strategy.step + 1 : 1;
     }
-    return newNode.action as Action;
+    return {...newNode.action} as Action;
   } else {
-    return axiumConclude();
+    return axiumConclude({origin: _strategy.currentNode.action?.origin});
   }
 };
 

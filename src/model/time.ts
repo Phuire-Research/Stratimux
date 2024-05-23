@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { Action, createAction } from './action';
-import { getAxiumState } from './axium';
+import { getAxiumState, tailWhip } from './axium';
 import { Concepts } from './concept';
 import { handlePriority, isPriorityValid } from './priority';
 
@@ -35,11 +35,7 @@ const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: n
       axiumState.timer.push(setTimeout(() => handleTimedRun(axiumState, slot, timerList[0]), someTime >= 0 ? someTime : 0));
     }
   }
-  if (axiumState.tailTimer.length === 0) {
-    axiumState.tailTimer.push(setTimeout(() => {
-      axiumState.action$.next(createAction('Kick Axium'));
-    }, 3));
-  }
+  tailWhip(axiumState);
 };
 
 // This is treating setTimeout as if it is its own Time Axium

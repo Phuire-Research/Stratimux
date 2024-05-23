@@ -13,7 +13,7 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, createCacheSemaphores } from './action';
+import { Action, createAction, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
@@ -29,6 +29,95 @@ import { StagePlanner, Staging } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
+
+// eslint-disable-next-line no-shadow
+export enum AxiumOrigins {
+  strategyTail = 'strategyTail',
+  axiumHead = 'axiumHead'
+}
+
+export const tailWhip = (axiumState: AxiumState) => {
+  if (axiumState.tailTimer.length === 0) {
+    axiumState.tailTimer.push(setTimeout(() => {
+      axiumState.action$.next(createAction('Kick Axium'));
+    }, 3));
+  }
+};
+
+export const createOrigin = (location: unknown[]): string => {
+  let origin = '';
+  let addSign = false;
+  location.forEach(l => {
+    if (addSign) {
+      origin += '+' + l;
+    } else {
+      origin += l;
+      addSign = true;
+    }
+  });
+  return origin;
+};
+
+export const HandleOrigin = (state: AxiumState, action: Action) => {
+  const {
+    body,
+    tail
+  } = state;
+  let found = false;
+  for (const [i, a] of body.entries()) {
+    if (a.origin && a.origin === action.origin) {
+      body[i] = action;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    for (const [i, a] of tail.entries()) {
+      if (a.origin && a.origin === action.origin) {
+        body[i] = action;
+        found = true;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
+    body.push(action);
+  }
+  tailWhip(state);
+};
+
+export const HandleHardOrigin = (state: AxiumState, action: Action) => {
+  const {
+    body,
+    tail
+  } = state;
+  let found = false;
+  const origin = action.origin?.split('+')[0];
+  for (const [i, a] of body.entries()) {
+    const aOrigin = a.origin?.split('+')[0];
+    if (aOrigin && a.origin === origin) {
+      body[i] = action;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    for (const [i, a] of tail.entries()) {
+      const aOrigin = a.origin?.split('+')[0];
+      if (aOrigin && aOrigin === action.origin) {
+        body[i] = action;
+        found = true;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
+    body.push(action);
+  }
+  tailWhip(state);
+};
 
 export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], action: Action) => {
   if (
@@ -48,6 +137,7 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
       handlePriority(state, action);
       handlePriority(state, appendToDialog);
     } else {
+      action.origin = AxiumOrigins.strategyTail;
       tail.push(action);
       tail.push(appendToDialog);
     }
@@ -181,8 +271,21 @@ export function createAxium(
     )
     .subscribe(([action, _concepts]: [Action, Concepts]) => {
       // Would be notifying methods
+      if (getAxiumState(_concepts).logActionStream) {
+        console.log(
+          'ACTION STREAM: ',
+          ' type: ', action.type,
+          ' payload: ', action.payload,
+          ' semaphore: ', action.semaphore,
+          ' expiration:', action.expiration,
+          ' priority: ', action.priority,
+          ' origin: ', action.origin,
+          ' topic: ', action.strategy?.topic
+        );
+      }
       const _axiumState = _concepts[0].state as AxiumState;
       if (_axiumState.head.length === 0) {
+        action.origin = AxiumOrigins.axiumHead;
         _axiumState.head.push(action);
         if (_axiumState.tailTimer.length > 0) {
           const timer = _axiumState.tailTimer.shift();
@@ -191,9 +294,6 @@ export function createAxium(
           }
         }
         const modeIndex = _axiumState.modeIndex;
-        if (getAxiumState(_concepts).logActionStream) {
-          console.log('ACTION STREAM: ', action.type, action.payload, action.semaphore, action.strategy?.topic);
-        }
         const modes = _concepts[0].mode as Mode[];
         const mode = modes[modeIndex] as Mode;
         mode([action, _concepts, _axiumState.action$, _axiumState.concepts$]);
