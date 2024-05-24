@@ -73,11 +73,11 @@ When in doubt simplify.
 ### Developer Experience Update v0.1.~8
 * The Goal with the update is to remove the need for semaphores across the board.
 * There are two breaking changes planned:
-  * Principles - Here we will be adding the ability to access primed Actions and KeyedSelectors
-    * This will be accomplished via a specific type cast of a Actions and KeyedSelectors properties access from the PrincipleFunction
-  * Access - Is a new concept being unified into the Axium that will restrict what actions a foreign Axium may have access to.
-    * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change we will create the option to have varying degrees of access that is defined at the time of creation per Axium.
-    * We will be creating an access function that returns ActionCreators and Selectors
+  * Add the ability to access primed Actions and KeyedSelectors directly in principles, plans, and qualities.
+    * This will be accomplished via a specific type cast of a Actions and KeyedSelectors properties access directly from PrincipleFunction, or new **Access** helper function.
+  * Access - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
+    * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
+    * Create an access function that returns ActionCreators and Selectors
       * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium. 
 * Origin, Override, Hard Override
   * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
