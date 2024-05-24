@@ -49,6 +49,20 @@ When in doubt simplify.
 * [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## [Change Log](https://github.com/Phuire-Research/Stratimux/blob/main/CHANGELOG.md) ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### *Consistency Update* v0.1.72
+* Added a new Axium Quality: **axiumRegisterTimeOut**, that accepts an action and specified timeout that will run the axiumTimeOut function then succeed an incoming strategy if present.
+  * This likewise fulfills the original purpose of buffer, even in a complex scenario.
+### v0.1.71 5/16/2024
+* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts.
+* Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
+### v0.1.69 5/15/2024
+* Added priority to axium strategies.
+* Improved consistency of logic due the above change.
+* Exported **isAxiumOpen** helper function.
+### Strategy Priority v0.1.68 5/15/2024
+* Added priority to strategies, this priority will be assigned to each step issued by such.
+  * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
+  * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 ## Road Map
 ### Beyond v0.1.~8
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
@@ -66,7 +80,7 @@ When in doubt simplify.
     * We will be creating an access function that returns ActionCreators and Selectors
       * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium. 
 * Origin, Override, Hard Override
-  * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue.
+  * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
   * Hard Override - This dispatch setting is effectively a destructive halt. And will conclude all active strategies currently in que from a given concept. Made for Experts who require a hard shift pending a specific observation and can account for the destructive halt.
     * *Someone cuts you off while driving and the coffee you are drinking flies from the cupholder onto the dash, but didn't crash.*
 
