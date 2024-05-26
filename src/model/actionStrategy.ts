@@ -599,6 +599,21 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
   }
 };
 
+export const strategyDetermine = <T extends Record<string, unknown>>(
+  action: Action,
+  options: {
+    topic?: string,
+    priority?: number,
+    data?: T
+  }): Action => {
+  return strategyBegin(createStrategy({
+    topic: options.topic ? options.topic : 'STRATEGY DETERMINED',
+    initialNode: createActionNode(action),
+    priority: options.priority,
+    data: options.data
+  }));
+};
+
 /**
  * The main functionality of this helper function is to allow for asynchronous recursion within your strategies.
  *  As the difficulty of working with async code within a node, is that you must use a then operation
@@ -648,6 +663,7 @@ export const strategy = ({
   success: strategySuccess,
   failed: strategyFailed,
   decide: strategyDecide,
+  determine: strategyDetermine,
   punt: strategyPunt,
   sequence: strategySequence,
   backTrack: strategyBackTrack,

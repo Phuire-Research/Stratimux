@@ -125,6 +125,13 @@ function strategyBegin(strategy: ActionStrategy, data?: unknown): Action;
 function strategySuccess(strategy: ActionStrategy, data?: unknown): Action;
 function strategyFailed(strategy: ActionStrategy, data?: unknown): Action;
 function strategyDecide(strategy: ActionStrategy, decideKey: string, data?: unknown): Action;
+function strategyDetermine<T extends Record<string, unknown>>(
+  action: Action,
+  options: {
+    topic?: string,
+    priority?: number,
+    data?: T
+  }): Action = {}
 function strategyPunt(puntedStrategy: ActionStrategy, newStrategy: ActionStrategy): ActionStrategy;
 function strategySequence(strategies: ActionStrategy): ActionStrategy | undefined;
 function strategyRecurse(_strategy: ActionStrategy, control: {payload?: unknown, data?: Record<string, unknown>}): Action => {}
@@ -137,6 +144,7 @@ function strategyBackTrack(_strategy: ActionStrategy): Action => {}
 * strategySuccess - Initializes the successNode action, otherwise if null will conclude the Strategy by returning the conclude action. If ActionNode or Strategy's currentNode does not set its preposition, will set such to "Success with"
 * strategyFailed - Same as the above, but if the preposition is not set, will set such to "Failed With". And is the default ActionNode called if a lock is dictated while ownership is loaded.
 * strategyDecide - Decide key will override or be placed after the preposition if set. And will be used to return the next ActionNode that the key corresponds to. If null, conclude action will be returned.
+* strategyDetermine - Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * strategyPunt - Will return a new strategy with the old strategy within the puntedStrategy Field. That will execute once the new strategy concludes via the consuming functions. That will call strategyBegin on first index of puntedStrategies if present, then remove such from the list, and successNode/decisionNode/failureNode all point to null.
 * strategySequence - This will take a list of ActionStrategies and return the first strategy with the rest placed in order in the puntedStrategy property. These will fire upon each possible conclusion of the included strategies.
 * strategyRecurse - Used within specified qualities that have some controlling mechanism such as a self depleting list to allow the recursion to be halting complete. The main purpose of this helper function is to allow for asynchronous recursion. As methods force the user to use then function chaining over async await for promises. Maintains current action expiration upon each successive recursion and will fail the action if that expiration passes.

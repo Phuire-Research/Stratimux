@@ -21,6 +21,7 @@ export {
   strategySuccess,
   strategyFailed,
   strategyDecide,
+  strategyDetermine,
   strategyPunt,
   strategySequence,
   strategyBackTrack,
