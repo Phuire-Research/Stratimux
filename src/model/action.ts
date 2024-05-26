@@ -34,7 +34,7 @@ export type Action = {
 };
 
 export type Actions<T extends object> = {
-  [K in keyof T]: Record<string, ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>>
+  [K in keyof T]: ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>
 };
 
 export type ActionOptions = {

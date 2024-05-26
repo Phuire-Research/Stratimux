@@ -18,25 +18,25 @@ import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/co
 type F = <T extends object>(actions: Actions<T>) => Action;
 
 test('Quality Actions', (done) => {
-  const [one, two, quality] = createQualitySet({
+  const [one, two, something] = createQualitySet({
     type: 'Something',
     reducer: (state) => state
   });
   const qs = {
-    quality,
+    something,
   };
   const acts = {
-    something: quality.actionCreator
+    something: something.actionCreator
   };
-  expect(qs.quality.actionType).toBe(quality.actionType);
+  expect(qs.something.actionType).toBe(something.actionType);
 
   const f = (actions: Actions<typeof acts>) => {
-    actions.something;
-    return axiumConclude();
+    return actions.something({});
   };
   const c = createConcept<typeof acts>('Some', {}, qs);
   c.actions.something;
-  expect(f(c.actions).type).toBe(axiumConcludeType);
+  console.log(c.actions);
+  expect(f(c.actions).type).toBe('Something');
   done();
 });
 /*#>*/
