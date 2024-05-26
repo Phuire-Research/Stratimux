@@ -25,15 +25,12 @@ test('Quality Actions', (done) => {
   const qs = {
     something,
   };
-  const acts = {
-    something: something.actionCreator
-  };
   expect(qs.something.actionType).toBe(something.actionType);
 
-  const f = (actions: Actions<typeof acts>) => {
+  const f = (actions: Actions<typeof qs>) => {
     return actions.something({});
   };
-  const c = createConcept<typeof acts>('Some', {}, qs);
+  const c = createConcept<typeof qs>('Some', {}, qs);
   c.actions.something;
   console.log(c.actions);
   expect(f(c.actions).type).toBe('Something');
