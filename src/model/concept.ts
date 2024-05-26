@@ -5,7 +5,7 @@ A concept is composed of name, unified, state, qualities, semaphore, principles,
 $>*/
 /*<#*/
 import { Observable, Subject } from 'rxjs';
-import { Action, ActionType } from './action';
+import { Action, ActionCreator, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
@@ -29,8 +29,10 @@ export type Mode = ([action, concept, action$, concepts$]: [
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
-export type Quality = {
+export type Quality<T extends Record<string,unknown>> = {
   actionType: ActionType;
+  actionSemaphoreBucket: [number, number, number, number][];
+  actionCreator: ActionCreator | ActionCreatorWithPayload<T>;
   reducer: Reducer;
   toString: () => string;
   methodCreator?: MethodCreator;
@@ -41,27 +43,32 @@ export type Quality = {
   analytics?: Record<string,unknown>;
 };
 
-export type Concept = {
+export type Qualities = {
+  [s: string]: Quality<Record<string,unknown>>
+};
+
+export type Concept<T extends object> = {
   name: string;
   unified: string[];
   state: Record<string, unknown>;
-  qualities: Quality[];
+  actions: Actions<T>;
+  qualities: Quality<Record<string, unknown>>[];
   semaphore: number;
-  principles?: PrincipleFunction[];
+  principles?: PrincipleFunction<Record<string, unknown>>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
 
-export type Concepts = Record<number, Concept>;
+export type Concepts = Record<number, Concept<any>>;
 
-export function createConcept(
+export function createConcept<T extends object>(
   name: string,
   state: Record<string, unknown>,
-  qualities?: Quality[],
-  principles?: PrincipleFunction[],
+  _qualities?: Qualities,
+  principles?: PrincipleFunction<Record<string, unknown>>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
-): Concept {
+): Concept<T> {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -72,10 +79,19 @@ export function createConcept(
       p.toString = () => `PRINCIPLE: ${name} ${i}`;
     });
   }
+  const actions: Record<string, unknown> = {};
+  const qualities: Quality<Record<string, unknown>>[] = [];
+  if (_qualities) {
+    Object.keys(_qualities).forEach(q => {
+      actions[q] = _qualities[q].actionCreator;
+      qualities.push(_qualities[q]);
+    });
+  }
   return {
     name,
     unified: [],
     state,
+    actions: actions as Actions<T>,
     qualities: qualities ? qualities : [],
     semaphore: -1,
     principles,
@@ -88,10 +104,10 @@ export function createConcept(
  * This will remove any duplicate qualities, principles, and modes.
  * Note that for now the check for mode and principle are based on concept name and loaded index;
  */
-function filterSimilarQualities(concept: Concept) {
-  const newQualities: Quality[] = [];
+function filterSimilarQualities(concept: Concept<any>) {
+  const newQualities: Quality<Record<string, unknown>>[] = [];
   const newUnified: string[] = [];
-  const newPrinciples: PrincipleFunction[] = [];
+  const newPrinciples: PrincipleFunction<Record<string, unknown>>[] = [];
   const newMode: Mode[] = [];
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;
@@ -152,7 +168,7 @@ function filterSimilarQualities(concept: Concept) {
   return concept;
 }
 
-function unify(base: Concept, target: Concept): Concept {
+function unify<T extends object, K extends object>(base: Concept<T>, target: Concept<K>): Concept<T & K> {
   if (target.name !== '') {
     base.unified.push(target.name);
   }
@@ -168,6 +184,10 @@ function unify(base: Concept, target: Concept): Concept {
     ...base.qualities,
     ...target.qualities,
   ];
+  base.actions = {
+    ...base.actions,
+    ...target.actions
+  };
   if (target.principles) {
     if (base.principles) {
       base.principles = [
@@ -204,16 +224,16 @@ function unify(base: Concept, target: Concept): Concept {
       };
     }
   }
-  return base;
+  return base as Concept<T & K>;
 }
 /**
  * This will unify concepts while prioritizing qualities later in the provided concepts list via recomposition.
  *  Then finally unify the emergent concept with final priority.
  */
-export function unifyConcepts(
-  concepts: Concept[],
-  emergentConcept: Concept
-): Concept {
+export function unifyConcepts<T extends object>(
+  concepts: Concept<any>[],
+  emergentConcept: Concept<any>
+): Concept<T> {
   let newConcept = createConcept('', {});
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
@@ -279,7 +299,7 @@ export const areConceptsLoaded = (concepts: Concepts, conceptNames: string[]): b
   return allExists;
 };
 
-export const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore: number) => void) => {
+export const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);
@@ -303,7 +323,7 @@ const stateToString = (state: Record<string, unknown>): string => {
   return final;
 };
 
-export const conceptToString = (concept: Concept): string => {
+export const conceptToString = (concept: Concept<any>): string => {
   let output = '';
   output += `{\nname: ${concept.name},`;
   if (concept.unified.length > 0) {
@@ -333,7 +353,7 @@ export const conceptsToString = (concepts: Concepts): string => {
   return '[\n' + conceptStringArray.join(',\n');
 };
 
-export const qualityToString = (quality: Quality) => () => {
+export const qualityToString = (quality: Quality<Record<string, unknown>>) => () => {
   const actionType = quality.actionType;
   const r = quality.reducer.toString();
   const reducer = r === 'Default Reducer' ? r : 'Reducer';

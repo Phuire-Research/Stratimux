@@ -33,7 +33,9 @@ export type Action = {
     origin?: string;
 };
 
-export type Actions = Record<string, ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>>;
+export type Actions<T extends object> = {
+  [K in keyof T]: Record<string, ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>>
+};
 
 export type ActionOptions = {
     semaphore?: [number, number, number, number];
@@ -146,7 +148,7 @@ export function getSemaphore(concepts: Concepts, conceptName: string, actionType
 }
 
 // For proper compilation
-const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore?: number) => void) => {
+const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore?: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);

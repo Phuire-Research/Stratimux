@@ -11,19 +11,19 @@ import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSub
 import { UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';
 
-export type PrincipleFunction = (
+export type PrincipleFunction<T extends Record<string, unknown>> = (
   observer: Subscriber<Action>,
   concepts: Concepts,
   concept$: UnifiedSubject,
-  actions: Actions,
+  actions: Actions<T>,
   keyedSelectors: KeyedSelectors
 ) => void;
 
-export function createPrinciple$(
-  principleFunc: PrincipleFunction,
+export function createPrinciple$<T extends Record<string, unknown>>(
+  principleFunc: PrincipleFunction<T>,
   concepts: Concepts,
   concepts$: UnifiedSubject,
-  actions: Actions,
+  actions: Actions<T>,
   keyedSelectors: KeyedSelectors
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {

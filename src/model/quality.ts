@@ -12,6 +12,7 @@ import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 /*<#*/
+export type Qualities = Record<string, Quality<Record<string,unknown>>>;
 
 export function defaultReducer(state: unknown, _: Action) {
   return state;
@@ -41,24 +42,20 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   return [defaultMethod, defaultSubject];
 };
 
-export type QualityState = {
-  semaphore: [number, number, number, number];
-}
-
-function createQuality(
+function createQuality<T extends Record<string, unknown>>(
   actionType: ActionType,
+  actionCreator: ActionCreator | ActionCreatorWithPayload<T>,
   reducer: Reducer,
   methodCreator?: MethodCreator,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>,
-): Quality {
-  const _qualityState: QualityState = {
-    semaphore: [-1, -1, -1, -1],
-  };
+): Quality<T> {
   return {
     actionType,
+    actionCreator,
+    actionSemaphoreBucket: [[-1, -1, -1, -1]],
     reducer,
     methodCreator,
     keyedSelectors,
@@ -74,11 +71,12 @@ export function createQualitySet(q: {
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): [ActionCreator, ActionType, Quality] {
+}): [ActionCreator, ActionType, Quality<Record<string, unknown>>] {
+  const actionCreator = prepareActionCreator(q.type);
   return [
-    prepareActionCreator(q.type),
+    actionCreator,
     q.type,
-    createQuality(q.type, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    createQuality(q.type, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 
@@ -89,11 +87,12 @@ export function createQualitySetWithPayload<T extends Record<string, unknown>>(q
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): [ActionCreatorWithPayload<T>, ActionType, Quality] {
+}): [ActionCreatorWithPayload<T>, ActionType, Quality<T>] {
+  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type);
   return [
-    prepareActionWithPayloadCreator<T>(q.type),
+    actionCreatorWithPayload,
     q.type,
-    createQuality(q.type, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    createQuality(q.type, actionCreatorWithPayload, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 

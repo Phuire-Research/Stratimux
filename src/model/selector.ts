@@ -230,12 +230,12 @@ export function selectPayload<T>(action: Action): T {
 export function selectSlice<T>(
   concepts: Concepts,
   keyed: KeyedSelector): T | undefined {
-  const concept: Concept | undefined = (() => {
+  const concept: Concept<any> | undefined = (() => {
     if (keyed.conceptSemaphore === -1) {
       const name = keyed.conceptName;
       const conceptKeys = Object.keys(concepts);
       const length = conceptKeys.length;
-      const select = (index: number): Concept | undefined => {
+      const select = (index: number): Concept<any> | undefined => {
         const i = Number(conceptKeys[index]);
         const possible = concepts[i];
         if (possible && possible.name === name) {
@@ -265,10 +265,10 @@ export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | unde
   return undefined;
 }
 
-export function selectConcept(concepts: Concepts, name: string): Concept | undefined {
+export function selectConcept(concepts: Concepts, name: string): Concept<any> | undefined {
   const conceptKeys = Object.keys(concepts);
   const length = conceptKeys.length;
-  const select = (index: number): Concept | undefined => {
+  const select = (index: number): Concept<any> | undefined => {
     const i = Number(conceptKeys[index]);
     if (concepts[i] && concepts[i].name === name) {
       return concepts[i];
