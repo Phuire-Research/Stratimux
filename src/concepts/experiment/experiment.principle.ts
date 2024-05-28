@@ -14,18 +14,17 @@ import { ExperimentState, experimentName } from './experiment.concept';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { axiumSelectOpen } from '../axium/axium.selector';
 
-export const experimentActionQuePrinciple: PrincipleFunction = (
-  observer: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
-  semaphore: number
-) => {
+export const experimentActionQuePrinciple: PrincipleFunction = ({
+  observer,
+  concepts$,
+  conceptSemaphore
+}) => {
   let readyToGo = false;
   const plan = concepts$.plan('Experiment Principle Plan', [
     stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: plan}))),
     createStage((cpts, _) => {
       const concepts = cpts;
-      const experimentState = selectUnifiedState<ExperimentState>(concepts, semaphore);
+      const experimentState = selectUnifiedState<ExperimentState>(concepts, conceptSemaphore);
       if (experimentState && experimentState.actionQue.length > 0) {
         if (!readyToGo) {
           readyToGo = true;

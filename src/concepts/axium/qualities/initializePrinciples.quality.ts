@@ -29,10 +29,18 @@ export const [
     const action$ = state.action$ as Subject<Action>;
     const concepts$ = state.concepts$ as UnifiedSubject;
     const principleSubscribers = state.generalSubscribers;
-    forEachConcept(concepts ,((concept: Concept, semaphore) => {
+    forEachConcept(concepts ,((concept, semaphore) => {
       if (concept.name === axiumName && concept.principles) {
         concept.principles.forEach(principle => {
-          const observable = createPrinciple$(principle, concepts, state.concepts$, semaphore as number);
+          const observable = createPrinciple$(
+            principle,
+            concepts,
+            state.concepts$,
+            concept.actions,
+            concept.selectors,
+            concept.typeValidators,
+            semaphore
+          );
           principleSubscribers.push({
             name: concept.name,
             subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,
@@ -41,7 +49,15 @@ export const [
         conceptCounter += 1;
       } else if (concept.principles) {
         concept.principles.forEach(principle => {
-          const observable = createPrinciple$(principle, concepts, concepts$, semaphore as number);
+          const observable = createPrinciple$(
+            principle,
+            concepts,
+            concepts$,
+            concept.actions,
+            concept.selectors,
+            concept.typeValidators,
+            semaphore
+          );
           principleSubscribers.push({
             name: concept.name,
             subscription: observable.subscribe((action: Action) => action$.next(action)) as Subscriber<Action>,

@@ -38,19 +38,23 @@ const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState =>
   };
 };
 
+const ownershipQualities = {
+  ownershipInitializeOwnershipQuality,
+  ownershipBackTrackQuality,
+  ownershipClearPayloadStubsQuality,
+  ownershipClearStrategyStubsFromLedgerAndSelfQuality,
+  ownershipClearPendingActionsQuality,
+  ownershipClearPendingActionsOfStrategyQuality,
+  ownershipResetOwnershipLedgerQuality
+};
+
+export type OwnershipQualities = typeof ownershipQualities;
+
 export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
-  return createConcept(
+  return createConcept<OwnershipQualities>(
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
-    [
-      ownershipInitializeOwnershipQuality,
-      ownershipBackTrackQuality,
-      ownershipClearPayloadStubsQuality,
-      ownershipClearStrategyStubsFromLedgerAndSelfQuality,
-      ownershipClearPendingActionsQuality,
-      ownershipClearPendingActionsOfStrategyQuality,
-      ownershipResetOwnershipLedgerQuality
-    ],
+    ownershipQualities,
     [
       ownershipPrinciple,
       ownershipExpirationPrinciple

@@ -10,24 +10,30 @@ import { Action, Actions, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';
+import { isT, uInterface } from './interface';
+
+export type PrincipleInterface<T> = {
+  observer: Subscriber<Action>,
+  _concepts: Concepts,
+  concepts$: UnifiedSubject,
+  conceptSemaphore: number,
+} & uInterface<T>;
 
 export type PrincipleFunction<T = void> = (
-  observer: Subscriber<Action>,
-  concepts: Concepts,
-  concept$: UnifiedSubject,
-  actions: Actions<T>,
-  keyedSelectors: KeyedSelectors
+  uI: PrincipleInterface<T>
 ) => void;
 
 export function createPrinciple$<T = void>(
   principleFunc: PrincipleFunction<T>,
-  concepts: Concepts,
+  _concepts: Concepts,
   concepts$: UnifiedSubject,
-  actions: Actions<T>,
-  keyedSelectors: KeyedSelectors
+  a: Actions<T>,
+  s: KeyedSelectors,
+  t: isT[],
+  conceptSemaphore: number,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
-    principleFunc(obs, concepts, concepts$, actions, keyedSelectors);
+    principleFunc({observer: obs, _concepts, concepts$, a, s, t, conceptSemaphore});
   });
 }
 

@@ -4,10 +4,10 @@ generate a principle that will allow for the modification of the Axium's loaded 
 $>*/
 /*<#*/
 import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rxjs';
-import { Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
+import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
-import { AxiumState, axiumName } from './axium.concept';
+import { AxiumState, axiumName, AxiumQualities } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
@@ -16,18 +16,23 @@ import { UnifiedSubject, createStage } from '../../model/stagePlanner';
 import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
+import { KeyedSelector, KeyedSelectors } from '../../model/selector';
+import { isT } from '../../model/interface';
 
-export const axiumPrinciple: PrincipleFunction = (
-  observer: Subscriber<Action>,
-  concepts: Concepts,
-  concepts$: UnifiedSubject,
-  conceptSemaphore: number
+export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
+  {
+    observer,
+    concepts$,
+    a,
+    s,
+    t
+  }
 ) => {
   let allowAdd = true;
   let allowRemove = true;
   const addConceptsPlan = concepts$.innerPlan('Add Concepts Plan', [
-    createStage((_concepts, dispatch) => {
-      const axiumState = _concepts[0].state as AxiumState;
+    createStage((concepts, dispatch) => {
+      const axiumState = concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
       }
@@ -35,10 +40,11 @@ export const axiumPrinciple: PrincipleFunction = (
         allowAdd = false;
         axiumState.generation += 1;
         const newConcepts: Concepts = {};
-        forEachConcept(concepts, (concept, s) => {
-          newConcepts[Number(s)] = concept;
+        forEachConcept(concepts, (concept, se) => {
+          newConcepts[Number(se)] = concept;
         });
-        axiumState.addConceptQue.forEach((concept, _index) => {
+        axiumState.addConceptQue.forEach((cpt, _index) => {
+          const concept = cpt as unknown as AnyConcept;
           concept.semaphore = axiumState.conceptCounter;
           if (concept.mode !== undefined) {
             const names = axiumState.modeNames;
@@ -50,7 +56,14 @@ export const axiumPrinciple: PrincipleFunction = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$(principle, concepts, axiumState.concepts$, concept.semaphore);
+              const observable = createPrinciple$<typeof concept.q>(principle,
+                concepts,
+                axiumState.concepts$,
+                concept.actions,
+                concept.selectors,
+                concept.typeValidators,
+                concept.semaphore
+              );
               axiumState.principleSubscribers.push({
                 name: concept.name,
                 subscription: observable.subscribe((action: Action) => axiumState.action$.next(action)) as Subscriber<Action>
@@ -75,7 +88,7 @@ export const axiumPrinciple: PrincipleFunction = (
               getAxiumState(concepts).methodSubscribers.push({name: concept.name, subscription: methodSub});
             }
           });
-          newConcepts[concept.semaphore] = concept;
+          newConcepts[concept.semaphore] = concept as AnyConcept;
           axiumState.conceptCounter += 1;
         });
 
@@ -93,8 +106,8 @@ export const axiumPrinciple: PrincipleFunction = (
   ]);
 
   const removeConceptsPlan = concepts$.innerPlan('Remove Concepts Plan', [
-    createStage((_concepts, dispatch) => {
-      const axiumState = _concepts[0].state as AxiumState;
+    createStage((concepts, dispatch) => {
+      const axiumState = concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;
       }
@@ -104,10 +117,10 @@ export const axiumPrinciple: PrincipleFunction = (
         axiumState.generation += 1;
         const newModes: Mode[] = [blockingMode, permissiveMode];
         const newModeNames: string[] = [axiumName, axiumName];
-        forEachConcept(concepts, ((concept, s) => {
+        forEachConcept(concepts, ((concept, se) => {
           axiumState.removeConceptQue.forEach(target => {
             if (concept.name !== target.name) {
-              newConcepts[s as number] = (concept);
+              newConcepts[se as number] = (concept);
             }
           });
         }));
@@ -138,10 +151,10 @@ export const axiumPrinciple: PrincipleFunction = (
         });
         newAxiumState.methodSubscribers = [];
 
-        forEachConcept(newConcepts, (concept, s) => {
+        forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {
             if (quality.methodCreator) {
-              const [method, subject] = quality.methodCreator(axiumState.concepts$, s);
+              const [method, subject] = quality.methodCreator(axiumState.concepts$, se);
               quality.method = method;
               quality.subject = subject;
               quality.method.pipe(
@@ -173,9 +186,9 @@ export const axiumPrinciple: PrincipleFunction = (
   ]);
   observer.next(strategy.begin(strategy.create({
     topic: 'Register Axium Add/Remove Plans',
-    initialNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}, {conceptSemaphore}), {
+    initialNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}), {
       successNode:
-      createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}, {conceptSemaphore}), {
+      createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}), {
         successNode: null,
         failureNode: null
       }),

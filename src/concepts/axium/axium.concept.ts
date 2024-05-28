@@ -122,36 +122,45 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
   };
 };
 
-export const createAxiumConcept = (name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): Concept =>  {
-  return createConcept(
+const axiumQualities = {
+  axiumKickQuality,
+  axiumOpenQuality,
+  axiumBadActionQuality,
+  axiumCloseQuality,
+  axiumPreCloseQuality,
+  axiumAppendActionListToDialogQuality,
+  axiumClearDialogQuality,
+  axiumLogQuality,
+  axiumRegisterSubscriberQuality,
+  axiumRegisterStagePlannerQuality,
+  axiumInitializePrinciplesQuality,
+  axiumSetBlockingModeQuality,
+  axiumSetDefaultModeQuality,
+  axiumSetDefaultModeIndexQuality,
+  axiumAddConceptsFromQueQuality,
+  axiumAppendConceptsToAddQueQuality,
+  axiumAppendConceptsToRemoveQueQuality,
+  axiumRemoveConceptsViaQueQuality,
+  axiumSetModeQuality,
+  axiumClearBadActionTypeFromBadActionListQuality,
+  axiumClearBadStrategyTopicFromBadActionListQuality,
+  axiumClearBadPlanFromBadPlanListQuality,
+  axiumStitchQuality,
+  axiumRegisterTimeOutQuality
+};
+
+export type AxiumQualities = typeof axiumQualities;
+
+export const createAxiumConcept = (
+  name: string,
+  storeDialog?: boolean,
+  logging?: boolean,
+  logActionStream?: boolean
+): Concept<AxiumQualities> =>  {
+  return createConcept<AxiumQualities>(
     axiumName,
     createAxiumState(name, storeDialog, logging, logActionStream),
-    [
-      axiumKickQuality,
-      axiumOpenQuality,
-      axiumBadActionQuality,
-      axiumCloseQuality,
-      axiumPreCloseQuality,
-      axiumAppendActionListToDialogQuality,
-      axiumClearDialogQuality,
-      axiumLogQuality,
-      axiumRegisterSubscriberQuality,
-      axiumRegisterStagePlannerQuality,
-      axiumInitializePrinciplesQuality,
-      axiumSetBlockingModeQuality,
-      axiumSetDefaultModeQuality,
-      axiumSetDefaultModeIndexQuality,
-      axiumAddConceptsFromQueQuality,
-      axiumAppendConceptsToAddQueQuality,
-      axiumAppendConceptsToRemoveQueQuality,
-      axiumRemoveConceptsViaQueQuality,
-      axiumSetModeQuality,
-      axiumClearBadActionTypeFromBadActionListQuality,
-      axiumClearBadStrategyTopicFromBadActionListQuality,
-      axiumClearBadPlanFromBadPlanListQuality,
-      axiumStitchQuality,
-      axiumRegisterTimeOutQuality
-    ],
+    axiumQualities,
     [axiumPrinciple, axiumClosePrinciple],
     [blockingMode, permissiveMode]
   );

@@ -19,16 +19,20 @@ const initialCounterState: CounterState = {
   count: 0
 };
 
+const counterQualities = {
+  counterAddQuality,
+  counterSubtractQuality,
+  counterSetCountQuality,
+  counterMultiplyQuality
+};
+
+export type CounterQualities = typeof counterQualities;
+
 export const createCounterConcept = () => {
-  return createConcept(
+  return createConcept<CounterQualities>(
     counterName,
     initialCounterState,
-    [
-      counterAddQuality,
-      counterSubtractQuality,
-      counterSetCountQuality,
-      counterMultiplyQuality
-    ]
+    counterQualities
   );
 };
 /*#>*/

@@ -43,6 +43,7 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
 
 function createQuality<T = void>(
   actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
   reducer: Reducer,
   methodCreator?: MethodCreator,
@@ -54,7 +55,7 @@ function createQuality<T = void>(
   return {
     actionType,
     actionCreator,
-    actionSemaphoreBucket: [[-1, -1, -1, -1]],
+    actionSemaphoreBucket,
     reducer,
     methodCreator,
     keyedSelectors,
@@ -71,12 +72,13 @@ export function createQualitySet(q: {
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
 }): [ActionCreator, ActionType, Quality<void>] {
-  const actionCreator = prepareActionCreator(q.type);
+  const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
+  const actionCreator = prepareActionCreator(q.type, bucket);
   return [
     actionCreator,
     q.type,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    createQuality<void>(q.type, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    createQuality<void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 
@@ -88,11 +90,12 @@ export function createQualitySetWithPayload<T extends Record<string, unknown>>(q
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
 }): [ActionCreatorWithPayload<T>, ActionType, Quality<T>] {
-  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type) as ActionCreatorType<T>;
+  const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
+  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket) as ActionCreatorType<T>;
   return [
     actionCreatorWithPayload,
     q.type,
-    createQuality<T>(q.type, actionCreatorWithPayload, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    createQuality<T>(q.type, bucket, actionCreatorWithPayload, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 

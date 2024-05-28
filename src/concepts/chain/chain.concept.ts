@@ -23,11 +23,18 @@ const initialChainState: ChainState = {
   end: false
 };
 
+const chainQualities = {
+  chainPrepareChainQuality,
+  chainEndQuality
+};
+
+export type ChainQualities = typeof chainQualities;
+
 export const createChainConcept = () => {
-  return createConcept(
+  return createConcept<ChainQualities>(
     chainName,
     initialChainState,
-    [chainPrepareChainQuality, chainEndQuality],
+    chainQualities,
     [chainPrinciple],
   );
 };

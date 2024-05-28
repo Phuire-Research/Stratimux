@@ -180,7 +180,9 @@ export function createCacheSemaphores(concepts: Concepts): Map<string, Map<strin
   forEachConcept(concepts, ((concept, ci) => {
     const qualityMap = new Map<string, [number, number, number, number]>();
     concept.qualities.forEach((quality, qi) => {
-      qualityMap.set(quality.actionType, [ci as number, qi, generation, 0]);
+      const semaphore: [number, number, number, number] = [ci as number, qi, generation, getSpecialSemaphore(quality.actionType)];
+      quality.actionSemaphoreBucket[0] = semaphore;
+      qualityMap.set(quality.actionType, semaphore);
     });
     newCachedSemaphores.set(concept.name, qualityMap);
   }));
@@ -191,7 +193,7 @@ export function createCacheSemaphores(concepts: Concepts): Map<string, Map<strin
  * This allows us to logically determine these values in code.
  * @returns The final value for the semaphore tuple.
  */
-function getSpecialSemaphore(type: ActionType) {
+export function getSpecialSemaphore(type: ActionType) {
   switch (type) {
   case axiumBadActionType: {
     return 1;
@@ -231,7 +233,7 @@ export function createAction<T extends Record<string, unknown>>(
     } = options;
     return {
       type,
-      semaphore,
+      semaphore: options.semaphore ? options.semaphore : semaphore,
       payload,
       keyedSelectors,
       agreement,
@@ -249,18 +251,31 @@ export function createAction<T extends Record<string, unknown>>(
   }
 }
 
-export function prepareActionCreator(actionType: ActionType) {
+export function prepareActionCreator(
+  actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][]
+) {
   return (
     options?: ActionOptions
   ) => {
+    if (options) {
+      return createAction(actionType,
+        {
+          ...options,
+          semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1]
+        }
+      );
+    }
     return createAction(
       actionType,
-      options
     );
   };
 }
 
-export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(actionType: ActionType) {
+export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(
+  actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][]
+) {
   return (
     payload: T,
     options?: ActionOptions
@@ -271,7 +286,10 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     };
     return createAction(
       actionType,
-      opt
+      {
+        ...opt,
+        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1]
+      }
     );
   };
 }

@@ -5,7 +5,7 @@ Functionally. This is a pure action with no method or reducer. That will instead
 within each qualities method if specified. As well as ownership if loaded in the Axium's concept set.
 $>*/
 /*<#*/
-import { ActionType, prepareActionCreator } from '../../../model/action';
+import { ActionType, getSemaphore, getSpecialSemaphore, prepareActionCreator } from '../../../model/action';
 
 /**
  * axiumConcludeType
@@ -16,5 +16,8 @@ import { ActionType, prepareActionCreator } from '../../../model/action';
  * This should not be used Directly
  */
 export const axiumConcludeType: ActionType = 'Conclude';
-export const axiumConclude = prepareActionCreator(axiumConcludeType);
+export const axiumConclude = prepareActionCreator(
+  axiumConcludeType,
+  [[-1, -1, -1, getSpecialSemaphore(axiumConcludeType)]]
+);
 /*#>*/

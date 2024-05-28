@@ -9,9 +9,10 @@ import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, Act
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
-import { KeyedSelector } from './selector';
+import { KeyedSelector, KeyedSelectors } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
+import { isT } from './interface';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -53,7 +54,10 @@ export type Concept<T = void> = {
   unified: string[];
   state: Record<string, unknown>;
   actions: Actions<T>;
+  selectors: KeyedSelectors;
+  typeValidators: isT[]
   qualities: Quality<unknown>[];
+  q: Record<string, unknown>;
   semaphore: number;
   principles?: PrincipleFunction<T>[];
   mode?: Mode[];
@@ -96,7 +100,10 @@ export function createConcept<T = void>(
     unified: [],
     state,
     actions: actions as Actions<T>,
+    selectors: {},
+    typeValidators: [],
     qualities: qualities ? qualities : [],
+    q: _qualities ? _qualities : {},
     semaphore: -1,
     principles,
     mode,

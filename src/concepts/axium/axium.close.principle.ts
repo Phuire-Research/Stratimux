@@ -6,21 +6,20 @@ import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { selectUnifiedState } from '../../model/selector';
 import { UnifiedSubject, createStage } from '../../model/stagePlanner';
-import { AxiumState } from './axium.concept';
+import { AxiumState, AxiumQualities } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
 import { Action } from '../../model/action';
 import { axiumSelectPrepareClose } from './axium.selector';
 /*<#*/
-export const axiumClosePrinciple: PrincipleFunction = (
-  _: Subscriber<Action>,
-  __: Concepts,
-  concepts$: UnifiedSubject,
-  semaphore: number
+export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
+  {
+    concepts$,
+  },
 ) => {
   let init = false;
   const plan = concepts$.innerPlan('Plan Axium Close', [
     createStage((concepts, dispatch) => {
-      const state = selectUnifiedState<AxiumState>(concepts, semaphore);
+      const state = selectUnifiedState<AxiumState>(concepts, 0);
       if (!init && state?.prepareClose) {
         init = true;
         concepts$.next({0: concepts[0]});

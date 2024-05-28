@@ -46,7 +46,14 @@ test('Quality Actions', (done) => {
     });
     return actions.something();
   };
-  const c = createConcept<typeof qs>('Some', {}, qs);
+  const c = createConcept<typeof qs>('Some', {}, qs, [
+    ({a}) => {
+      console.log('HIT PRINCIPLE', a.some({
+        here: 2
+      }));
+      expect(a.something().type).toBe('Something');
+    }
+  ]);
   c.actions.something;
   c.actions.some({
     here: 7
@@ -55,6 +62,10 @@ test('Quality Actions', (done) => {
     here: 8
   });
   console.log(c.actions);
+  const axium = createAxium('Quality Actions', [
+    c
+  ]);
+  axium.subscribe(concepts => concepts);
   expect(f(c.actions).type).toBe('Something');
   done();
 });

@@ -23,10 +23,10 @@ export const createExperimentState = (): ExperimentState => {
   };
 };
 
-export const createExperimentConcept = (
+export const createExperimentConcept = <T>(
   state: Record<string, unknown>,
-  qualities?: Quality[],
-  principles?: PrincipleFunction[],
+  qualities?: Record<string, unknown>,
+  principles?: PrincipleFunction<T>[],
   mode?: Mode[]) => {
   return createConcept(
     experimentName,

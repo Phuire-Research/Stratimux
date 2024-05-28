@@ -8,7 +8,7 @@ $>*/
 import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
-import { OwnershipState, ownershipName} from '../ownership/ownership.concept';
+import { OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectUnifiedState } from '../../model/selector';
@@ -29,19 +29,18 @@ function denoteExpiredPending(action: Action): Action {
   return action;
 }
 
-export const ownershipPrinciple: PrincipleFunction = (
-  observer: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
-  semaphore: number
-) => {
+export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
+  observer,
+  concepts$,
+  conceptSemaphore
+}) => {
   let initDispatch = false;
   let finalCheck = true;
   const plan = concepts$.plan('ownership Principle Plan', [
     stageWaitForOpenThenIterate(() => axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan})),
     createStage((cpts, _) => {
       let concepts = cpts;
-      let ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
+      let ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         // This will be the point of dispatch of Qued Actions
         let newAction;
@@ -56,7 +55,7 @@ export const ownershipPrinciple: PrincipleFunction = (
             }
           }
           if (newAction) {
-            ownershipState = selectUnifiedState(concepts, semaphore) as OwnershipState;
+            ownershipState = selectUnifiedState(concepts, conceptSemaphore) as OwnershipState;
             const newPendingActions = [];
             for (const pending of ownershipState.pendingActions) {
               if (!areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
@@ -112,17 +111,15 @@ This functionality is chiefly important for Actions that have moved off the curr
 their strategies in outside Axiums.
 $>*/
 /*<#*/
-export const ownershipExpirationPrinciple: PrincipleFunction = (
-  _: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
-  semaphore: number
-) => {
+export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities> = ({
+  concepts$,
+  conceptSemaphore
+}) => {
   const plan = concepts$.plan('ownership Principle Plan', [
     stageWaitForOwnershipThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: plan}))),
     createStage((cpts, __) => {
       const concepts = cpts;
-      const ownershipState = selectUnifiedState<OwnershipState>(concepts, semaphore);
+      const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         let modified = false;
         const newLedger = createOwnershipLedger();

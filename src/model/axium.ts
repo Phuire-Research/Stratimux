@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { Action, createAction, createCacheSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -205,7 +205,8 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
 
 export function createAxium(
   name: string,
-  initialConcepts: Concept[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialConcepts: Concept<any>[],
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
@@ -220,7 +221,8 @@ export function createAxium(
       options?.logging,
       options?.logActionStream
     ), ...initialConcepts];
-  init.forEach((concept, i) => {
+  init.forEach((cpt, i) => {
+    const concept = cpt as unknown as AnyConcept;
     concept.semaphore = i;
     concepts[i] = concept;
   });

@@ -8,19 +8,19 @@ import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
-import { ChainState, chainName } from './chain.concept';
+import { ChainQualities, ChainState, chainName } from './chain.concept';
 import { selectUnifiedState } from '../../model/selector';
 import { AxiumState } from '../axium/axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 
-export const chainPrinciple: PrincipleFunction = (
-  observer: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
-  semaphore: number
-) => {
+export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
+  observer,
+  _concepts,
+  concepts$,
+  conceptSemaphore
+}) => {
   const subscription = concepts$.subscribe((concepts: Concepts) => {
-    const chainState = selectUnifiedState<ChainState>(concepts, semaphore);
+    const chainState = selectUnifiedState<ChainState>(concepts, conceptSemaphore);
     if (chainState && chainState.actionQue.length > 0) {
       const newActionQue = [...chainState.actionQue];
       const nextAction = newActionQue.pop() as Action;

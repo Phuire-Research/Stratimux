@@ -9,7 +9,7 @@ import { createQualitySet } from '../../../model/quality';
 
 export const [axiumAddConceptFromQue, axiumAddConceptFromQueType, axiumAddConceptsFromQueQuality] = createQualitySet({
   type: 'Add Concepts from Axium Concept Que',
-  reducer: (state: AxiumState, action) => {
+  reducer: (state: AxiumState) => {
     return {
       ...state,
       addConceptQue: []
