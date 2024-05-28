@@ -6,19 +6,15 @@ import { Action, act } from '../../../model/action';
 import { quality } from '../../../model/quality';
 import { ExperimentPriorityState } from '../priority.concept';
 
-export const experimentPriorityIsReadyType = 'experimentPriority is ready';
-
-export const experimentPriorityIsReady = act.prepareActionCreator(experimentPriorityIsReadyType);
-
-function experimentPriorityIsReadyReducer(state: ExperimentPriorityState, action: Action): ExperimentPriorityState {
-  return {
+export const [
+  experimentPriorityIsReady,
+  experimentPriorityIsReadyType,
+  experimentPriorityIsReadyQuality
+] = quality.createSet({
+  type: 'experimentPriority is ready',
+  reducer: (state: ExperimentPriorityState, action: Action): ExperimentPriorityState => ({
     ...state,
     ready: true
-  };
-}
-
-export const experimentPriorityIsReadyQuality = quality.create(
-  experimentPriorityIsReadyType,
-  experimentPriorityIsReadyReducer,
-);
+  }),
+});
 /*#>*/

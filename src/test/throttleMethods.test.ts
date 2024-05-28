@@ -24,12 +24,13 @@ import {
 } from '../concepts/experiment/strategies/throttleIterateIdThenAddToData.strategy';
 
 import { strategyBegin } from '../model/actionStrategy';
-import { createAxium, getAxiumState } from '../model/axium';
+import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 
 test('Action Throttle Method Test with Concepts id comparison', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [experimentThrottleIterateIdThenReceiveInMethodQuality]);
+  const qualities = {experimentThrottleIterateIdThenReceiveInMethodQuality};
+  const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Throttle Iterate id with Concepts', [
     stageWaitForOpenThenIterate(() => axiumKick()),
@@ -92,7 +93,8 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
 
 jest.setTimeout(7000);
 test('Action Throttle Async Method Test with Concepts id comparison', (done) => {
-  const experiment = createExperimentConcept(createExperimentState(), [experimentThrottleAsyncIterateIdThenReceiveInMethodQuality]);
+  const qualities = {experimentThrottleAsyncIterateIdThenReceiveInMethodQuality};
+  const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Action Throttle Async Iterate id with Concepts', [
     createStage((concepts, dispatch) => {

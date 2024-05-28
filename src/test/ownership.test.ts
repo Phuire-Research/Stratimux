@@ -20,16 +20,17 @@ import {
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { experimentCheckInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
-import { experimentActionQuePrinciple } from '../concepts/experiment/experiment.principle';
+import { experimentActionQuePrincipleCreator } from '../concepts/experiment/experiment.principle';
 import { createStage } from '../model/stagePlanner';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
+  const qualities = {experimentCheckInStrategyQuality};
   const axium = createAxium('ownershipTest', [
     createOwnershipConcept(),
     createCounterConcept(),
-    createExperimentConcept(createExperimentState(), [experimentCheckInStrategyQuality], [experimentActionQuePrinciple])
+    createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
   ], {logging: true, storeDialog: true});
   const plan = axium.plan(
     'Testing Ownership Staging', [

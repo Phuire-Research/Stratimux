@@ -5,7 +5,7 @@ A concept is composed of name, unified, state, qualities, semaphore, principles,
 $>*/
 /*<#*/
 import { Observable, Subject } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
+import { Action, ActionCreator, ActionCreatorWithPayload, ActionType } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
@@ -26,6 +26,17 @@ export type Mode = ([action, concept, action$, concepts$]: [
   Subject<Action>,
   UnifiedSubject,
 ]) => void;
+
+export type ActionCreatorType<T = void> =
+  T extends Record<string, unknown> ?
+    ActionCreatorWithPayload<T> :
+    ActionCreator;
+
+export type Actions<T = void> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]: T[K] extends Quality<any> ?
+    T[K]['actionCreator'] : ActionCreator;
+};
 
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
@@ -76,7 +87,8 @@ export function createConcept<T = void>(
   principles?: PrincipleFunction<T>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
-): Concept<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Concept<T extends void ? any : T> {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -91,15 +103,21 @@ export function createConcept<T = void>(
   const qualities: Quality<unknown>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
-      actions[q] = (_qualities[q] as Quality<unknown>).actionCreator;
-      qualities.push(_qualities[q] as Quality<unknown>);
+      try {
+        actions[q] = (_qualities[q] as Quality<unknown>).actionCreator;
+        qualities.push(_qualities[q] as Quality<unknown>);
+      } catch (error) {
+        console.error('ERROR @: ', q, _qualities[q]);
+        // console.warn('Check: ', _qualities);
+      }
     });
   }
   return {
     name,
     unified: [],
     state,
-    actions: actions as Actions<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    actions: actions as Actions<T extends void ? any : T>,
     selectors: {},
     typeValidators: [],
     qualities: qualities ? qualities : [],
@@ -111,6 +129,28 @@ export function createConcept<T = void>(
   };
 }
 
+export function createQuality<T = void>(
+  actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][],
+  actionCreator: ActionCreatorType<T>,
+  reducer: Reducer,
+  methodCreator?: MethodCreator,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyedSelectors?: KeyedSelector[],
+  meta?: Record<string,unknown>,
+  analytics?: Record<string,unknown>,
+): Quality<T> {
+  return {
+    actionType,
+    actionCreator,
+    actionSemaphoreBucket,
+    reducer,
+    methodCreator,
+    keyedSelectors,
+    meta,
+    analytics
+  };
+}
 /**
  * This will remove any duplicate qualities, principles, and modes.
  * Note that for now the check for mode and principle are based on concept name and loaded index;

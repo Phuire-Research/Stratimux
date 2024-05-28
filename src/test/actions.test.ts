@@ -11,8 +11,8 @@ import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { createStage } from '../model/stagePlanner';
 import { createQualitySet, createQualitySetWithPayload } from '../model/quality';
-import { Qualities, Quality, createConcept } from '../model/concept';
-import { Action, Actions } from '../model/action';
+import { Actions, Qualities, Quality, createConcept } from '../model/concept';
+import { Action } from '../model/action';
 import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 test('Quality Actions', (done) => {

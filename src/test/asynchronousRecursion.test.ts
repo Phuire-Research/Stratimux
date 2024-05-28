@@ -18,7 +18,8 @@ import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner'
 
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
-  const experiment = createExperimentConcept(createExperimentState(), [experimentRecurseIterateIdQuality]);
+  const qualities = {experimentRecurseIterateIdQuality};
+  const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with Concepts', [experiment], {storeDialog: true});
   const plan = axium.plan('Experiment debounce add one', [
     stageWaitForOpenThenIterate(() => axiumKick()),

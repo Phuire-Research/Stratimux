@@ -42,17 +42,6 @@ export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
   options?: ActionWithPayloadOptions<T>
 ) => Action;
 
-export type ActionCreatorType<T = void> =
-  T extends Record<string, unknown> ?
-    ActionCreatorWithPayload<T> :
-    ActionCreator;
-
-export type Actions<T = void> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends Quality<any> ?
-    T[K]['actionCreator'] : ActionCreator;
-};
-
 export type ActionOptions = {
     semaphore?: [number, number, number, number];
     conceptSemaphore?: number;

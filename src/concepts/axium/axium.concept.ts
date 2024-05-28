@@ -121,7 +121,6 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     timerLedger: new Map()
   };
 };
-
 const axiumQualities = {
   axiumKickQuality,
   axiumOpenQuality,
@@ -150,6 +149,7 @@ const axiumQualities = {
 };
 
 export type AxiumQualities = typeof axiumQualities;
+console.log('CHECK AXIUM Q', axiumQualities.axiumLogQuality, axiumQualities.axiumRegisterTimeOutQuality);
 
 export const createAxiumConcept = (
   name: string,

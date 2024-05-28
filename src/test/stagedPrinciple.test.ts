@@ -32,8 +32,9 @@ const [
 ] = createQualitySet({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
 
 test('Axium Principle Stage', (done) => {
-  const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concepts, concept$: UnifiedSubject) => {
-    const plan = concept$.plan('Experiment Principle', [
+  const qualities = {experimentMockToTrueQuality};
+  const experimentPrinciple: PrincipleFunction<typeof qualities> = ({concepts$}) => {
+    const plan = concepts$.plan('Experiment Principle', [
       stageWaitForOpenThenIterate(() => experimentMockToTrue()),
       createStage((concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -52,7 +53,7 @@ test('Axium Principle Stage', (done) => {
     ]);
   };
   createAxium('axiumStrategyTest', [
-    createExperimentConcept(createExperimentState(), [experimentMockToTrueQuality], [experimentPrinciple])
+    createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentPrinciple])
   ], {logging: true, storeDialog: true});
 });
 /*#>*/

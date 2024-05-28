@@ -5,7 +5,7 @@ Note this should be limited to actions that provably do not require error correc
 Otherwise you would want to use a Strategy Stitch instead.
 $>*/
 /*<#*/
-import { Action } from '../../../model/action';
+import { Action, createAction } from '../../../model/action';
 import { ActionNode, ActionNodeOptions, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { axiumLog } from '../qualities/log.quality';
 
@@ -50,7 +50,7 @@ export const axium_createGatherNode = (props: AxiumGatherNode, options?: ActionN
   if (first) {
     return first;
   } else {
-    const log = axiumLog();
+    const log = createAction('logged a message passed to Axium');
     log.payload = {message: 'NO ACTIONS WERE GATHERED VIA AXIUM_CREATE_GATHER_NODE'};
     return createActionNode(log, {
       successNode: null,

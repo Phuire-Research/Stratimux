@@ -6,7 +6,7 @@ import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { selectUnifiedState } from '../../model/selector';
 import { UnifiedSubject, createStage } from '../../model/stagePlanner';
-import { AxiumState, AxiumQualities } from './axium.concept';
+import { AxiumQualities, AxiumState } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
 import { Action } from '../../model/action';
 import { axiumSelectPrepareClose } from './axium.selector';

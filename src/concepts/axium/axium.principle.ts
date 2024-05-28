@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rx
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, createCacheSemaphores } from '../../model/action';
-import { AxiumState, axiumName, AxiumQualities } from './axium.concept';
+import { AxiumQualities, AxiumState, axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';

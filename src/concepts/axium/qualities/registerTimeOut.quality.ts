@@ -12,8 +12,8 @@ import { Action } from '../../../model/action';
 import { strategySuccess } from '../../../model/actionStrategy';
 
 export type AxiumRegisterTimeOutPayload = {
-    act: Action;
-    timeOut: number
+  act: Action;
+  timeOut: number
 }
 
 export const [

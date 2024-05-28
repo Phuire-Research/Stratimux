@@ -27,12 +27,16 @@ export const createExperimentPlanOptionsState = (): ExperimentPlanOptionsState =
   seven: false
 });
 
-export const createExperimentPlanOptionsConcept = () => createExperimentConcept(
+const experimentPlanOptionsQualities = {
+  experimentToggleAllSevenQuality,
+  experimentPlanOptionsAddValueQuality,
+  experimentPlanOptionsIsReadyQuality
+};
+
+export type ExperimentPlanOptionsQualities = typeof experimentPlanOptionsQualities;
+
+export const createExperimentPlanOptionsConcept = () => createExperimentConcept<ExperimentPlanOptionsQualities>(
   createExperimentPlanOptionsState(),
-  [
-    experimentToggleAllSevenQuality,
-    experimentPlanOptionsAddValueQuality,
-    experimentPlanOptionsIsReadyQuality
-  ],
+  experimentPlanOptionsQualities,
   []
 );

@@ -34,19 +34,23 @@ const initialBeatSelectorChangesState: BeatSelectorChangesState = {
   countSeven: 0,
 };
 
+const beatSelectorChangesQualities = {
+  beatSelectorChangesAddToCountOneQuality,
+  beatSelectorChangesAddToCountTwoQuality,
+  beatSelectorChangesAddToCountThreeQuality,
+  beatSelectorChangesAddToCountFourQuality,
+  beatSelectorChangesAddToCountFiveQuality,
+  beatSelectorChangesAddToCountSixQuality,
+  beatSelectorChangesAddToCountSevenQuality,
+};
+
+export type BeatSelectorChangesQualities = typeof beatSelectorChangesQualities;
+
 export const createBeatSelectorChangesConcept = () => {
-  return createConcept(
+  return createConcept<BeatSelectorChangesQualities>(
     beatSelectorChangesName,
     initialBeatSelectorChangesState,
-    [
-      beatSelectorChangesAddToCountOneQuality,
-      beatSelectorChangesAddToCountTwoQuality,
-      beatSelectorChangesAddToCountThreeQuality,
-      beatSelectorChangesAddToCountFourQuality,
-      beatSelectorChangesAddToCountFiveQuality,
-      beatSelectorChangesAddToCountSixQuality,
-      beatSelectorChangesAddToCountSevenQuality,
-    ]
+    beatSelectorChangesQualities
   );
 };
 /*#>*/

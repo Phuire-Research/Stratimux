@@ -8,30 +8,27 @@ import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
 import { ExperimentPriorityState } from '../priority.concept';
 
-export const experimentPriorityAddValueType = 'experimentPriority Add value';
-
 export type ExperimentPriorityAddValuePayload = {
   newValue: number
 };
 
-export const experimentPriorityAddValue =
-  act.prepareActionWithPayloadCreator<ExperimentPriorityAddValuePayload>(experimentPriorityAddValueType);
-
-function experimentPriorityAddValueReducer(state: ExperimentPriorityState, action: Action): ExperimentPriorityState {
-  const { newValue } = select.payLoad<ExperimentPriorityAddValuePayload>(action);
-  if (newValue) {
+export const [
+  experimentPriorityAddValue,
+  experimentPriorityAddValueType,
+  experimentPriorityAddValueQuality
+] = quality.createSetWithPayload<ExperimentPriorityAddValuePayload>({
+  type: 'experimentPriority Add value',
+  reducer: (state: ExperimentPriorityState, action: Action): ExperimentPriorityState => {
+    const { newValue } = select.payLoad<ExperimentPriorityAddValuePayload>(action);
+    if (newValue) {
+      return {
+        ...state,
+        value: newValue + state.value
+      };
+    }
     return {
       ...state,
-      value: newValue + state.value
     };
-  }
-  return {
-    ...state,
-  };
-}
-
-export const experimentPriorityAddValueQuality = quality.create(
-  experimentPriorityAddValueType,
-  experimentPriorityAddValueReducer,
-);
+  },
+});
 /*#>*/

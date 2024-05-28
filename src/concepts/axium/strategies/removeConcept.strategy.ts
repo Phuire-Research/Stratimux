@@ -14,7 +14,8 @@ import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDe
 import { axiumName } from '../axium.concept';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
-export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concepts, targetConcepts: Concept[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function addConceptsToRemovalQueThenBlockStrategy(concepts: Concepts, targetConcepts: Concept<any>[]) {
   const setBlockingModeSemaphore = getSemaphore(concepts, axiumName, axiumSetBlockingModeType);
   const appendConceptsToRemoveQueSemaphore = getSemaphore(concepts, axiumName, axiumAppendConceptsToRemoveQueType);
 

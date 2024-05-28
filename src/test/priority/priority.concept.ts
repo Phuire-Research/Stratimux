@@ -9,11 +9,15 @@ export type ExperimentPriorityState = {
 
 export const createExperimentPriorityState = (): ExperimentPriorityState => ({value: 0, ready: false});
 
-export const createExperimentPriorityConcept = () => createExperimentConcept(
+const experimentPriorityQualities = {
+  experimentPriorityIsReadyQuality,
+  experimentPriorityAddValueQuality
+};
+
+export type ExperimentPriorityQualities = typeof experimentPriorityQualities;
+
+export const createExperimentPriorityConcept = () => createExperimentConcept<ExperimentPriorityQualities>(
   createExperimentPriorityState(),
-  [
-    experimentPriorityIsReadyQuality,
-    experimentPriorityAddValueQuality
-  ],
+  experimentPriorityQualities,
   []
 );

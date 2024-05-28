@@ -270,5 +270,5 @@ export {
   experimentPrimedCountingStrategy,
   experimentPrimedCountingTopic
 } from './concepts/experiment/strategies/experimentCounting.strategy';
-export {experimentActionQuePrinciple} from './concepts/experiment/experiment.principle';
+export {experimentActionQuePrincipleCreator} from './concepts/experiment/experiment.principle';
 /*#>*/

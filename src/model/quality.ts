@@ -4,9 +4,9 @@ This model allows for qualities to be made at a single point of entry, reducing 
 $>*/
 
 import { Subject, map } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
+import { Action, ActionCreator, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
 import { strategySuccess } from './actionStrategy';
-import { Method, MethodCreator, Quality, Reducer } from './concept';
+import { ActionCreatorType, Method, MethodCreator, Quality, Reducer, createQuality } from './concept';
 import { ActionType } from './method';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
@@ -40,29 +40,6 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   defaultMethod.toString = () => ('Default Method');
   return [defaultMethod, defaultSubject];
 };
-
-function createQuality<T = void>(
-  actionType: ActionType,
-  actionSemaphoreBucket: [number, number, number, number][],
-  actionCreator: ActionCreatorType<T>,
-  reducer: Reducer,
-  methodCreator?: MethodCreator,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyedSelectors?: KeyedSelector[],
-  meta?: Record<string,unknown>,
-  analytics?: Record<string,unknown>,
-): Quality<T> {
-  return {
-    actionType,
-    actionCreator,
-    actionSemaphoreBucket,
-    reducer,
-    methodCreator,
-    keyedSelectors,
-    meta,
-    analytics
-  };
-}
 
 export function createQualitySet(q: {
   type: string,

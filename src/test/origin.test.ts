@@ -23,18 +23,21 @@ test('Test Dispatch Override', (done) => {
   const timer: NodeJS.Timeout[] = [];
   let finalDispatchedSet = -1;
   let finalCount = -1;
-  const axium = createAxium('Override actions based on Plan and Stage', [createExperimentConcept({
-    count: 0,
-  } as CounterState, [
+  const experimentCounterQualities = {
     counterAddQuality,
     counterSetCountQuality
-  ], [
-    (obs, cpts, c$, s) => {
+  };
+  type ExperimentCounterQualities = typeof experimentCounterQualities;
+  const axium = createAxium('Override actions based on Plan and Stage', [createExperimentConcept<ExperimentCounterQualities>({
+    count: 0,
+  } as CounterState,
+  experimentCounterQualities, [
+    ({_concepts, concepts$}) => {
       const {
         body
-      } = getAxiumState(cpts);
+      } = getAxiumState(_concepts);
       const stageName = 'Test Override';
-      const plan = c$.plan(stageName, [
+      const plan = concepts$.plan(stageName, [
         stageWaitForOpenThenIterate(() => {
           return axiumKick();
         }),

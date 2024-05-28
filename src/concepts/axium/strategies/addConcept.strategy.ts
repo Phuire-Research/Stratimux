@@ -15,7 +15,8 @@ import { axiumName } from '../axium.concept';
 
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
-export function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConcepts: Concept[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function addConceptsToAddQueThenBlockStrategy(concepts: Concepts, newConcepts: Concept<any>[]) {
   const stepTwo = createActionNode(axiumAppendConceptsToAddQue({concepts: newConcepts}),{
     successNode: null,
     successNotes: {
