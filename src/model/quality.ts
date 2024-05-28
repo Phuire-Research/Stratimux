@@ -4,7 +4,7 @@ This model allows for qualities to be made at a single point of entry, reducing 
 $>*/
 
 import { Subject, map } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
 import { strategySuccess } from './actionStrategy';
 import { Method, MethodCreator, Quality, Reducer } from './concept';
 import { ActionType } from './method';
@@ -12,7 +12,6 @@ import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 /*<#*/
-export type Qualities = Record<string, Quality<Record<string,unknown>>>;
 
 export function defaultReducer(state: unknown, _: Action) {
   return state;
@@ -42,9 +41,9 @@ export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>
   return [defaultMethod, defaultSubject];
 };
 
-function createQuality<T extends Record<string, unknown>>(
+function createQuality<T = void>(
   actionType: ActionType,
-  actionCreator: ActionCreator | ActionCreatorWithPayload<T>,
+  actionCreator: ActionCreatorType<T>,
   reducer: Reducer,
   methodCreator?: MethodCreator,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,12 +70,13 @@ export function createQualitySet(q: {
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): [ActionCreator, ActionType, Quality<Record<string, unknown>>] {
+}): [ActionCreator, ActionType, Quality<void>] {
   const actionCreator = prepareActionCreator(q.type);
   return [
     actionCreator,
     q.type,
-    createQuality(q.type, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createQuality<void>(q.type, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 
@@ -88,11 +88,11 @@ export function createQualitySetWithPayload<T extends Record<string, unknown>>(q
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
 }): [ActionCreatorWithPayload<T>, ActionType, Quality<T>] {
-  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type);
+  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type) as ActionCreatorType<T>;
   return [
     actionCreatorWithPayload,
     q.type,
-    createQuality(q.type, actionCreatorWithPayload, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
+    createQuality<T>(q.type, actionCreatorWithPayload, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
   ];
 }
 

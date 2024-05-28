@@ -4,7 +4,7 @@ This file will contain a series of selectors that can be used to engage with dif
 $>*/
 /*<#*/
 import { Action } from './action';
-import { Concept, Concepts } from './concept';
+import { AnyConcept, Concept, Concepts, Qualities } from './concept';
 import { DotPath } from './dotPath';
 
 /**
@@ -230,12 +230,12 @@ export function selectPayload<T>(action: Action): T {
 export function selectSlice<T>(
   concepts: Concepts,
   keyed: KeyedSelector): T | undefined {
-  const concept: Concept<any> | undefined = (() => {
+  const concept: AnyConcept | undefined = (() => {
     if (keyed.conceptSemaphore === -1) {
       const name = keyed.conceptName;
       const conceptKeys = Object.keys(concepts);
       const length = conceptKeys.length;
-      const select = (index: number): Concept<any> | undefined => {
+      const select = (index: number): AnyConcept | undefined => {
         const i = Number(conceptKeys[index]);
         const possible = concepts[i];
         if (possible && possible.name === name) {
@@ -265,10 +265,10 @@ export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | unde
   return undefined;
 }
 
-export function selectConcept(concepts: Concepts, name: string): Concept<any> | undefined {
+export function selectConcept<T extends Qualities>(concepts: Concepts, name: string): Concept<T> | undefined {
   const conceptKeys = Object.keys(concepts);
   const length = conceptKeys.length;
-  const select = (index: number): Concept<any> | undefined => {
+  const select = (index: number): Concept<T> | undefined => {
     const i = Number(conceptKeys[index]);
     if (concepts[i] && concepts[i].name === name) {
       return concepts[i];

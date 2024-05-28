@@ -5,7 +5,7 @@ A concept is composed of name, unified, state, qualities, semaphore, principles,
 $>*/
 /*<#*/
 import { Observable, Subject } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorWithPayload, ActionType, Actions } from './action';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
@@ -29,10 +29,10 @@ export type Mode = ([action, concept, action$, concepts$]: [
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
-export type Quality<T extends Record<string,unknown>> = {
+export type Quality<T = void> = {
   actionType: ActionType;
   actionSemaphoreBucket: [number, number, number, number][];
-  actionCreator: ActionCreator | ActionCreatorWithPayload<T>;
+  actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
   reducer: Reducer;
   toString: () => string;
   methodCreator?: MethodCreator;
@@ -44,28 +44,32 @@ export type Quality<T extends Record<string,unknown>> = {
 };
 
 export type Qualities = {
-  [s: string]: Quality<Record<string,unknown>>
+  [s: string]: Quality<Record<string, unknown>> | Quality<undefined>
+  // [s: string]: Quality<Record<string, unknown>>
 };
 
-export type Concept<T extends object> = {
+export type Concept<T = void> = {
   name: string;
   unified: string[];
   state: Record<string, unknown>;
   actions: Actions<T>;
-  qualities: Quality<Record<string, unknown>>[];
+  qualities: Quality<unknown>[];
   semaphore: number;
-  principles?: PrincipleFunction<Record<string, unknown>>[];
+  principles?: PrincipleFunction<T>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
 
-export type Concepts = Record<number, Concept<any>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyConcept = Concept<any>;
 
-export function createConcept<T extends object>(
+export type Concepts = Record<number, AnyConcept>;
+
+export function createConcept<T = void>(
   name: string,
   state: Record<string, unknown>,
-  _qualities?: Qualities,
-  principles?: PrincipleFunction<Record<string, unknown>>[],
+  _qualities?: Record<string, unknown>,
+  principles?: PrincipleFunction<T>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
 ): Concept<T> {
@@ -80,11 +84,11 @@ export function createConcept<T extends object>(
     });
   }
   const actions: Record<string, unknown> = {};
-  const qualities: Quality<Record<string, unknown>>[] = [];
+  const qualities: Quality<unknown>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
-      actions[q] = _qualities[q].actionCreator;
-      qualities.push(_qualities[q]);
+      actions[q] = (_qualities[q] as Quality<unknown>).actionCreator;
+      qualities.push(_qualities[q] as Quality<unknown>);
     });
   }
   return {
@@ -104,10 +108,11 @@ export function createConcept<T extends object>(
  * This will remove any duplicate qualities, principles, and modes.
  * Note that for now the check for mode and principle are based on concept name and loaded index;
  */
-function filterSimilarQualities(concept: Concept<any>) {
-  const newQualities: Quality<Record<string, unknown>>[] = [];
+function filterSimilarQualities(concept: AnyConcept) {
+  const newQualities: Quality<unknown>[] = [];
   const newUnified: string[] = [];
-  const newPrinciples: PrincipleFunction<Record<string, unknown>>[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const newPrinciples: PrincipleFunction<any>[] = [];
   const newMode: Mode[] = [];
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;
@@ -168,7 +173,7 @@ function filterSimilarQualities(concept: Concept<any>) {
   return concept;
 }
 
-function unify<T extends object, K extends object>(base: Concept<T>, target: Concept<K>): Concept<T & K> {
+function unify<T extends Qualities, K extends Qualities>(base: Concept<T>, target: Concept<K>): Concept<T & K> {
   if (target.name !== '') {
     base.unified.push(target.name);
   }
@@ -190,14 +195,18 @@ function unify<T extends object, K extends object>(base: Concept<T>, target: Con
   };
   if (target.principles) {
     if (base.principles) {
-      base.principles = [
+      const principles = [
         ...base.principles,
         ...target.principles
-      ];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any;
+      base.principles = principles;
     } else {
-      base.principles = [
+      const principles = [
         ...target.principles
-      ];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any;
+      base.principles = principles;
     }
   }
   if (target.mode) {
@@ -230,11 +239,11 @@ function unify<T extends object, K extends object>(base: Concept<T>, target: Con
  * This will unify concepts while prioritizing qualities later in the provided concepts list via recomposition.
  *  Then finally unify the emergent concept with final priority.
  */
-export function unifyConcepts<T extends object>(
-  concepts: Concept<any>[],
-  emergentConcept: Concept<any>
+export function unifyConcepts<T extends Qualities>(
+  concepts: AnyConcept[],
+  emergentConcept: AnyConcept
 ): Concept<T> {
-  let newConcept = createConcept('', {});
+  let newConcept = createConcept<T>('', {});
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
   }));
@@ -267,7 +276,6 @@ export const getConceptSemaphore = (concepts: Concepts, conceptName: string): nu
   return -1;
 };
 
-
 export const isConceptLoaded = (concepts: Concepts, conceptName: string): boolean => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
@@ -299,7 +307,7 @@ export const areConceptsLoaded = (concepts: Concepts, conceptNames: string[]): b
   return allExists;
 };
 
-export const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore: number) => void) => {
+export const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphore: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);
@@ -323,7 +331,7 @@ const stateToString = (state: Record<string, unknown>): string => {
   return final;
 };
 
-export const conceptToString = (concept: Concept<any>): string => {
+export const conceptToString = (concept: AnyConcept): string => {
   let output = '';
   output += `{\nname: ${concept.name},`;
   if (concept.unified.length > 0) {

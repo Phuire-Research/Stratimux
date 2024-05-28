@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concept, Concepts } from './concept';
+import { Concept, Concepts, Qualities, Quality } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -33,8 +33,24 @@ export type Action = {
     origin?: string;
 };
 
-export type Actions<T extends object> = {
-  [K in keyof T]: ActionCreator | ActionCreatorWithPayload<Record<string, unknown>>
+export type ActionCreator = (
+  options?: ActionOptions
+) => Action;
+
+export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
+  payload: T,
+  options?: ActionWithPayloadOptions<T>
+) => Action;
+
+export type ActionCreatorType<T = void> =
+  T extends Record<string, unknown> ?
+    ActionCreatorWithPayload<T> :
+    ActionCreator;
+
+export type Actions<T = void> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]: T[K] extends Quality<any> ?
+    T[K]['actionCreator'] : ActionCreator;
 };
 
 export type ActionOptions = {
@@ -148,6 +164,7 @@ export function getSemaphore(concepts: Concepts, conceptName: string, actionType
 }
 
 // For proper compilation
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore?: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
@@ -232,10 +249,6 @@ export function createAction<T extends Record<string, unknown>>(
   }
 }
 
-export type ActionCreator = (
-    options?: ActionOptions
-  ) => Action;
-
 export function prepareActionCreator(actionType: ActionType) {
   return (
     options?: ActionOptions
@@ -262,10 +275,6 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
     );
   };
 }
-export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
-    payload: T,
-    options?: ActionWithPayloadOptions<T>
-  ) => Action;
 
 /**
  * Should only be used after if you can logically determine that the semaphores have been primed.

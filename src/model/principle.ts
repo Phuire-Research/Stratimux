@@ -5,13 +5,13 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts } from './concept';
+import { Concepts, Qualities, Quality } from './concept';
 import { Action, Actions, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';
 
-export type PrincipleFunction<T extends Record<string, unknown>> = (
+export type PrincipleFunction<T = void> = (
   observer: Subscriber<Action>,
   concepts: Concepts,
   concept$: UnifiedSubject,
@@ -19,7 +19,7 @@ export type PrincipleFunction<T extends Record<string, unknown>> = (
   keyedSelectors: KeyedSelectors
 ) => void;
 
-export function createPrinciple$<T extends Record<string, unknown>>(
+export function createPrinciple$<T = void>(
   principleFunc: PrincipleFunction<T>,
   concepts: Concepts,
   concepts$: UnifiedSubject,
