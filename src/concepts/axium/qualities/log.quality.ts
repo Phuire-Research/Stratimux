@@ -24,6 +24,4 @@ export const [
     }
   })
 });
-
-console.log('HIT', axiumLogQuality);
 /*#>*/

@@ -149,7 +149,6 @@ const axiumQualities = {
 };
 
 export type AxiumQualities = typeof axiumQualities;
-console.log('CHECK AXIUM Q', axiumQualities.axiumLogQuality, axiumQualities.axiumRegisterTimeOutQuality);
 
 export const createAxiumConcept = (
   name: string,

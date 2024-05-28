@@ -3,10 +3,10 @@ For the asynchronous graph programming framework Stratimux, generate a tests and
 $>*/
 /*<#*/
 import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
-import { axiumRegisterTimeOut } from '../../concepts/axium/qualities/registerTimeOut.quality';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSelectCount } from '../../concepts/counter/counter.selector';
 import { counterAdd } from '../../concepts/counter/qualities/add.quality';
+import { createAction } from '../../model/action';
 import { createAxium } from '../../model/axium';
 import { selectState } from '../../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
@@ -16,40 +16,40 @@ test('Axium Register Time Out', (done) => {
   const plan = axium.plan('timeout add 4 after 10ms', [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
-      dispatch(axiumRegisterTimeOut({
+      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
         act: counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
     createStage((concepts, dispatch) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
+      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
         act: counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
     createStage((concepts, dispatch) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
+      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
         act: counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
     createStage((concepts, dispatch) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
+      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
         act: counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
