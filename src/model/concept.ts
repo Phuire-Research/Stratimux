@@ -5,7 +5,7 @@ A concept is composed of name, unified, state, qualities, semaphore, principles,
 $>*/
 /*<#*/
 import { Observable, Subject } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorWithPayload, ActionType } from './action';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
@@ -13,6 +13,7 @@ import { KeyedSelector, KeyedSelectors } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { isT } from './interface';
+import { Qualities, Quality } from './quality';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer = (state: any, action: Action) => any;
@@ -27,38 +28,10 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-export type ActionCreatorType<T = void> =
-  T extends Record<string, unknown> ?
-    ActionCreatorWithPayload<T> :
-    ActionCreator;
 
-export type Actions<T = void> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends Quality<any> ?
-    T[K]['actionCreator'] : ActionCreator;
-};
 
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
-
-export type Quality<T = void> = {
-  actionType: ActionType;
-  actionSemaphoreBucket: [number, number, number, number][];
-  actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
-  reducer: Reducer;
-  toString: () => string;
-  methodCreator?: MethodCreator;
-  method?: Method;
-  subject?: Subject<Action>;
-  keyedSelectors?: KeyedSelector[];
-  meta?: Record<string,unknown>;
-  analytics?: Record<string,unknown>;
-};
-
-export type Qualities = {
-  [s: string]: Quality<Record<string, unknown>> | Quality<undefined>
-  // [s: string]: Quality<Record<string, unknown>>
-};
 
 export type Concept<T = void> = {
   name: string;

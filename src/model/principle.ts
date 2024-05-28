@@ -5,8 +5,8 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Actions, Concepts, Qualities, Quality } from './concept';
-import { Action, primeAction } from './action';
+import { Concepts } from './concept';
+import { Action, Actions, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';

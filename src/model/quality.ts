@@ -4,14 +4,32 @@ This model allows for qualities to be made at a single point of entry, reducing 
 $>*/
 
 import { Subject, map } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
 import { strategySuccess } from './actionStrategy';
-import { ActionCreatorType, Method, MethodCreator, Quality, Reducer, createQuality } from './concept';
+import { Method, MethodCreator, Reducer, createQuality } from './concept';
 import { ActionType } from './method';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 
 /*<#*/
+export type Quality<T = void> = {
+  actionType: ActionType;
+  actionSemaphoreBucket: [number, number, number, number][];
+  actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
+  reducer: Reducer;
+  toString: () => string;
+  methodCreator?: MethodCreator;
+  method?: Method;
+  subject?: Subject<Action>;
+  keyedSelectors?: KeyedSelector[];
+  meta?: Record<string,unknown>;
+  analytics?: Record<string,unknown>;
+};
+
+export type Qualities = {
+  [s: string]: Quality<Record<string, unknown>> | Quality<undefined>
+  // [s: string]: Quality<Record<string, unknown>>
+};
 
 export function defaultReducer(state: unknown, _: Action) {
   return state;

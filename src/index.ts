@@ -94,7 +94,6 @@ export {
 export type {
   Concept,
   Concepts,
-  Quality,
   Reducer,
   Method,
   Principle,
@@ -107,6 +106,7 @@ export {
   defaultReducer,
   nullReducer,
   defaultMethodCreator,
+  Quality,
   quality
 } from './model/quality';
 export type { KeyedSelector } from './model/selector';

@@ -4,8 +4,9 @@ This file will contain a series of selectors that can be used to engage with dif
 $>*/
 /*<#*/
 import { Action } from './action';
-import { AnyConcept, Concept, Concepts, Qualities } from './concept';
+import { AnyConcept, Concept, Concepts } from './concept';
 import { DotPath } from './dotPath';
+import { Qualities } from './quality';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.

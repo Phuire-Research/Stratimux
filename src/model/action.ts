@@ -3,12 +3,13 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concept, Concepts, Qualities, Quality } from './concept';
+import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { AxiumBadActionPayload } from '../concepts/axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+import { Quality } from './quality';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
@@ -31,6 +32,17 @@ export type Action = {
     priority?: number;
     axium?: string;
     origin?: string;
+};
+
+export type ActionCreatorType<T = void> =
+  T extends Record<string, unknown> ?
+    ActionCreatorWithPayload<T> :
+    ActionCreator;
+
+export type Actions<T = void> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]: T[K] extends Quality<any> ?
+    T[K]['actionCreator'] : ActionCreator;
 };
 
 export type ActionCreator = (

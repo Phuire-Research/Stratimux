@@ -4,16 +4,9 @@ And ensure that the semaphore is being set via the Axium for the actions created
 $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
-import { strategyBegin } from '../model/actionStrategy';
-import { selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
-import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { createStage } from '../model/stagePlanner';
 import { createQualitySet, createQualitySetWithPayload } from '../model/quality';
-import { Actions, Qualities, Quality, createConcept } from '../model/concept';
-import { Action } from '../model/action';
-import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { createConcept } from '../model/concept';
+import { Actions } from '../model/action';
 
 test('Quality Actions', (done) => {
   const [one, two, something] = createQualitySet({

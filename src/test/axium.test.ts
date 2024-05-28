@@ -4,7 +4,6 @@ for the getAxiumState helper function to properly return the current axium state
 $>*/
 /*<#*/
 import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { axium_createStitchNode } from '../concepts/axium/model/stitch.model';
 import {
   ActionStrategy,
@@ -19,11 +18,12 @@ import { selectSlice } from '../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
+import { createAction } from '../model/action';
 
 test('Axium advanced usage: StrategyStitch', (done) => {
   const yourStrategyStitch: ActionStrategyStitch = () => {
     const stepStitch = axium_createStitchNode();
-    const stepOne = createActionNode(axiumLog(), {
+    const stepOne = createActionNode(createAction('logged a message passed to Axium'), {
       successNode: stepStitch,
       failureNode: null
     });
@@ -35,7 +35,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
   };
 
   const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrategy => {
-    const stepFinal = createActionNode(axiumLog(), {
+    const stepFinal = createActionNode(createAction('logged a message passed to Axium'), {
       successNode: null,
       failureNode: null
     });
@@ -48,7 +48,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
     stitchEnd.successNode = stepFinal;
     const stitchHead = createActionNodeFromStrategy(stitchStrategy);
 
-    const stepOne = createActionNode(axiumLog(), {
+    const stepOne = createActionNode(createAction('logged a message passed to Axium'), {
       successNode: stitchHead,
       failureNode: null
     });
@@ -59,24 +59,27 @@ test('Axium advanced usage: StrategyStitch', (done) => {
       initialNode: stepOne
     });
   };
-  const axium = createAxium('Test advanced usage', [createCounterConcept()]);
-  const strategy = yourComposingStrategy(yourStrategyStitch);
-  const plan = axium.plan('Test Stitch', [
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((_, dispatch) => {
-      dispatch(strategyBegin(strategy), {
-        iterateStage: true
-      });
-    }),
-    createStage((concepts, _) => {
-      const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
-      if (lastTopic === strategy.topic) {
-        expect(true).toBe(true);
-        plan.conclude();
-        done();
-      }
-    })
-  ]);
+  createAxium('dummy', []);
+  setTimeout(() => {
+    const axium = createAxium('Test advanced usage', [createCounterConcept()]);
+    const strategy = yourComposingStrategy(yourStrategyStitch);
+    const plan = axium.plan('Test Stitch', [
+      stageWaitForOpenThenIterate(() => axiumKick()),
+      createStage((_, dispatch) => {
+        dispatch(strategyBegin(strategy), {
+          iterateStage: true
+        });
+      }),
+      createStage((concepts, _) => {
+        const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
+        if (lastTopic === strategy.topic) {
+          expect(true).toBe(true);
+          plan.conclude();
+          done();
+        }
+      })
+    ]);
+  }, 1000);
 });
 
 test('Axium get axium state helper function', (done) => {

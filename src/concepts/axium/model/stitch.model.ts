@@ -4,6 +4,7 @@ This function allows for Strategy Stitches to be composed of only one action nod
 While calling the axium's stitch quality to silently move to the next node assigned to the end of that stitch.
 $>*/
 /*<#*/
+import { createAction } from '../../../model/action';
 import { ActionNodeOptions, createActionNode } from '../../../model/actionStrategy';
 import { axiumStitch } from '../qualities/stitch.quality';
 
@@ -13,7 +14,7 @@ import { axiumStitch } from '../qualities/stitch.quality';
  * @returns ActionNode of axiumStitch
  */
 export const axium_createStitchNode = (options?: ActionNodeOptions) =>
-  (createActionNode(axiumStitch(), options ? options : {
+  (createActionNode(createAction('Axium Stitch'), options ? options : {
     successNode: null,
     failureNode: null,
   }));

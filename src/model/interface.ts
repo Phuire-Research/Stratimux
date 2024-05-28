@@ -2,8 +2,7 @@
 For the asynchronous graph programming framework Stratimux, define the Interface model file.
 $>*/
 
-import { Action } from './action';
-import { Actions } from './concept';
+import { Action, Actions } from './action';
 import { KeyedSelectors } from './selector';
 
 /*<#*/

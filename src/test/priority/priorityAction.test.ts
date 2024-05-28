@@ -185,14 +185,15 @@ test('Priority Action Close Test', (done) => {
     expect(body[4].type).toBe(kick.type);
     let dispatched = false;
     axium.subscribe(cpts => {
-      if (dispatched) {
+      if (!dispatched) {
+        dispatched = true;
         const preClose = axiumPreClose({
           exit: false
         });
         preClose.priority = 100000;
         axium.dispatch(preClose);
       }
-      expect(selectState<CounterState>(cpts, counterName)).toBe(0);
+      expect(selectState<CounterState>(cpts, counterName)?.count).toBe(0);
       if (!dispatched) {
         setTimeout(() => {
           done();
