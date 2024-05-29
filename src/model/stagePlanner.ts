@@ -17,7 +17,7 @@ import { ownershipSelectInitialized } from '../concepts/ownership/ownership.sele
 import { Axium, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
-import { HInterface } from './interface';
+import { HInterface, UInterface } from './interface';
 import { Qualities } from './quality';
 
 export type Plan = {
@@ -35,21 +35,21 @@ export type Plan = {
   changeAggregator: Record<string, KeyedSelector>;
 }
 
-export type Stage = (params: StageParams) => void;
+export type Stage<T> = (params: StageParams<T>) => void;
 
-export type StageParams = {
+export type StageParams<T = void> = {
   concepts: Concepts,
   dispatch: (action: Action, options: dispatchOptions, ) => void,
   changes: KeyedSelector[],
   stagePlanner: StagePlanner
-}
+} & UInterface<T>
 
 export type Planning = <T = void>(title: string, planner: Planner<T>) => StagePlanner;
 
 export type Planner<T = void> = (uI: HInterface<T>) => PartialStaging[];
 
 export type Staging = {
-  stage: Stage;
+  stage: Stage<any>;
   selectors: KeyedSelector[];
   firstRun: boolean;
   priority?: number
@@ -57,7 +57,7 @@ export type Staging = {
 };
 
 export type PartialStaging = {
-  stage: Stage;
+  stage: Stage<any>;
   selectors?: KeyedSelector[];
   priority?: number
   beat?: number,
@@ -136,7 +136,7 @@ export const stageWaitForOwnershipThenIterate =
  * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
  * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
  */
-export const createStage = (stage: Stage, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging => {
+export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging => {
   if (options) {
     return {
       stage,
@@ -717,11 +717,19 @@ export class UnifiedSubject extends Subject<Concepts> {
     const conclude = () => {
       this.deletePlan(plan.id);
     };
-    plan.stages[index].stage({concepts: this.concepts, dispatch: dispatcher, changes, stagePlanner: {
-      title: plan.title,
-      planId: plan.id,
-      conclude: conclude.bind(this)
-    }});
+    plan.stages[index].stage({
+      concepts: this.concepts,
+      dispatch: dispatcher,
+      changes,
+      stagePlanner: {
+        title: plan.title,
+        planId: plan.id,
+        conclude: conclude.bind(this)
+      },
+      a: this.concepts[plan.conceptSemaphore].actions,
+      s: {},
+      t: []
+    });
   }
 
   protected nextPlans() {

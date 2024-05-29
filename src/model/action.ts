@@ -174,7 +174,7 @@ const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaph
   }
 };
 
-export function createCacheSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
+export function createCachedSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
   const generation = (concepts[0].state as AxiumState).generation;
   const newCachedSemaphores = new Map<string, Map<string, [number, number, number, number]>>();
 
@@ -182,7 +182,9 @@ export function createCacheSemaphores(concepts: Concepts): Map<string, Map<strin
     const qualityMap = new Map<string, [number, number, number, number]>();
     concept.qualities.forEach((quality, qi) => {
       const semaphore: [number, number, number, number] = [ci as number, qi, generation, getSpecialSemaphore(quality.actionType)];
-      quality.actionSemaphoreBucket[0] = semaphore;
+      quality.actionSemaphoreBucket.shift();
+      quality.actionSemaphoreBucket.push(semaphore);
+      // console.log(quality.actionType, semaphore);
       qualityMap.set(quality.actionType, semaphore);
     });
     newCachedSemaphores.set(concept.name, qualityMap);
@@ -222,6 +224,7 @@ export function createAction<T extends Record<string, unknown>>(
   options?: ActionWithPayloadOptions<T>,
 ): Action {
   const special = getSpecialSemaphore(type);
+
   const semaphore = options?.semaphore !== undefined ? options.semaphore : [0, 0, -1, special] as [number, number, number, number];
   if (options) {
     const {
@@ -268,7 +271,9 @@ export function prepareActionCreator(
       );
     }
     return createAction(
-      actionType,
+      actionType, {
+        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1]
+      }
     );
   };
 }
@@ -307,7 +312,7 @@ export const act = ({
   prime: primeAction,
   refresh: refreshAction,
   getSemaphore,
-  createCacheSemaphores,
+  createCachedSemaphores,
   create: createAction,
   prepareActionCreator,
   prepareActionWithPayloadCreator,

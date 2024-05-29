@@ -7,7 +7,7 @@ import { Axium, createAxium } from '../model/axium';
 import { createQualitySet, createQualitySetWithPayload } from '../model/quality';
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
-import { stageWaitForOpenThenIterate } from '../model/stagePlanner';
+import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { AxiumQualities } from '../concepts/axium/axium.concept';
 
 test('Quality Actions', (done) => {
@@ -61,11 +61,16 @@ test('Quality Actions', (done) => {
     c
   ]);
   const p = axium.plan<AxiumQualities>('outer plan', ({a__}) => [
-    stageWaitForOpenThenIterate(() => a__.axiumKickQuality())
+    stageWaitForOpenThenIterate(() => a__.axiumKickQuality()),
+    createStage<AxiumQualities>(({a, stagePlanner}) => {
+      const log = a.axiumLogQuality();
+      console.log('CHECK LOG', log);
+      stagePlanner.conclude();
+      done();
+    })
   ]);
 
   axium.subscribe(concepts => concepts);
   expect(f(c.actions).type).toBe('Something');
-  done();
 });
 /*#>*/

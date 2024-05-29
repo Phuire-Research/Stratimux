@@ -13,7 +13,7 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, createAction, createCacheSemaphores } from './action';
+import { Action, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
 import { AnyConcept, Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
@@ -228,7 +228,7 @@ export function createAxium(
     concepts[i] = concept;
   });
   let axiumState = concepts[0].state as AxiumState;
-  axiumState.cachedSemaphores = createCacheSemaphores(concepts);
+  axiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     axiumState.conceptCounter += 1;
     concept.qualities.forEach(quality => {

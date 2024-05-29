@@ -6,7 +6,7 @@ $>*/
 import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
-import { Action, createCacheSemaphores } from '../../model/action';
+import { Action, createCachedSemaphores } from '../../model/action';
 import { AxiumQualities, AxiumState, axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
@@ -95,7 +95,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         });
 
         const newAxiumState = newConcepts[0].state as AxiumState;
-        newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
+        newAxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
 
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
@@ -147,7 +147,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         newConcepts[0].mode = newModes;
         newAxiumState.modeNames = newModeNames;
 
-        newAxiumState.cachedSemaphores = createCacheSemaphores(newConcepts);
+        newAxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
         newAxiumState.methodSubscribers.forEach(named => {
           named.subscription.unsubscribe();
         });
