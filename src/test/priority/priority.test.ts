@@ -66,8 +66,8 @@ test('Priority Test', (done) => {
 
   const LOW = 'Low';
   const LOW_PRIORITY = 1;
-  const low = priorityTest.plan(
-    'Low Priority Plan', [
+  const low: StagePlanner = priorityTest.plan(
+    'Low Priority Plan', () => [
       firstStage(LOW, LOW_PRIORITY),
       secondStage(LOW, 1, LOW_PRIORITY),
       thirdStage(LOW, 111, LOW_PRIORITY),
@@ -75,8 +75,8 @@ test('Priority Test', (done) => {
     ]);
   const HIGH = 'High';
   const HIGH_PRIORITY = 100;
-  const high = priorityTest.plan(
-    'High Priority Plan', [
+  const high: StagePlanner = priorityTest.plan(
+    'High Priority Plan', () => [
       firstStage(HIGH, HIGH_PRIORITY),
       secondStage(HIGH, 100, HIGH_PRIORITY),
       thirdStage(HIGH, 100, HIGH_PRIORITY),
@@ -84,8 +84,8 @@ test('Priority Test', (done) => {
     ]);
   const MID = 'Mid';
   const MID_PRIORITY = 50;
-  const mid = priorityTest.plan(
-    'Mid Priority Plan', [
+  const mid: StagePlanner = priorityTest.plan(
+    'Mid Priority Plan', () => [
       firstStage(MID, MID_PRIORITY),
       secondStage(MID, 10, MID_PRIORITY),
       thirdStage(MID, 110, MID_PRIORITY),

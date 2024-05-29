@@ -36,7 +36,7 @@ test('Debounce method prevent excess count', (done) => {
   const qualities = {experimentDebounceNextActionNodeQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
-  const plan = axium.plan('Experiment debounce add one', [
+  const plan = axium.plan('Experiment debounce add one', () => [
     createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
         iterateStage: true
@@ -69,7 +69,7 @@ test('Async debounce method prevent excess count', (done) => {
   const qualities = {experimentAsyncDebounceNextActionNodeQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
-  const plan = axium.plan('Experiment async debounce add one', [
+  const plan = axium.plan('Experiment async debounce add one', () => [
     createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
         iterateStage: true
@@ -96,7 +96,7 @@ test('Async debounce method prevent excess count', (done) => {
     })
   ]);
   setTimeout(() => {
-    const secondPlan = axium.plan('Second experiment async debounce add one', [
+    const secondPlan = axium.plan('Second experiment async debounce add one', () => [
       createStage((_, dispatch) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
@@ -136,7 +136,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   const qualities = {experimentDebounceIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Debounce Iterate id with concepts', [
+  const plan = axium.plan('Debounce Iterate id with concepts', () => [
     createStage((concepts, dispatch) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -190,7 +190,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = axium.plan('Second experiment debounce add one', [
+    const secondPlan = axium.plan('Second experiment debounce add one', () => [
       createStage((concepts, dispatch) => {
         console.log('2 Debounce initial dispatch');
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -254,7 +254,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   const qualities = {experimentDebounceAsyncIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Debounce Async Iterate id with concepts', [
+  const plan = axium.plan('Debounce Async Iterate id with concepts', () => [
     createStage((concepts, dispatch) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -308,7 +308,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = axium.plan('Second experiment async debounce add one', [
+    const secondPlan = axium.plan('Second experiment async debounce add one', () => [
       createStage((concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {

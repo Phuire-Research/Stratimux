@@ -3,10 +3,12 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 And ensure that the semaphore is being set via the Axium for the actions created using said qualities.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { Axium, createAxium } from '../model/axium';
 import { createQualitySet, createQualitySetWithPayload } from '../model/quality';
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
+import { stageWaitForOpenThenIterate } from '../model/stagePlanner';
+import { AxiumQualities } from '../concepts/axium/axium.concept';
 
 test('Quality Actions', (done) => {
   const [one, two, something] = createQualitySet({
@@ -40,11 +42,11 @@ test('Quality Actions', (done) => {
     return actions.something();
   };
   const c = createConcept<typeof qs>('Some', {}, qs, [
-    ({a}) => {
-      console.log('HIT PRINCIPLE', a.some({
+    ({a_}) => {
+      console.log('HIT PRINCIPLE', a_.some({
         here: 2
       }));
-      expect(a.something().type).toBe('Something');
+      expect(a_.something().type).toBe('Something');
     }
   ]);
   c.actions.something;
@@ -58,6 +60,10 @@ test('Quality Actions', (done) => {
   const axium = createAxium('Quality Actions', [
     c
   ]);
+  const p = axium.plan<AxiumQualities>('outer plan', ({a__}) => [
+    stageWaitForOpenThenIterate(() => a__.axiumKickQuality())
+  ]);
+
   axium.subscribe(concepts => concepts);
   expect(f(c.actions).type).toBe('Something');
   done();

@@ -32,7 +32,7 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Throttle Iterate id with Concepts', [
+  const plan = axium.plan('Throttle Iterate id with Concepts', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((concepts, dispatch) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -96,7 +96,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
   const qualities = {experimentThrottleAsyncIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Action Throttle Async Iterate id with Concepts', [
+  const plan = axium.plan('Action Throttle Async Iterate id with Concepts', () => [
     createStage((concepts, dispatch) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -149,7 +149,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
     })
   ]);
   setTimeout(() => {
-    const secondPlan = axium.plan('Action Throttle Async Iterate id with Concepts', [
+    const secondPlan = axium.plan('Action Throttle Async Iterate id with Concepts', () => [
       createStage((concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {

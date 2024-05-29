@@ -9,18 +9,22 @@ $>*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
 import { Concepts } from './concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { AxiumQualities, AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
 import { Action, ActionType, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
+import { Axium, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
+import { HInterface } from './interface';
+import { Qualities } from './quality';
 
 export type Plan = {
   id: number;
   space: number;
+  conceptSemaphore: number;
+  conceptName: string;
   title: string;
   stages: Staging[],
   stage: number;
@@ -36,6 +40,10 @@ export type Stage = (
   dispatch: (action: Action, options: dispatchOptions, ) => void,
   changes: KeyedSelector[]
 ) => void;
+
+export type Planning = <T = void>(title: string, planner: Planner<T>) => StagePlanner;
+
+export type Planner<T = void> = (uI: HInterface<T>) => PartialStaging[];
 
 export type Staging = {
   stage: Stage;
@@ -117,7 +125,6 @@ export const stageWaitForOwnershipThenIterate =
       });
     }
   }, { selectors: [ownershipSelectInitialized] }));
-
 /**
  * Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
  * @param stage - (concepts, dispatch) => {}
@@ -334,7 +341,12 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan(title: string, stages: PartialStaging[], space: number): Plan {
+  protected createPlan = <T = void>(title: string, planner: Planner<T>, space: number, conceptSemaphore: number): Plan => {
+    const stages = planner({
+      a__: this.concepts[conceptSemaphore].actions,
+      s__: {},
+      t__: []
+    });
     const planId = this.planId;
     this.planId += 1;
     const staged: Staging[] = stages.map<Staging>(s => {
@@ -350,6 +362,8 @@ export class UnifiedSubject extends Subject<Concepts> {
     return {
       id: planId,
       space,
+      conceptSemaphore,
+      conceptName: this.concepts[conceptSemaphore].name,
       title,
       stages: staged,
       stage: 0,
@@ -359,7 +373,7 @@ export class UnifiedSubject extends Subject<Concepts> {
       timer: [],
       changeAggregator: {}
     };
-  }
+  };
 
   protected initPlan(plan: Plan): StagePlanner {
     this.currentPlans.set(plan.id, plan);
@@ -379,17 +393,18 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   }
 
-  innerPlan(title: string, stages: PartialStaging[]) {
-    return this.initPlan(this.createPlan(title, stages, Inner));
-  }
+  innerPlan: Planning = <T = void>(title: string, planner: Planner<T>) => {
+    return this.initPlan(this.createPlan<T>(title, planner, Inner, 0));
+  };
 
-  outerPlan(title: string, stages: PartialStaging[]) {
-    return this.initPlan(this.createPlan(title, stages, Outer));
-  }
+  // [TODO] - IMPORTANT - LIMIT THIS TO WHITE LISTED VALUES
+  outerPlan: Planning = <T = void>(title: string, planner: Planner<T>) => {
+    return this.initPlan(this.createPlan<T>(title, planner, Outer, 0));
+  };
 
-  plan(title: string, stages: Staging[]): StagePlanner {
-    return this.initPlan(this.createPlan(title, stages, Base));
-  }
+  plan = (conceptSemaphore: number): Planning => <T>(title: string, planner: Planner<T>): StagePlanner => {
+    return this.initPlan(this.createPlan<T>(title, planner, Base, conceptSemaphore));
+  };
 
   protected deletePlan(planId: number) {
     const plan = this.currentPlans.get(planId);

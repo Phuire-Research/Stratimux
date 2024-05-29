@@ -26,7 +26,7 @@ test('Axium Counting Strategy Priority Test', (done) => {
   strategy1.topic += 3;
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy with Priority Plan',
-    [
+    () => [
       createStage((concepts, dispatch) => {
         if (isAxiumOpen(concepts)) {
           handlePriority(getAxiumState(concepts), strategyBegin(strategy1));

@@ -21,7 +21,7 @@ test('Asynchronous recursion', (done) => {
   const qualities = {experimentRecurseIterateIdQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with Concepts', [experiment], {storeDialog: true});
-  const plan = axium.plan('Experiment debounce add one', [
+  const plan = axium.plan('Experiment debounce add one', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentRecursivelyIterateId([...list])), {

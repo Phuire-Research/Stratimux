@@ -28,7 +28,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
     }
   });
   const plan = axium.plan('Stage DispatchOptions Test',
-    [
+    () => [
       createStage((concepts, dispatch) => {
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 1 ', counter, runCount);

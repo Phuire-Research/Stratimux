@@ -23,7 +23,7 @@ test('Axium onChange Test', (done) => {
   };
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan with selectors',
-    [
+    () => [
       createStage((concepts, dispatch) => {
         console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {

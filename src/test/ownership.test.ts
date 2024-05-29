@@ -33,7 +33,7 @@ test('Ownership Test', (done) => {
     createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
   ], {logging: true, storeDialog: true});
   const plan = axium.plan(
-    'Testing Ownership Staging', [
+    'Testing Ownership Staging', () => [
       createStage((cpts, dispatch) => {
         const axiumState = cpts[0].state as AxiumState;
         console.log(axiumState.lastStrategy);

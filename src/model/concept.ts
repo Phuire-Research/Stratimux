@@ -4,7 +4,7 @@ This file defines the Concept abstraction that the Axium uses to Transform its f
 A concept is composed of name, unified, state, qualities, semaphore, principles, and some meta attributes if necessary.
 $>*/
 /*<#*/
-import { Observable, Subject } from 'rxjs';
+import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
@@ -12,7 +12,7 @@ import { map } from 'rxjs';
 import { KeyedSelector, KeyedSelectors } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
-import { isT } from './interface';
+import { IsT } from './interface';
 import { Qualities, Quality } from './quality';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,8 +28,6 @@ export type Mode = ([action, concept, action$, concepts$]: [
   UnifiedSubject,
 ]) => void;
 
-
-
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
@@ -39,7 +37,7 @@ export type Concept<T = void> = {
   state: Record<string, unknown>;
   actions: Actions<T>;
   selectors: KeyedSelectors;
-  typeValidators: isT[]
+  typeValidators: IsT[]
   qualities: Quality<unknown>[];
   q: Record<string, unknown>;
   semaphore: number;
@@ -52,6 +50,8 @@ export type Concept<T = void> = {
 export type AnyConcept = Concept<any>;
 
 export type Concepts = Record<number, AnyConcept>;
+
+export type ConceptsSubscriber = (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
 
 export function createConcept<T = void>(
   name: string,

@@ -20,12 +20,13 @@ import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
+  AxiumQualities,
 } from '../concepts/axium/axium.concept';
 import {
   axiumAppendActionListToDialog,
 } from '../concepts/axium/qualities/appendActionListToDialog.quality';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
-import { StagePlanner, Staging } from './stagePlanner';
+import { Planning } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
@@ -336,16 +337,17 @@ export function createAxium(
     dispatch: (action: Action) => {
       action$.next(action);
     },
-    plan: axiumState.concepts$.outerPlan.bind(axiumState.concepts$),
+    plan: axiumState.concepts$.outerPlan,
   };
 }
 
+// [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
 export type Axium = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action) => void;
-  plan: (title: string, stages: Staging[]) => StagePlanner
+  plan: Planning;
 }
 
 export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);

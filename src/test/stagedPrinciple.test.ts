@@ -33,8 +33,8 @@ const [
 
 test('Axium Principle Stage', (done) => {
   const qualities = {experimentMockToTrueQuality};
-  const experimentPrinciple: PrincipleFunction<typeof qualities> = ({concepts$}) => {
-    const plan = concepts$.plan('Experiment Principle', [
+  const experimentPrinciple: PrincipleFunction<typeof qualities> = ({plan}) => {
+    const planExperiment = plan('Experiment Principle', () => [
       stageWaitForOpenThenIterate(() => experimentMockToTrue()),
       createStage((concepts, dispatch) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -44,7 +44,7 @@ test('Axium Principle Stage', (done) => {
           dispatch(axiumPreClose({exit: false}), {
             iterateStage: true
           });
-          plan.conclude();
+          planExperiment.conclude();
         }
       }),
       createStage(() => {

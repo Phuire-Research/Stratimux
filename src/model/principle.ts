@@ -5,35 +5,52 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts } from './concept';
+import { Concepts, ConceptsSubscriber } from './concept';
 import { Action, Actions, primeAction } from './action';
 import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
-import { UnifiedSubject } from './stagePlanner';
+import { Planner, Planning, UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';
-import { isT, uInterface } from './interface';
+import { BInterface, IsT } from './interface';
 
-export type PrincipleInterface<T> = {
+export type PrincipleInterface<T = void> = {
   observer: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
+  concepts_: Concepts,
+  subscribe: ConceptsSubscriber,
+  plan: Planning,
+  nextC: (concepts: Concepts) => void,
+  nextA: (action: Action) => void,
   conceptSemaphore: number,
-} & uInterface<T>;
+} & BInterface<T>;
 
 export type PrincipleFunction<T = void> = (
-  uI: PrincipleInterface<T>
+  baseI: PrincipleInterface<T>
 ) => void;
 
 export function createPrinciple$<T = void>(
   principleFunc: PrincipleFunction<T>,
-  _concepts: Concepts,
-  concepts$: UnifiedSubject,
-  a: Actions<T>,
-  s: KeyedSelectors,
-  t: isT[],
+  concepts_: Concepts,
+  plan: Planning,
+  subscribe: ConceptsSubscriber,
+  nextC: (concepts: Concepts) => void,
+  nextA: (action: Action) => void,
   conceptSemaphore: number,
+  a_: Actions<T>,
+  s_: KeyedSelectors,
+  t_: IsT[]
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
-    principleFunc({observer: obs, _concepts, concepts$, a, s, t, conceptSemaphore});
+    principleFunc({
+      observer: obs,
+      concepts_,
+      plan,
+      subscribe,
+      nextC,
+      nextA,
+      a_,
+      s_,
+      t_,
+      conceptSemaphore
+    });
   });
 }
 

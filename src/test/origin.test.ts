@@ -32,12 +32,12 @@ test('Test Dispatch Override', (done) => {
     count: 0,
   } as CounterState,
   experimentCounterQualities, [
-    ({_concepts, concepts$}) => {
+    ({concepts_, plan}) => {
       const {
         body
-      } = getAxiumState(_concepts);
+      } = getAxiumState(concepts_);
       const stageName = 'Test Override';
-      const plan = concepts$.plan(stageName, [
+      const planTestOverride = plan(stageName, () => [
         stageWaitForOpenThenIterate(() => {
           return axiumKick();
         }),
@@ -78,7 +78,7 @@ test('Test Dispatch Override', (done) => {
         // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
         }),
         createStage(() => {
-          plan.conclude();
+          planTestOverride.conclude();
         })
       ]);
     }

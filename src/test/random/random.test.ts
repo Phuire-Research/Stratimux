@@ -15,7 +15,7 @@ test('Axium Counting Strategy Test', (done) => {
   const repeat = 10;
   let steps = 0;
   const plan = axium.plan('Counting Strategy Stage',
-    [
+    () => [
       stageWaitForOpenThenIterate(() => axiumKick()),
       createStage((_, dispatch) => {
         const [shouldBe, strategy] = generateRandomCountingStrategy(count);

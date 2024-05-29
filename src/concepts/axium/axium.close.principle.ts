@@ -13,20 +13,21 @@ import { axiumSelectPrepareClose } from './axium.selector';
 /*<#*/
 export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
   {
-    concepts$,
+    plan,
+    nextC
   },
 ) => {
   let init = false;
-  const plan = concepts$.innerPlan('Plan Axium Close', [
+  const planAxiumClose = plan('Plan Axium Close', () => [
     createStage((concepts, dispatch) => {
       const state = selectUnifiedState<AxiumState>(concepts, 0);
       if (!init && state?.prepareClose) {
         init = true;
-        concepts$.next({0: concepts[0]});
+        nextC({0: concepts[0]});
         dispatch(axiumClose({exit: state.exit}), {
           iterateStage: true
         });
-        plan.conclude();
+        planAxiumClose.conclude();
       }
     }, { selectors: [axiumSelectPrepareClose], priority: Infinity}),
     createStage(() => {

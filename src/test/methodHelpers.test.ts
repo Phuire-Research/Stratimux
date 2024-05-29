@@ -2,6 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that method helpers are working as intended.
 $>*/
 /*<#*/
+import { AxiumQualities } from '../concepts/axium/axium.concept';
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
@@ -35,8 +36,9 @@ test('Async Method Test', (done) => {
   const qualities = {experimentTimerEmitActionQuality, experimentMockToTrueQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator', [experiment]);
-  const plan = axium.plan('timed mock to true', [
-    stageWaitForOpenThenIterate(() => axiumKick()),
+  const plan = axium.plan<AxiumQualities>('timed mock to true', ({a__}) => [
+    // Noting that the axiumKickQuality here is temporary until the type and action creators are removed entirely
+    stageWaitForOpenThenIterate(() => a__.axiumKickQuality()),
     createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentTimedMockToTrue()), {
         iterateStage: true
@@ -58,7 +60,7 @@ test('Async Method Plain Iterate Id Test', (done) => {
   const qualities = {experimentAsyncIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator', [experiment]);
-  const plan = axium.plan('timed mock to true', [
+  const plan = axium.plan('timed mock to true', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(experimentAsyncIterateIdThenReceiveInMethod(), {
@@ -84,7 +86,7 @@ test('Async Method with State Test', (done) => {
   const qualities = {experimentTimerEmitActionWithStateQuality, experimentMockToTrueQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with State', [experiment]);
-  const plan = axium.plan('timed mock to true', [
+  const plan = axium.plan('timed mock to true', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(strategyBegin(timedMockToTrueWithState()), {
@@ -114,7 +116,7 @@ test('Method Test with State id comparison', (done) => {
   const qualities = {experimentIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Iterate id', [
+  const plan = axium.plan('Iterate id', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(strategyBegin(iterateIdThenAddToData()), {
@@ -146,7 +148,7 @@ test('Async Method Test with State id comparison', (done) => {
   const qualities = {experimentAsyncIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
-  const plan = axium.plan('Iterate id', [
+  const plan = axium.plan('Iterate id', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(strategyBegin(experimentAsyncIterateIdThenAddToData()), {

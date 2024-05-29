@@ -15,21 +15,22 @@ import { UnifiedSubject } from '../../model/stagePlanner';
 
 export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
   observer,
-  _concepts,
-  concepts$,
+  concepts_,
+  subscribe,
+  nextC,
+  nextA,
   conceptSemaphore
 }) => {
-  const subscription = concepts$.subscribe((concepts: Concepts) => {
+  const subscription = subscribe((concepts: Concepts) => {
     const chainState = selectUnifiedState<ChainState>(concepts, conceptSemaphore);
     if (chainState && chainState.actionQue.length > 0) {
       const newActionQue = [...chainState.actionQue];
       const nextAction = newActionQue.pop() as Action;
       chainState.actionQue = newActionQue;
-      concepts$.next(concepts);
-      const axiumState = concepts[0].state as AxiumState;
-      axiumState.action$?.next(nextAction);
+      nextC(concepts);
+      nextA(nextAction);
     }
   });
-  registerPrincipleSubscription(observer, _concepts, chainName, subscription);
+  registerPrincipleSubscription(observer, concepts_, chainName, subscription);
 };
 /*#>*/

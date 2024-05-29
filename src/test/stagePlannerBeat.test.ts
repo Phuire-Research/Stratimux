@@ -23,7 +23,7 @@ test('Stage Planner Beat Test', (done) => {
     createCounterConcept()
   ], {logging: true, storeDialog: true});
   const beat = 105;
-  const plan = axium.plan('Stage Planner Beat Test', [
+  const plan = axium.plan('Stage Planner Beat Test', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((concepts, dispatch) => {
       console.log('HIT 1');

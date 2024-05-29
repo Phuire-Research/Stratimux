@@ -6,20 +6,69 @@ import { Action, Actions } from './action';
 import { KeyedSelectors } from './selector';
 
 /*<#*/
-export type isT = (action: Action) => boolean;
+/**
+ * is Type Validator, utilizes semaphore in place of ActionType to provide a stringless abstraction for later purposes.
+ */
+export type IsT = (action: Action) => boolean;
 
-export const createTypeValidator = (actionSemaphoreBucket: [number, number, number, number][]) => (action: Action) => {
+export type PrimeIsT = (actionSemaphoreBucket: [number, number, number, number][]) => IsT;
+
+/**
+ * This will curry the actionSemaphoreBucket into a function that will supply type validation without the utilization of string comparison.
+ * @param actionSemaphoreBucket [number, number, number, number][]
+ * @returns True of False if the action's semaphore matches the curried actionSemaphoreBucket
+ * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the axium.
+ */
+export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action) => {
   const semaphore = actionSemaphoreBucket[0];
-  if (semaphore) {
+  if (semaphore[0] && semaphore[0] !== -1) {
     return action.semaphore[0] === semaphore[0] && action.semaphore[1] === semaphore[1];
   } else {
     throw 'ACTION SEMAPHORE BUCKET NOT PRIMED';
   }
 };
 
-export type uInterface<T> = {
+// Providing these interfaces to avoid overlap and denote some final order that should be maintained when orchestrating plans.
+// If you have a plan within a plan. That plan should be represented by some function that you compose into that plan instead.
+// Principle -> Plan Creation -> Stages
+// BInterface -> HInterface -> UInterface
+/**
+ * Highest Order Interface
+ * U in Stratimux represents the Universal Scale and limit of our physical existence.
+ */
+export type UInterface<T = void> = {
   a: Actions<T>
   s: KeyedSelectors
-  t: isT[]
+  t: IsT[]
+}
+
+/**
+ * [TODO] - IMPORTANT
+ * Exception: Outer Interface
+ * Provides access to all Interfaces via concepts
+ * Limited by a whitelist provided by some access property supplied to the Axium
+ */
+export type OInterface<T = void> = {
+  a: Actions<T>
+  s: KeyedSelectors
+  t: IsT[]
+}
+
+/**
+ * Higher Order Interface
+ */
+export type HInterface<T = void> = {
+  a__: Actions<T>
+  s__: KeyedSelectors
+  t__: IsT[]
+}
+
+/**
+ * Base Interface
+ */
+export type BInterface<T = void> = {
+  a_: Actions<T>
+  s_: KeyedSelectors
+  t_: IsT[]
 }
 /*#>*/

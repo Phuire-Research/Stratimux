@@ -13,7 +13,7 @@ import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlann
 
 test('Axium Register Time Out', (done) => {
   const axium = createAxium('timeout defer actions', [createCounterConcept()]);
-  const plan = axium.plan('timeout add 4 after 10ms', [
+  const plan = axium.plan('timeout add 4 after 10ms', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage((_, dispatch) => {
       dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {

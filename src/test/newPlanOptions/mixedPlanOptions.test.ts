@@ -15,7 +15,7 @@ test('Mixed Plan Options Test', (done) => {
     createExperimentPlanOptionsConcept()
   ]);
   const allShouldBeTrue = [false, false, false, false, false, false, false, false];
-  const planOne = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planOne = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE One');
@@ -44,7 +44,7 @@ test('Mixed Plan Options Test', (done) => {
       planOne.conclude();
     })
   ]);
-  const planTwo = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planTwo = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Two');
@@ -58,7 +58,7 @@ test('Mixed Plan Options Test', (done) => {
       planTwo.conclude();
     })
   ]);
-  const planThree = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planThree = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Three');
@@ -72,7 +72,7 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[2] = true;
     })
   ]);
-  const planFour = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planFour = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Four');
@@ -86,7 +86,7 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[3] = true;
     })
   ]);
-  const planFive = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planFive = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Five');
@@ -100,7 +100,7 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[4] = true;
     })
   ]);
-  const planSix = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planSix = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Six');
@@ -114,7 +114,7 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[5] = true;
     })
   ]);
-  const planSeven = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planSeven = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Seven');
@@ -128,7 +128,7 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[6] = true;
     })
   ]);
-  const planEight = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
+  const planEight = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Eight');

@@ -17,20 +17,18 @@ import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
 import { KeyedSelector, KeyedSelectors } from '../../model/selector';
-import { isT } from '../../model/interface';
+import { IsT } from '../../model/interface';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
     observer,
-    concepts$,
-    a,
-    s,
-    t
+    plan,
+    a_
   }
 ) => {
   let allowAdd = true;
   let allowRemove = true;
-  const addConceptsPlan = concepts$.innerPlan('Add Concepts Plan', [
+  const addConceptsPlan = plan('Add Concepts Plan', () => [
     createStage((concepts, dispatch) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
@@ -56,13 +54,17 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$<typeof concept.q>(principle,
+              const observable = createPrinciple$<typeof concept.q>(
+                principle,
                 concepts,
-                axiumState.concepts$,
+                axiumState.concepts$.plan(concept.semaphore).bind(axiumState.concepts$),
+                axiumState.concepts$.subscribe.bind(axiumState.concepts$),
+                axiumState.concepts$.next.bind(axiumState.concepts$),
+                axiumState.action$.next.bind(axiumState.action$),
+                concept.semaphore,
                 concept.actions,
                 concept.selectors,
                 concept.typeValidators,
-                concept.semaphore
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,
@@ -105,7 +107,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
     }, { selectors: [axiumSelectAddConceptQue], priority: Infinity - 1}),
   ]);
 
-  const removeConceptsPlan = concepts$.innerPlan('Remove Concepts Plan', [
+  const removeConceptsPlan = plan('Remove Concepts Plan', () => [
     createStage((concepts, dispatch) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {

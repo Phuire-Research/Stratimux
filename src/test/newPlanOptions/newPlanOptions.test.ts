@@ -18,7 +18,7 @@ test('New Plan Options Selector Test', (done) => {
     createExperimentPlanOptionsConcept()
   ]);
   let count = 0;
-  const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', [
+  const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', () => [
     createStage((_, dispatch, changes) => {
       // First run will be all
       const selectors: KeyedSelector[] = [];
@@ -106,7 +106,7 @@ test('New Plan Options Priority Test', (done) => {
   ]);
   let count = 0;
   let planOneCount = 0;
-  const planOne = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+  const planOne = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 1 Count: ', count, planOneCount);
@@ -144,7 +144,7 @@ test('New Plan Options Priority Test', (done) => {
   ]);
 
   let planTwoCount = 0;
-  const planTwo = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+  const planTwo = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 2 Count: ', count, planTwoCount);
@@ -177,7 +177,7 @@ test('New Plan Options Priority Test', (done) => {
   ]);
 
   let planThreeCount = 0;
-  const planThree = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', [
+  const planThree = planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
     createStage((concepts, dispatch) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 3 Count: ', count, planThreeCount);
