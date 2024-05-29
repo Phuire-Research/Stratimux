@@ -34,7 +34,7 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Throttle Iterate id with Concepts', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         dispatch(strategyBegin(experimentThrottleIterateIdThenAddToData(experimentState.id)), {
@@ -42,18 +42,7 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, dispatch) => {
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        console.log('Action Throttle: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(experimentThrottleIterateIdThenAddToData(experimentState.id)), {
-          iterateStage: true
-        });
-      }
-    }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -64,7 +53,18 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        console.log('Action Throttle: ', experimentState.id, lastStrategy, data);
+        dispatch(strategyBegin(experimentThrottleIterateIdThenAddToData(experimentState.id)), {
+          iterateStage: true
+        });
+      }
+    }),
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -97,7 +97,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Action Throttle Async Iterate id with Concepts', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         dispatch(strategyBegin(experimentThrottleAsyncIterateIdThenAddToData(experimentState.id)), {
@@ -105,18 +105,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         });
       }
     }),
-    createStage((concepts, dispatch) => {
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(experimentThrottleAsyncIterateIdThenAddToData(experimentState.id)), {
-          iterateStage: true
-        });
-      }
-    }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -127,7 +116,18 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
         });
       }
     }),
-    createStage((concepts, _) => {
+    createStage(({concepts, dispatch}) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
+        dispatch(strategyBegin(experimentThrottleAsyncIterateIdThenAddToData(experimentState.id)), {
+          iterateStage: true
+        });
+      }
+    }),
+    createStage(({concepts}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -150,7 +150,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
   ]);
   setTimeout(() => {
     const secondPlan = axium.plan('Action Throttle Async Iterate id with Concepts', () => [
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const strategy = experimentThrottleAsyncIterateIdThenAddToData(experimentState.id);
@@ -160,20 +160,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
           });
         }
       }),
-      createStage((concepts, dispatch) => {
-        const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-          console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
-          const strategy = experimentThrottleAsyncIterateIdThenAddToData(experimentState.id);
-          strategy.topic += 2;
-          dispatch(strategyBegin(strategy), {
-            iterateStage: true
-          });
-        }
-      }),
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -186,7 +173,19 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
           });
         }
       }),
-      createStage((concepts, _) => {
+      createStage(({concepts, dispatch}) => {
+        const experimentState = selectState<ExperimentState>(concepts, experimentName); if (experimentState) {
+          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          console.log('Async Action Throttle: ', experimentState.id, lastStrategy, data);
+          const strategy = experimentThrottleAsyncIterateIdThenAddToData(experimentState.id);
+          strategy.topic += 2;
+          dispatch(strategyBegin(strategy), {
+            iterateStage: true
+          });
+        }
+      }),
+      createStage(({concepts}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);

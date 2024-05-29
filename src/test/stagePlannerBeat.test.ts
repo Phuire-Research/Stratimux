@@ -25,7 +25,7 @@ test('Stage Planner Beat Test', (done) => {
   const beat = 105;
   const plan = axium.plan('Stage Planner Beat Test', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       console.log('HIT 1');
       timerActive = true;
       setTimeout(() => {
@@ -38,13 +38,13 @@ test('Stage Planner Beat Test', (done) => {
         });
       }
     }, {beat}),
-    createStage((___, dispatch) => {
+    createStage(({dispatch}) => {
       console.log('HIT 2');
       dispatch(counterAdd(), {
         iterateStage: true
       });
     }, {beat}),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       // console.log('HIT 3', timerActive, selectState<CounterState>(concepts, counterName));
       if (!timerActive) {
         const state = selectState<CounterState>(concepts, counterName);

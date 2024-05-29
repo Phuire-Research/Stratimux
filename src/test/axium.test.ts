@@ -65,12 +65,12 @@ test('Axium advanced usage: StrategyStitch', (done) => {
     const strategy = yourComposingStrategy(yourStrategyStitch);
     const plan = axium.plan('Test Stitch', ({a__}) => [
       stageWaitForOpenThenIterate(() => axiumKick()),
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }),
-      createStage((concepts, _) => {
+      createStage(({concepts}) => {
         const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
         if (lastTopic === strategy.topic) {
           expect(true).toBe(true);
@@ -85,7 +85,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
 test('Axium get axium state helper function', (done) => {
   const axium = createAxium('Test advanced usage', []);
   const plan = axium.plan('Test getAxiumState', () => [
-    createStage((concepts, _) => {
+    createStage(({concepts}) => {
       if (getAxiumState(concepts)) {
         expect(true).toBe(true);
         plan.conclude();

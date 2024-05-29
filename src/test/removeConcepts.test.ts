@@ -18,7 +18,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], { logging: true, storeDialog: true });
   const plan = axium.plan('Remove Concepts Stage', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       console.log('REMOVE');
       dispatch(
         strategyBegin(
@@ -28,7 +28,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
         }
       );
     }),
-    createStage((concepts) => {
+    createStage(({concepts}) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('VERIFY', axiumState.lastStrategy);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {

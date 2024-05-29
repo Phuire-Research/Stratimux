@@ -34,14 +34,14 @@ test('Ownership Test', (done) => {
   ], {logging: true, storeDialog: true});
   const plan = axium.plan(
     'Testing Ownership Staging', () => [
-      createStage((cpts, dispatch) => {
-        const axiumState = cpts[0].state as AxiumState;
+      createStage(({concepts, dispatch}) => {
+        const axiumState = concepts[0].state as AxiumState;
         console.log(axiumState.lastStrategy);
         if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
-          const ownership = selectState<OwnershipState>(cpts, ownershipName);
+          const ownership = selectState<OwnershipState>(concepts, ownershipName);
           if (ownership) {
             console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
-            const counter = selectState<CounterState>(cpts, counterName);
+            const counter = selectState<CounterState>(concepts, counterName);
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
             //    Via its principle, to simulate an action moving off premise.
@@ -52,30 +52,30 @@ test('Ownership Test', (done) => {
         }
       }),
       // Comment out if testing log and the halting quality of the Unified Turing Machine.
-      createStage((cpts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         // Will be ran after both counting strategies conclude.
-        const ownership = selectState<OwnershipState>(cpts, ownershipName);
+        const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
           dispatch(counterSetCount({newCount: 1000}, {agreement: 7000} ), { iterateStage: true});
         }
       }),
-      createStage((cpts, dispatch) => {
-        const ownership = selectState<OwnershipState>(cpts, ownershipName);
+      createStage(({concepts, dispatch}) => {
+        const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
-          const counter = selectState<CounterState>(cpts, counterName);
+          const counter = selectState<CounterState>(concepts, counterName);
           console.log('Count: ', counter?.count);
-          dispatch(strategyBegin(experimentPrimedCountingStrategy(cpts)), {
+          dispatch(strategyBegin(experimentPrimedCountingStrategy(concepts)), {
             iterateStage: true
           });
         }
       }),
-      createStage((cpts, dispatch) => {
-        const axiumState = cpts[0].state as AxiumState;
-        const counter = selectState<CounterState>(cpts, counterName);
+      createStage(({concepts, dispatch}) => {
+        const axiumState = concepts[0].state as AxiumState;
+        const counter = selectState<CounterState>(concepts, counterName);
         if (counter) {
-          console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(cpts, ownershipName)?.state);
+          console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(concepts, ownershipName)?.state);
           if (orderOfTopics.length === 2 && finalRun) {
             finalRun = false;
             // This will be the final test to be triggered by a log action.

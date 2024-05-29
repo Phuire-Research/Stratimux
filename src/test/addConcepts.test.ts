@@ -18,7 +18,7 @@ test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], {logging: true, storeDialog: true});
   const plan = axium.plan('Add Concepts Stage', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       console.log('Add Counter Concept');
       dispatch(
         strategyBegin(
@@ -29,7 +29,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         }
       );
     }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       if (select.slice(concepts, axiumSelectOpen)) {
         let exists = false;
         console.log('CHECK CONCEPTS', concepts);
@@ -46,7 +46,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         });
       }
     }, { selectors: [axiumSelectOpen] }),
-    createStage((concepts) => {
+    createStage(({concepts}) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);
       if (axiumState.lastStrategy === countingTopic) {

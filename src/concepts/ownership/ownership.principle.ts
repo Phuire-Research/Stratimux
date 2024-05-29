@@ -39,9 +39,9 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
   let finalCheck = true;
   const planOwnership: StagePlanner = plan('ownership Principle Plan', () => [
     stageWaitForOpenThenIterate(() => axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
-    createStage((cpts, _) => {
-      let concepts = cpts;
-      let ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
+    createStage(({concepts}) => {
+      let newConcepts = concepts;
+      let ownershipState = selectUnifiedState<OwnershipState>(newConcepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         // This will be the point of dispatch of Qued Actions
         let newAction;
@@ -49,14 +49,14 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
           // One Action at a Time
           for (const action of ownershipState.pendingActions) {
             let readyToGo = false;
-            [concepts, readyToGo] = isActionReady(concepts, action);
+            [newConcepts, readyToGo] = isActionReady(newConcepts, action);
             if (readyToGo) {
               newAction = action;
               break;
             }
           }
           if (newAction) {
-            ownershipState = selectUnifiedState(concepts, conceptSemaphore) as OwnershipState;
+            ownershipState = selectUnifiedState(newConcepts, conceptSemaphore) as OwnershipState;
             const newPendingActions = [];
             for (const pending of ownershipState.pendingActions) {
               if (!areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
@@ -66,7 +66,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
               }
             }
             ownershipState.pendingActions = [...newPendingActions];
-            nextC(concepts);
+            nextC(newConcepts);
             observer.next(newAction);
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
             const payload: AxiumBadActionPayload = {
@@ -83,13 +83,13 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
             if (payload.badActions.length > 0) {
               newAction = createAction(axiumBadActionType, {payload});
               ownershipState.pendingActions = newPending;
-              nextC(concepts);
+              nextC(newConcepts);
               observer.next(newAction);
             } else if (finalCheck) {
               finalCheck = false;
               setTimeout(() => {
                 finalCheck = true;
-                nextC(concepts);
+                nextC(newConcepts);
               }, 200);
             }
           }
@@ -98,7 +98,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
         initDispatch = true;
         observer.next(
           strategyBegin(
-            ownershipSetOwnershipModeStrategy(concepts, 'Ownership')
+            ownershipSetOwnershipModeStrategy(newConcepts, 'Ownership')
           )
         );
       }
@@ -119,8 +119,7 @@ export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities>
 }) => {
   const planOwnership: StagePlanner = plan('ownership Principle Plan', () => [
     stageWaitForOwnershipThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
-    createStage((cpts, __) => {
-      const concepts = cpts;
+    createStage(({concepts}) => {
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         let modified = false;

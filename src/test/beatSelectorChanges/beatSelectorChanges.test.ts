@@ -27,14 +27,14 @@ test('Deferred Beat Selector Changes Test', (done) => {
     createBeatSelectorChangesConcept()
   ]);
   const plan = axium.plan('Prolonged Counting Strategy', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       if (isAxiumOpen(concepts)) {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }
     }),
-    createStage((concepts, _, changes) => {
+    createStage(({concepts, changes}) => {
       if (getAxiumState(concepts).lastStrategy === topic) {
         expect(selectSlice(concepts, beatSelectorChangesSelectCountOne)).toBe(tally[0]);
         expect(selectSlice(concepts, beatSelectorChangesSelectCountTwo)).toBe(tally[1]);

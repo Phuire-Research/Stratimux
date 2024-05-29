@@ -20,8 +20,7 @@ export const experimentActionQuePrincipleCreator = <T>() => {
     let readyToGo = false;
     const planExperiment: StagePlanner = plan('Experiment Principle Plan', () => [
       stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))),
-      createStage((cpts, _) => {
-        const concepts = cpts;
+      createStage(({concepts}) => {
         const experimentState = selectUnifiedState<ExperimentState>(concepts, conceptSemaphore);
         if (experimentState && experimentState.actionQue.length > 0) {
           if (!readyToGo) {

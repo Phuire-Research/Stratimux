@@ -18,9 +18,9 @@ test('prioritized plans with selectors Test', (done) => {
   const allShouldBeTrue = new Array(num).fill(false);
   const stressTest = (id: number) => {
     console.log('INIT ', id);
-    const plan = planPrioritizedSelectors.plan('Ensure that prioritized plans with selectors allow for each plan to be informed',
+    planPrioritizedSelectors.plan('Ensure that prioritized plans with selectors allow for each plan to be informed',
       () => [
-        createStage((concepts, dispatch) => {
+        createStage(({concepts, dispatch}) => {
           if (selectSlice(concepts, axiumSelectOpen)) {
             console.log(`FIRE ${id}`, allShouldBeTrue, getAxiumState(concepts).open);
             dispatch(axiumKick(), {
@@ -28,9 +28,9 @@ test('prioritized plans with selectors Test', (done) => {
             });
           }
         }, { priority: (num + 1) - id, selectors: [axiumSelectOpen] }),
-        createStage(() => {
+        createStage(({stagePlanner}) => {
           allShouldBeTrue[id] = true;
-          plan.conclude();
+          stagePlanner.conclude();
         })
       ]
     );

@@ -13,7 +13,7 @@ import { KeyedSelectors } from './selector';
 // Within some Auth Concept we could use this as a means of black listing probing actors
 // Can also set the semaphore to a hash if we are truly in a sensitive situation then fall back to numbs in a private context.
 // LARGE PUNT with the hash
-function access(concepts: Concepts, conceptName: string): [Actions, KeyedSelectors] {
+function access(concepts: Concepts, conceptName: string): [Actions<any>, KeyedSelectors] {
   return [
     {},
     {}

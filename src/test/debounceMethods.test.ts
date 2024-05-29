@@ -37,22 +37,22 @@ test('Debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with State', [createCounterConcept(), experiment]);
   const plan = axium.plan('Experiment debounce add one', () => [
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((concepts, _) => {
+    createStage(({concepts}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       console.log('Debounce HIT 4', counterState);
       if (counterState?.count === 1) {
@@ -70,22 +70,22 @@ test('Async debounce method prevent excess count', (done) => {
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async debounce', [createCounterConcept(), experiment]);
   const plan = axium.plan('Experiment async debounce add one', () => [
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
         iterateStage: true
       });
     }),
-    createStage((concepts, _) => {
+    createStage(({concepts}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       console.log('Async Debounce HIT 4', counterState);
       if (counterState?.count === 1) {
@@ -97,22 +97,22 @@ test('Async debounce method prevent excess count', (done) => {
   ]);
   setTimeout(() => {
     const secondPlan = axium.plan('Second experiment async debounce add one', () => [
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
         });
       }),
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
         });
       }),
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy()), {
           iterateStage: true
         });
       }),
-      createStage((concepts, _) => {
+      createStage(({concepts}) => {
         const counterState = selectState<CounterState>(concepts, counterName);
         console.log('Async 2 Debounce HIT 4', counterState);
         if (counterState?.count === 2) {
@@ -137,7 +137,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Debounce Iterate id with concepts', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(experimentState.id)), {
@@ -145,18 +145,7 @@ test('Debounce Method Test with State id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, dispatch) => {
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        console.log('Debounce: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(experimentState.id)), {
-          iterateStage: true
-        });
-      }
-    }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -167,7 +156,18 @@ test('Debounce Method Test with State id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, _) => {
+    createStage(({concepts, dispatch}) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        console.log('Debounce: ', experimentState.id, lastStrategy, data);
+        dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(experimentState.id)), {
+          iterateStage: true
+        });
+      }
+    }),
+    createStage(({concepts}) => {
       const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -191,7 +191,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
     const secondPlan = axium.plan('Second experiment debounce add one', () => [
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         console.log('2 Debounce initial dispatch');
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
@@ -200,7 +200,7 @@ test('Debounce Method Test with State id comparison', (done) => {
           });
         }
       }),
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -211,7 +211,7 @@ test('Debounce Method Test with State id comparison', (done) => {
           });
         }
       }),
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -222,7 +222,7 @@ test('Debounce Method Test with State id comparison', (done) => {
           });
         }
       }),
-      createStage((concepts, _) => {
+      createStage(({concepts}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -255,7 +255,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
   const plan = axium.plan('Debounce Async Iterate id with concepts', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         dispatch(strategyBegin(experimentDebounceAsyncIterateIdThenAddToData(experimentState.id)), {
@@ -263,18 +263,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, dispatch) => {
-      const experimentState = selectState<ExperimentState>(concepts, experimentName);
-      if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-        console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
-        dispatch(strategyBegin(experimentDebounceAsyncIterateIdThenAddToData(experimentState.id)), {
-          iterateStage: true
-        });
-      }
-    }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -285,7 +274,18 @@ test('Debounce Async Method Test with State id comparison', (done) => {
         });
       }
     }),
-    createStage((concepts, _) => {
+    createStage(({concepts, dispatch}) => {
+      const experimentState = selectState<ExperimentState>(concepts, experimentName);
+      if (experimentState) {
+        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
+        dispatch(strategyBegin(experimentDebounceAsyncIterateIdThenAddToData(experimentState.id)), {
+          iterateStage: true
+        });
+      }
+    }),
+    createStage(({concepts}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -309,7 +309,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
     const secondPlan = axium.plan('Second experiment async debounce add one', () => [
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const strategy = experimentDebounceAsyncIterateIdThenAddToData(experimentState.id);
@@ -319,20 +319,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
           });
         }
       }),
-      createStage((concepts, dispatch) => {
-        const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
-          console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
-          const strategy = experimentDebounceAsyncIterateIdThenAddToData(experimentState.id);
-          strategy.topic += 2;
-          dispatch(strategyBegin(strategy), {
-            iterateStage: true
-          });
-        }
-      }),
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
@@ -345,7 +332,20 @@ test('Debounce Async Method Test with State id comparison', (done) => {
           });
         }
       }),
-      createStage((concepts, _) => {
+      createStage(({concepts, dispatch}) => {
+        const experimentState = selectState<ExperimentState>(concepts, experimentName);
+        if (experimentState) {
+          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
+          const strategy = experimentDebounceAsyncIterateIdThenAddToData(experimentState.id);
+          strategy.topic += 2;
+          dispatch(strategyBegin(strategy), {
+            iterateStage: true
+          });
+        }
+      }),
+      createStage(({concepts}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
           const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);

@@ -35,11 +35,14 @@ export type Plan = {
   changeAggregator: Record<string, KeyedSelector>;
 }
 
-export type Stage = (
+export type Stage = (params: StageParams) => void;
+
+export type StageParams = {
   concepts: Concepts,
   dispatch: (action: Action, options: dispatchOptions, ) => void,
-  changes: KeyedSelector[]
-) => void;
+  changes: KeyedSelector[],
+  stagePlanner: StagePlanner
+}
 
 export type Planning = <T = void>(title: string, planner: Planner<T>) => StagePlanner;
 
@@ -109,7 +112,7 @@ export type StageDelimiter = {
 /**
  * Used in principle plans that are loaded during axium initialization
  */
-export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
+export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage(({concepts, dispatch}) => {
   if (isAxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true
@@ -118,7 +121,7 @@ export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (cre
 }, { selectors: [axiumSelectOpen] }));
 
 export const stageWaitForOwnershipThenIterate =
-  (func: () => Action): Staging => (createStage((concepts: Concepts, dispatch: Dispatcher) => {
+  (func: () => Action): Staging => (createStage(({concepts, dispatch}) => {
     if (selectSlice(concepts, ownershipSelectInitialized) && getAxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
@@ -711,7 +714,14 @@ export class UnifiedSubject extends Subject<Concepts> {
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
     }).bind(this)();
-    plan.stages[index].stage(this.concepts, dispatcher, changes);
+    const conclude = () => {
+      this.deletePlan(plan.id);
+    };
+    plan.stages[index].stage({concepts: this.concepts, dispatch: dispatcher, changes, stagePlanner: {
+      title: plan.title,
+      planId: plan.id,
+      conclude: conclude.bind(this)
+    }});
   }
 
   protected nextPlans() {

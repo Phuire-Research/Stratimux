@@ -17,7 +17,7 @@ test('Axium Counting Strategy Test', (done) => {
   const plan = axium.plan('Counting Strategy Stage',
     () => [
       stageWaitForOpenThenIterate(() => axiumKick()),
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         const [shouldBe, strategy] = generateRandomCountingStrategy(count);
         strategyTopic = strategy.topic;
         expectedOutput = shouldBe;
@@ -28,7 +28,7 @@ test('Axium Counting Strategy Test', (done) => {
           throttle: 1
         });
       }),
-      createStage((concepts, dispatch) => {
+      createStage(({concepts, dispatch}) => {
         const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('HIT, AX', axiumState.lastStrategy);

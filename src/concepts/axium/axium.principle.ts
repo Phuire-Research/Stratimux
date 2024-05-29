@@ -29,7 +29,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   let allowAdd = true;
   let allowRemove = true;
   const addConceptsPlan = plan('Add Concepts Plan', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
@@ -108,7 +108,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   ]);
 
   const removeConceptsPlan = plan('Remove Concepts Plan', () => [
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;

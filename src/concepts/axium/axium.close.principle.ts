@@ -18,8 +18,8 @@ export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
   },
 ) => {
   let init = false;
-  const planAxiumClose = plan('Plan Axium Close', () => [
-    createStage((concepts, dispatch) => {
+  plan('Plan Axium Close', () => [
+    createStage(({concepts, dispatch, stagePlanner}) => {
       const state = selectUnifiedState<AxiumState>(concepts, 0);
       if (!init && state?.prepareClose) {
         init = true;
@@ -27,7 +27,7 @@ export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
         dispatch(axiumClose({exit: state.exit}), {
           iterateStage: true
         });
-        planAxiumClose.conclude();
+        stagePlanner.conclude();
       }
     }, { selectors: [axiumSelectPrepareClose], priority: Infinity}),
     createStage(() => {

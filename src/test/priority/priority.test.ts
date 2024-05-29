@@ -28,7 +28,7 @@ test('Priority Test', (done) => {
     createExperimentPriorityConcept()
   ], {logging: true, storeDialog: true, logActionStream: true});
 
-  const firstStage = (name: string, priority: number) => createStage((concepts, dispatch, changes) => {
+  const firstStage = (name: string, priority: number) => createStage(({concepts, dispatch, changes}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     console.log('HIT: ', name, changes);
     if (priorityState?.ready) {
@@ -38,7 +38,7 @@ test('Priority Test', (done) => {
       });
     }
   }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number) => createStage((concepts, dispatch) => {
+  const secondStage = (name: string, newValue: number, priority: number) => createStage(({concepts, dispatch}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     if (priorityState) {
       console.log(`${name} Priority Base Value: `, priorityState.value);
@@ -47,7 +47,7 @@ test('Priority Test', (done) => {
       });
     }
   }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage((concepts, dispatch, changes) => {
+  const thirdStage = (name: string, expected: number, priority: number) => createStage(({concepts, dispatch, changes}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     if (priorityState && changes.length > 0) {
       // expect(order).toBe(expectedOrder);
@@ -58,38 +58,38 @@ test('Priority Test', (done) => {
       });
     }
   }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = (name: string, func: () => StagePlanner) => createStage(() => {
-    console.log(`${name} Priority END`);
-    func().conclude();
+  const concludePlan = () => createStage(({stagePlanner}) => {
+    console.log(`${stagePlanner.title} Priority END`);
+    stagePlanner.conclude();
     finalize();
   });
 
   const LOW = 'Low';
   const LOW_PRIORITY = 1;
-  const low: StagePlanner = priorityTest.plan(
+  priorityTest.plan(
     'Low Priority Plan', () => [
       firstStage(LOW, LOW_PRIORITY),
       secondStage(LOW, 1, LOW_PRIORITY),
       thirdStage(LOW, 111, LOW_PRIORITY),
-      concludePlan(LOW, () => low),
+      concludePlan(),
     ]);
   const HIGH = 'High';
   const HIGH_PRIORITY = 100;
-  const high: StagePlanner = priorityTest.plan(
+  priorityTest.plan(
     'High Priority Plan', () => [
       firstStage(HIGH, HIGH_PRIORITY),
       secondStage(HIGH, 100, HIGH_PRIORITY),
       thirdStage(HIGH, 100, HIGH_PRIORITY),
-      concludePlan(HIGH, () => high),
+      concludePlan(),
     ]);
   const MID = 'Mid';
   const MID_PRIORITY = 50;
-  const mid: StagePlanner = priorityTest.plan(
+  priorityTest.plan(
     'Mid Priority Plan', () => [
       firstStage(MID, MID_PRIORITY),
       secondStage(MID, 10, MID_PRIORITY),
       thirdStage(MID, 110, MID_PRIORITY),
-      concludePlan(MID, () => mid),
+      concludePlan(),
     ]);
   setTimeout(() => {
     priorityTest.dispatch(experimentPriorityIsReady());

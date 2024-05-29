@@ -21,7 +21,7 @@ test('Unified Selector Test', (done) => {
     createCounterConcept()
   ], {logging: true, storeDialog: true});
   const plan = axium.plan('Plan: Counter Selector', () => [
-    createStage((concepts, _) => {
+    createStage(({concepts}) => {
       console.log('FIRED!!!');
       const concept = createConceptKeyedSelector<CounterState>(counterName, 'count');
       const updated = updateUnifiedKeyedSelector(concepts, 1, concept) as KeyedSelector;

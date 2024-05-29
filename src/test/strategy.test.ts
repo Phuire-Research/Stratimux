@@ -14,13 +14,13 @@ test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan',
     () => [
-      createStage((_, dispatch) => {
+      createStage(({dispatch}) => {
         console.log('HIT!!!');
         dispatch(strategyBegin(countingStrategy()), {
           iterateStage: true
         });
       }),
-      createStage((concepts) => {
+      createStage(({concepts}) => {
         const axiumState = concepts[0].state as AxiumState;
         if (axiumState.lastStrategy === countingTopic) {
           const counter = selectState<CounterState>(concepts, counterName);

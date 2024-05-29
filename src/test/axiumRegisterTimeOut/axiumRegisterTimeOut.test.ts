@@ -13,9 +13,9 @@ import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlann
 
 test('Axium Register Time Out', (done) => {
   const axium = createAxium('timeout defer actions', [createCounterConcept()]);
-  const plan = axium.plan('timeout add 4 after 10ms', () => [
+  axium.plan('timeout add 4 after 10ms', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((_, dispatch) => {
+    createStage(({dispatch}) => {
       dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
         act: counterAdd(),
         timeOut: 50
@@ -23,7 +23,7 @@ test('Axium Register Time Out', (done) => {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
       dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
@@ -33,7 +33,7 @@ test('Axium Register Time Out', (done) => {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
       dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
@@ -43,7 +43,7 @@ test('Axium Register Time Out', (done) => {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    createStage(({concepts, dispatch}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
       dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
@@ -53,19 +53,19 @@ test('Axium Register Time Out', (done) => {
         iterateStage: true,
       });
     }),
-    createStage((concepts, _dispatch, changes) => {
+    createStage(({concepts, changes, stagePlanner}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       if (changes.length > 0) {
         expect(counterState?.count).toBe(4);
         setTimeout(() => {
-          plan.conclude();
+          stagePlanner.conclude();
           axium.close();
           done();
         }, 10);
       }
     }, {selectors: [counterSelectCount], beat: 200}),
-    createStage(() => {
-      plan.conclude();
+    createStage(({stagePlanner}) => {
+      stagePlanner.conclude();
     })
   ]);
 });

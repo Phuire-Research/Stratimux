@@ -41,7 +41,7 @@ test('Test Dispatch Override', (done) => {
         stageWaitForOpenThenIterate(() => {
           return axiumKick();
         }),
-        createStage((_, dispatch) => {
+        createStage(({dispatch}) => {
           new Array(10).fill('').forEach(() => body.push(counterAdd()));
           body.push(counterSetCount({
             newCount: Infinity
@@ -52,7 +52,7 @@ test('Test Dispatch Override', (done) => {
             iterateStage: true
           });
         }),
-        createStage((concepts, dispatch) => {
+        createStage(({concepts, dispatch}) => {
           const count = selectState<CounterState>(concepts, experimentName)?.count;
           let exists = false;
           getAxiumState(concepts).body.forEach(a => {

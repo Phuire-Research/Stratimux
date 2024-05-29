@@ -11,7 +11,7 @@ import { createStage } from '../model/stagePlanner';
 test('Concepts exists', (done) => {
   const axium = createAxium('Mock Axium', [createCounterConcept()]);
   const plan = axium.plan('Check Concepts', () => [
-    createStage((concepts, __) => {
+    createStage(({concepts}) => {
       if (isConceptLoaded(concepts, counterName)) {
         expect(true).toBe(true);
         done();
@@ -28,7 +28,7 @@ test('Concepts exists', (done) => {
 test('Concepts exists', (done) => {
   const axium = createAxium('Mock Axium', [createCounterConcept(), createChainConcept()]);
   const plan = axium.plan('Check Concepts', () => [
-    createStage((concepts, __) => {
+    createStage(({concepts}) => {
       if (areConceptsLoaded(concepts, [counterName, chainName])) {
         expect(true).toBe(true);
         plan.conclude();
