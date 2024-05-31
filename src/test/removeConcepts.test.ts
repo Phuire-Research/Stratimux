@@ -15,7 +15,7 @@ import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner'
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium remove Concepts Strategy Test', (done) => {
-  const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], { logging: true, storeDialog: true });
+  const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], { logging: true, storeDialog: true, dynamic: true });
   const plan = axium.plan('Remove Concepts Stage', () => [
     stageWaitForOpenThenIterate(() => axiumKick()),
     createStage(({concepts, dispatch}) => {

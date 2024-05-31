@@ -211,7 +211,8 @@ export function createAxium(
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
-    logActionStream?: boolean
+    logActionStream?: boolean,
+    dynamic?: boolean,
   }
 ): Axium {
   const concepts: Concepts = {};
@@ -220,7 +221,8 @@ export function createAxium(
       name,
       options?.storeDialog,
       options?.logging,
-      options?.logActionStream
+      options?.logActionStream,
+      options?.dynamic
     ), ...initialConcepts];
   init.forEach((cpt, i) => {
     const concept = cpt as unknown as AnyConcept;

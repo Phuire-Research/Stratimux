@@ -148,19 +148,54 @@ const axiumQualities = {
   axiumRegisterTimeOutQuality
 };
 
+const axiumStaticQualities = {
+  axiumKickQuality,
+  axiumOpenQuality,
+  axiumBadActionQuality,
+  axiumCloseQuality,
+  axiumPreCloseQuality,
+  axiumAppendActionListToDialogQuality,
+  axiumClearDialogQuality,
+  axiumLogQuality,
+  axiumRegisterSubscriberQuality,
+  axiumRegisterStagePlannerQuality,
+  axiumInitializePrinciplesQuality,
+  axiumSetBlockingModeQuality,
+  axiumSetDefaultModeQuality,
+  axiumSetDefaultModeIndexQuality,
+  axiumSetModeQuality,
+  axiumClearBadActionTypeFromBadActionListQuality,
+  axiumClearBadStrategyTopicFromBadActionListQuality,
+  axiumClearBadPlanFromBadPlanListQuality,
+  axiumStitchQuality,
+  axiumRegisterTimeOutQuality
+};
+
+const axiumStaticPrinciple = [axiumClosePrinciple];
+
 export type AxiumQualities = typeof axiumQualities;
 
 export const createAxiumConcept = (
   name: string,
   storeDialog?: boolean,
   logging?: boolean,
-  logActionStream?: boolean
+  logActionStream?: boolean,
+  dynamic?: boolean,
 ): Concept<AxiumQualities> =>  {
+  if (dynamic) {
+    return createConcept<AxiumQualities>(
+      axiumName,
+      createAxiumState(name, storeDialog, logging, logActionStream),
+      axiumQualities,
+      [axiumPrinciple, axiumClosePrinciple],
+      [blockingMode, permissiveMode]
+    );
+  }
   return createConcept<AxiumQualities>(
     axiumName,
     createAxiumState(name, storeDialog, logging, logActionStream),
-    axiumQualities,
-    [axiumPrinciple, axiumClosePrinciple],
+    axiumStaticQualities,
+    axiumStaticPrinciple,
     [blockingMode, permissiveMode]
   );
 };
