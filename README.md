@@ -63,13 +63,6 @@ When in doubt simplify.
 * Added priority to strategies, this priority will be assigned to each step issued by such.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
-## Road Map
-### Beyond v0.1.~8
-* Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
-* Planned
-  * Action Graph
-  * Project Scaffolding
-  * *Spoilers*
 
 ## Road Map (*Updated*  5/31/24)
 ### Beyond v0.2.0
