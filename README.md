@@ -70,15 +70,30 @@ When in doubt simplify.
   * Action Graph
   * Project Scaffolding
   * *Spoilers*
-### Developer Experience Update v0.1.~8
-* The Goal with the update is to remove the need for semaphores across the board.
-* There are two breaking changes planned:
-  * Add the ability to access primed Actions and KeyedSelectors directly in principles, plans, and qualities.
-    * This will be accomplished via a specific type cast of a Actions and KeyedSelectors properties access directly from PrincipleFunction, or new **Access** helper function.
-  * Access - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
+
+## Road Map (*Updated*  5/31/24)
+### Beyond v0.2.0
+* Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
+* Planned
+  * Action Graph
+  * Project Scaffolding
+  * *Spoilers*
+### Developer Experience Update v0.2.0
+* The have moved the need to set semaphores across the board.
+* This imposes two breaking changes:
+  * **Set Interfaces**: Add the ability to access primed Actions(**done**), KeyedSelectors(*pending*), and new isTypeValidator(*pending*) helper functions for action comparisons directly in principles, plans, and qualities.
+    * { a: Actions, s: KeyedSelectors, ist: Ists }
+    * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
+    * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
+      * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
+      * Same applies for IsT functions
+    * Will not be extending this feature to Qualities. As you may already access the new Set Interface via the new *access* via a method supplied the most recent Concepts.
+  * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
     * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
     * Create an access function that returns ActionCreators and Selectors
-      * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium. 
+      * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium.
+* **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
+* **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * Origin, Override, Hard Override
   * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
   * Hard Override - This dispatch setting is effectively a destructive halt. And will conclude all active strategies currently in que from a given concept. Made for Experts who require a hard shift pending a specific observation and can account for the destructive halt.
