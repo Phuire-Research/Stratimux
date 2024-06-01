@@ -75,11 +75,14 @@ When in doubt simplify.
 * The have moved the need to set semaphores across the board.
 * This imposes two breaking changes:
   * **Set Interfaces**: Add the ability to access primed Actions(**done**), KeyedSelectors(*pending*), and new isTypeValidator(*pending*) helper functions for action comparisons directly in principles, plans, and qualities.
-    * { a: Actions, s: KeyedSelectors, ist: Ists }
+    * { a: Actions, s: KeyedSelectors, t: Ists }
     * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
     * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
-      * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
-      * Same applies for IsT functions
+    * You may also create new deeply nested array/record look up via a supplied creator assigned to **s**.
+    * Will be adding default selectors to the Set Interface
+      * s.getS<State>(concepts) that will return the unified state from that observation.
+      * s.getC<Qualities>(concepts) will return the current unified concept.
+    * Same logic applies for IsT functions (e.g. t.axiumKick(action): true | false)
     * Will not be extending this feature to Qualities. As you may already access the new Set Interface via the new *access* via a method supplied the most recent Concepts.
   * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
     * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
