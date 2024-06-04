@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
-import { Concepts } from '../model/concept';
+import { Concept, Concepts } from '../model/concept';
 import { select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
@@ -67,7 +67,7 @@ test('Axium Unified Selector Test', (done) => {
   };
   const experiment = createExperimentConcept(obj);
   const concepts: Concepts = {
-    0: experiment
+    0: experiment as Concept<any>
   };
   const selector = select.createUnifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
   const conceptSelector = select.createConceptKeyedSelector<DeepNested>(experimentName, 'anything.something.somethingElse');

@@ -13,14 +13,14 @@ import { createStage } from '../model/stagePlanner';
 test('Axium Counting Strategy Test', (done) => {
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan',
-    () => [
-      createStage(({dispatch}) => {
+    ({stage}) => [
+      stage(({dispatch}) => {
         console.log('HIT!!!');
         dispatch(strategyBegin(countingStrategy()), {
           iterateStage: true
         });
       }),
-      createStage(({concepts}) => {
+      stage(({concepts}) => {
         const axiumState = concepts[0].state as AxiumState;
         if (axiumState.lastStrategy === countingTopic) {
           const counter = selectState<CounterState>(concepts, counterName);

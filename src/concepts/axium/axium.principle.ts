@@ -28,8 +28,8 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
 ) => {
   let allowAdd = true;
   let allowRemove = true;
-  const addConceptsPlan = plan('Add Concepts Plan', () => [
-    createStage(({concepts, dispatch}) => {
+  const addConceptsPlan = plan('Add Concepts Plan', ({stage}) => [
+    stage(({concepts, dispatch, a}) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
@@ -57,7 +57,8 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
               const observable = createPrinciple$<typeof concept.q>(
                 principle,
                 concepts,
-                axiumState.concepts$.plan(concept.semaphore).bind(axiumState.concepts$),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (axiumState.concepts$.plan(concept.semaphore) as any).bind(axiumState.concepts$),
                 axiumState.concepts$.subscribe.bind(axiumState.concepts$),
                 axiumState.concepts$.next.bind(axiumState.concepts$),
                 axiumState.action$.next.bind(axiumState.action$),
@@ -100,7 +101,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
 
-        dispatch(strategyBegin(addConceptsFromQueThenUnblockStrategy(newConcepts)), {
+        dispatch(strategyBegin(addConceptsFromQueThenUnblockStrategy(a, newConcepts)), {
           throttle: 50
         });
       }
@@ -108,7 +109,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   ]);
 
   const removeConceptsPlan = plan('Remove Concepts Plan', () => [
-    createStage(({concepts, dispatch}) => {
+    createStage(({concepts, dispatch, a}) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;
@@ -180,7 +181,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
         dispatch(strategyBegin(
-          removeConceptsViaQueThenUnblockStrategy(newConcepts)), {
+          removeConceptsViaQueThenUnblockStrategy(a, newConcepts)), {
           throttle: 50
         });
       }

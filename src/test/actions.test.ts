@@ -60,10 +60,10 @@ test('Quality Actions', (done) => {
   const axium = createAxium('Quality Actions', [
     c
   ]);
-  const p = axium.plan<AxiumQualities>('outer plan', ({a__}) => [
-    stageWaitForOpenThenIterate(() => a__.axiumKickQuality()),
-    createStage<AxiumQualities>(({a, stagePlanner}) => {
-      const log = a.axiumLogQuality();
+  const p = axium.plan('outer plan', ({ax__, stage, stageO}) => [
+    stageO(() => ax__.axiumKickQuality()),
+    stage(({ax, stagePlanner}) => {
+      const log = ax.axiumLogQuality();
       console.log('CHECK LOG', log);
       stagePlanner.conclude();
       done();

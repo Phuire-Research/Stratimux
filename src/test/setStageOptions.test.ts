@@ -17,8 +17,8 @@ test('Axium setStageSelectors Test', (done) => {
   let tally = 0;
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan using setStageSelectors',
-    () => [
-      createStage(({concepts, dispatch}) => {
+    ({stage}) => [
+      stage(({concepts, dispatch}) => {
         if (isAxiumOpen(concepts)) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
@@ -29,7 +29,7 @@ test('Axium setStageSelectors Test', (done) => {
           });
         }
       }, {selectors: [axiumSelectLastStrategy]}),
-      createStage(({concepts, changes}) => {
+      stage(({concepts, changes}) => {
         tally++;
         if (tally === 1) {
           expect(changes?.length).toBe(0);
@@ -52,8 +52,8 @@ test('Axium setStageBeat Test', (done) => {
   let tally = 0;
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan using setStageBeat',
-    () => [
-      createStage(({concepts, dispatch}) => {
+    ({stage}) => [
+      stage(({concepts, dispatch}) => {
         if (isAxiumOpen(concepts)) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
@@ -64,7 +64,7 @@ test('Axium setStageBeat Test', (done) => {
           });
         }
       }, {selectors: [axiumSelectLastStrategy]}),
-      createStage(({concepts}) => {
+      stage(({concepts}) => {
         const axiumState = concepts[0].state as AxiumState;
         tally++;
         const counter = selectState<CounterState>(concepts, counterName);
@@ -84,8 +84,8 @@ test('Axium setStagePriority Test', (done) => {
   let ready = false;
   let tally = 0;
   const plan = axium.plan('Counting Strategy Plan using setStagePriority',
-    () => [
-      createStage(({dispatch}) => {
+    ({stage}) => [
+      stage(({dispatch, ax}) => {
         if (ready) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
@@ -96,7 +96,7 @@ test('Axium setStagePriority Test', (done) => {
           });
         }
       }, {selectors: [axiumSelectLastStrategy]}),
-      createStage(() => {
+      stage(() => {
         expect(tally).toBe(1);
         tally++;
         plan.conclude();
@@ -105,8 +105,8 @@ test('Axium setStagePriority Test', (done) => {
       })
     ]);
   const planTwo = axium.plan('Counting Strategy Plan using setStagePriority Two',
-    () => [
-      createStage(({dispatch}) => {
+    ({stage}) => [
+      stage(({dispatch}) => {
         if (ready) {
           dispatch(strategyBegin(countingStrategy()), {
             iterateStage: true,
@@ -117,7 +117,7 @@ test('Axium setStagePriority Test', (done) => {
           });
         }
       }, {selectors: [axiumSelectLastStrategy]}),
-      createStage(() => {
+      stage(() => {
         expect(tally).toBe(0);
         tally++;
         setTimeout(() => {done();}, 500);

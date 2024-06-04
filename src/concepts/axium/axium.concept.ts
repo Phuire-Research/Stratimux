@@ -71,7 +71,7 @@ export type AxiumState = {
   concepts$: UnifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
-  badPlans: Plan[];
+  badPlans: Plan<any>[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
   timerLedger: Map<number, (() => Action)[]>

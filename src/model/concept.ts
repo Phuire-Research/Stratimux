@@ -51,6 +51,8 @@ export type AnyConcept = Concept<any>;
 
 export type Concepts = Record<number, AnyConcept>;
 
+export type ConceptDeck = Record<string, Concept<any>>;
+
 export type ConceptsSubscriber = (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
 
 export function createConcept<T = void>(
@@ -61,7 +63,7 @@ export function createConcept<T = void>(
   mode?: Mode[],
   meta?: Record<string,unknown>,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Concept<T extends void ? any : T> {
+): Concept<T> {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;

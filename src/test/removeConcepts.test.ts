@@ -16,19 +16,19 @@ import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], { logging: true, storeDialog: true, dynamic: true });
-  const plan = axium.plan('Remove Concepts Stage', () => [
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage(({concepts, dispatch}) => {
+  const plan = axium.plan('Remove Concepts Stage', ({stage, stageO}) => [
+    stageO(() => axiumKick()),
+    stage(({concepts, dispatch, ax}) => {
       console.log('REMOVE');
       dispatch(
         strategyBegin(
-          addConceptsToRemovalQueThenBlockStrategy(concepts,[createCounterConcept()])
+          addConceptsToRemovalQueThenBlockStrategy(ax, concepts,[createCounterConcept()])
         ), {
           iterateStage: true
         }
       );
     }),
-    createStage(({concepts}) => {
+    stage(({concepts}) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('VERIFY', axiumState.lastStrategy);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {

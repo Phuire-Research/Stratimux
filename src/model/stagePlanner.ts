@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { Concepts } from './concept';
 import { AxiumQualities, AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
-import { Action, ActionType, createAction } from './action';
+import { Action, ActionType, Actions, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { Axium, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
@@ -20,13 +20,13 @@ import { axiumTimeOut } from './time';
 import { HInterface, UInterface } from './interface';
 import { Qualities } from './quality';
 
-export type Plan = {
+export type Plan<T = void> = {
   id: number;
   space: number;
   conceptSemaphore: number;
   conceptName: string;
   title: string;
-  stages: Staging[],
+  stages: Staging<T>[],
   stage: number;
   stageFailed: number;
   beat: number;
@@ -44,20 +44,23 @@ export type StageParams<T = void> = {
   stagePlanner: StagePlanner
 } & UInterface<T>
 
-export type Planning = <T = void>(title: string, planner: Planner<T>) => StagePlanner;
+export type Planning<T = void> = (title: string, planner: Planner<T>) => StagePlanner;
 
-export type Planner<T = void> = (uI: HInterface<T>) => PartialStaging[];
+export type Planner<T = void> = (uI: HInterface<T> & {
+  stage: typeof createStage<T>
+  stageO: typeof stageWaitForOpenThenIterate,
+}) => PartialStaging<T>[];
 
-export type Staging = {
-  stage: Stage<any>;
+export type Staging<T = void> = {
+  stage: Stage<T>;
   selectors: KeyedSelector[];
   firstRun: boolean;
   priority?: number
   beat?: number,
 };
 
-export type PartialStaging = {
-  stage: Stage<any>;
+export type PartialStaging<T = void> = {
+  stage: Stage<T>;
   selectors?: KeyedSelector[];
   priority?: number
   beat?: number,
@@ -112,7 +115,7 @@ export type StageDelimiter = {
 /**
  * Used in principle plans that are loaded during axium initialization
  */
-export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (createStage(({concepts, dispatch}) => {
+export const stageWaitForOpenThenIterate = <T>(func: () => Action): Staging<T> => (createStage(({concepts, dispatch}) => {
   if (isAxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true
@@ -121,7 +124,7 @@ export const stageWaitForOpenThenIterate = (func: () => Action): Staging => (cre
 }, { selectors: [axiumSelectOpen] }));
 
 export const stageWaitForOwnershipThenIterate =
-  (func: () => Action): Staging => (createStage(({concepts, dispatch}) => {
+  <T>(func: () => Action): Staging<T> => (createStage(({concepts, dispatch}) => {
     if (selectSlice(concepts, ownershipSelectInitialized) && getAxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
@@ -136,7 +139,7 @@ export const stageWaitForOwnershipThenIterate =
  * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
  * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
  */
-export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging => {
+export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging<T> => {
   if (options) {
     return {
       stage,
@@ -158,7 +161,7 @@ export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSel
 const ALL = '*4||*';
 
 const handleRun =
-  (stageDelimiter: StageDelimiter, plan: Plan, action: Action, options?: dispatchOptions)
+  <T>(stageDelimiter: StageDelimiter, plan: Plan<T>, action: Action, options?: dispatchOptions)
     : [StageDelimiter, boolean] => {
     if (options?.runOnce) {
       const stageRunner = stageDelimiter.runOnceMap.get(action.type + plan.stage);
@@ -181,7 +184,7 @@ const handleRun =
   };
 
 const handleStageDelimiter =
-  (plan: Plan, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
+  <T>(plan: Plan<T>, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
     let stageDelimiter = delimiter;
     let goodAction = true;
     if (stageDelimiter &&
@@ -245,7 +248,7 @@ const Outer = 2;
 
 export class UnifiedSubject extends Subject<Concepts> {
   private planId = -1;
-  private currentPlans: Map<number, Plan> = new Map();
+  private currentPlans: Map<number, Plan<any>> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
   // Assemble front of line
@@ -282,7 +285,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     selectors.forEach(selector => this.addSelector(selector, id));
   }
 
-  protected handleNewStageOptions = (plan: Plan, options: dispatchOptions, next: number): boolean => {
+  protected handleNewStageOptions = <T>(plan: Plan<T>, options: dispatchOptions, next: number): boolean => {
     let evaluate = false;
     if (options.newPriority) {
       plan.stages[plan.stage].priority = options.newPriority;
@@ -304,7 +307,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     return evaluate;
   };
 
-  protected handleSetStageOptions = (plan: Plan, options: dispatchOptions) => {
+  protected handleSetStageOptions = <T>(plan: Plan<T>, options: dispatchOptions) => {
     if (options.setStageSelectors && plan.stages[options.setStageSelectors.stage]) {
       plan.stages[options.setStageSelectors.stage].selectors = options.setStageSelectors.selectors;
     }
@@ -344,15 +347,18 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan = <T = void>(title: string, planner: Planner<T>, space: number, conceptSemaphore: number): Plan => {
+  protected createPlan = <T = void>(title: string, planner: Planner<T>, space: number, conceptSemaphore: number): Plan<T> => {
     const stages = planner({
       a__: this.concepts[conceptSemaphore].actions,
+      ax__: this.concepts[0].actions as Actions<AxiumQualities>,
       s__: {},
-      t__: []
+      t__: [],
+      stage: createStage,
+      stageO: stageWaitForOpenThenIterate,
     });
     const planId = this.planId;
     this.planId += 1;
-    const staged: Staging[] = stages.map<Staging>(s => {
+    const staged: Staging<T>[] = stages.map<Staging<T>>(s => {
       return {
         stage: s.stage,
         selectors: s.selectors ? s.selectors : [],
@@ -378,7 +384,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   };
 
-  protected initPlan(plan: Plan): StagePlanner {
+  protected initPlan<T>(plan: Plan<T>): StagePlanner {
     this.currentPlans.set(plan.id, plan);
     this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
     this.manageQues();
@@ -606,9 +612,9 @@ export class UnifiedSubject extends Subject<Concepts> {
     this.assembleGeneralQues();
   }
 
-  protected _dispatch(
+  protected _dispatch<T>(
     axiumState: AxiumState,
-    plan: Plan,
+    plan: Plan<T>,
     action: Action,
     options: dispatchOptions): void {
     let stageDelimiter = this.stageDelimiters.get(plan.id);
@@ -709,7 +715,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected execute(plan: Plan, index: number, changes: KeyedSelector[]): void {
+  protected execute<T>(plan: Plan<T>, index: number, changes: KeyedSelector[]): void {
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
@@ -726,7 +732,9 @@ export class UnifiedSubject extends Subject<Concepts> {
         planId: plan.id,
         conclude: conclude.bind(this)
       },
-      a: this.concepts[plan.conceptSemaphore].actions,
+      // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
+      a: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions : {},
+      ax: this.concepts[0].actions as Actions<AxiumQualities>,
       s: {},
       t: []
     });

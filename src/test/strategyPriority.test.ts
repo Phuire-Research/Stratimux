@@ -26,8 +26,8 @@ test('Axium Counting Strategy Priority Test', (done) => {
   strategy1.topic += 3;
   const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy with Priority Plan',
-    () => [
-      createStage(({concepts, dispatch}) => {
+    ({stage}) => [
+      stage(({concepts, dispatch}) => {
         if (isAxiumOpen(concepts)) {
           handlePriority(getAxiumState(concepts), strategyBegin(strategy1));
           handlePriority(getAxiumState(concepts), strategyBegin(strategy2));
@@ -40,7 +40,7 @@ test('Axium Counting Strategy Priority Test', (done) => {
           });
         }
       }),
-      createStage(({concepts}) => {
+      stage(({concepts}) => {
         const axiumState = concepts[0].state as AxiumState;
         const counter = selectState<CounterState>(concepts, counterName);
         // console.log('CHECK COUNT', counter, 'HEAD', axiumState.head, 'BODY', axiumState.body, 'TAIL', axiumState.tail);

@@ -11,12 +11,13 @@ import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSub
 import { Planner, Planning, UnifiedSubject } from './stagePlanner';
 import { KeyedSelectors } from './selector';
 import { BInterface, IsT } from './interface';
+import { AxiumQualities } from '../concepts/axium/axium.concept';
 
 export type PrincipleInterface<T = void> = {
   observer: Subscriber<Action>,
   concepts_: Concepts,
   subscribe: ConceptsSubscriber,
-  plan: Planning,
+  plan: Planning<T>,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
@@ -29,7 +30,7 @@ export type PrincipleFunction<T = void> = (
 export function createPrinciple$<T = void>(
   principleFunc: PrincipleFunction<T>,
   concepts_: Concepts,
-  plan: Planning,
+  plan: Planning<T>,
   subscribe: ConceptsSubscriber,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
@@ -47,6 +48,7 @@ export function createPrinciple$<T = void>(
       nextC,
       nextA,
       a_,
+      ax_: concepts_[0].actions as Actions<AxiumQualities>,
       s_,
       t_,
       conceptSemaphore

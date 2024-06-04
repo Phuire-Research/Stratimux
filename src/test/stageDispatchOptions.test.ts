@@ -28,15 +28,15 @@ test('Axium Stage Dispatch Options Test', (done) => {
     }
   });
   const plan = axium.plan('Stage DispatchOptions Test',
-    () => [
-      createStage(({concepts, dispatch}) => {
+    ({stage}) => [
+      stage(({concepts, dispatch}) => {
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 1 ', counter, runCount);
         dispatch(counterAdd(), {
           iterateStage: true
         });
       }),
-      createStage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch}) => {
         runCount++;
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Stage 2 ', counter, runCount);
@@ -54,7 +54,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
         }
         // }
       }),
-      createStage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch}) => {
         runCount++;
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('Should run twice, Stage 3 ', counter, runCount);

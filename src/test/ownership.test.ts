@@ -21,7 +21,6 @@ import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { experimentCheckInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrincipleCreator } from '../concepts/experiment/experiment.principle';
-import { createStage } from '../model/stagePlanner';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
@@ -33,14 +32,15 @@ test('Ownership Test', (done) => {
     createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
   ], {logging: true, storeDialog: true});
   const plan = axium.plan(
-    'Testing Ownership Staging', () => [
-      createStage(({concepts, dispatch}) => {
+    'Testing Ownership Staging', ({stage}) => [
+      stage(({concepts, dispatch}) => {
         const axiumState = concepts[0].state as AxiumState;
         console.log(axiumState.lastStrategy);
         if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(concepts, ownershipName);
           if (ownership) {
             console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
+            console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
             const counter = selectState<CounterState>(concepts, counterName);
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
@@ -52,18 +52,20 @@ test('Ownership Test', (done) => {
         }
       }),
       // Comment out if testing log and the halting quality of the Unified Turing Machine.
-      createStage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch}) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
+          console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           dispatch(counterSetCount({newCount: 1000}, {agreement: 7000} ), { iterateStage: true});
         }
       }),
-      createStage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch}) => {
         const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
+          console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           const counter = selectState<CounterState>(concepts, counterName);
           console.log('Count: ', counter?.count);
           dispatch(strategyBegin(experimentPrimedCountingStrategy(concepts)), {
@@ -71,11 +73,12 @@ test('Ownership Test', (done) => {
           });
         }
       }),
-      createStage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch}) => {
         const axiumState = concepts[0].state as AxiumState;
         const counter = selectState<CounterState>(concepts, counterName);
         if (counter) {
           console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(concepts, ownershipName)?.state);
+          console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           if (orderOfTopics.length === 2 && finalRun) {
             finalRun = false;
             // This will be the final test to be triggered by a log action.

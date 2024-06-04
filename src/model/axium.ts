@@ -20,7 +20,6 @@ import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
-  AxiumQualities,
 } from '../concepts/axium/axium.concept';
 import {
   axiumAppendActionListToDialog,
@@ -204,6 +203,7 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
   }
 };
 
+type TESTER<T> = Record<string, T>;
 export function createAxium(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -215,6 +215,7 @@ export function createAxium(
     dynamic?: boolean,
   }
 ): Axium {
+  const test: TESTER<typeof initialConcepts> = {};
   const concepts: Concepts = {};
   const init = [
     createAxiumConcept(

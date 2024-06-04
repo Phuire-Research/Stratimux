@@ -37,11 +37,11 @@ test('Test Dispatch Override', (done) => {
         body
       } = getAxiumState(concepts_);
       const stageName = 'Test Override';
-      const planTestOverride = plan(stageName, () => [
-        stageWaitForOpenThenIterate(() => {
-          return axiumKick();
+      const planTestOverride = plan(stageName, ({stage, stageO, ax__}) => [
+        stageO(() => {
+          return ax__.axiumKickQuality();
         }),
-        createStage(({dispatch}) => {
+        stage(({dispatch}) => {
           new Array(10).fill('').forEach(() => body.push(counterAdd()));
           body.push(counterSetCount({
             newCount: Infinity
@@ -52,7 +52,7 @@ test('Test Dispatch Override', (done) => {
             iterateStage: true
           });
         }),
-        createStage(({concepts, dispatch}) => {
+        stage(({concepts, dispatch, ax}) => {
           const count = selectState<CounterState>(concepts, experimentName)?.count;
           let exists = false;
           getAxiumState(concepts).body.forEach(a => {
@@ -71,13 +71,13 @@ test('Test Dispatch Override', (done) => {
               override: true,
             });
           } else {
-            dispatch(axiumKick(), {
+            dispatch(ax.axiumKickQuality(), {
               iterateStage: true
             });
           }
         // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
         }),
-        createStage(() => {
+        stage(() => {
           planTestOverride.conclude();
         })
       ]);

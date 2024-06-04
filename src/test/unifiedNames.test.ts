@@ -5,27 +5,27 @@ $>*/
 import { createConcept, unifyConcepts } from '../model/concept';
 
 test('Unified Names Test', (done) => {
-  const one = createConcept(
+  const one = createConcept<any>(
     'one',
     {},
   );
-  const two = createConcept(
+  const two = createConcept<any>(
     'two',
     {},
   );
-  const three = createConcept(
+  const three = createConcept<any>(
     'three',
     {},
   );
-  const four = createConcept(
+  const four = createConcept<any>(
     'four',
     {},
   );
-  const five = createConcept(
+  const five = createConcept<any>(
     'five',
     {},
   );
-  const unified = unifyConcepts([
+  const unified = unifyConcepts<any>([
     one, two, two, three, four, five, five
   ],
   createConcept('unified', {})

@@ -8,7 +8,7 @@ import { Concept, Concepts, forEachConcept  } from '../../../model/concept';
 import { createPrinciple$ } from '../../../model/principle';
 import { Action, } from '../../../model/action';
 import { AxiumQualities, AxiumState, axiumName } from '../axium.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
+import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
@@ -35,7 +35,7 @@ export const [
           const observable = createPrinciple$<AxiumQualities>(
             principle,
             concepts,
-            state.concepts$.innerPlan.bind(concepts$),
+            state.concepts$.innerPlan.bind(concepts$) as Planning<any>,
             state.concepts$.subscribe.bind(concepts$),
             state.concepts$.next.bind(concepts$),
             state.action$.next.bind(action$),
@@ -55,7 +55,7 @@ export const [
           const observable = createPrinciple$<typeof concept.q>(
             principle,
             concepts,
-            concepts$.plan(concept.semaphore).bind(concepts$),
+            concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any>,
             concepts$.subscribe.bind(concepts$),
             concepts$.next.bind(concepts$),
             action$.next.bind(action$),

@@ -2,6 +2,7 @@
 For the asynchronous graph programming framework Stratimux, define the Interface model file.
 $>*/
 
+import { AxiumQualities } from '../concepts/axium/axium.concept';
 import { Action, Actions } from './action';
 import { KeyedSelectors } from './selector';
 
@@ -38,6 +39,7 @@ export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action)
  */
 export type UInterface<T = void> = {
   a: Actions<T>
+  ax: Actions<AxiumQualities>
   s: KeyedSelectors
   t: IsT[]
 }
@@ -50,6 +52,7 @@ export type UInterface<T = void> = {
  */
 export type OInterface<T = void> = {
   a: Actions<T>
+  ax: Actions<AxiumQualities>
   s: KeyedSelectors
   t: IsT[]
 }
@@ -59,6 +62,7 @@ export type OInterface<T = void> = {
  */
 export type HInterface<T = void> = {
   a__: Actions<T>
+  ax__: Actions<AxiumQualities>
   s__: KeyedSelectors
   t__: IsT[]
 }
@@ -68,6 +72,7 @@ export type HInterface<T = void> = {
  */
 export type BInterface<T = void> = {
   a_: Actions<T>
+  ax_: Actions<AxiumQualities>
   s_: KeyedSelectors
   t_: IsT[]
 }

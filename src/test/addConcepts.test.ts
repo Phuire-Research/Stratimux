@@ -16,20 +16,20 @@ import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest',[], {logging: true, storeDialog: true, dynamic: true});
-  const plan = axium.plan('Add Concepts Stage', () => [
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage(({concepts, dispatch}) => {
+  const plan = axium.plan('Add Concepts Stage', ({stage, stageO, ax__}) => [
+    stageO(() => ax__.axiumKickQuality()),
+    stage(({concepts, dispatch, ax}) => {
       console.log('Add Counter Concept');
       dispatch(
         strategyBegin(
-          addConceptsToAddQueThenBlockStrategy(concepts,[createCounterConcept()])
+          addConceptsToAddQueThenBlockStrategy(ax, concepts,[createCounterConcept()])
         ),
         {
           iterateStage: true
         }
       );
     }),
-    createStage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch}) => {
       if (select.slice(concepts, axiumSelectOpen)) {
         let exists = false;
         console.log('CHECK CONCEPTS', concepts);
@@ -46,7 +46,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         });
       }
     }, { selectors: [axiumSelectOpen] }),
-    createStage(({concepts}) => {
+    stage(({concepts}) => {
       const axiumState = concepts[0].state as AxiumState;
       console.log('Check for final counting topic', axiumState.lastStrategy, concepts[1]?.state);
       if (axiumState.lastStrategy === countingTopic) {
