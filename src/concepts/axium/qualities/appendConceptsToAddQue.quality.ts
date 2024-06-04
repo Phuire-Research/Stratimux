@@ -3,13 +3,13 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 addConceptQue. This will then be observed via the Axium's principle.
 $>*/
 /*<#*/
-import { Concept } from '../../../model/concept';
+import { AnyConcept, Concept } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumAppendConceptsToAddQuePayload = {
-  concepts: Concept[]
+  concepts: AnyConcept[]
 }
 
 export const [

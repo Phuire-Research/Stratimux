@@ -41,7 +41,8 @@ test('Quality Actions', (done) => {
     });
     return actions.something();
   };
-  const c = createConcept<typeof qs>('Some', {}, qs, [
+  const state = {};
+  const c = createConcept<typeof state, typeof qs>('Some', state, qs, [
     ({a_}) => {
       console.log('HIT PRINCIPLE', a_.some({
         here: 2
@@ -57,9 +58,9 @@ test('Quality Actions', (done) => {
     here: 8
   });
   console.log(c.actions);
-  const axium = createAxium('Quality Actions', [
-    c
-  ]);
+  const axium = createAxium('Quality Actions', {
+    someConcept: c
+  });
   const p = axium.plan('outer plan', ({ax__, stage, stageO}) => [
     stageO(() => ax__.axiumKickQuality()),
     stage(({ax, stagePlanner}) => {

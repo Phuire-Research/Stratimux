@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { Action, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { AnyConcept, Concept, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -29,6 +29,7 @@ import { Planning } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
+import { Qualities } from './quality';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -203,11 +204,10 @@ export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], ac
   }
 };
 
-type TESTER<T> = Record<string, T>;
-export function createAxium(
+export function createAxium<T extends Record<string, unknown>>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialConcepts: Concept<any>[],
+  deck: ConceptDeck<T>,
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
@@ -215,7 +215,7 @@ export function createAxium(
     dynamic?: boolean,
   }
 ): Axium {
-  const test: TESTER<typeof initialConcepts> = {};
+  const initialConcepts = Object.keys(deck).map(k => deck[k]);
   const concepts: Concepts = {};
   const init = [
     createAxiumConcept(

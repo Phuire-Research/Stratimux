@@ -31,7 +31,7 @@ import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner'
 test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
-  const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
+  const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = axium.plan('Throttle Iterate id with Concepts', ({stage, stageO}) => [
     stageO(() => axiumKick()),
     stage(({concepts, dispatch}) => {
@@ -95,7 +95,7 @@ jest.setTimeout(7000);
 test('Action Throttle Async Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleAsyncIterateIdThenReceiveInMethodQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
-  const axium = createAxium('Experiment observe how concepts updates via reducer and method', [experiment]);
+  const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = axium.plan('Action Throttle Async Iterate id with Concepts', ({stage}) => [
     stage(({concepts, dispatch}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);

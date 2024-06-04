@@ -3,13 +3,13 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 removeConceptQue. The main axium principle will then initialize a removal strategy based on this que.
 $>*/
 /*<#*/
-import { Concept } from '../../../model/concept';
+import { AnyConcept, Concept } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumAppendConceptsToRemoveQuePayload = {
-  concepts: Concept[]
+  concepts: AnyConcept[]
 }
 
 export const [

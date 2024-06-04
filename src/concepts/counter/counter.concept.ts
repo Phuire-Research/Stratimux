@@ -29,7 +29,7 @@ const counterQualities = {
 export type CounterQualities = typeof counterQualities;
 
 export const createCounterConcept = () => {
-  return createConcept<CounterQualities>(
+  return createConcept<CounterState, CounterQualities>(
     counterName,
     initialCounterState,
     counterQualities

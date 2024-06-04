@@ -6,7 +6,7 @@ $>*/
 import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
-import { Action, createCachedSemaphores } from '../../model/action';
+import { Action, Actions, createCachedSemaphores } from '../../model/action';
 import { AxiumQualities, AxiumState, axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
@@ -63,7 +63,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 axiumState.concepts$.next.bind(axiumState.concepts$),
                 axiumState.action$.next.bind(axiumState.action$),
                 concept.semaphore,
-                concept.actions,
+                concept.actions as Actions<any>,
                 concept.selectors,
                 concept.typeValidators,
               );

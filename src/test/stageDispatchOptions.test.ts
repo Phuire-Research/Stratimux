@@ -13,7 +13,7 @@ import { createStage } from '../model/stagePlanner';
 
 test('Axium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
-  const axium = createAxium('axiumStageDispatchOptionsTest', [createCounterConcept()], {logging: true});
+  const axium = createAxium('axiumStageDispatchOptionsTest', {counter: createCounterConcept()}, {logging: true});
   const sub = axium.subscribe((concepts) => {
     const axiumState = concepts[0].state as AxiumState;
     if (axiumState.badPlans.length > 0) {

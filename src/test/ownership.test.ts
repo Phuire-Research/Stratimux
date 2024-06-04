@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 $>*/
 /*<#*/
 import { createAxium  } from '../model/axium';
-import { Concepts } from '../model/concept';
+import { ConceptDeck, Concepts } from '../model/concept';
 import { selectConcept, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -26,11 +26,12 @@ test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
   const qualities = {experimentCheckInStrategyQuality};
-  const axium = createAxium('ownershipTest', [
-    createOwnershipConcept(),
-    createCounterConcept(),
-    createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
-  ], {logging: true, storeDialog: true});
+  const deck = {
+    ownership: createOwnershipConcept(),
+    counter: createCounterConcept(),
+    experiment: createExperimentConcept(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
+  };
+  const axium = createAxium<typeof deck>('ownershipTest', deck, {logging: true, storeDialog: true});
   const plan = axium.plan(
     'Testing Ownership Staging', ({stage}) => [
       stage(({concepts, dispatch}) => {

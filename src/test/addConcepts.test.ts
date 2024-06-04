@@ -15,7 +15,7 @@ import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium add Concepts Strategy Test', (done) => {
-  const axium = createAxium('axiumAddConceptTest',[], {logging: true, storeDialog: true, dynamic: true});
+  const axium = createAxium('axiumAddConceptTest', {}, {logging: true, storeDialog: true, dynamic: true});
   const plan = axium.plan('Add Concepts Stage', ({stage, stageO, ax__}) => [
     stageO(() => ax__.axiumKickQuality()),
     stage(({concepts, dispatch, ax}) => {

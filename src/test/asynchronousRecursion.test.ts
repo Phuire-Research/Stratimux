@@ -20,15 +20,15 @@ test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
   const qualities = {experimentRecurseIterateIdQuality};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
-  const axium = createAxium('Experiment async method creator with Concepts', [experiment], {storeDialog: true});
-  const plan = axium.plan('Experiment debounce add one', () => [
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage(({dispatch}) => {
+  const axium = createAxium('Experiment async method creator with Concepts', {experiment}, {storeDialog: true});
+  const plan = axium.plan('Experiment debounce add one', ({stage, stageO, ax__}) => [
+    stageO(() => ax__.axiumKickQuality()),
+    stage(({dispatch}) => {
       dispatch(strategyBegin(experimentRecursivelyIterateId([...list])), {
         iterateStage: true
       });
     }),
-    createStage(({concepts}) => {
+    stage(({concepts}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);

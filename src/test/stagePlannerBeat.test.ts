@@ -19,9 +19,9 @@ jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
   let timerActive = false;
-  const axium = createAxium('axium test stage planner beat', [
-    createCounterConcept()
-  ], {logging: true, storeDialog: true});
+  const axium = createAxium('axium test stage planner beat', {
+    counter: createCounterConcept()
+  }, {logging: true, storeDialog: true});
   const beat = 105;
   const plan = axium.plan('Stage Planner Beat Test', ({stage, stageO}) => [
     stageO(() => axiumKick()),

@@ -5,8 +5,8 @@ $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';
 import { Concept, Concepts, forEachConcept  } from '../../../model/concept';
-import { createPrinciple$ } from '../../../model/principle';
-import { Action, } from '../../../model/action';
+import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
+import { Action, Actions, } from '../../../model/action';
 import { AxiumQualities, AxiumState, axiumName } from '../axium.concept';
 import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
@@ -33,14 +33,14 @@ export const [
       if (concept.name === axiumName && concept.principles) {
         concept.principles.forEach(principle => {
           const observable = createPrinciple$<AxiumQualities>(
-            principle,
+            principle as PrincipleFunction<any>,
             concepts,
             state.concepts$.innerPlan.bind(concepts$) as Planning<any>,
             state.concepts$.subscribe.bind(concepts$),
             state.concepts$.next.bind(concepts$),
             state.action$.next.bind(action$),
             semaphore,
-            concept.actions,
+            concept.actions as Actions<any>,
             concept.selectors,
             concept.typeValidators,
           );
@@ -60,7 +60,7 @@ export const [
             concepts$.next.bind(concepts$),
             action$.next.bind(action$),
             semaphore,
-            concept.actions,
+            concept.actions as Actions<any>,
             concept.selectors,
             concept.typeValidators,
           );

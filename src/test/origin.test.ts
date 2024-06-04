@@ -28,7 +28,7 @@ test('Test Dispatch Override', (done) => {
     counterSetCountQuality
   };
   type ExperimentCounterQualities = typeof experimentCounterQualities;
-  const axium = createAxium('Override actions based on Plan and Stage', [createExperimentConcept<ExperimentCounterQualities>({
+  const axium = createAxium('Override actions based on Plan and Stage', {experiment: createExperimentConcept<ExperimentCounterQualities>({
     count: 0,
   } as CounterState,
   experimentCounterQualities, [
@@ -82,7 +82,7 @@ test('Test Dispatch Override', (done) => {
         })
       ]);
     }
-  ])], {
+  ])}, {
     // storeDialog: true,
     // logging: true,
     // logActionStream: true

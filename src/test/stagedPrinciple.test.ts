@@ -34,7 +34,7 @@ const [
 test('Axium Principle Stage', (done) => {
   const qualities = {experimentMockToTrueQuality};
   const experimentPrinciple: PrincipleFunction<typeof qualities> = ({plan}) => {
-    const planExperiment = plan('Experiment Principle', ({stage, stageO}) => [
+    const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude}) => [
       stageO(() => experimentMockToTrue()),
       stage(({concepts, dispatch}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -47,13 +47,11 @@ test('Axium Principle Stage', (done) => {
           planExperiment.conclude();
         }
       }),
-      stage(() => {
-        //
-      })
+      conclude()
     ]);
   };
-  createAxium('axiumStrategyTest', [
-    createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentPrinciple])
-  ], {logging: true, storeDialog: true});
+  createAxium('axiumStrategyTest', {
+    experiment: createExperimentConcept<typeof qualities>(createExperimentState(), qualities, [experimentPrinciple])
+  }, {logging: true, storeDialog: true});
 });
 /*#>*/

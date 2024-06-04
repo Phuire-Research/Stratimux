@@ -11,16 +11,16 @@ import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 import { axiumSelectOpen } from '../../concepts/axium/axium.selector';
 jest.setTimeout(30000);
 test('prioritized plans with selectors Test', (done) => {
-  const planPrioritizedSelectors = createAxium('Plan New Stage Priority Test', [
-    createExperimentPlanOptionsConcept()
-  ]);
+  const planPrioritizedSelectors = createAxium('Plan New Stage Priority Test', {
+    experiment: createExperimentPlanOptionsConcept()
+  });
   const num = 100;
   const allShouldBeTrue = new Array(num).fill(false);
   const stressTest = (id: number) => {
     console.log('INIT ', id);
     planPrioritizedSelectors.plan('Ensure that prioritized plans with selectors allow for each plan to be informed',
-      () => [
-        createStage(({concepts, dispatch}) => {
+      ({stage}) => [
+        stage(({concepts, dispatch}) => {
           if (selectSlice(concepts, axiumSelectOpen)) {
             console.log(`FIRE ${id}`, allShouldBeTrue, getAxiumState(concepts).open);
             dispatch(axiumKick(), {
@@ -28,7 +28,7 @@ test('prioritized plans with selectors Test', (done) => {
             });
           }
         }, { priority: (num + 1) - id, selectors: [axiumSelectOpen] }),
-        createStage(({stagePlanner}) => {
+        stage(({stagePlanner}) => {
           allShouldBeTrue[id] = true;
           stagePlanner.conclude();
         })

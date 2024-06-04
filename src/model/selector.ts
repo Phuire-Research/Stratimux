@@ -266,13 +266,15 @@ export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | unde
   return undefined;
 }
 
-export function selectConcept<T extends Qualities>(concepts: Concepts, name: string): Concept<T> | undefined {
+export function selectConcept<
+  S extends Record<string, unknown>, T = void
+>(concepts: Concepts, name: string): Concept<S, T> | undefined {
   const conceptKeys = Object.keys(concepts);
   const length = conceptKeys.length;
-  const select = (index: number): Concept<T> | undefined => {
+  const select = (index: number): Concept<S, T> | undefined => {
     const i = Number(conceptKeys[index]);
     if (concepts[i] && concepts[i].name === name) {
-      return concepts[i];
+      return concepts[i] as Concept<S, T>;
     } else if (index < length) {
       return select(index + 1);
     } else {

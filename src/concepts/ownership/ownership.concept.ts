@@ -51,7 +51,7 @@ const ownershipQualities = {
 export type OwnershipQualities = typeof ownershipQualities;
 
 export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
-  return createConcept<OwnershipQualities>(
+  return createConcept<OwnershipState, OwnershipQualities>(
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
     ownershipQualities,

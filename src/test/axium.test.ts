@@ -59,18 +59,18 @@ test('Axium advanced usage: StrategyStitch', (done) => {
       initialNode: stepOne
     });
   };
-  createAxium('dummy', []);
+  createAxium('dummy', {});
   setTimeout(() => {
-    const axium = createAxium('Test advanced usage', [createCounterConcept()]);
+    const axium = createAxium('Test advanced usage', {counter: createCounterConcept()});
     const strategy = yourComposingStrategy(yourStrategyStitch);
-    const plan = axium.plan('Test Stitch', ({a__}) => [
-      stageWaitForOpenThenIterate(() => axiumKick()),
-      createStage(({dispatch}) => {
+    const plan = axium.plan('Test Stitch', ({ax__, stage, stageO}) => [
+      stageO(() => ax__.axiumKickQuality()),
+      stage(({dispatch}) => {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }),
-      createStage(({concepts}) => {
+      stage(({concepts}) => {
         const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
         if (lastTopic === strategy.topic) {
           expect(true).toBe(true);
@@ -83,9 +83,9 @@ test('Axium advanced usage: StrategyStitch', (done) => {
 });
 
 test('Axium get axium state helper function', (done) => {
-  const axium = createAxium('Test advanced usage', []);
-  const plan = axium.plan('Test getAxiumState', () => [
-    createStage(({concepts}) => {
+  const axium = createAxium('Test advanced usage', {});
+  const plan = axium.plan('Test getAxiumState', ({stage}) => [
+    stage(({concepts}) => {
       if (getAxiumState(concepts)) {
         expect(true).toBe(true);
         plan.conclude();

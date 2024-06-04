@@ -5,7 +5,7 @@ within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
 import { Subject, Subscription } from 'rxjs';
-import { Concept, Concepts } from '../../model/concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { axiumClosePrinciple } from './axium.close.principle';
@@ -69,8 +69,9 @@ export type AxiumState = {
   action$: Subject<Action>;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
-  addConceptQue: Concept[],
-  removeConceptQue: Concept[],
+  deck: ConceptDeck<Record<string, unknown>>,
+  addConceptQue: AnyConcept[],
+  removeConceptQue: AnyConcept[],
   badPlans: Plan<any>[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
@@ -112,8 +113,9 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
-    addConceptQue: [] as Concept[],
-    removeConceptQue: [] as Concept[],
+    deck: {},
+    addConceptQue: [] as AnyConcept[],
+    removeConceptQue: [] as AnyConcept[],
     badPlans: [],
     badActions: [],
     timer: [],
@@ -181,22 +183,26 @@ export const createAxiumConcept = (
   logging?: boolean,
   logActionStream?: boolean,
   dynamic?: boolean,
-): Concept<AxiumQualities> =>  {
+): Concept<AxiumState, AxiumQualities> =>  {
+  const state = createAxiumState(name, storeDialog, logging, logActionStream);
   if (dynamic) {
-    return createConcept<AxiumQualities>(
+    const c = createConcept<AxiumState, AxiumQualities>(
       axiumName,
-      createAxiumState(name, storeDialog, logging, logActionStream),
+      state,
       axiumQualities,
       [axiumPrinciple, axiumClosePrinciple],
       [blockingMode, permissiveMode]
     );
+    return c;
+  } else {
+    const c = createConcept<AxiumState, AxiumQualities>(
+      axiumName,
+      state,
+      axiumStaticQualities,
+      axiumStaticPrinciple,
+      [blockingMode, permissiveMode]
+    );
+    return c;
   }
-  return createConcept<AxiumQualities>(
-    axiumName,
-    createAxiumState(name, storeDialog, logging, logActionStream),
-    axiumStaticQualities,
-    axiumStaticPrinciple,
-    [blockingMode, permissiveMode]
-  );
 };
 /*#>*/

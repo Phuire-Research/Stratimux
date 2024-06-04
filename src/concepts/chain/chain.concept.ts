@@ -31,7 +31,7 @@ const chainQualities = {
 export type ChainQualities = typeof chainQualities;
 
 export const createChainConcept = () => {
-  return createConcept<ChainQualities>(
+  return createConcept<ChainState, ChainQualities>(
     chainName,
     initialChainState,
     chainQualities,

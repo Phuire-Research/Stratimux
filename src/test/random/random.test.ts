@@ -7,7 +7,7 @@ import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 
 test('Axium Counting Strategy Test', (done) => {
-  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
+  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   let strategyTopic = 'SOME STRATEGY TOPIC';
   let expectedOutput = 0;
   let totalExpected = 0;

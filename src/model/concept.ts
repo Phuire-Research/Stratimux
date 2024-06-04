@@ -31,15 +31,18 @@ export type Mode = ([action, concept, action$, concepts$]: [
 export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
-export type Concept<T = void> = {
+export type Concept<S extends Record<string, unknown>, T = void> = {
   name: string;
   unified: string[];
-  state: Record<string, unknown>;
+  state: S;
   actions: Actions<T>;
   selectors: KeyedSelectors;
   typeValidators: IsT[]
   qualities: Quality<unknown>[];
-  q: Record<string, unknown>;
+  q: T extends Record<string, unknown> ?
+    T
+    :
+    Record<string, unknown>;
   semaphore: number;
   principles?: PrincipleFunction<T>[];
   mode?: Mode[];
@@ -47,23 +50,32 @@ export type Concept<T = void> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyConcept = Concept<any>;
+export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
 
 export type Concepts = Record<number, AnyConcept>;
 
-export type ConceptDeck = Record<string, Concept<any>>;
+export type ConceptDeck<T> = {
+  [K in keyof T]:
+    T[K] extends Concept<Record<string, unknown>, void> ?
+      Concept<Record<string, unknown>, void>
+      :
+      T[K] extends Concept<Record<string, unknown>, Qualities> ?
+      Concept<Record<string, unknown>, T[K]['q']>
+      :
+      Concept<Record<string, unknown>, any>
+};
 
 export type ConceptsSubscriber = (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
 
-export function createConcept<T = void>(
+export function createConcept<S extends Record<string, unknown>, T = void>(
   name: string,
-  state: Record<string, unknown>,
+  state: S,
   _qualities?: Record<string, unknown>,
   principles?: PrincipleFunction<T>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Concept<T> {
+): Concept<S, T> {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -96,7 +108,7 @@ export function createConcept<T = void>(
     selectors: {},
     typeValidators: [],
     qualities: qualities ? qualities : [],
-    q: _qualities ? _qualities : {},
+    q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
     semaphore: -1,
     principles,
     mode,
@@ -195,7 +207,10 @@ function filterSimilarQualities(concept: AnyConcept) {
   return concept;
 }
 
-function unify<T extends Qualities, K extends Qualities>(base: Concept<T>, target: Concept<K>): Concept<T & K> {
+function unify<T extends Qualities, K extends Qualities>(
+  base: Concept<Record<string, unknown>, T>,
+  target: Concept<Record<string, unknown>, K>
+): Concept<Record<string, unknown>, T & K> {
   if (target.name !== '') {
     base.unified.push(target.name);
   }
@@ -255,17 +270,18 @@ function unify<T extends Qualities, K extends Qualities>(base: Concept<T>, targe
       };
     }
   }
-  return base as Concept<T & K>;
+  return base as Concept<Record<string, unknown>, T & K>;
 }
 /**
  * This will unify concepts while prioritizing qualities later in the provided concepts list via recomposition.
  *  Then finally unify the emergent concept with final priority.
  */
-export function unifyConcepts<T extends Qualities>(
+export function unifyConcepts<S extends Record<string, unknown>, T extends Qualities>(
   concepts: AnyConcept[],
   emergentConcept: AnyConcept
-): Concept<T> {
-  let newConcept = createConcept<T>('', {});
+): Concept<S, T> {
+  const dummy = {};
+  let newConcept = createConcept<typeof dummy, T>('', dummy);
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
   }));
@@ -282,7 +298,7 @@ export function unifyConcepts<T extends Qualities>(
       p.toString = () => `PRINCIPLE: ${newConcept.name} ${i}`;
     });
   }
-  return filterSimilarQualities(newConcept);
+  return filterSimilarQualities(newConcept) as Concept<S, T>;
 }
 
 export const getUnifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);

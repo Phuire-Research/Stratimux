@@ -14,9 +14,9 @@ import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 
 test('New Plan Options Selector Test', (done) => {
-  const planNewStageSelectors = createAxium('Plan New Stage Selectors Test', [
-    createExperimentPlanOptionsConcept()
-  ]);
+  const planNewStageSelectors = createAxium('Plan New Stage Selectors Test', {
+    experiment: createExperimentPlanOptionsConcept()
+  });
   let count = 0;
   const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', () => [
     createStage(({dispatch, changes}) => {
@@ -101,9 +101,9 @@ test('New Plan Options Selector Test', (done) => {
 // As if you set the tests to explicitly fail, the third stage will repeat over and over again despite the iterateStage...
 // This is a non-trivial example of an abstraction leaking an implementation detail towards the handling of expect in jest.
 test('New Plan Options Priority Test', (done) => {
-  const planNewStagePriority = createAxium('Plan New Stage Priority Test', [
-    createExperimentPlanOptionsConcept()
-  ]);
+  const planNewStagePriority = createAxium('Plan New Stage Priority Test', {
+    experiment: createExperimentPlanOptionsConcept()
+  });
   let count = 0;
   let planOneCount = 0;
   planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [

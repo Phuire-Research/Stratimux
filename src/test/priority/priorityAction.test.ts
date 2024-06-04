@@ -30,9 +30,9 @@ test('Priority Action Test', (done) => {
     }
   };
 
-  const priorityTest = createAxium('Priority Test', [
-    createExperimentPriorityConcept()
-  ], {logging: true, storeDialog: true, logActionStream: true});
+  const priorityTest = createAxium('Priority Test', {
+    experiment: createExperimentPriorityConcept()
+  }, {logging: true, storeDialog: true, logActionStream: true});
 
   const firstStage = (name: string, priority: number) => createStage(({concepts, dispatch, changes}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
@@ -112,7 +112,7 @@ type SetCount = {
 }
 
 test('Priority Action Manual Test', (done) => {
-  const axium = createAxium('Priority Action Manual Axium Extraction', []);
+  const axium = createAxium('Priority Action Manual Axium Extraction', {});
   const sub = axium.subscribe(concepts => {
     sub.unsubscribe();
     axium.close();
@@ -149,7 +149,7 @@ test('Priority Action Manual Test', (done) => {
 });
 
 test('Priority Action Close Test', (done) => {
-  const axium = createAxium('Priority Action Manual Axium Extraction', [createCounterConcept()]);
+  const axium = createAxium('Priority Action Manual Axium Extraction', {counter: createCounterConcept()});
   const sub = axium.subscribe(concepts => {
     sub.unsubscribe();
     const axiumState = getAxiumState(concepts);

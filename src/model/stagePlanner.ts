@@ -49,6 +49,7 @@ export type Planning<T = void> = (title: string, planner: Planner<T>) => StagePl
 export type Planner<T = void> = (uI: HInterface<T> & {
   stage: typeof createStage<T>
   stageO: typeof stageWaitForOpenThenIterate,
+  conclude: typeof stageConclude
 }) => PartialStaging<T>[];
 
 export type Staging<T = void> = {
@@ -122,6 +123,8 @@ export const stageWaitForOpenThenIterate = <T>(func: () => Action): Staging<T> =
     });
   }
 }, { selectors: [axiumSelectOpen] }));
+
+export const stageConclude = <T>(): Staging<T> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
 
 export const stageWaitForOwnershipThenIterate =
   <T>(func: () => Action): Staging<T> => (createStage(({concepts, dispatch}) => {
@@ -349,12 +352,13 @@ export class UnifiedSubject extends Subject<Concepts> {
 
   protected createPlan = <T = void>(title: string, planner: Planner<T>, space: number, conceptSemaphore: number): Plan<T> => {
     const stages = planner({
-      a__: this.concepts[conceptSemaphore].actions,
+      a__: this.concepts[conceptSemaphore].actions as Actions<any>,
       ax__: this.concepts[0].actions as Actions<AxiumQualities>,
       s__: {},
       t__: [],
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
+      conclude: stageConclude
     });
     const planId = this.planId;
     this.planId += 1;
@@ -733,7 +737,7 @@ export class UnifiedSubject extends Subject<Concepts> {
         conclude: conclude.bind(this)
       },
       // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
-      a: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions : {},
+      a: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       ax: this.concepts[0].actions as Actions<AxiumQualities>,
       s: {},
       t: []

@@ -47,7 +47,7 @@ const beatSelectorChangesQualities = {
 export type BeatSelectorChangesQualities = typeof beatSelectorChangesQualities;
 
 export const createBeatSelectorChangesConcept = () => {
-  return createConcept<BeatSelectorChangesQualities>(
+  return createConcept<BeatSelectorChangesState, BeatSelectorChangesQualities>(
     beatSelectorChangesName,
     initialBeatSelectorChangesState,
     beatSelectorChangesQualities

@@ -15,7 +15,7 @@ import { initializeTopic } from '../concepts/axium/strategies/initialization.str
 
 test('Axium setStageSelectors Test', (done) => {
   let tally = 0;
-  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
+  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan using setStageSelectors',
     ({stage}) => [
       stage(({concepts, dispatch}) => {
@@ -50,7 +50,7 @@ test('Axium setStageSelectors Test', (done) => {
 
 test('Axium setStageBeat Test', (done) => {
   let tally = 0;
-  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
+  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan using setStageBeat',
     ({stage}) => [
       stage(({concepts, dispatch}) => {
@@ -80,7 +80,7 @@ test('Axium setStageBeat Test', (done) => {
 });
 
 test('Axium setStagePriority Test', (done) => {
-  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
+  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   let ready = false;
   let tally = 0;
   const plan = axium.plan('Counting Strategy Plan using setStagePriority',
