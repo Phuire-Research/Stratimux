@@ -16,10 +16,10 @@ export const [
   experimentPriorityAddValue,
   experimentPriorityAddValueType,
   experimentPriorityAddValueQuality
-] = quality.createSetWithPayload<ExperimentPriorityAddValuePayload>({
+] = quality.createSetWithPayload<ExperimentPriorityState, ExperimentPriorityAddValuePayload>({
   type: 'experimentPriority Add value',
-  reducer: (state: ExperimentPriorityState, action: Action): ExperimentPriorityState => {
-    const { newValue } = select.payLoad<ExperimentPriorityAddValuePayload>(action);
+  reducer: (state, action) => {
+    const { newValue } = action.payload;
     if (newValue) {
       return {
         ...state,

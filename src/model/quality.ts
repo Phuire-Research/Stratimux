@@ -18,7 +18,7 @@ export type Quality<S extends Record<string, unknown>, T = void> = {
   actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
   reducer: Reducer<any, T>;
   toString: () => string;
-  methodCreator?: MethodCreator<S, T>;
+  methodCreator?: MethodCreatorStep<S, T>;
   method?: Method<unknown>;
   subject?: Subject<Action<any>>;
   keyedSelectors?: KeyedSelector[];
@@ -75,7 +75,7 @@ export function createQualitySet<S extends Record<string, unknown>>(q: {
       actionCreator,
       q.type,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator(), q.keyedSelectors, q.meta, q.analytics)
+      createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
     ];
   }
   return [
@@ -108,7 +108,7 @@ export function createQualitySetWithPayload<
         bucket,
         actionCreatorWithPayload as ActionCreatorType<T>,
         q.reducer,
-        q.methodCreator(),
+        q.methodCreator,
         q.keyedSelectors,
         q.meta,
         q.analytics

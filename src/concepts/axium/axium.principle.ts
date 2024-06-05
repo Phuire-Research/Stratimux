@@ -73,7 +73,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           concept.qualities.forEach(quality => {
             if (quality.methodCreator) {
-              [quality.method, quality.subject] = quality.methodCreator(getAxiumState(concepts).concepts$, concept.semaphore);
+              [quality.method, quality.subject] = quality.methodCreator()(getAxiumState(concepts).concepts$, concept.semaphore);
               quality.method.pipe(
                 catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
                   if (getAxiumState(concepts).logging) {
@@ -155,7 +155,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {
             if (quality.methodCreator) {
-              const [method, subject] = quality.methodCreator(axiumState.concepts$, se);
+              const [method, subject] = quality.methodCreator()(axiumState.concepts$, se);
               quality.method = method;
               quality.subject = subject;
               quality.method.pipe(

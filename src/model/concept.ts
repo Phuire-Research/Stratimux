@@ -127,7 +127,7 @@ export function createQuality<S extends Record<string, unknown>, T = void>(
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
   reducer: Reducer<S, T>,
-  methodCreator?: MethodCreator<S, T>,
+  methodCreator?: MethodCreatorStep<S, T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,

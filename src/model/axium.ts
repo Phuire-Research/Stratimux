@@ -246,7 +246,7 @@ export function createAxium<T extends Record<string, unknown>>(
     axiumState.conceptCounter += 1;
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        [quality.method, quality.subject] = quality.methodCreator(axiumState.concepts$, semaphore);
+        [quality.method, quality.subject] = quality.methodCreator()(axiumState.concepts$, semaphore);
         quality.method.pipe(
           catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
             if (axiumState.logging) {

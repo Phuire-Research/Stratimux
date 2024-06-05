@@ -10,9 +10,9 @@ export const [
   experimentPriorityIsReady,
   experimentPriorityIsReadyType,
   experimentPriorityIsReadyQuality
-] = quality.createSet({
+] = quality.createSet<ExperimentPriorityState>({
   type: 'experimentPriority is ready',
-  reducer: (state: ExperimentPriorityState, action: Action): ExperimentPriorityState => ({
+  reducer: (state) => ({
     ...state,
     ready: true
   }),
