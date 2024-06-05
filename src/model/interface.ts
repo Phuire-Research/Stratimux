@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, define the Interface model file.
 $>*/
 
-import { AxiumQualities } from '../concepts/axium/axium.concept';
+import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
 import { KeyedSelectors } from './selector';
 

@@ -16,24 +16,23 @@ export const [
   experimentAsyncIterateIdThenReceiveInMethod,
   experimentAsyncIterateIdThenReceiveInMethodType,
   experimentAsyncIterateIdThenReceiveInMethodQuality
-] = createQualitySet({
+] = createQualitySet<ExperimentState>({
   type: 'Experiment asynchronously iterate ID then receive in Method via State',
-  reducer: (state: ExperimentState) => {
+  reducer: (state) => {
     return {
       ...state,
       id: state.id + 1
     };
   },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
-      setTimeout(() => {
-        if (action.strategy) {
-          const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
-          const strategy = strategySuccess(action.strategy, data);
-          controller.fire(strategy);
-        }
-        controller.fire(action);
-      }, 50);
-    }, concepts$ as UnifiedSubject, semaphore as number),
+  methodCreator: createAsyncMethodWithState((controller, action, state) => {
+    setTimeout(() => {
+      if (action.strategy) {
+        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
+        const strategy = strategySuccess(action.strategy, data);
+        controller.fire(strategy);
+      }
+      controller.fire(action);
+    }, 50);
+  }),
 });
 /*#>*/

@@ -4,14 +4,9 @@ generate an ActionStrategy that will add new concepts into the Axium's conceptua
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { AnyConcept, Concept, Concepts } from '../../../model/concept';
-import { Actions, getSemaphore} from '../../../model/action';
-import { axiumAddConceptFromQue, axiumAddConceptFromQueType } from '../qualities/addConceptsFromQue.quality';
-import { axiumAppendConceptsToAddQue, axiumAppendConceptsToAddQueType } from '../qualities/appendConceptsToAddQue.quality';
-import { axiumOpen, axiumOpenType } from '../qualities/open.quality';
-import { axiumSetBlockingMode, axiumSetBlockingModeType } from '../qualities/setBlockingMode.quality';
-import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
-import { AxiumQualities, axiumName } from '../axium.concept';
+import { AnyConcept, Concepts } from '../../../model/concept';
+import { Actions } from '../../../model/action';
+import { AxiumQualities } from '../qualities';
 
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';

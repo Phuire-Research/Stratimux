@@ -20,11 +20,11 @@ const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
 const axiumOpenType: ActionType = 'Open Axium';
 
 export type ActionType = string;
-export type Action = {
+export type Action<T = void> = {
     type: ActionType;
     semaphore: [number, number, number, number];
     conceptSemaphore?: number;
-    payload?: Record<string, unknown>;
+    payload: T extends Record<string, unknown> ? T : undefined;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
@@ -34,6 +34,20 @@ export type Action = {
     origin?: string;
 };
 
+export type AnyAction = {
+    type: ActionType;
+    semaphore: [number, number, number, number];
+    conceptSemaphore?: number;
+    payload: any;
+    strategy?: ActionStrategy;
+    keyedSelectors?: KeyedSelector[];
+    agreement?: number;
+    expiration: number;
+    priority?: number;
+    axium?: string;
+    origin?: string;
+}
+
 export type ActionCreatorType<T = void> =
   T extends Record<string, unknown> ?
     ActionCreatorWithPayload<T> :
@@ -41,7 +55,7 @@ export type ActionCreatorType<T = void> =
 
 export type Actions<T = void> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends Quality<any> ?
+  [K in keyof T]: T[K] extends Quality<Record<string, unknown>, any> ?
     T[K]['actionCreator'] : ActionCreator;
 };
 
@@ -52,7 +66,7 @@ export type ActionCreator = (
 export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
   payload: T,
   options?: ActionWithPayloadOptions<T>
-) => Action;
+) => Action<T>;
 
 export type ActionOptions = {
     semaphore?: [number, number, number, number];
@@ -66,10 +80,10 @@ export type ActionOptions = {
     origin?: string;
 };
 
-export type ActionWithPayloadOptions<T extends Record<string, unknown>> = {
+export type ActionWithPayloadOptions<T = void> = {
     semaphore?: [number, number, number, number];
     conceptSemaphore?: number;
-    payload?: T;
+    payload?: T extends Record<string, unknown> ? T : undefined;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
     agreement?: number;
@@ -81,7 +95,7 @@ export type ActionWithPayloadOptions<T extends Record<string, unknown>> = {
 
 const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
 
-export function primeAction(concepts: Concepts, action: Action): Action {
+export function primeAction<T>(concepts: Concepts, action: Action<T>): Action<T> {
   const expired = action.expiration < Date.now();
   let semaphore: [number, number, number, number] = [-1, -1, -1, -1];
   if (!expired) {
@@ -109,13 +123,13 @@ export function primeAction(concepts: Concepts, action: Action): Action {
       ...action,
       semaphore: semaphore,
       axium,
-    };
+    } as Action<T>;
     if (newAction.strategy) {
       newAction.strategy.currentNode.action = newAction;
     }
     return newAction;
   }
-  const badAction: Action = {
+  const badAction: Action<AxiumBadActionPayload> = {
     type: axiumBadActionType,
     payload: createPayload<AxiumBadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
@@ -123,14 +137,14 @@ export function primeAction(concepts: Concepts, action: Action): Action {
   };
   if (action.strategy) {
     badAction.strategy = action.strategy;
-    badAction.strategy.currentNode.action = badAction;
+    badAction.strategy.currentNode.action = badAction as Action<any>;
     if (expired) {
       badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumExpired);
     } else {
       badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumBadGeneration);
     }
   }
-  return badAction;
+  return badAction as Action<any>;
 }
 
 /**
@@ -219,10 +233,10 @@ export function getSpecialSemaphore(type: ActionType) {
   }
 }
 
-export function createAction<T extends Record<string, unknown>>(
+export function createAction<T = void>(
   type: ActionType,
   options?: ActionWithPayloadOptions<T>,
-): Action {
+): Action<T> {
   const special = getSpecialSemaphore(type);
 
   const semaphore = options?.semaphore !== undefined ? options.semaphore : [0, 0, -1, special] as [number, number, number, number];
@@ -238,7 +252,7 @@ export function createAction<T extends Record<string, unknown>>(
     return {
       type,
       semaphore: options.semaphore ? options.semaphore : semaphore,
-      payload,
+      payload: (payload ? payload  : {}) as T extends Record<string, unknown> ? T : undefined,
       keyedSelectors,
       agreement,
       expiration: Date.now() + (agreement !== undefined ? agreement : 5000),
@@ -251,6 +265,7 @@ export function createAction<T extends Record<string, unknown>>(
       type,
       semaphore,
       expiration: Date.now() + 5000,
+      payload: {} as T extends Record<string, unknown> ? T : undefined
     };
   }
 }
@@ -281,16 +296,16 @@ export function prepareActionCreator(
 export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][]
-) {
+): ActionCreatorWithPayload<T> {
   return (
     payload: T,
     options?: ActionOptions
-  ): Action => {
+  ): Action<T> => {
     const opt: ActionWithPayloadOptions<T> = {
       ...options,
-      payload
+      payload: payload as T extends Record<string, unknown> ? T : undefined
     };
-    return createAction(
+    return createAction<T>(
       actionType,
       {
         ...opt,

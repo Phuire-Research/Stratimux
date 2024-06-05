@@ -3,21 +3,19 @@ For the asynchronous graph programming framework Stratimux and Axium Concept,
 generate a principle that will allow for the modification of the Axium's loaded concepts.
 $>*/
 /*<#*/
-import { BehaviorSubject, Observable, Subject, Subscriber, catchError } from 'rxjs';
+import { Observable, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, Actions, createCachedSemaphores } from '../../model/action';
-import { AxiumQualities, AxiumState, axiumName } from './axium.concept';
+import { AxiumState, axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { UnifiedSubject, createStage } from '../../model/stagePlanner';
 import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
-import { KeyedSelector, KeyedSelectors } from '../../model/selector';
-import { IsT } from '../../model/interface';
+import { AxiumQualities } from './qualities';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -108,8 +106,8 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
     }, { selectors: [axiumSelectAddConceptQue], priority: Infinity - 1}),
   ]);
 
-  const removeConceptsPlan = plan('Remove Concepts Plan', () => [
-    createStage(({concepts, dispatch, a}) => {
+  const removeConceptsPlan = plan('Remove Concepts Plan', ({stage}) => [
+    stage(({concepts, dispatch, a}) => {
       const axiumState = concepts[0].state as AxiumState;
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;

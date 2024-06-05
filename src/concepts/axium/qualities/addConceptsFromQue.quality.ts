@@ -7,14 +7,15 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualitySet } from '../../../model/quality';
 
-export const [axiumAddConceptFromQue, axiumAddConceptFromQueType, axiumAddConceptsFromQueQuality] = createQualitySet({
-  type: 'Add Concepts from Axium Concept Que',
-  reducer: (state: AxiumState) => {
-    return {
-      ...state,
-      addConceptQue: []
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+export const [axiumAddConceptFromQue, axiumAddConceptFromQueType, axiumAddConceptsFromQueQuality] =
+  createQualitySet<AxiumState>({
+    type: 'Add Concepts from Axium Concept Que',
+    reducer: (state) => {
+      return {
+        ...state,
+        addConceptQue: []
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

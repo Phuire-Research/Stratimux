@@ -11,9 +11,9 @@ export const [
   ownershipResetOwnershipLedger,
   ownershipResetOwnershipLedgerType,
   ownershipResetOwnershipLedgerQuality
-] = createQualitySet({
+] = createQualitySet<OwnershipState>({
   type: 'reset Ownership Ledger',
-  reducer: (state: OwnershipState): OwnershipState => ({...state, ownershipLedger: createOwnershipLedger()}),
+  reducer: (state) => ({...state, ownershipLedger: createOwnershipLedger()}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

@@ -17,9 +17,9 @@ export const [
   axiumClearBadPlanFromBadPlanList,
   axiumClearBadPlanFromBadPlanListQualityType,
   axiumClearBadPlanFromBadPlanListQuality
-] = createQualitySet({
+] = createQualitySet<AxiumState>({
   type: 'clear Plan Topic from Axium\'s badPlan list',
-  reducer: (state: AxiumState, action) => {
+  reducer: (state, action) => {
     const {title} = selectPayload<AxiumClearBadPlanFromBadPlanListPayload>(action);
     return {
       ...state,

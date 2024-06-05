@@ -40,7 +40,7 @@ const emptyBucket = (body: Action[], bucket: Action[]) => {
   }
 };
 
-export const handlePriority = (axiumState: AxiumState, action: Action) => {
+export const handlePriority = (axiumState: AxiumState, action: Action<unknown>) => {
   const body = axiumState.body;
   if (body[0] && body[0].priority !== undefined) {
     const bucket: Action[] = [];

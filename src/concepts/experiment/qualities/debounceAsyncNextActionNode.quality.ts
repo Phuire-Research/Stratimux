@@ -15,7 +15,7 @@ export const [
 ] = createQualitySet({
   type: 'Experiment will debounce incoming actions within set duration asynchronously',
   reducer: defaultReducer,
-  methodCreator: () => createAsyncMethodDebounce((controller, action) => {
+  methodCreator: createAsyncMethodDebounce((controller, action) => {
     setTimeout(() => {
       if (action.strategy) {
         controller.fire(strategySuccess(action.strategy));

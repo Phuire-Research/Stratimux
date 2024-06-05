@@ -12,9 +12,9 @@ export const [
   experimentCheckInStrategy,
   experimentCheckInStrategyType,
   experimentCheckInStrategyQuality
-] = createQualitySet({
+] = createQualitySet<ExperimentState>({
   type: 'Experiment check in Action',
-  reducer: (state: ExperimentState, action) => {
+  reducer: (state, action) => {
     if (action.strategy) {
       const nextAction = strategySuccess(action.strategy);
       if (nextAction.type !== axiumConcludeType) {

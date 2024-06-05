@@ -17,14 +17,14 @@ export const [
   axiumSetDefaultModeIndex,
   axiumSetDefaultModeIndexType,
   axiumSetDefaultModeIndexQuality
-] = createQualitySetWithPayload<AxiumSetDefaultModeIndexPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumSetDefaultModeIndexPayload>({
   type: 'set Axium\'s Default Mode Index',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumSetDefaultModeIndexPayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     return {
       ...state,
       defaultModeIndex: payload.index,
-    } as AxiumState;
+    };
   },
   methodCreator: defaultMethodCreator
 });

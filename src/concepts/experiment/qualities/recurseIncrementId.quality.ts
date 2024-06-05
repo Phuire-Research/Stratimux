@@ -21,31 +21,30 @@ export const [
   experimentRecurseIterateId,
   experimentRecurseIterateIdType,
   experimentRecurseIterateIdQuality
-] = createQualitySetWithPayload<ExperimentRecurseIterateId>({
+] = createQualitySetWithPayload<ExperimentState, ExperimentRecurseIterateId>({
   type: 'Asynchronous experiment, recursively iterate ID and receive in Method via State',
-  reducer: (state: ExperimentState) => {
+  reducer: (state) => {
     return {
       ...state,
       id: state.id + 1
     };
   },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createAsyncMethodWithState<ExperimentState>((controller, action, state) => {
-      setTimeout(() => {
-        const payload = selectPayload<ExperimentRecurseIterateId>(action);
-        payload.controlling.shift();
-        if (action.strategy) {
-          const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
-          if (payload.controlling.length > 0) {
-            const strategy = strategyRecurse(action.strategy, {payload});
-            controller.fire(strategy);
-          } else {
-            const strategy = strategySuccess(action.strategy, data);
-            controller.fire(strategy);
-          }
+  methodCreator: createAsyncMethodWithState((controller, action, state) => {
+    setTimeout(() => {
+      const payload = action.payload;
+      payload.controlling.shift();
+      if (action.strategy) {
+        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
+        if (payload.controlling.length > 0) {
+          const strategy = strategyRecurse(action.strategy, {payload});
+          controller.fire(strategy);
+        } else {
+          const strategy = strategySuccess(action.strategy, data);
+          controller.fire(strategy);
         }
-        controller.fire(action);
-      }, 50);
-    }, concepts$ as UnifiedSubject, semaphore as number)
+      }
+      controller.fire(action);
+    }, 50);
+  })
 });
 /*#>*/

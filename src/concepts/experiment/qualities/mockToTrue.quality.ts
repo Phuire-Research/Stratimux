@@ -10,9 +10,9 @@ export const [
   experimentMockToTrue,
   experimentMockToTrueType,
   experimentMockToTrueQuality,
-] = createQualitySet({
+] = createQualitySet<ExperimentState>({
   type: 'Experiment mock set to True',
-  reducer: (state: ExperimentState) => {
+  reducer: (state) => {
     return {
       ...state,
       mock: true

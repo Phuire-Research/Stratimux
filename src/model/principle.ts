@@ -6,12 +6,11 @@ $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concepts, ConceptsSubscriber } from './concept';
-import { Action, Actions, primeAction } from './action';
-import { axiumRegisterSubscriber } from '../concepts/axium/qualities/registerSubscription.quality';
-import { Planner, Planning, UnifiedSubject } from './stagePlanner';
+import { Action, Actions } from './action';
+import { Planning } from './stagePlanner';
 import { KeyedSelectors } from './selector';
 import { BInterface, IsT } from './interface';
-import { AxiumQualities } from '../concepts/axium/axium.concept';
+import { AxiumQualities } from '../concepts/axium/qualities';
 
 export type PrincipleInterface<T = void> = {
   observer: Subscriber<Action>,
@@ -56,8 +55,13 @@ export function createPrinciple$<T = void>(
   });
 }
 
-export function registerPrincipleSubscription(observer: Subscriber<Action>, concepts: Concepts, name: string, subscription: Subscription) {
-  const primedRegisterSubscriber = primeAction(concepts, axiumRegisterSubscriber({ subscription, name }));
+export function registerPrincipleSubscription(
+  observer: Subscriber<Action<unknown>>,
+  ax: Actions<AxiumQualities>,
+  name: string,
+  subscription: Subscription
+) {
+  const primedRegisterSubscriber = ax.axiumRegisterSubscriberQuality({ subscription, name });
   observer.next(primedRegisterSubscriber);
 }
 

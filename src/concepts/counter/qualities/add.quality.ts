@@ -11,9 +11,9 @@ export const [
   counterAdd,
   counterAddType,
   counterAddQuality
-] = createQualitySet({
+] = createQualitySet<CounterState>({
   type: 'Counter Add',
-  reducer: (state: CounterState) => {
+  reducer: (state) => {
     return {
       ...state,
       count: state.count + 1

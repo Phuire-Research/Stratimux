@@ -16,7 +16,7 @@ export const [
 ] = createQualitySet({
   type: 'Experiment create async method with timer, to return action',
   reducer: nullReducer,
-  methodCreator: () => createAsyncMethod((controller, action) => {
+  methodCreator: createAsyncMethod((controller, action) => {
     setTimeout(() => {
       if (action.strategy) {
         controller.fire(strategySuccess(action.strategy));

@@ -11,9 +11,9 @@ export const [
   ownershipClearPendingActions,
   ownershipClearPendingActionsType,
   ownershipClearPendingActionsQuality
-] = createQualitySet({
+] = createQualitySet<OwnershipState>({
   type: 'clear Ownership\'s Pending Actions',
-  reducer: (state: OwnershipState): OwnershipState => ({...state, pendingActions: []}),
+  reducer: (state) => ({...state, pendingActions: []}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

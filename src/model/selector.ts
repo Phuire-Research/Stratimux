@@ -223,7 +223,7 @@ export function selectState<T>(concepts: Concepts, name: string): T | undefined 
 /**
  * Simple helper function that returns payload casted to T.
  */
-export function selectPayload<T>(action: Action): T {
+export function selectPayload<T>(action: Action<any>): T {
   return action.payload as T;
 }
 

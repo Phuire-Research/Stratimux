@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { Subject } from 'rxjs';
 import { Concepts, Mode } from '../../model/concept';
-import { Action, primeAction } from '../../model/action';
+import { Action, AnyAction, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumBadActionPayload } from './qualities/badAction.quality';
@@ -50,7 +50,7 @@ export const permissiveMode: Mode = (
           concepts$.next(newConcepts);
         }
       } else {
-        const nextAction = primeAction(concepts, action);
+        const nextAction = primeAction(concepts, action) as AnyAction;
         // Logical Determination: axiumBadActionType
         if (nextAction.semaphore[3] === 1) {
           const payload: AxiumBadActionPayload = {badActions: [action]};
@@ -91,7 +91,7 @@ export const blockingMode: Mode = (
         subject.next(action);
       }
     } else {
-      const nextAction = primeAction(concepts, action);
+      const nextAction = primeAction(concepts, action) as AnyAction;
       // Logical Determination: axiumBadActionType
       if (nextAction.semaphore[3] === 1) {
         const payload = {...action};

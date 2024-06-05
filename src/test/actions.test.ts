@@ -8,7 +8,6 @@ import { createQualitySet, createQualitySetWithPayload } from '../model/quality'
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { AxiumQualities } from '../concepts/axium/axium.concept';
 
 test('Quality Actions', (done) => {
   const [one, two, something] = createQualitySet({
@@ -19,7 +18,8 @@ test('Quality Actions', (done) => {
     here: number;
   };
 
-  const [_, __, some] = createQualitySetWithPayload<payload>({
+  const initialState = {};
+  const [_, __, some] = createQualitySetWithPayload<typeof initialState, payload>({
     type: 'Some',
     reducer: (state) => state
   });
@@ -41,8 +41,7 @@ test('Quality Actions', (done) => {
     });
     return actions.something();
   };
-  const state = {};
-  const c = createConcept<typeof state, typeof qs>('Some', state, qs, [
+  const c = createConcept<typeof initialState, typeof qs>('Some', initialState, qs, [
     ({a_}) => {
       console.log('HIT PRINCIPLE', a_.some({
         here: 2

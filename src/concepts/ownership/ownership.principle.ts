@@ -5,21 +5,16 @@ ownershipLedger's contents. Only actions that are first in all lines of their ti
 may be dispatched into the Axium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
 $>*/
 /*<#*/
-import { Subscriber } from 'rxjs';
-import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { Action, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
+import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
-import { StagePlanner, UnifiedSubject, createStage, stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate  } from '../../model/stagePlanner';
+import { StagePlanner } from '../../model/stagePlanner';
 import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
-import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
-import { isAxiumOpen } from '../../model/axium';
-import { axiumSelectOpen } from '../axium/axium.selector';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -37,9 +32,9 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
 }) => {
   let initDispatch = false;
   let finalCheck = true;
-  const planOwnership: StagePlanner = plan('ownership Principle Plan', () => [
-    stageWaitForOpenThenIterate(() => axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
-    createStage(({concepts}) => {
+  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({ax__, stage, stageO}) => [
+    stageO(() => ax__.axiumRegisterStagePlannerQuality({conceptName: ownershipName, stagePlanner: planOwnership})),
+    stage(({concepts}) => {
       let newConcepts = concepts;
       let ownershipState = selectUnifiedState<OwnershipState>(newConcepts, conceptSemaphore);
       if (ownershipState?.initialized) {
@@ -81,7 +76,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
               }
             }
             if (payload.badActions.length > 0) {
-              newAction = createAction(axiumBadActionType, {payload});
+              newAction = createAction(axiumBadActionType, {payload}) as AnyAction;
               ownershipState.pendingActions = newPending;
               nextC(newConcepts);
               observer.next(newAction);
@@ -117,9 +112,9 @@ export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities>
   nextC,
   conceptSemaphore
 }) => {
-  const planOwnership: StagePlanner = plan('ownership Principle Plan', () => [
-    stageWaitForOwnershipThenIterate(() => (axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
-    createStage(({concepts}) => {
+  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({ax__, stage, stageO}) => [
+    stageO(() => (ax__.axiumRegisterStagePlannerQuality({conceptName: ownershipName, stagePlanner: planOwnership}))),
+    stage(({concepts}) => {
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         let modified = false;

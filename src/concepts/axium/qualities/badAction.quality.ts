@@ -5,22 +5,22 @@ is currently not loaded, part of the wrong generation, expired, etc... If state 
 of the bad action that was received.
 $>*/
 /*<#*/
-import { Action } from '../../../model/action';
+import { Action, AnyAction } from '../../../model/action';
 import { createQualitySetWithPayload } from '../../../model/quality';
 import { selectPayload } from '../../../model/selector';
 import { AxiumState } from '../axium.concept';
 
 export type AxiumBadActionPayload = {
-  badActions: Action[],
+  badActions: AnyAction[],
 }
 export const [
   axiumBadAction,
   axiumBadActionType,
   axiumBadActionQuality
-] = createQualitySetWithPayload<AxiumBadActionPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumBadActionPayload>({
   type: 'Axium received a Bad Action',
   reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumBadActionPayload>(action).badActions;
+    const payload = action.payload.badActions;
     if (state.logging) {
       console.log('Axium Received a Bad Action: ', action);
     }

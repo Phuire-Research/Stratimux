@@ -16,10 +16,10 @@ export const [
   axiumClearBadStrategyTopicFromBadActionList,
   axiumClearBadStrategyTopicFromBadActionListType,
   axiumClearBadStrategyTopicFromBadActionListQuality
-] = createQualitySetWithPayload<AxiumClearBadStrategyTopicFromBadActionListPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumClearBadStrategyTopicFromBadActionListPayload>({
   type: 'clear Strategy Topic from Axium\'s badAction list',
-  reducer: (state: AxiumState, action) => {
-    const {topic} = selectPayload<AxiumClearBadStrategyTopicFromBadActionListPayload>(action);
+  reducer: (state, action) => {
+    const {topic} = action.payload;
     const badActions = state.badActions.filter(act => {
       if (act.strategy && act.strategy.topic !== topic) {
         return true;

@@ -17,14 +17,12 @@ export const [
   axiumPreClose,
   axiumPreCloseType,
   axiumPreCloseQuality
-] = createQualitySetWithPayload<AxiumPreClosePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumPreClosePayload>({
   type: 'Prepare Close Axium',
-  reducer: (state: AxiumState, action) => {
-    return {
-      ...state,
-      prepareClose: true,
-      exit: selectPayload<AxiumPreClosePayload>(action).exit
-    };
-  }
+  reducer: (state, action) => ({
+    ...state,
+    prepareClose: true,
+    exit: action.payload.exit
+  })
 });
 /*#>*/

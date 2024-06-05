@@ -4,39 +4,101 @@ The Axium is a set of concepts that create a greater whole via their association
 within strategies, plans, modes, qualities, and principles.
 $>*/
 /*<#*/
+import { OpenPayload, axiumOpenQuality } from './qualities/open.quality';
+import { AxiumBadActionPayload, axiumBadActionQuality } from './qualities/badAction.quality';
+import { AxiumClosePayload, axiumCloseQuality } from './qualities/close.quality';
+import { axiumLogQuality } from './qualities/log.quality';
+import { AxiumRegisterSubscriberPayload, axiumRegisterSubscriberQuality } from './qualities/registerSubscription.quality';
+import { AxiumInitializePrinciplesPayload, axiumInitializePrinciplesQuality } from './qualities/initializePrinciples.quality';
+import { AxiumSetBlockingModePayload, axiumSetBlockingModeQuality } from './qualities/setBlockingMode.quality';
+import { AxiumSetDefaultModePayload, axiumSetDefaultModeQuality } from './qualities/setDefaultMode.quality';
+import { axiumAddConceptsFromQueQuality } from './qualities/addConceptsFromQue.quality';
+import { AxiumAppendConceptsToAddQuePayload, axiumAppendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
+import { AxiumAppendConceptsToRemoveQuePayload, axiumAppendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRemoveQue.quality';
+import { axiumRemoveConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
+import { AppendActionListToDialogPayload, axiumAppendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
+import { AxiumSetModePayload, axiumSetModeQuality } from './qualities/setMode.quality';
+import { AxiumSetDefaultModeIndexPayload, axiumSetDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
+import { axiumClearDialogQuality } from './qualities/clearDialog.quality';
+import { AxiumClearBadActionTypeFromBadActionListPayload, axiumClearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
+import { AxiumClearBadStrategyTopicFromBadActionListPayload, axiumClearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
+import { axiumClearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
+import { AxiumRegisterStagePlannerPayload, axiumRegisterStagePlannerQuality } from './qualities/registerStagePlanner.quality';
+import { axiumKickQuality } from './qualities/kick.quality';
+import { AxiumPreClosePayload, axiumPreCloseQuality } from './qualities/preClose.quality';
+import { axiumStitchQuality } from './qualities/stitch.quality';
+import { AxiumRegisterTimeOutPayload, axiumRegisterTimeOutQuality } from './qualities/registerTimeOut.quality';
 import { Subject, Subscription } from 'rxjs';
 import { AnyConcept, Concept, ConceptDeck, Concepts } from '../../model/concept';
-import { Action } from '../../model/action';
+import { Action, AnyAction } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { axiumClosePrinciple } from './axium.close.principle';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { axiumOpenQuality } from './qualities/open.quality';
-import { axiumBadActionQuality } from './qualities/badAction.quality';
-import { axiumCloseQuality } from './qualities/close.quality';
-import { axiumLogQuality } from './qualities/log.quality';
-import { axiumRegisterSubscriberQuality } from './qualities/registerSubscription.quality';
-import { axiumInitializePrinciplesQuality } from './qualities/initializePrinciples.quality';
 export { initializationStrategy } from './strategies/initialization.strategy';
-import { axiumSetBlockingModeQuality } from './qualities/setBlockingMode.quality';
-import { axiumSetDefaultModeQuality } from './qualities/setDefaultMode.quality';
-import { axiumAddConceptsFromQueQuality } from './qualities/addConceptsFromQue.quality';
-import { axiumAppendConceptsToAddQueQuality } from './qualities/appendConceptsToAddQue.quality';
-import { axiumAppendConceptsToRemoveQueQuality } from './qualities/appendConceptsToRemoveQue.quality';
-import { axiumRemoveConceptsViaQueQuality } from './qualities/removeConceptsViaQue.quality';
-import { axiumAppendActionListToDialogQuality } from './qualities/appendActionListToDialog.quality';
 import { createConcept } from '../../model/concept';
-import { axiumSetModeQuality } from './qualities/setMode.quality';
-import { axiumSetDefaultModeIndexQuality } from './qualities/setDefaultModeIndex.quality';
-import { axiumClearDialogQuality } from './qualities/clearDialog.quality';
 import { NamedStagePlanner, Plan, UnifiedSubject } from '../../model/stagePlanner';
-import { axiumClearBadActionTypeFromBadActionListQuality } from './qualities/clearBadActionTypeFromBadActionList.quality';
-import { axiumClearBadStrategyTopicFromBadActionListQuality } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
-import { axiumClearBadPlanFromBadPlanListQuality } from './qualities/clearBadPlanFromBadPlanList.quality';
-import { axiumRegisterStagePlannerQuality } from './qualities/registerStagePlanner.quality';
-import { axiumKickQuality } from './qualities/kick.quality';
-import { axiumPreCloseQuality } from './qualities/preClose.quality';
-import { axiumStitchQuality } from './qualities/stitch.quality';
-import { axiumRegisterTimeOutQuality } from './qualities/registerTimeOut.quality';
+import { AxiumQualities } from './qualities';
+
+export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
+export type KeyedSelector = {
+  conceptName: string,
+  conceptSemaphore: number,
+  keys: string,
+  selector: SelectorFunction,
+  setKeys?: (number | string)[]
+  setSelector?: SelectorFunction
+};
+export type KeyedSelectors =  Record<string, KeyedSelector>;
+
+export const axiumQualities = {
+  axiumKickQuality,
+  axiumOpenQuality,
+  axiumBadActionQuality,
+  axiumCloseQuality,
+  axiumPreCloseQuality,
+  axiumAppendActionListToDialogQuality,
+  axiumClearDialogQuality,
+  axiumLogQuality,
+  axiumRegisterSubscriberQuality,
+  axiumRegisterStagePlannerQuality,
+  axiumInitializePrinciplesQuality,
+  axiumSetBlockingModeQuality,
+  axiumSetDefaultModeQuality,
+  axiumSetDefaultModeIndexQuality,
+  axiumAddConceptsFromQueQuality,
+  axiumAppendConceptsToAddQueQuality,
+  axiumAppendConceptsToRemoveQueQuality,
+  axiumRemoveConceptsViaQueQuality,
+  axiumSetModeQuality,
+  axiumClearBadActionTypeFromBadActionListQuality,
+  axiumClearBadStrategyTopicFromBadActionListQuality,
+  axiumClearBadPlanFromBadPlanListQuality,
+  axiumStitchQuality,
+  axiumRegisterTimeOutQuality
+};
+
+export const axiumStaticQualities = {
+  axiumKickQuality,
+  axiumOpenQuality,
+  axiumBadActionQuality,
+  axiumCloseQuality,
+  axiumPreCloseQuality,
+  axiumAppendActionListToDialogQuality,
+  axiumClearDialogQuality,
+  axiumLogQuality,
+  axiumRegisterSubscriberQuality,
+  axiumRegisterStagePlannerQuality,
+  axiumInitializePrinciplesQuality,
+  axiumSetBlockingModeQuality,
+  axiumSetDefaultModeQuality,
+  axiumSetDefaultModeIndexQuality,
+  axiumSetModeQuality,
+  axiumClearBadActionTypeFromBadActionListQuality,
+  axiumClearBadStrategyTopicFromBadActionListQuality,
+  axiumClearBadPlanFromBadPlanListQuality,
+  axiumStitchQuality,
+  axiumRegisterTimeOutQuality
+};
 
 export type NamedSubscription = {
   name: string;
@@ -66,7 +128,7 @@ export type AxiumState = {
   principleSubscribers: NamedSubscription[];
   generalSubscribers: NamedSubscription[];
   stagePlanners: NamedStagePlanner[];
-  action$: Subject<Action>;
+  action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject;
   deck: ConceptDeck<Record<string, unknown>>,
@@ -76,9 +138,9 @@ export type AxiumState = {
   badActions: Action[];
   timer: NodeJS.Timeout[];
   timerLedger: Map<number, (() => Action)[]>
-  head: Action[];
-  body: Action[];
-  tail: Action[];
+  head: AnyAction[];
+  body: AnyAction[];
+  tail: AnyAction[];
   tailTimer: NodeJS.Timeout[];
 }
 
@@ -123,59 +185,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     timerLedger: new Map()
   };
 };
-const axiumQualities = {
-  axiumKickQuality,
-  axiumOpenQuality,
-  axiumBadActionQuality,
-  axiumCloseQuality,
-  axiumPreCloseQuality,
-  axiumAppendActionListToDialogQuality,
-  axiumClearDialogQuality,
-  axiumLogQuality,
-  axiumRegisterSubscriberQuality,
-  axiumRegisterStagePlannerQuality,
-  axiumInitializePrinciplesQuality,
-  axiumSetBlockingModeQuality,
-  axiumSetDefaultModeQuality,
-  axiumSetDefaultModeIndexQuality,
-  axiumAddConceptsFromQueQuality,
-  axiumAppendConceptsToAddQueQuality,
-  axiumAppendConceptsToRemoveQueQuality,
-  axiumRemoveConceptsViaQueQuality,
-  axiumSetModeQuality,
-  axiumClearBadActionTypeFromBadActionListQuality,
-  axiumClearBadStrategyTopicFromBadActionListQuality,
-  axiumClearBadPlanFromBadPlanListQuality,
-  axiumStitchQuality,
-  axiumRegisterTimeOutQuality
-};
-
-const axiumStaticQualities = {
-  axiumKickQuality,
-  axiumOpenQuality,
-  axiumBadActionQuality,
-  axiumCloseQuality,
-  axiumPreCloseQuality,
-  axiumAppendActionListToDialogQuality,
-  axiumClearDialogQuality,
-  axiumLogQuality,
-  axiumRegisterSubscriberQuality,
-  axiumRegisterStagePlannerQuality,
-  axiumInitializePrinciplesQuality,
-  axiumSetBlockingModeQuality,
-  axiumSetDefaultModeQuality,
-  axiumSetDefaultModeIndexQuality,
-  axiumSetModeQuality,
-  axiumClearBadActionTypeFromBadActionListQuality,
-  axiumClearBadStrategyTopicFromBadActionListQuality,
-  axiumClearBadPlanFromBadPlanListQuality,
-  axiumStitchQuality,
-  axiumRegisterTimeOutQuality
-};
-
 const axiumStaticPrinciple = [axiumClosePrinciple];
-
-export type AxiumQualities = typeof axiumQualities;
 
 export const createAxiumConcept = (
   name: string,

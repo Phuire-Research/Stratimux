@@ -19,10 +19,10 @@ export const [
   axiumRegisterStagePlanner,
   axiumRegisterStagePlannerType,
   axiumRegisterStagePlannerQuality
-] = createQualitySetWithPayload<AxiumRegisterStagePlannerPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumRegisterStagePlannerPayload>({
   type: 'register Stage Planner to Axium\'s Named Stage Planner list',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumRegisterStagePlannerPayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     const stagePlanners = state.stagePlanners;
     const stagePlanner = payload.stagePlanner;
     const name = payload.conceptName;

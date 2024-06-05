@@ -15,8 +15,8 @@ import { UnifiedSubject } from '../../model/stagePlanner';
 
 export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
   observer,
-  concepts_,
   subscribe,
+  ax_,
   nextC,
   nextA,
   conceptSemaphore
@@ -31,6 +31,6 @@ export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
       nextA(nextAction);
     }
   });
-  registerPrincipleSubscription(observer, concepts_, chainName, subscription);
+  registerPrincipleSubscription(observer, ax_, chainName, subscription);
 };
 /*#>*/
