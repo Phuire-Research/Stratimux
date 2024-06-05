@@ -10,12 +10,12 @@ import { Action, axiumBadAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 
-export class ActionController extends Subject<[Action, boolean]> {
+export class ActionController extends Subject<[Action<any>, boolean]> {
   expiration: number;
   expired: boolean;
   timer: NodeJS.Timeout | undefined;
-  action: Action;
-  constructor(action: Action) {
+  action: Action<any>;
+  constructor(action: Action<any>) {
     super();
     this.expiration = action.expiration;
     this.expired = false;
@@ -47,13 +47,13 @@ export class ActionController extends Subject<[Action, boolean]> {
    * Next fires once and then completes.
    * In case someone uses next over fire.
    */
-  next(union: [Action, boolean]) {
+  next(union: [Action<any>, boolean]) {
     this.fire(union[0]);
   }
   /**
    * Fires once and then completes.
    */
-  fire(action: Action) {
+  fire(action: Action<any>) {
     if (!this.closed) {
       if (!this.expired && this.timer) {
         clearTimeout(this.timer);
@@ -69,7 +69,10 @@ export class ActionController extends Subject<[Action, boolean]> {
   }
 }
 
-export const createActionController$ = (act: Action, controlling: (controller: ActionController, action: Action) => void) => {
+export const createActionController$ = <T = void>(
+  act: Action<T>,
+  controlling: (controller: ActionController, action: Action<T>) => void
+) => {
   const ctrl = new ActionController(act);
   // Needs to have timeout so that subscribers have time to attach in case the controller fires synchronously.
   setTimeout(() => {

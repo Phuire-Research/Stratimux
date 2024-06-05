@@ -6,34 +6,24 @@ $>*/
 /*<#*/
 import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concepts } from '../../../model/concept';
-import { getSemaphore } from '../../../model/action';
-import { axiumOpen, axiumOpenType } from '../qualities/open.quality';
-import { axiumInitializePrinciples, axiumInitializePrinciplesType } from '../qualities/initializePrinciples.quality';
-import { axiumSetDefaultMode, axiumSetDefaultModeType } from '../qualities/setDefaultMode.quality';
-import { axiumName } from '../axium.concept';
+import { Actions } from '../../../model/action';
+import { AxiumQualities } from '../qualities';
 
 export const initializeTopic = 'Axium Initialization Strategy';
-export function initializationStrategy(concepts: Concepts): ActionStrategy {
-  const initSemaphore = getSemaphore(concepts, axiumName, axiumInitializePrinciplesType);
-  const setDefaultModeSemaphore = getSemaphore(concepts, axiumName, axiumSetDefaultModeType);
-  const openSemaphore = getSemaphore(concepts, axiumName, axiumOpenType);
-
-  const stepThree: ActionNode = createActionNode(axiumOpen({open: true}), {
-    semaphore: openSemaphore,
+export function initializationStrategy(ax: Actions<AxiumQualities>, concepts: Concepts): ActionStrategy {
+  const stepThree: ActionNode = createActionNode(ax.axiumOpenQuality({open: true}), {
     successNotes: {
       preposition: 'Finally',
       denoter: 'to Notify Subscribers of State changes.'
     },
   });
-  const stepTwo: ActionNode = createActionNode(axiumSetDefaultMode({concepts}), {
-    semaphore: setDefaultModeSemaphore,
+  const stepTwo: ActionNode = createActionNode(ax.axiumSetDefaultModeQuality({concepts}), {
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
   });
-  const stepOne: ActionNode = createActionNode(axiumInitializePrinciples({concepts}),{
-    semaphore: initSemaphore,
+  const stepOne: ActionNode = createActionNode(ax.axiumInitializePrinciplesQuality({concepts}),{
     successNode: stepTwo,
     successNotes: {
       preposition: 'Begin with'

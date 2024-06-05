@@ -4,32 +4,45 @@ This file hold a series of helper functions that enable users to quickly create 
 within their own defined qualities.
 $>*/
 /*<#*/
-import { Observable, Subject, bufferTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
-import { Concepts } from './concept';
-import { ActionController, createActionController$, createActionControllerForEach$ } from './actionController';
+import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
+import { Concepts, MethodCreator } from './concept';
+import { ActionController, createActionController$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector, selectUnifiedState } from './selector';
 import { debounceAction, throttleAction } from './actionOperators';
-import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
+import { createAction } from './action';
+
+const axiumConclude = () => {
+  return createAction('Conclude');
+};
 
 export type ActionType = string;
-type Action = {
-    type: ActionType;
-    semaphore: [number, number, number, number];
-    payload?: Record<string, unknown>;
-    strategy?: ActionStrategy;
-    keyedSelectors?: KeyedSelector[];
-    agreement?: number;
-    expiration: number;
-    axium?: string;
+export type Action<T = void> = {
+  type: ActionType;
+  semaphore: [number, number, number, number];
+  conceptSemaphore?: number;
+  payload: T extends Record<string, unknown> ? T : undefined;
+  strategy?: ActionStrategy;
+  keyedSelectors?: KeyedSelector[];
+  agreement?: number;
+  expiration: number;
+  priority?: number;
+  axium?: string;
+  origin?: string;
 };
-type Method = Observable<[Action, boolean]> & {toString: () => string};
+type Method<T = void> = Observable<[Action<T>, boolean]> & {toString: () => string};
 
-export const createMethod =
-  (method: (action: Action) => Action): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
-      map((action: Action) => {
+type MethodCreatorBase = <S extends Record<string, unknown>, T = void>(
+  method: (action: Action<T>) => Action<any>
+) => MethodCreator<S, T>;
+
+export const createMethod: MethodCreatorBase =
+  <S extends Record<string, unknown>, T = void>(
+    method: (action: Action<T>) => Action<any>
+  ): MethodCreator<S, T> => (): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
+      map((action) => {
         const methodAction = method(action);
         if (methodAction.strategy) {
           return [methodAction, false];
@@ -40,21 +53,27 @@ export const createMethod =
           ...conclude,
         }, false];
       }),
-    );
+    ) as Method<T>;
     defaultMethod.toString = () => ('Method');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodWithState =
-  <T>(
-    methodWithState: (action: Action, state: T) => Action,
+
+type MethodCreatorBaseWithState = <S extends Record<string, unknown>, T = void>(
+  methodWithState: (action: Action<T>, state: S) => Action<any>,
+) => MethodCreator<S, T>;
+
+export const createMethodWithState: MethodCreatorBaseWithState =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithState: (action: Action<T>, state: S) => Action<any>,
+  ): MethodCreator<S, T> => (
     concepts$: Subject<Concepts>,
     semaphore: number
-  ): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      map(([act, state] : [Action, T]) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, state] : [Action<T>, S]) => {
         const methodAction = methodWithState(act, state);
         if (methodAction.strategy) {
           return [methodAction, false];
@@ -69,41 +88,98 @@ export const createMethodWithState =
     defaultMethod.toString = () => ('Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethod =
-  (asyncMethod: (controller: ActionController, action: Action) => void): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
-      switchMap(act => createActionController$(act, (controller: ActionController, action: Action) => {
+
+type MethodCreatorBaseWithConcepts = <S extends Record<string, unknown>, T = void>(
+  methodWithConcepts: (action: Action<T>, concepts: Concepts) => Action<any>,
+) => MethodCreator<S, T>;
+
+export const createMethodWithConcepts: MethodCreatorBaseWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithConcepts: (action: Action<T>, concepts: Concepts) => Action<any>,
+  ): MethodCreator<S, T> => ((
+    concepts$: Subject<Concepts>,
+    _semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
+      withLatestFrom(concepts$),
+      map(([act, concepts] : [Action<T>, Concepts]) => {
+        const methodAction = methodWithConcepts(act, concepts);
+        if (methodAction.strategy) {
+          return [methodAction, false];
+        }
+        const conclude = axiumConclude();
+        return [{
+          ...act,
+          ...conclude,
+        }, false];
+      }),
+    ) as Method<T>;
+    defaultMethod.toString = () => ('Method with Concepts');
+    return [defaultMethod, defaultSubject];
+  });
+
+type MethodCreatorAsync = <S extends Record<string, unknown>, T = void>(
+  asyncMethod: (controller: ActionController, action: Action<T>) => void
+) => MethodCreator<S, T>;
+
+export const createAsyncMethod: MethodCreatorAsync =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethod: (controller: ActionController, action: Action<T>) => void
+  ) : MethodCreator<S, T> => (
+    _concepts$: Subject<Concepts>,
+    _semaphore: number
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
+      switchMap((act: Action<T>) => createActionController$(act, (controller: ActionController, action: Action<T>) => {
         asyncMethod(controller, action);
       })),
     );
     defaultMethod.toString = () => ('Async Method');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodWithState =
-  <T>(
-    asyncMethodWithState: (controller: ActionController, action: Action, state: T) => void,
+
+type MethodCreatorAsyncWithState = <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+  ) : MethodCreator<S, T> => (
     concepts$: Subject<Concepts>,
     semaphore: number
-  )
-    : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      switchMap(([act, state] : [Action, T]) => createActionController$(act, (controller: ActionController, action: Action) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      switchMap(([act, state] : [Action<T>, S]) => createActionController$(act, (controller: ActionController, action: Action<T>) => {
         asyncMethodWithState(controller, action, state);
       })),
-    );
+    ) as Method<T>;
     defaultMethod.toString = () => ('Async Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodDebounce =
-  (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorBaseDebounce = <S extends Record<string, unknown>, T = void>(
+  method: (action: Action<T>) => Action<any>,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodDebounce: MethodCreatorBaseDebounce =
+  <S extends Record<string, unknown>, T = void>(
+    method: (action: Action<T>) => Action<any>,
+    duration: number
+  ): MethodCreator<S, T> => (
+    _concepts$: Subject<Concepts>,
+    _semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
       debounceAction(duration),
-      map((action: Action) => {
+      map((action: Action<T>) => {
         // Logically Determined axiumConclude
         if (action.semaphore[3] !== 3) {
           const methodAction = method(action);
@@ -119,19 +195,30 @@ export const createMethodDebounce =
           return [action, true];
         }
       }),
-    );
+    ) as Method<T>;
     defaultMethod.toString = () => ('Debounce Method');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodDebounceWithState =
-  <T>(methodWithState: (action: Action, state: T) => Action, concepts$: Subject<Concepts>, semaphore: number, duration: number)
-    : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorBaseDebounceWithState = <S extends Record<string, unknown>, T = void>(
+  methodWithState: (action: Action<T>, state: S) => Action<any>,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithState: (action: Action<T>, state: S) => Action<any>,
+    duration: number
+  ) : MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      map(([act, state] : [Action, T]) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, state] : [Action<T>, S]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithState(act, state);
@@ -151,13 +238,25 @@ export const createMethodDebounceWithState =
     defaultMethod.toString = () => ('Debounce Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodDebounce =
-  (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncDebounce = <S extends Record<string, unknown>, T = void>(
+  asyncMethod: (controller: ActionController, action: Action<T>) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodDebounce: MethodCreatorAsyncDebounce =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethod: (controller: ActionController, action: Action<T>) => void,
+    duration: number
+  ): MethodCreator<S, T> => (
+    _concepts$: Subject<Concepts>,
+    _semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       switchMap((act) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethod(controller, action);
         });
       }),
@@ -165,16 +264,27 @@ export const createAsyncMethodDebounce =
     defaultMethod.toString = () => ('Async Debounce Method');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodDebounceWithState =
-  <T>(asyncMethodWithState: (controller: ActionController, action: Action, state: T) =>
-    void, concepts$: Subject<Concepts>, semaphore: number, duration: number, ): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncDebounceWithState = <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodDebounceWithState: MethodCreatorAsyncDebounceWithState =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+    duration: number
+  ): MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      switchMap(([act, state] : [Action, T]) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      switchMap(([act, state] : [Action<T>, S]) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithState(controller, action, state);
         });
       })
@@ -182,12 +292,24 @@ export const createAsyncMethodDebounceWithState =
     defaultMethod.toString = () => ('Async Debounce Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodThrottle =
-  (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorBaseThrottle = <S extends Record<string, unknown>, T = void>(
+  method: (action: Action<T>) => Action<any>,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodThrottle: MethodCreatorBaseThrottle =
+  <S extends Record<string, unknown>, T = void>(
+    method: (action: Action<T>) => Action<any>,
+    duration: number
+  ): MethodCreator<S,T> => (
+    _concepts$: Subject<Concepts>,
+    _semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
-      map((action: Action) => {
+      map((action: Action<T>) => {
         // Logically Determined axiumConclude
         if (action.semaphore[3] !== 3) {
           const methodAction = method(action);
@@ -207,15 +329,26 @@ export const createMethodThrottle =
     defaultMethod.toString = () => ('Throttle Method');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodThrottleWithState =
-  <T>(methodWithState: (action: Action, state: T) => Action, concepts$: Subject<Concepts>, semaphore: number, duration: number)
-    : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorBaseThrottleWithState = <S extends Record<string, unknown>, T = void>(
+  methodWithState: (action: Action<T>, state: S) => Action<any>,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodThrottleWithState: MethodCreatorBaseThrottleWithState =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithState: (action: Action<T>, state: S) => Action<any>,
+    duration: number
+  ): MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number,
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      map(([act, state] : [Action, T]) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, state] : [Action<T>, S]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithState(act, state);
@@ -235,13 +368,25 @@ export const createMethodThrottleWithState =
     defaultMethod.toString = () => ('Throttle Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodThrottle =
-  (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncThrottle = <S extends Record<string, unknown>, T = void>(
+  asyncMethod: (controller: ActionController, action: Action<T>) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodThrottle: MethodCreatorAsyncThrottle =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethod: (controller: ActionController, action: Action<T>) => void,
+    duration: number
+  ): MethodCreator<S, T> => (
+    _concepts$: Subject<Concepts>,
+    _semaphore: number
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       switchMap((act) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethod(controller, action);
         });
       }),
@@ -249,16 +394,27 @@ export const createAsyncMethodThrottle =
     defaultMethod.toString = () => ('Async Throttle Method');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodThrottleWithState =
-  <T>(asyncMethodWithState: (controller: ActionController, action: Action, state: T) =>
-    void, concepts$: Subject<Concepts>, semaphore: number, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncThrottleWithState = <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodThrottleWithState: MethodCreatorAsyncThrottleWithState =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithState: (controller: ActionController, action: Action<T>, state: S) => void,
+    duration: number
+  ): MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number,
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]): [Action, T] => ([act, selectUnifiedState<T>(concepts, semaphore) as T])),
-      switchMap(([act, state] : [Action, T]) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      switchMap(([act, state] : [Action<T>, S]) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithState(controller, action, state);
         });
       })
@@ -266,58 +422,49 @@ export const createAsyncMethodThrottleWithState =
     defaultMethod.toString = () => ('Async Throttle Method with State');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodWithConcepts =
-  (
-    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action,
+
+type MethodCreatorAsyncWithConcepts= <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodWithConcepts: MethodCreatorAsyncWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+  ): MethodCreator<S, T> => (
     concepts$: Subject<Concepts>,
     semaphore: number
-  ): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]) => {
-        const methodAction = methodWithConcepts(act, concepts, semaphore);
-        if (methodAction.strategy) {
-          return [methodAction, false];
-        }
-        const conclude = axiumConclude();
-        return [{
-          ...act,
-          ...conclude,
-        }, false];
-      }),
-    );
-    defaultMethod.toString = () => ('Method with Concepts');
-    return [defaultMethod, defaultSubject];
-  };
-export const createAsyncMethodWithConcepts =
-  (
-    asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) => void,
-    concepts$: Subject<Concepts>,
-    semaphore: number
-  )
-    : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
-      withLatestFrom(concepts$ ),
-      switchMap(([act, concepts] : [Action, Concepts]) => createActionController$(act, (controller: ActionController, action: Action) => {
-        asyncMethodWithConcepts(controller, action, concepts, semaphore);
-      })),
+      switchMap(([act, concepts] : [Action<T>, Concepts]) =>
+        createActionController$(act, (controller: ActionController, action: Action<T>) => {
+          asyncMethodWithConcepts(controller, action, concepts, semaphore);
+        })),
     );
     defaultMethod.toString = () => ('Async Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodDebounceWithConcepts =
-  (
-    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action, concepts$: Subject<Concepts>,
-    semaphore: number,
+
+type MethodCreatorBaseDebounceWithConcepts= <S extends Record<string, unknown>, T = void>(
+  methodWithConcepts: (action: Action<T>, concepts: Concepts, semaphore: number) => Action<any>,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodDebounceWithConcepts: MethodCreatorBaseDebounceWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithConcepts: (action: Action<T>, concepts: Concepts, semaphore: number) => Action<any>,
     duration: number
-  ) : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+  ): MethodCreator<S,T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number,
+  ) : [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]) => {
+      map(([act, concepts] : [Action<T>, Concepts]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithConcepts(act, concepts, semaphore);
@@ -333,19 +480,30 @@ export const createMethodDebounceWithConcepts =
           return [act, true];
         }
       }),
-    );
+    ) as Method<T>;
     defaultMethod.toString = () => ('Debounce Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodDebounceWithConcepts =
-  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) =>
-    void, concepts$: Subject<Concepts>, semaphore: number, duration: number, ): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncDebounceWithConcepts= <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+  duration: number,
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodDebounceWithConcepts: MethodCreatorAsyncDebounceWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+    duration: number,
+  ): MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number,
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      switchMap(([act, concepts] : [Action, Concepts]) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+      switchMap(([act, concepts] : [Action<T>, Concepts]) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithConcepts(controller, action, concepts, semaphore);
         });
       })
@@ -353,18 +511,25 @@ export const createAsyncMethodDebounceWithConcepts =
     defaultMethod.toString = () => ('Async Debounce Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
-export const createMethodThrottleWithConcepts =
-  (
-    methodWithConcepts: (action: Action, concepts: Concepts, semaphore: number) => Action,
+
+type MethodCreatorBaseThrottleWithConcepts= <S extends Record<string, unknown>, T = void>(
+  methodWithConcepts: (action: Action<T>, concepts: Concepts, semaphore: number) => Action,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createMethodThrottleWithConcepts: MethodCreatorBaseThrottleWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    methodWithConcepts: (action: Action<T>, concepts: Concepts, semaphore: number) => Action,
+    duration: number
+  ): MethodCreator<S, T> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
-    duration: number
-  ) : [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action, Concepts]) => {
+      map(([act, concepts] : [Action<T>, Concepts]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
           const methodAction = methodWithConcepts(act, concepts, semaphore);
@@ -380,19 +545,30 @@ export const createMethodThrottleWithConcepts =
           return [act, false];
         }
       }),
-    );
+    ) as Method<T>;
     defaultMethod.toString = () => ('Throttle Method with Concepts');
     return [defaultMethod, defaultSubject];
   };
-export const createAsyncMethodThrottleWithConcepts =
-  (asyncMethodWithConcepts: (controller: ActionController, action: Action, concepts: Concepts, semaphore: number) =>
-    void, concepts$: Subject<Concepts>, semaphore: number, duration: number): [Method, Subject<Action>] => {
-    const defaultSubject = new Subject<Action>();
-    const defaultMethod: Method = defaultSubject.pipe(
+
+type MethodCreatorAsyncThrottleWithConcepts= <S extends Record<string, unknown>, T = void>(
+  asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+  duration: number
+) => MethodCreator<S, T>;
+
+export const createAsyncMethodThrottleWithConcepts: MethodCreatorAsyncThrottleWithConcepts =
+  <S extends Record<string, unknown>, T = void>(
+    asyncMethodWithConcepts: (controller: ActionController, action: Action<T>, concepts: Concepts, semaphore: number) => void,
+    duration: number
+  ): MethodCreator<S, T> => (
+    concepts$: Subject<Concepts>,
+    semaphore: number,
+  ): [Method<T>, Subject<Action<T>>] => {
+    const defaultSubject = new Subject<Action<T>>();
+    const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      switchMap(([act, concepts] : [Action, Concepts]) => {
-        return createActionController$(act, (controller: ActionController, action: Action) => {
+      switchMap(([act, concepts] : [Action<T>, Concepts]) => {
+        return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithConcepts(controller, action, concepts, semaphore);
         });
       })

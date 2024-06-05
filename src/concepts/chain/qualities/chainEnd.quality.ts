@@ -9,9 +9,9 @@ export const [
   chainEnd,
   chainEndType,
   chainEndQuality
-] = createQualitySet({
+] = createQualitySet<ChainState>({
   type: 'set chain end property to true',
-  reducer: (state: ChainState, action) => {
+  reducer: (state) => {
     return {
       ...state,
       end: true

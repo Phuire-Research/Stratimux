@@ -9,7 +9,7 @@ a bad action that signifies that the associated action was invalidated.
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { Action } from '../../model/action';
+import { Action, AnyAction } from '../../model/action';
 import { Concepts } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
@@ -48,7 +48,7 @@ export const ownershipMode: Mode = (
           const strategy = action.strategy;
           if (action.strategy.currentNode.failureNode === null) {
           // This assumes that the Strategy does not account for the Block
-            let nextAction = strategyFailed(
+            let nextAction: AnyAction = strategyFailed(
               strategy,
               strategyData_appendFailure(strategy, failureConditions.ownershipBlocked)
             );

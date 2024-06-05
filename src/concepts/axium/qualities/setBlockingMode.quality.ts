@@ -20,14 +20,14 @@ export const [
   axiumSetBlockingMode,
   axiumSetBlockingModeType,
   axiumSetBlockingModeQuality
-] = createQualitySetWithPayload<AxiumSetBlockingModePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumSetBlockingModePayload>({
   type: 'set Axium to Blocking Mode',
-  reducer: (state: AxiumState, _action) => {
+  reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;
     methodSubscribers.forEach(named => named.subscription.unsubscribe());
     methodSubscribers = [];
 
-    const payload = selectPayload<AxiumSetBlockingModePayload>(_action);
+    const payload = _action.payload;
     const concepts = payload.concepts;
     forEachConcept(concepts, (concept => {
       concept.qualities.forEach(quality => {

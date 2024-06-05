@@ -14,9 +14,9 @@ export const [
   ownershipClearStrategyStubsFromLedgerAndSelf,
   ownershipClearStrategyStubsFromLedgerAndSelfType,
   ownershipClearStrategyStubsFromLedgerAndSelfQuality
-] = createQualitySet({
+] = createQualitySet<OwnershipState>({
   type: 'clear current Strategy Stubs from Ownership Ledger and Itself',
-  reducer: (state: OwnershipState, action) => {
+  reducer: (state, action) => {
     const stubs = action?.strategy?.stubs;
     const ownershipLedger = state.ownershipLedger;
     if (action.strategy && stubs) {

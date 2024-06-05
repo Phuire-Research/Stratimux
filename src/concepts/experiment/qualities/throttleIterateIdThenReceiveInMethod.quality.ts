@@ -17,30 +17,31 @@ export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 
+type Data = ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload;
+
 export const [
   experimentThrottleIterateIdThenReceiveInMethod,
   experimentThrottleIterateIdThenReceiveInMethodType,
   experimentThrottleIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
+] = createQualitySetWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
   type: 'Experiment throttle iterate ID then receive in Method via State',
-  reducer: (state: ExperimentState) => {
+  reducer: (state) => {
     return {
       ...state,
       id: state.id + 1
     };
   },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createMethodThrottleWithState<ExperimentState>((action, state) => {
-      const payload = selectPayload<ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action);
-      if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action.strategy, {
-          id: state.id,
-          setId: payload.setId
-        });
-        const strategy = strategySuccess(action.strategy, data);
-        return strategy;
-      }
-      return action;
-    }, concepts$ as UnifiedSubject, semaphore as number, 500)
+  methodCreator: () => createMethodThrottleWithState((action, state) => {
+    const payload = action.payload;
+    if (action.strategy) {
+      const data = strategyData_unifyData<Data>(action.strategy, {
+        id: state.id,
+        setId: payload.setId
+      });
+      const strategy = strategySuccess(action.strategy, data);
+      return strategy;
+    }
+    return action;
+  }, 500)
 });
 /*#>*/

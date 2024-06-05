@@ -14,9 +14,9 @@ export const [
   axiumRemoveConceptsViaQue,
   axiumRemoveConceptsViaQueType,
   axiumRemoveConceptsViaQueQuality
-] = createQualitySet({
+] = createQualitySet<AxiumState>({
   type: 'remove Concepts via Axium\'s Removal Concept Que',
-  reducer: (state: AxiumState, action) => {
+  reducer: (state) => {
     const principleSubscribers = state.methodSubscribers;
     const newPrincipleSubscribers = [] as NamedSubscription[];
     const generalSubscribers = state.methodSubscribers;

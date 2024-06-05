@@ -4,7 +4,6 @@ $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
 import { createAxium } from '../../model/axium';
-import { createStage } from '../../model/stagePlanner';
 import { selectSlice } from '../../model/selector';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';

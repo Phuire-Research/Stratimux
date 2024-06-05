@@ -153,10 +153,10 @@ function createOperatorSubscriber<T>(
  *  Thus this needs to be taken into account in the Method using debounceAction if implemented directly.
  *   But will be handled automatically in actionControllers and associated debounce createMethods.
  */
-export function debounceAction(dueTime: number, scheduler: SchedulerLike = asyncScheduler): MonoTypeOperatorFunction<Action> {
+export function debounceAction<T>(dueTime: number, scheduler: SchedulerLike = asyncScheduler): MonoTypeOperatorFunction<Action<T>> {
   return operate((source, subscriber) => {
     let activeTask: Subscription | null = null;
-    let lastValue: Action | null = null;
+    let lastValue: Action<T> | null = null;
     let lastTime: number | null = null;
 
     const emit = () => {
@@ -183,7 +183,7 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
     source.subscribe(
       createOperatorSubscriber(
         subscriber,
-        (value: Action) => {
+        (value: Action<T>) => {
           lastValue = value;
           lastTime = scheduler.now();
           if (!activeTask) {
@@ -191,7 +191,7 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
             subscriber.add(activeTask);
           } else {
             // All this code just to place this code block.
-            const conclude = {
+            const conclude: Action<any> = {
               ...value,
               ...axiumConclude(),
             };
@@ -213,15 +213,17 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
   });
 }
 
-function throttle(durationSelector: (value: Action) => ObservableInput<any>, config?: ThrottleConfig): MonoTypeOperatorFunction<Action> {
+function throttle<T>(
+  durationSelector: (value: Action<T>) => ObservableInput<any>, config?: ThrottleConfig
+): MonoTypeOperatorFunction<Action<T>> {
   return operate((source, subscriber) => {
     const { leading = true, trailing = false } = config ?? {};
     let hasValue = false;
-    let sendValue: Action | null = null;
+    let sendValue: Action<T> | null = null;
     let throttled: Subscription | null = null;
     let isComplete = false;
 
-    const endThrottling = (value: Action) => {
+    const endThrottling = (value: Action<T>) => {
       throttled?.unsubscribe();
       throttled = null;
       if (trailing) {
@@ -237,13 +239,13 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
       isComplete && subscriber.complete();
     };
 
-    const startThrottle = (value: Action) =>
+    const startThrottle = (value: Action<T>) =>
       (throttled = innerFrom(durationSelector(value)).subscribe(createOperatorSubscriber(subscriber, endThrottling, cleanupThrottling)));
-    const passConclude = (value: Action) => {
+    const passConclude = (value: Action<T>) => {
       subscriber.next({
         ...value,
         ...axiumConclude()
-      });
+      } as Action<T>);
     };
 
     const send = () => {
@@ -277,12 +279,12 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
  *  Thus this needs to be taken into account in the Method using throttleAction if implemented directly.
  *   But will be handled automatically in actionControllers and associated debounce createMethods.
  */
-export function throttleAction(
+export function throttleAction<T>(
   duration: number,
   scheduler: SchedulerLike = asyncScheduler,
   config?: ThrottleConfig
-): MonoTypeOperatorFunction<Action> {
+): MonoTypeOperatorFunction<Action<T>> {
   const duration$ = timer(duration, scheduler);
-  return throttle(() => duration$, config);
+  return throttle<T>(() => duration$, config);
 }
 /*#>*/

@@ -16,10 +16,10 @@ export const [
   counterMultiply,
   counterMultiplyType,
   counterMultiplyQuality
-] = createQualitySetWithPayload<CounterMultiplyPayload>({
+] = createQualitySetWithPayload<CounterState, CounterMultiplyPayload>({
   type: 'Counter Multiply',
-  reducer: (state: CounterState, action) => {
-    const {by} = selectPayload<CounterMultiplyPayload>(action);
+  reducer: (state: CounterState, {payload}) => {
+    const {by} = payload;
     console.log(state.count, 'by', by);
     return {
       ...state,

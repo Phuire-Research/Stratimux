@@ -11,9 +11,9 @@ export const [
   ownershipInitializeOwnership,
   ownershipInitializeOwnershipType,
   ownershipInitializeOwnershipQuality
-] = createQualitySet({
+] = createQualitySet<OwnershipState>({
   type: 'Ownership Initialize to True to enable Ownership Principle',
-  reducer: (state: OwnershipState): OwnershipState => ({...state, initialized: true}),
+  reducer: (state) => ({...state, initialized: true}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

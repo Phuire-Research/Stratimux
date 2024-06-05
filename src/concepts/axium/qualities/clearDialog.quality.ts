@@ -11,9 +11,9 @@ export const [
   axiumClearDialog,
   axiumClearDialogType,
   axiumClearDialogQuality
-] = createQualitySet({
+] = createQualitySet<AxiumState>({
   type: 'clear Axium Dialog',
-  reducer: (state: AxiumState) => {
+  reducer: (state) => {
     return {
       ...state,
       dialog: '',

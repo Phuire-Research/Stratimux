@@ -18,10 +18,10 @@ export const [
   axiumOpen,
   axiumOpenType,
   axiumOpenQuality
-] = createQualitySetWithPayload<OpenPayload>({
+] = createQualitySetWithPayload<AxiumState, OpenPayload>({
   type: 'Open Axium',
   reducer: (state: AxiumState, action) => {
-    const {open} = selectPayload<OpenPayload>(action);
+    const {open} = action.payload;
     return {
       ...state,
       open

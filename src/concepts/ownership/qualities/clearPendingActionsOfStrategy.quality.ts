@@ -17,9 +17,9 @@ export const [
   ownershipClearPendingActionsOfStrategy,
   ownershipClearPendingActionsOfStrategyType,
   ownershipClearPendingActionsOfStrategyQuality
-] = createQualitySetWithPayload<OwnershipClearPendingActionsOfStrategyPayload>({
+] = createQualitySetWithPayload<OwnershipState, OwnershipClearPendingActionsOfStrategyPayload>({
   type: 'clear Ownership\'s Pending Actions of Strategy Topic',
-  reducer: (state: OwnershipState, action) => {
+  reducer: (state, action) => {
     const {topic} = selectPayload<OwnershipClearPendingActionsOfStrategyPayload>(action);
     const newPendingActions: Action[] = [];
     for (const act of state.pendingActions) {

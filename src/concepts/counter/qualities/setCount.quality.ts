@@ -17,10 +17,10 @@ export const [
   counterSetCount,
   counterSetCountType,
   counterSetCountQuality
-] = createQualitySetWithPayload<CounterSetCountPayload>({
+] = createQualitySetWithPayload<CounterState, CounterSetCountPayload>({
   type: 'Counter set Count',
-  reducer: (state: CounterState, action) => {
-    const {newCount} = selectPayload<CounterSetCountPayload>(action);
+  reducer: (state, {payload}) => {
+    const {newCount} = payload;
     return {
       ...state,
       count: newCount

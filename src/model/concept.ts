@@ -16,19 +16,25 @@ import { IsT } from './interface';
 import { Qualities, Quality } from './quality';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Reducer = (state: any, action: Action) => any;
+export type Reducer<
+  S extends Record<string, unknown>,
+  T = void
+> = (state: S, action: Action<T>) => S | null;
 
-export type Method = Observable<[Action, boolean]>;
+export type Method<T = void> = Observable<[Action<T>, boolean]>;
 export type Principle = Observable<Action>;
 
 export type Mode = ([action, concept, action$, concepts$]: [
-  Action,
+  Action<unknown>,
   Concepts,
   Subject<Action>,
   UnifiedSubject,
 ]) => void;
 
-export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
+export type MethodCreatorStep<S extends Record<string, unknown>, T = void> = () => MethodCreator<S, T>;
+
+export type MethodCreator<S extends Record<string, unknown>, T = void> =
+  (concept$: Subject<Concepts>, semaphore: number) => [Method<T>, Subject<Action<T>>];
 // export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
 export type Concept<S extends Record<string, unknown>, T = void> = {
@@ -38,7 +44,7 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   actions: Actions<T>;
   selectors: KeyedSelectors;
   typeValidators: IsT[]
-  qualities: Quality<unknown>[];
+  qualities: Quality<Record<string, unknown>>[];
   q: T extends Record<string, unknown> ?
     T
     :
@@ -87,12 +93,12 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     });
   }
   const actions: Record<string, unknown> = {};
-  const qualities: Quality<unknown>[] = [];
+  const qualities: Quality<Record<string, unknown>>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
       try {
-        actions[q] = (_qualities[q] as Quality<unknown>).actionCreator;
-        qualities.push(_qualities[q] as Quality<unknown>);
+        actions[q] = (_qualities[q] as Quality<any>).actionCreator;
+        qualities.push(_qualities[q] as Quality<Record<string, unknown>>);
       } catch (error) {
         console.error('ERROR @: ', q, _qualities[q]);
         // console.warn('Check: ', _qualities);
@@ -116,17 +122,17 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
   };
 }
 
-export function createQuality<T = void>(
+export function createQuality<S extends Record<string, unknown>, T = void>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
-  reducer: Reducer,
-  methodCreator?: MethodCreator,
+  reducer: Reducer<S, T>,
+  methodCreator?: MethodCreatorStep<S, T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>,
-): Quality<T> {
+): Quality<S, T> {
   return {
     actionType,
     actionCreator,
@@ -143,7 +149,7 @@ export function createQuality<T = void>(
  * Note that for now the check for mode and principle are based on concept name and loaded index;
  */
 function filterSimilarQualities(concept: AnyConcept) {
-  const newQualities: Quality<unknown>[] = [];
+  const newQualities: Quality<Record<string, unknown>>[] = [];
   const newUnified: string[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const newPrinciples: PrincipleFunction<any>[] = [];

@@ -3,6 +3,7 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 the incoming action's payload
 $>*/
 /*<#*/
+import { ExperimentState } from '../../../concepts/experiment/experiment.concept';
 import { Action } from '../../../model/action';
 import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
@@ -16,10 +17,10 @@ export const [
   experimentPlanOptionsAddValue,
   experimentPlanOptionsAddValueType,
   experimentPlanOptionsAddValueQuality
-] = quality.createSetWithPayload<ExperimentPlanOptionsAddValuePayload>({
+] = quality.createSetWithPayload<ExperimentPlanOptionsState, ExperimentPlanOptionsAddValuePayload>({
   type: 'experimentPlanOptions Add value',
-  reducer: (state: ExperimentPlanOptionsState, action: Action) => {
-    const { newValue } = select.payLoad<ExperimentPlanOptionsAddValuePayload>(action);
+  reducer: (state, action) => {
+    const { newValue } = action.payload;
     if (newValue) {
       return {
         ...state,

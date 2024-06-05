@@ -18,9 +18,9 @@ export const [
   ownershipClearPayloadStubs,
   ownershipClearPayloadStubsType,
   ownershipClearPayloadStubsQuality
-] = createQualitySetWithPayload<OwnershipClearPayloadStubsPayload>({
+] = createQualitySetWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload>({
   type: 'clear payload Stubs from Ownership Ledger',
-  reducer: (state: OwnershipState, action) => {
+  reducer: (state, action) => {
     const stubs = selectPayload<OwnershipClearPayloadStubsPayload>(action).stubs;
     const ownershipLedger = state.ownershipLedger;
     stubs.forEach(ticketStub => {

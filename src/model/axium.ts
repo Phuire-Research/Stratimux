@@ -13,9 +13,9 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, createAction, createCachedSemaphores } from './action';
+import { Action, Actions, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { AnyConcept, Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -29,7 +29,7 @@ import { Planning } from './stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
-import { Qualities } from './quality';
+import { AxiumQualities } from '../concepts/axium/qualities';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -123,7 +123,11 @@ export const HandleHardOrigin = (state: AxiumState, action: Action) => {
   tailWhip(state);
 };
 
-export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], action: Action) => {
+export const blockingMethodSubscription = (
+  concepts: Concepts,
+  tail: Action<unknown>[],
+  action: Action
+) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -158,7 +162,13 @@ export const blockingMethodSubscription = (concepts: Concepts, tail: Action[], a
   }
 };
 
-export const defaultMethodSubscription = (concepts: Concepts, tail: Action[], action$: Subject<Action>, action: Action, async: boolean) => {
+export const defaultMethodSubscription = (
+  concepts: Concepts,
+  tail: Action<unknown>[],
+  action$: Subject<Action>,
+  action: Action,
+  async: boolean
+) => {
   if (
     action.strategy &&
     // Logical Determination: axiumConcludeType
@@ -236,7 +246,7 @@ export function createAxium<T extends Record<string, unknown>>(
     axiumState.conceptCounter += 1;
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
-        [quality.method, quality.subject] = quality.methodCreator(axiumState.concepts$, semaphore);
+        [quality.method, quality.subject] = quality.methodCreator()(axiumState.concepts$, semaphore);
         quality.method.pipe(
           catchError((err: unknown, caught: Observable<[Action, boolean]>) => {
             if (axiumState.logging) {
@@ -326,7 +336,7 @@ export function createAxium<T extends Record<string, unknown>>(
   axiumState.actionConcepts$.next(concepts);
   axiumState.concepts$.init(concepts);
   axiumState.action$.next(
-    strategyBegin(initializationStrategy(concepts)),
+    strategyBegin(initializationStrategy(concepts[0].actions as Actions<AxiumQualities>, concepts)),
   );
   const close = (exit?: boolean) => {
     action$.next(axiumPreClose({
@@ -349,7 +359,7 @@ export type Axium = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
-  dispatch: (action: Action) => void;
+  dispatch: (action: Action<any>) => void;
   plan: Planning;
 }
 

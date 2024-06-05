@@ -16,10 +16,10 @@ export const [
   axiumAppendConceptsToRemoveQue,
   axiumAppendConceptsToRemoveQueType,
   axiumAppendConceptsToRemoveQueQuality
-] = createQualitySetWithPayload<AxiumAppendConceptsToRemoveQuePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumAppendConceptsToRemoveQuePayload>({
   type: 'append Concepts to Axium\'s Remove Concept Que',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumAppendConceptsToRemoveQuePayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     let removeQue = state.removeConceptQue;
     removeQue = [
       ...removeQue,

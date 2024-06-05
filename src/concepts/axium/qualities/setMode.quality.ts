@@ -17,17 +17,17 @@ export const [
   axiumSetMode,
   axiumSetModeType,
   axiumSetModeQuality
-] = createQualitySetWithPayload<AxiumSetModePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumSetModePayload>({
   type: 'set Axium Mode',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumSetModePayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     return {
       ...state,
-      modeIndex: [payload.modeIndex],
+      modeIndex: payload.modeIndex,
     };
   },
   methodCreator: () => createMethod((action) => {
-    const payload = action.payload as AxiumSetModePayload;
+    const payload = action.payload;
     if (action.strategy) {
       action.strategy.currentNode.successNotes = {
         denoter: `to ${payload.modeName}.`

@@ -1,15 +1,12 @@
 /*<$
 For the asynchronous graph programming framework Stratimux and Axium Concept, generate a principle that will manage the Axium's close process.
 $>*/
-import { Subscriber } from 'rxjs';
-import { Concepts } from '../../model/concept';
 import { PrincipleFunction } from '../../model/principle';
 import { selectUnifiedState } from '../../model/selector';
-import { UnifiedSubject, createStage } from '../../model/stagePlanner';
-import { AxiumQualities, AxiumState } from './axium.concept';
+import { AxiumState } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
-import { Action } from '../../model/action';
 import { axiumSelectPrepareClose } from './axium.selector';
+import { AxiumQualities } from './qualities';
 /*<#*/
 export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
   {

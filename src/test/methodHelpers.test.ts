@@ -2,7 +2,6 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that method helpers are working as intended.
 $>*/
 /*<#*/
-import { AxiumQualities } from '../concepts/axium/axium.concept';
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';

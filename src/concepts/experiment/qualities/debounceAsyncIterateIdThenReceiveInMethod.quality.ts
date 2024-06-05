@@ -21,7 +21,7 @@ export const [
   experimentDebounceAsyncIterateIdThenReceiveInMethod,
   experimentDebounceAsyncIterateIdThenReceiveInMethodType,
   experimentDebounceAsyncIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>({
+] = createQualitySetWithPayload<ExperimentState, ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>({
   type: 'Debounce Experiment asynchronously iterate ID then receive in Method via State',
   reducer: (state: ExperimentState) => {
     return {
@@ -29,23 +29,22 @@ export const [
       id: state.id + 1
     };
   },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createAsyncMethodDebounceWithState<ExperimentState>((controller, action, state) => {
-      setTimeout(() => {
-        const payload = selectPayload<ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(action);
-        if (action.strategy) {
-          const data = strategyData_unifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
-            action.strategy,
-            {
-              id: state.id,
-              setId: payload.setId
-            }
-          );
-          const strategy = strategySuccess(action.strategy, data);
-          controller.fire(strategy);
-        }
-        controller.fire(action);
-      }, 50);
-    }, concepts$ as UnifiedSubject, semaphore as number, 500)
+  methodCreator: () => createAsyncMethodDebounceWithState((controller, action, state) => {
+    setTimeout(() => {
+      const payload = action.payload;
+      if (action.strategy) {
+        const data = strategyData_unifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
+          action.strategy,
+          {
+            id: state.id,
+            setId: payload.setId
+          }
+        );
+        const strategy = strategySuccess(action.strategy, data);
+        controller.fire(strategy);
+      }
+      controller.fire(action);
+    }, 50);
+  }, 500)
 });
 /*#>*/

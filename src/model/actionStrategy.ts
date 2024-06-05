@@ -32,7 +32,7 @@ import { KeyedSelector } from './selector';
  * @Output Via Axium set Mode to Ownership Mode.
  */
 export interface ActionNode {
-  action?: Action;
+  action?: Action<unknown>;
   actionType: ActionType;
   payload?: Record<string, unknown>;
   conceptSemaphore?: number;
@@ -95,7 +95,7 @@ export type ActionStrategyCreator = (...arg0: unknown[]) => ActionStrategy;
  * @param options successNode and failureNodes are always required. If using decisionNodes, set both to null.
  * @returns ActionNode
  */
-export function createActionNode(action: Action, options?: ActionNodeOptions): ActionNode {
+export function createActionNode(action: Action<any>, options?: ActionNodeOptions): ActionNode {
   if (options) {
     return {
       actionType: action.type,
@@ -285,7 +285,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, un
  */
 export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string, unknown>) => {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode?.successNotes,
@@ -374,7 +374,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
  */
 export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, unknown>) {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode.failureNotes,
@@ -469,7 +469,7 @@ export const strategyDecide = (
   data?: Record<string, unknown>,
 ) => {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode.decisionNotes,
@@ -626,7 +626,7 @@ export const strategyDetermine = <T extends Record<string, unknown>>(
  * @returns Action
  */
 export const strategyRecurse =
-  (_strategy: ActionStrategy, control: {payload?: Record<string, unknown>, data?: Record<string, unknown>}): Action => {
+  (_strategy: ActionStrategy, control: {payload?: Record<string, unknown>, data?: Record<string, unknown>}): Action<unknown> => {
     const strategy = {
       ..._strategy
     };
@@ -635,7 +635,7 @@ export const strategyRecurse =
     };
     const action = {
       ...currentNode.action
-    } as Action;
+    } as Action<any>;
     action.payload = control.payload ? control.payload : (_strategy.currentNode.action as Action).payload;
     currentNode.payload = control.payload ? control.payload : _strategy.currentNode.payload;
     currentNode.lastActionNode = _strategy.currentNode;

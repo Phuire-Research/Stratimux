@@ -9,9 +9,9 @@ export const [
   experimentToggleAllSeven,
   experimentToggleAllSevenType,
   experimentToggleAllSevenQuality
-] = quality.createSet({
+] = quality.createSet<ExperimentPlanOptionsState>({
   type: 'experimentPriority Add value',
-  reducer: (state: ExperimentPlanOptionsState): ExperimentPlanOptionsState => ({
+  reducer: (state) => ({
     ...state,
     one: !state.one,
     two: !state.two,

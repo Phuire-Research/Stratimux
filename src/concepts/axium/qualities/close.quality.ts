@@ -18,10 +18,10 @@ export const [
   axiumClose,
   axiumCloseType,
   axiumCloseQuality
-] = createQualitySetWithPayload<AxiumClosePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumClosePayload>({
   type: 'Close Axium',
   reducer: (state: AxiumState, action) => {
-    const {exit} = selectPayload<AxiumClosePayload>(action);
+    const {exit} = action.payload;
     state.generalSubscribers.forEach(named => named.subscription.unsubscribe());
     state.methodSubscribers.forEach(named => named.subscription.unsubscribe());
     state.stagePlanners.forEach(named => named.conclude());

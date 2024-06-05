@@ -19,13 +19,13 @@ export const [
   axiumSetDefaultMode,
   axiumSetDefaultModeType,
   axiumSetDefaultModeQuality
-] = createQualitySetWithPayload<AxiumSetDefaultModePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumSetDefaultModePayload>({
   type: 'set Axium to its current Default Mode Index',
-  reducer: (state: AxiumState, _action) => {
+  reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;
     methodSubscribers.forEach(named => named.subscription.unsubscribe());
     methodSubscribers = [];
-    const payload = selectPayload<AxiumSetDefaultModePayload>(_action);
+    const payload = _action.payload;
     const concepts = payload.concepts;
     forEachConcept(concepts, (concept => {
       concept.qualities.forEach(quality => {

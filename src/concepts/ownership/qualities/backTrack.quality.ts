@@ -6,6 +6,9 @@ import { nullReducer } from '../../../model/quality';
 import { strategyBackTrack } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
 import { createQualitySet } from '../../../model/quality';
+import { OwnershipState } from '../ownership.concept';
+
+console.log('CHECK HERE!!', createMethod);
 
 export const [
   ownershipBackTrack,
@@ -14,7 +17,7 @@ export const [
 ] = createQualitySet({
   type: 'backtracking to previous ActionNode',
   reducer: nullReducer,
-  methodCreator: () => createMethod((action) => {
+  methodCreator: () => createMethod<OwnershipState>((action) => {
     if (action.strategy) {
       const newAction = strategyBackTrack(action.strategy);
       return newAction;

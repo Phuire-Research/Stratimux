@@ -9,9 +9,9 @@ $>*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
 import { Concepts } from './concept';
-import { AxiumQualities, AxiumState } from '../concepts/axium/axium.concept';
+import { AxiumState } from '../concepts/axium/axium.concept';
 import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
-import { Action, ActionType, Actions, createAction } from './action';
+import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
 import { Axium, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
@@ -19,6 +19,7 @@ import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies
 import { axiumTimeOut } from './time';
 import { HInterface, UInterface } from './interface';
 import { Qualities } from './quality';
+import { AxiumQualities } from '../concepts/axium/qualities';
 
 export type Plan<T = void> = {
   id: number;
@@ -39,7 +40,7 @@ export type Stage<T> = (params: StageParams<T>) => void;
 
 export type StageParams<T = void> = {
   concepts: Concepts,
-  dispatch: (action: Action, options: dispatchOptions, ) => void,
+  dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
   changes: KeyedSelector[],
   stagePlanner: StagePlanner
 } & UInterface<T>
@@ -116,7 +117,7 @@ export type StageDelimiter = {
 /**
  * Used in principle plans that are loaded during axium initialization
  */
-export const stageWaitForOpenThenIterate = <T>(func: () => Action): Staging<T> => (createStage(({concepts, dispatch}) => {
+export const stageWaitForOpenThenIterate = <T>(func: () => AnyAction): Staging<T> => (createStage(({concepts, dispatch}) => {
   if (isAxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true

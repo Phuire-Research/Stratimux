@@ -7,10 +7,11 @@ import { Subject, Subscriber } from 'rxjs';
 import { Concept, Concepts, forEachConcept  } from '../../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
 import { Action, Actions, } from '../../../model/action';
-import { AxiumQualities, AxiumState, axiumName } from '../axium.concept';
+import { AxiumState, axiumName } from '../axium.concept';
 import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
+import { AxiumQualities } from '.';
 
 export type AxiumInitializePrinciplesPayload = {
     concepts: Concepts;
@@ -20,10 +21,10 @@ export const [
   axiumInitializePrinciples,
   axiumInitializePrinciplesType,
   axiumInitializePrinciplesQuality
-] = createQualitySetWithPayload<AxiumInitializePrinciplesPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumInitializePrinciplesPayload>({
   type: 'initialize Principles and set new Subscribers to General Subscribers list',
-  reducer: (state: AxiumState, act) => {
-    const payload = selectPayload<AxiumInitializePrinciplesPayload>(act);
+  reducer: (state, act) => {
+    const payload = act.payload;
     const concepts = payload.concepts;
     let conceptCounter = state.conceptCounter;
     const action$ = state.action$ as Subject<Action>;

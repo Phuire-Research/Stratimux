@@ -19,10 +19,10 @@ export const [
   axiumRegisterSubscriber,
   axiumRegisterSubscriberType,
   axiumRegisterSubscriberQuality
-] = createQualitySetWithPayload<AxiumRegisterSubscriberPayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Axium\'s General Subscriber list',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumRegisterSubscriberPayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     const generalSubscribers = state.generalSubscribers;
     const subscription = payload.subscription;
     const name = payload.name;

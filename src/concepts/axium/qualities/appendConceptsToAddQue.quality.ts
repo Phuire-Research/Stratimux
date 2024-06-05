@@ -16,10 +16,10 @@ export const [
   axiumAppendConceptsToAddQue,
   axiumAppendConceptsToAddQueType,
   axiumAppendConceptsToAddQueQuality
-] = createQualitySetWithPayload<AxiumAppendConceptsToAddQuePayload>({
+] = createQualitySetWithPayload<AxiumState, AxiumAppendConceptsToAddQuePayload>({
   type: 'append Concepts to Axium\'s Add Concept Que',
-  reducer: (state: AxiumState, action) => {
-    const payload = selectPayload<AxiumAppendConceptsToAddQuePayload>(action);
+  reducer: (state, action) => {
+    const payload = action.payload;
     const addConceptQue = [
       ...payload.concepts
     ];
