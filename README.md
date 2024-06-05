@@ -76,20 +76,20 @@ When in doubt simplify.
   * In Qualities you no longer have to use selector methods to access an action's payload and state slots in where needed. 
     * Example: createQualitySetWithPayload<State, Qualities>({etc...})
       * reducer: (state, action) => ({ ...state, someProp: action.payload.someProp })
-* Removed the need to handle semaphores across the board.
+* (*Progressing*) Removed the need to handle semaphores across the board.
   * This imposes several breaking changes:
     * Qualities and Concepts are now passed in as an Record versus an Array.
       * You will now have to name each concept as it exists in your Axium
-      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*pending*)
+      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Pending*)
       * This enforces that all accessed actions in an Axium will be primed by default alongside the *Deck Interface*
     * **Deck Interface**: Add the ability to access primed Actions, KeyedSelectors, and new isTypeValidator helper functions for action comparisons directly in principles, plans, and qualities.
-      * { a: Actions(**DONE**), ax: AxiumActions(**DONE**), s: KeyedSelectors(*progressing*), ist: Ists(*progressing*), d: Deck(*pending*) }
+      * { a: Actions(**DONE**), ax: AxiumActions(**DONE**), s: KeyedSelectors(*Progressing*), ist: Ists(*Progressing*), d: Deck(*Pending*) }
       * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
       * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
         * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
         * Same applies for IsT functions
-      * Will not be extending this feature to Qualities. As you may already access the new Set Interface via the new *access* via a method supplied the most recent Concepts.
-      * The **Deck** Interface is a collection of actions categorized by you chosen Concept names. (*pending*)
+      * Will not be extending this feature to Qualities. As you may already access the new Deck Interfaces via the new *Access* via a method supplied the most recent Concepts.
+      * The **Deck** Interface is a collection of actions categorized by you chosen Concept names. (*Pending*)
     * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
       * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
       * Create an access function that returns ActionCreators and Selectors
