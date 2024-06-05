@@ -29,7 +29,7 @@ export const [
       id: state.id + 1
     };
   },
-  methodCreator: createAsyncMethodWithState((controller, action, state) => {
+  methodCreator: () => createAsyncMethodWithState((controller, action, state) => {
     setTimeout(() => {
       const payload = action.payload;
       payload.controlling.shift();

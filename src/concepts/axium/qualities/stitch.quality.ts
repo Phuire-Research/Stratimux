@@ -15,7 +15,7 @@ export const [
 ] = createQualitySet({
   type: 'Axium Stitch',
   reducer: defaultReducer,
-  methodCreator: createMethod((action) => {
+  methodCreator: () => createMethod((action) => {
     if (action.strategy) {
       const nextStrategy = strategySuccess(action.strategy);
       if (nextStrategy.strategy) {

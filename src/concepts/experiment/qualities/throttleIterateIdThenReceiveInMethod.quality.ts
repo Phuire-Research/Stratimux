@@ -31,7 +31,7 @@ export const [
       id: state.id + 1
     };
   },
-  methodCreator: createMethodThrottleWithState((action, state) => {
+  methodCreator: () => createMethodThrottleWithState((action, state) => {
     const payload = action.payload;
     if (action.strategy) {
       const data = strategyData_unifyData<Data>(action.strategy, {

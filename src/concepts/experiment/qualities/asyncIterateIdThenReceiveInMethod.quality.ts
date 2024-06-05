@@ -24,7 +24,7 @@ export const [
       id: state.id + 1
     };
   },
-  methodCreator: createAsyncMethodWithState((controller, action, state) => {
+  methodCreator: () => createAsyncMethodWithState((controller, action, state) => {
     setTimeout(() => {
       if (action.strategy) {
         const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});

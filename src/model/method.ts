@@ -4,13 +4,17 @@ This file hold a series of helper functions that enable users to quickly create 
 within their own defined qualities.
 $>*/
 /*<#*/
-import { Observable, Subject, bufferTime, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs';
+import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
 import { Concepts, MethodCreator } from './concept';
-import { ActionController, createActionController$, createActionControllerForEach$ } from './actionController';
+import { ActionController, createActionController$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector, selectUnifiedState } from './selector';
 import { debounceAction, throttleAction } from './actionOperators';
-import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
+import { createAction } from './action';
+
+const axiumConclude = () => {
+  return createAction('Conclude');
+};
 
 export type ActionType = string;
 export type Action<T = void> = {

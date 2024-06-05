@@ -26,7 +26,7 @@ export const [
       id: state.id + 1
     };
   },
-  methodCreator: createMethodDebounceWithState((action, state) => {
+  methodCreator: () => createMethodDebounceWithState((action, state) => {
     const payload = action.payload;
     if (action.strategy) {
       const data = strategyData_unifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {

@@ -15,7 +15,7 @@ export const [
 ] = createQualitySet({
   type: 'Experiment will debounce incoming actions within set duration',
   reducer: nullReducer,
-  methodCreator: createMethodDebounce((action) => {
+  methodCreator: () => createMethodDebounce((action) => {
     if (action.strategy) {
       return strategySuccess(action.strategy);
     } else {

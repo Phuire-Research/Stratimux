@@ -17,7 +17,7 @@ export const [
 ] = createQualitySet<ExperimentState>({
   type: 'Experiment create async method with timer and state, to return action',
   reducer: nullReducer,
-  methodCreator: createAsyncMethodWithState((controller, action, state) => {
+  methodCreator: () => createAsyncMethodWithState((controller, action, state) => {
     setTimeout(() => {
       if (action.strategy) {
         const data = strategyData_unifyData(action.strategy, { mock: state.mock });
