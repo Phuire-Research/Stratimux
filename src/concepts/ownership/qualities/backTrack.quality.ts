@@ -8,8 +8,6 @@ import { createMethod } from '../../../model/method';
 import { createQualitySet } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 
-console.log('CHECK HERE!!', createMethod);
-
 export const [
   ownershipBackTrack,
   ownershipBackTrackType,
