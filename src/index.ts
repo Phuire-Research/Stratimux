@@ -64,6 +64,7 @@ export {
 } from './model/actionOperators';
 export type {
   Action,
+  AnyAction,
   ActionType,
   ActionCreator,
   ActionCreatorWithPayload,
@@ -99,6 +100,8 @@ export type {
   Principle,
   Mode,
   MethodCreator,
+  AnyConcept,
+  ConceptDeck,
 } from './model/concept';
 export {
   createQualitySet,
@@ -107,7 +110,8 @@ export {
   nullReducer,
   defaultMethodCreator,
   Quality,
-  quality
+  quality,
+  Qualities
 } from './model/quality';
 export type { KeyedSelector } from './model/selector';
 export {

@@ -5,7 +5,6 @@ $>*/
 /*<#*/
 import { AnyConcept, Concept } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
-import { selectPayload } from '../../../model/selector';
 import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumAppendConceptsToAddQuePayload = {

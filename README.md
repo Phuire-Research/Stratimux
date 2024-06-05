@@ -64,7 +64,7 @@ When in doubt simplify.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 
-## Road Map (*Updated*  5/31/24)
+## Road Map (*Updated*  6/05/24)
 ### Beyond v0.2.0
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
 * Planned
@@ -72,19 +72,28 @@ When in doubt simplify.
   * Project Scaffolding
   * *Spoilers*
 ### Developer Experience Update v0.2.0
-* The have moved the need to set semaphores across the board.
-* This imposes two breaking changes:
-  * **Set Interfaces**: Add the ability to access primed Actions(**done**), KeyedSelectors(*pending*), and new isTypeValidator(*pending*) helper functions for action comparisons directly in principles, plans, and qualities.
-    * { a: Actions, s: KeyedSelectors, ist: Ists }
-    * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
-    * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
-      * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
-      * Same applies for IsT functions
-    * Will not be extending this feature to Qualities. As you may already access the new Set Interface via the new *access* via a method supplied the most recent Concepts.
-  * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
-    * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
-    * Create an access function that returns ActionCreators and Selectors
-      * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium.
+* (**DONE**) Extended type safety throughout the Axium.
+  * In Qualities you no longer have to use selector methods to access an action's payload and state slots in where needed. 
+    * Example: createQualitySetWithPayload<State, Qualities>({etc...})
+      * reducer: (state, action) => ({ ...state, someProp: action.payload.someProp })
+* Removed the need to handle semaphores across the board.
+  * This imposes several breaking changes:
+    * Qualities and Concepts are now passed in as an Record versus an Array.
+      * You will now have to name each concept as it exists in your Axium
+      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*pending*)
+      * This enforces that all accessed actions in an Axium will be primed by default alongside the *Deck Interface*
+    * **Deck Interface**: Add the ability to access primed Actions, KeyedSelectors, and new isTypeValidator helper functions for action comparisons directly in principles, plans, and qualities.
+      * { a: Actions(**DONE**), ax: AxiumActions(**DONE**), s: KeyedSelectors(*progressing*), ist: Ists(*progressing*), d: Deck(*pending*) }
+      * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
+      * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
+        * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
+        * Same applies for IsT functions
+      * Will not be extending this feature to Qualities. As you may already access the new Set Interface via the new *access* via a method supplied the most recent Concepts.
+      * The **Deck** Interface is a collection of actions categorized by you chosen Concept names. (*pending*)
+    * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
+      * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
+      * Create an access function that returns ActionCreators and Selectors
+        * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium.
 * **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
 * **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * Origin, Override, Hard Override
