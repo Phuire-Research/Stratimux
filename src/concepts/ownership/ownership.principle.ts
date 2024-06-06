@@ -108,13 +108,13 @@ This functionality is chiefly important for Actions that have moved off the curr
 their strategies in outside Axiums.
 $>*/
 /*<#*/
-export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities> = ({
+export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities, OwnershipDeck & AxiumDeck> = ({
   plan,
   nextC,
   conceptSemaphore
 }) => {
-  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({ax__, stage, stageO}) => [
-    stageO(() => (ax__.axiumRegisterStagePlannerQuality({conceptName: ownershipName, stagePlanner: planOwnership}))),
+  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
+    stageO(() => (d__.axium.a.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
     stage(({concepts}) => {
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
