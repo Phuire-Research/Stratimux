@@ -5,14 +5,17 @@ ultimately just increment the count by one.
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concepts} from '../../../model/concept';
-import { getSemaphore } from '../../../model/action';
-import { counterAdd, counterAddType } from '../qualities/add.quality';
-import { counterSubtract, counterSubtractType } from '../qualities/subtract.quality';
-import { counterName } from '../counter.concept';
+import { Concept } from '../../../model/concept';
+import { CounterQualities, CounterState } from '../counter.concept';
+import { Deck } from '../../../model/deck';
 
 export const countingTopic = 'Counting Strategy';
-export function countingStrategy(): ActionStrategy {
+export function countingStrategy<T extends Deck<{counter: Concept<CounterState, CounterQualities>}>>(deck: T): ActionStrategy {
+  const {
+    counterSubtract,
+    counterAdd
+  } = deck.counter.a;
+
   const stepFive = createActionNode(counterSubtract(), {
     successNotes: {
       preposition: 'and finally',
@@ -50,61 +53,6 @@ export function countingStrategy(): ActionStrategy {
 
   const params: ActionStrategyParameters = {
     topic: countingTopic,
-    initialNode: stepOne,
-  };
-
-  return createStrategy(params);
-}
-/*#>*/
-/*<$
-For the asynchronous graph programming framework Stratimux and Counter Concept,
-generate a strategy that will ultimately increment the Counter's count by one.
-This strategy should likewise accept concepts to allow for a base Counter Concept to prime its action's semaphore.
-$>*/
-/*<#*/
-export const primedCountingTopic = 'Counting Strategy with Primed Actions';
-export function primedCountingStrategy(concepts: Concepts): ActionStrategy {
-  const addSemaphore = getSemaphore(concepts, counterName, counterAddType);
-  const subtractSemaphore = getSemaphore(concepts, counterName, counterSubtractType);
-  const stepFour = createActionNode(counterAdd(), {
-    semaphore: addSemaphore,
-    successNode: null,
-    successNotes: {
-      preposition: 'and finally',
-      denoter: 'One.',
-    },
-    failureNode: null,
-  });
-  const stepThree = createActionNode(counterAdd(), {
-    semaphore: addSemaphore,
-    successNode: stepFour,
-    successNotes: {
-      preposition: '',
-      denoter: 'One;',
-    },
-    failureNode: null,
-  });
-  const stepTwo = createActionNode(counterSubtract(), {
-    semaphore: subtractSemaphore,
-    successNode: stepThree,
-    successNotes: {
-      preposition: '',
-      denoter: 'One;',
-    },
-    failureNode: null,
-  });
-  const stepOne = createActionNode(counterAdd(), {
-    semaphore: subtractSemaphore,
-    successNode: stepTwo,
-    successNotes: {
-      preposition: '',
-      denoter: 'One;',
-    },
-    failureNode: null,
-  });
-
-  const params: ActionStrategyParameters = {
-    topic: primedCountingTopic,
     initialNode: stepOne,
   };
 

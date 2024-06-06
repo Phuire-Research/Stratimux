@@ -5,10 +5,10 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [axiumAddConceptFromQue, axiumAddConceptFromQueType, axiumAddConceptsFromQueQuality] =
-  createQualitySet<AxiumState>({
+export const axiumAddConceptsFromQue =
+  createQualityCard<AxiumState<unknown>>({
     type: 'Add Concepts from Axium Concept Que',
     reducer: (state) => {
       return {

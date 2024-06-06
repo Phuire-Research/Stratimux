@@ -6,13 +6,9 @@ $>*/
 import { strategySuccess } from '../../../model/actionStrategy';
 import { defaultReducer } from '../../../model/quality';
 import { createMethod } from '../../../model/method';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  axiumStitch,
-  axiumStitchType,
-  axiumStitchQuality
-] = createQualitySet({
+export const axiumStitch = createQualityCard({
   type: 'Axium Stitch',
   reducer: defaultReducer,
   methodCreator: () => createMethod((action) => {

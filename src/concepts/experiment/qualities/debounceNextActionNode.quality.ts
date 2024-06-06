@@ -6,13 +6,9 @@ $>*/
 import { nullReducer } from '../../../model/quality';
 import { createMethodDebounce } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentDebounceNextActionNode,
-  experimentDebounceNextActionNodeType,
-  experimentDebounceNextActionNodeQuality
-] = createQualitySet({
+export const experimentDebounceNextActionNode = createQualityCard({
   type: 'Experiment will debounce incoming actions within set duration',
   reducer: nullReducer,
   methodCreator: () => createMethodDebounce((action) => {

@@ -11,19 +11,19 @@ import { AxiumQualities } from '../qualities';
 
 export const initializeTopic = 'Axium Initialization Strategy';
 export function initializationStrategy(ax: Actions<AxiumQualities>, concepts: Concepts): ActionStrategy {
-  const stepThree: ActionNode = createActionNode(ax.axiumOpenQuality({open: true}), {
+  const stepThree: ActionNode = createActionNode(ax.axiumOpen({open: true}), {
     successNotes: {
       preposition: 'Finally',
       denoter: 'to Notify Subscribers of State changes.'
     },
   });
-  const stepTwo: ActionNode = createActionNode(ax.axiumSetDefaultModeQuality({concepts}), {
+  const stepTwo: ActionNode = createActionNode(ax.axiumSetDefaultMode({concepts}), {
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
   });
-  const stepOne: ActionNode = createActionNode(ax.axiumInitializePrinciplesQuality({concepts}),{
+  const stepOne: ActionNode = createActionNode(ax.axiumInitializePrinciples({concepts}),{
     successNode: stepTwo,
     successNotes: {
       preposition: 'Begin with'

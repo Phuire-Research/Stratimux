@@ -11,7 +11,7 @@ import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
   setId: number;
@@ -19,29 +19,26 @@ export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
 
 type Data = ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload;
 
-export const [
-  experimentThrottleIterateIdThenReceiveInMethod,
-  experimentThrottleIterateIdThenReceiveInMethodType,
-  experimentThrottleIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
-  type: 'Experiment throttle iterate ID then receive in Method via State',
-  reducer: (state) => {
-    return {
-      ...state,
-      id: state.id + 1
-    };
-  },
-  methodCreator: () => createMethodThrottleWithState((action, state) => {
-    const payload = action.payload;
-    if (action.strategy) {
-      const data = strategyData_unifyData<Data>(action.strategy, {
-        id: state.id,
-        setId: payload.setId
-      });
-      const strategy = strategySuccess(action.strategy, data);
-      return strategy;
-    }
-    return action;
-  }, 500)
-});
+export const experimentThrottleIterateIdThenReceiveInMethod =
+  createQualityCardWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
+    type: 'Experiment throttle iterate ID then receive in Method via State',
+    reducer: (state) => {
+      return {
+        ...state,
+        id: state.id + 1
+      };
+    },
+    methodCreator: () => createMethodThrottleWithState((action, state) => {
+      const payload = action.payload;
+      if (action.strategy) {
+        const data = strategyData_unifyData<Data>(action.strategy, {
+          id: state.id,
+          setId: payload.setId
+        });
+        const strategy = strategySuccess(action.strategy, data);
+        return strategy;
+      }
+      return action;
+    }, 500)
+  });
 /*#>*/

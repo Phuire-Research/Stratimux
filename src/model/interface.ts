@@ -4,6 +4,7 @@ $>*/
 
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
+import { Deck } from './deck';
 import { KeyedSelectors } from './selector';
 
 /*<#*/
@@ -37,9 +38,9 @@ export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action)
  * Highest Order Interface
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
  */
-export type UInterface<T = void> = {
+export type UInterface<T = void, C = void> = {
+  d: Deck<C>
   a: Actions<T>
-  ax: Actions<AxiumQualities>
   s: KeyedSelectors
   t: IsT[]
 }
@@ -50,9 +51,9 @@ export type UInterface<T = void> = {
  * Provides access to all Interfaces via concepts
  * Limited by a whitelist provided by some access property supplied to the Axium
  */
-export type OInterface<T = void> = {
+export type OInterface<T = void, C = void> = {
+  d: Deck<C>
   a: Actions<T>
-  ax: Actions<AxiumQualities>
   s: KeyedSelectors
   t: IsT[]
 }
@@ -60,9 +61,9 @@ export type OInterface<T = void> = {
 /**
  * Higher Order Interface
  */
-export type HInterface<T = void> = {
+export type HInterface<T = void, C = void> = {
+  d__: Deck<C>
   a__: Actions<T>
-  ax__: Actions<AxiumQualities>
   s__: KeyedSelectors
   t__: IsT[]
 }
@@ -70,9 +71,9 @@ export type HInterface<T = void> = {
 /**
  * Base Interface
  */
-export type BInterface<T = void> = {
+export type BInterface<T = void, C = void> = {
+  d_: Deck<C>,
   a_: Actions<T>
-  ax_: Actions<AxiumQualities>
   s_: KeyedSelectors
   t_: IsT[]
 }

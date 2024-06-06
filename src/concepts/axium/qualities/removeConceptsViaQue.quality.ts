@@ -8,13 +8,9 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { NamedSubscription } from '../axium.concept';
 import { AxiumState } from '../axium.concept';
 import { NamedStagePlanner } from '../../../model/stagePlanner';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  axiumRemoveConceptsViaQue,
-  axiumRemoveConceptsViaQueType,
-  axiumRemoveConceptsViaQueQuality
-] = createQualitySet<AxiumState>({
+export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown>>({
   type: 'remove Concepts via Axium\'s Removal Concept Que',
   reducer: (state) => {
     const principleSubscribers = state.methodSubscribers;

@@ -12,13 +12,13 @@ import { AxiumQualities } from '../qualities';
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addConceptsToAddQueThenBlockStrategy(ax: Actions<AxiumQualities>, concepts: Concepts, newConcepts: AnyConcept[]) {
-  const stepTwo = createActionNode(ax.axiumAppendConceptsToAddQueQuality({concepts: newConcepts}),{
+  const stepTwo = createActionNode(ax.axiumAppendConceptsToAddQue({concepts: newConcepts}),{
     successNode: null,
     successNotes: {
       preposition: 'Then Safely'
     },
   });
-  const stepOne = createActionNode(ax.axiumSetBlockingModeQuality({concepts}), {
+  const stepOne = createActionNode(ax.axiumSetBlockingMode({concepts}), {
     successNode: stepTwo,
     successNotes: {
       preposition: 'Immediately'
@@ -34,20 +34,20 @@ export function addConceptsToAddQueThenBlockStrategy(ax: Actions<AxiumQualities>
 // Step Two
 export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
 export function addConceptsFromQueThenUnblockStrategy(ax: Actions<AxiumQualities>, conceptualSet: Concepts): ActionStrategy {
-  const stepThree = createActionNode(ax.axiumOpenQuality({open: true}), {
+  const stepThree = createActionNode(ax.axiumOpen({open: true}), {
     successNode: null,
     successNotes: {
       preposition: 'Reinstate',
       denoter: 'State.'
     },
   });
-  const stepTwo = createActionNode(ax.axiumSetDefaultModeQuality({concepts: conceptualSet}), {
+  const stepTwo = createActionNode(ax.axiumSetDefaultMode({concepts: conceptualSet}), {
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
   });
-  const stepOne = createActionNode(ax.axiumAddConceptsFromQueQuality(),{
+  const stepOne = createActionNode(ax.axiumAddConceptsFromQue(),{
     successNode: stepTwo,
     successNotes: {
       preposition: 'First'

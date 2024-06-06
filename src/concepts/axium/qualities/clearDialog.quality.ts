@@ -5,13 +5,9 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  axiumClearDialog,
-  axiumClearDialogType,
-  axiumClearDialogQuality
-] = createQualitySet<AxiumState>({
+export const axiumClearDialog = createQualityCard<AxiumState<unknown>>({
   type: 'clear Axium Dialog',
   reducer: (state) => {
     return {

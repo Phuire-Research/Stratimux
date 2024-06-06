@@ -7,15 +7,14 @@ import { Observable, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, Actions, createCachedSemaphores } from '../../model/action';
-import { AxiumState, axiumName } from './axium.concept';
+import { axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
 import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
-import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
-import { axiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
 import { AxiumQualities } from './qualities';
+import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -28,7 +27,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   let allowRemove = true;
   const addConceptsPlan = plan('Add Concepts Plan', ({stage}) => [
     stage(({concepts, dispatch, a}) => {
-      const axiumState = concepts[0].state as AxiumState;
+      const axiumState = getAxiumState(concepts);
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
       }
@@ -93,7 +92,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           axiumState.conceptCounter += 1;
         });
 
-        const newAxiumState = newConcepts[0].state as AxiumState;
+        const newAxiumState = getAxiumState(newConcepts[0]);
         newAxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
 
         axiumState.actionConcepts$.next(newConcepts);
@@ -108,7 +107,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
 
   const removeConceptsPlan = plan('Remove Concepts Plan', ({stage}) => [
     stage(({concepts, dispatch, a}) => {
-      const axiumState = concepts[0].state as AxiumState;
+      const axiumState = getAxiumState(concepts);
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;
       }
@@ -125,7 +124,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
         }));
-        const newAxiumState = newConcepts[0].state as AxiumState;
+        const newAxiumState = getAxiumState(newConcepts);
         newAxiumState.modeNames.forEach((modeName, modeIndex) => {
           let shouldAdd = false;
           axiumState.removeConceptQue.forEach(removeTarget => {
@@ -168,7 +167,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
               const methodSub = quality.method.subscribe(([action, _]) => {
                 blockingMethodSubscription(newConcepts, axiumState.tail, action);
               }) as Subscriber<Action>;
-              const _axiumState = newConcepts[0].state as AxiumState;
+              const _axiumState = getAxiumState(newConcepts);
               _axiumState.methodSubscribers.push({
                 name: concept.name,
                 subscription: methodSub,
@@ -187,9 +186,9 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   ]);
   observer.next(strategy.begin(strategy.create({
     topic: 'Register Axium Add/Remove Plans',
-    initialNode: createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}), {
+    initialNode: createActionNode(a_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}), {
       successNode:
-      createActionNode(axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}), {
+      createActionNode(a_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}), {
         successNode: null,
         failureNode: null
       }),

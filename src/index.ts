@@ -104,8 +104,8 @@ export type {
   ConceptDeck,
 } from './model/concept';
 export {
-  createQualitySet,
-  createQualitySetWithPayload,
+  createQualityCard,
+  createQualityCardWithPayload,
   defaultReducer,
   nullReducer,
   defaultMethodCreator,

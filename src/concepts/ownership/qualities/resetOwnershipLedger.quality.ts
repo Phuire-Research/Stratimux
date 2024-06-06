@@ -5,13 +5,9 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { createOwnershipLedger } from '../../../model/ownership';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipResetOwnershipLedger,
-  ownershipResetOwnershipLedgerType,
-  ownershipResetOwnershipLedgerQuality
-] = createQualitySet<OwnershipState>({
+export const ownershipResetOwnershipLedger = createQualityCard<OwnershipState>({
   type: 'reset Ownership Ledger',
   reducer: (state) => ({...state, ownershipLedger: createOwnershipLedger()}),
   methodCreator: defaultMethodCreator

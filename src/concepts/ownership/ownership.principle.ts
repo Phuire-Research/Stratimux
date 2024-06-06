@@ -6,15 +6,16 @@ may be dispatched into the Axium. This principle will also clear duplicate strat
 $>*/
 /*<#*/
 import { PrincipleFunction } from '../../model/principle';
-import { OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
+import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectUnifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
-import { AxiumBadActionPayload, axiumBadActionType } from '../axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { AxiumBadActionPayload } from '../axium/qualities/badAction.quality';
+import { AxiumDeck, accessAxium, getAxiumState } from '../../model/axium';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -24,7 +25,7 @@ function denoteExpiredPending(action: Action): Action {
   return action;
 }
 
-export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
+export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, OwnershipDeck & AxiumDeck> = ({
   observer,
   plan,
   nextC,
@@ -32,9 +33,9 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
 }) => {
   let initDispatch = false;
   let finalCheck = true;
-  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({ax__, stage, stageO}) => [
-    stageO(() => ax__.axiumRegisterStagePlannerQuality({conceptName: ownershipName, stagePlanner: planOwnership})),
-    stage(({concepts}) => {
+  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
+    stageO(() => d__.axium.a.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
+    stage(({concepts, d}) => {
       let newConcepts = concepts;
       let ownershipState = selectUnifiedState<OwnershipState>(newConcepts, conceptSemaphore);
       if (ownershipState?.initialized) {
@@ -76,7 +77,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
               }
             }
             if (payload.badActions.length > 0) {
-              newAction = createAction(axiumBadActionType, {payload}) as AnyAction;
+              newAction = d.axium.a.axiumBadAction(payload) as AnyAction;
               ownershipState.pendingActions = newPending;
               nextC(newConcepts);
               observer.next(newAction);
@@ -93,7 +94,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities> = ({
         initDispatch = true;
         observer.next(
           strategyBegin(
-            ownershipSetOwnershipModeStrategy(newConcepts, 'Ownership')
+            ownershipSetOwnershipModeStrategy(d, newConcepts, 'Ownership')
           )
         );
       }

@@ -60,7 +60,7 @@ export const defaultMethodCreator = <T = void>() =>
     return [defaultMethod, defaultSubject];
   };
 
-export function createQualitySet<S extends Record<string, unknown>>(q: {
+export function createQualityCard<S extends Record<string, unknown>>(q: {
   type: string,
   reducer: Reducer<S, void>,
   methodCreator?: MethodCreatorStep<S, void>,
@@ -86,7 +86,7 @@ export function createQualitySet<S extends Record<string, unknown>>(q: {
   ];
 }
 
-export function createQualitySetWithPayload<
+export function createQualityCardWithPayload<
   S extends Record<string, unknown>,
   T extends Record<string, unknown>
 >(q: {
@@ -96,29 +96,11 @@ export function createQualitySetWithPayload<
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): [ActionCreatorWithPayload<T>, ActionType, Quality<S, T>] {
+}): Quality<S, T> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket);
   if (q.methodCreator) {
-    return [
-      actionCreatorWithPayload,
-      q.type,
-      createQuality<S, T>(
-        q.type,
-        bucket,
-        actionCreatorWithPayload as ActionCreatorType<T>,
-        q.reducer,
-        q.methodCreator,
-        q.keyedSelectors,
-        q.meta,
-        q.analytics
-      )
-    ];
-  }
-  return [
-    actionCreatorWithPayload,
-    q.type,
-    createQuality<S, T>(
+    return createQuality<S, T>(
       q.type,
       bucket,
       actionCreatorWithPayload as ActionCreatorType<T>,
@@ -127,8 +109,18 @@ export function createQualitySetWithPayload<
       q.keyedSelectors,
       q.meta,
       q.analytics
-    )
-  ];
+    );
+  }
+  return createQuality<S, T>(
+    q.type,
+    bucket,
+    actionCreatorWithPayload as ActionCreatorType<T>,
+    q.reducer,
+    q.methodCreator,
+    q.keyedSelectors,
+    q.meta,
+    q.analytics
+  );
 }
 
 export const quality = {
@@ -136,7 +128,7 @@ export const quality = {
   nullReducer,
   defaultMethodCreator,
   create: createQuality,
-  createSet: createQualitySet,
-  createSetWithPayload: createQualitySetWithPayload
+  createSet: createQualityCard,
+  createSetWithPayload: createQualityCardWithPayload
 };
 /*#>*/

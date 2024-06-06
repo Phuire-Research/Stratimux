@@ -11,7 +11,7 @@ import { Subscriber } from 'rxjs';
 import { Concepts } from '../model/concept';
 import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
-import { createQualitySet } from '../model/quality';
+import { createQualityCard } from '../model/quality';
 
 type ExperimentState = {
   mock: boolean;
@@ -29,7 +29,7 @@ const [
   experimentMockToTrue,
   experimentMockToTrueType,
   experimentMockToTrueQuality
-] = createQualitySet({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
+] = createQualityCard({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
 
 test('Axium Principle Stage', (done) => {
   const qualities = {experimentMockToTrueQuality};

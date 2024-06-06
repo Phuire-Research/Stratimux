@@ -4,7 +4,7 @@ generate a quality that will register a subscription to the concepts$ stream.
 This allows for the clean closure of concepts that are removed or when the axium itself exits.
 $>*/
 /*<#*/
-import { createQualitySetWithPayload, defaultReducer } from '../../../model/quality';
+import { createQualityCardWithPayload, defaultReducer } from '../../../model/quality';
 import { createMethodWithConcepts } from '../../../model/method';
 import { axiumTimeOut } from '../../../model/time';
 import { AnyAction } from '../../../model/action';
@@ -16,11 +16,7 @@ export type AxiumRegisterTimeOutPayload = {
   timeOut: number
 }
 
-export const [
-  axiumRegisterTimeOut,
-  axiumRegisterTimeOutType,
-  axiumRegisterTimeOutQuality
-] = createQualitySetWithPayload<AxiumState, AxiumRegisterTimeOutPayload>({
+export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown>, AxiumRegisterTimeOutPayload>({
   type: 'register an Action to Axium\'s timerLedger',
   reducer: defaultReducer,
   methodCreator: () => createMethodWithConcepts((action, concepts) => {

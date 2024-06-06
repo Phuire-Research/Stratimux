@@ -15,21 +15,17 @@ import {
 } from 'rxjs';
 import { Action, Actions, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { AnyConcept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
 } from '../concepts/axium/axium.concept';
-import {
-  axiumAppendActionListToDialog,
-} from '../concepts/axium/qualities/appendActionListToDialog.quality';
-import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { Planning } from './stagePlanner';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
+import { Deck } from './deck';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -37,7 +33,7 @@ export enum AxiumOrigins {
   axiumHead = 'axiumHead'
 }
 
-export const tailWhip = (axiumState: AxiumState) => {
+export const tailWhip = (axiumState: AxiumState<unknown>) => {
   if (axiumState.tailTimer.length === 0) {
     axiumState.tailTimer.push(setTimeout(() => {
       axiumState.action$.next(createAction('Kick Axium'));
@@ -59,7 +55,7 @@ export const createOrigin = (location: unknown[]): string => {
   return origin;
 };
 
-export const HandleOrigin = (state: AxiumState, action: Action) => {
+export const HandleOrigin = (state: AxiumState<unknown>, action: Action) => {
   const {
     body,
     tail
@@ -88,7 +84,7 @@ export const HandleOrigin = (state: AxiumState, action: Action) => {
   tailWhip(state);
 };
 
-export const HandleHardOrigin = (state: AxiumState, action: Action) => {
+export const HandleHardOrigin = (state: AxiumState<unknown>, action: Action) => {
   // Fill Bucket
   // Empty Bucket
   // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
@@ -134,7 +130,7 @@ export const blockingMethodSubscription = (
     action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
-    const appendToDialog = axiumAppendActionListToDialog({
+    const appendToDialog = accessAxium(concepts).a.axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data,
@@ -175,7 +171,7 @@ export const defaultMethodSubscription = (
     action.semaphore[3] === 3
   ) {
     // Allows for reducer next in sequence
-    const appendToDialog = axiumAppendActionListToDialog({
+    const appendToDialog = accessAxium(concepts).a.axiumAppendActionListToDialog({
       actionList: action.strategy.actionList,
       strategyTopic: action.strategy.topic,
       strategyData: action.strategy.data
@@ -192,7 +188,7 @@ export const defaultMethodSubscription = (
     }
     if (async) {
       axiumTimeOut(concepts, () => {
-        return axiumKick();
+        return accessAxium(concepts).a.axiumKick();
       }, 0);
     }
     // }, 0);
@@ -208,39 +204,56 @@ export const defaultMethodSubscription = (
     }
     if (async) {
       axiumTimeOut(concepts, () => {
-        return axiumKick();
+        return accessAxium(concepts).a.axiumKick();
       }, 0);
     }
   }
 };
 
+export type AxiumDeck = {
+  axium: Concept<AxiumState<AxiumDeck>, AxiumQualities>
+};
+
+export type BaseDeck = Deck<AxiumDeck>;
+
 export function createAxium<T extends Record<string, unknown>>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deck: ConceptDeck<T>,
+  deckLoad: ConceptDeck<T>,
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
     logActionStream?: boolean,
     dynamic?: boolean,
   }
-): Axium {
-  const initialConcepts = Object.keys(deck).map(k => deck[k]);
-  const concepts: Concepts = {};
-  const init = [
-    createAxiumConcept(
+): Axium<AxiumDeck & T> {
+  const concepts: Concepts = {
+    0: createAxiumConcept(
       name,
       options?.storeDialog,
       options?.logging,
       options?.logActionStream,
       options?.dynamic
-    ), ...initialConcepts];
-  init.forEach((cpt, i) => {
-    const concept = cpt as unknown as AnyConcept;
-    concept.semaphore = i;
-    concepts[i] = concept;
+    )
+  };
+  const baseDeck: BaseDeck = {
+    axium: {
+      a: (concepts[0] as Concept<AxiumState<AxiumDeck & T>, AxiumQualities>).actions
+    },
+  };
+  concepts[0].semaphore = 0;
+  Object.keys(deckLoad).forEach((k, i) => {
+    (baseDeck as Deck<any>)[k] = {
+      a: deckLoad[k].actions
+    };
+    deckLoad[k].semaphore = i + 1;
+    concepts[i + 1] = deckLoad[k];
   });
-  let axiumState = concepts[0].state as AxiumState;
+
+  const deck = baseDeck as BaseDeck & Deck<T>;
+
+  let axiumState = concepts[0].state as AxiumState<AxiumDeck & T>;
+  axiumState.deck = deck;
   axiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     axiumState.conceptCounter += 1;
@@ -258,7 +271,7 @@ export function createAxium<T extends Record<string, unknown>>(
         const methodSub = quality.method.subscribe(([action, _]) => {
           blockingMethodSubscription(concepts, axiumState.tail, action);
         }) as Subscriber<Action>;
-        axiumState = concepts[0].state as AxiumState;
+        axiumState = concepts[0].state as AxiumState<AxiumDeck & T>;
         axiumState.methodSubscribers.push({
           name: concept.name,
           subscription: methodSub,
@@ -266,7 +279,7 @@ export function createAxium<T extends Record<string, unknown>>(
       }
     });
     if (semaphore !== 0 && concept.mode !== undefined) {
-      axiumState = concepts[0].state as AxiumState;
+      axiumState = concepts[0].state as AxiumState<AxiumDeck & T>;
       const names = axiumState.modeNames;
       const modes = concepts[0].mode as Mode[];
       concept.mode.forEach((mode) => {
@@ -296,7 +309,7 @@ export function createAxium<T extends Record<string, unknown>>(
           ' topic: ', action.strategy?.topic
         );
       }
-      const _axiumState = _concepts[0].state as AxiumState;
+      const _axiumState = _concepts[0].state as AxiumState<AxiumDeck & T>;
       if (_axiumState.head.length === 0) {
         action.origin = AxiumOrigins.axiumHead;
         _axiumState.head.push(action);
@@ -331,7 +344,7 @@ export function createAxium<T extends Record<string, unknown>>(
       }
     });
 
-  axiumState = concepts[0].state as AxiumState;
+  axiumState = concepts[0].state as AxiumState<AxiumDeck & T>;
   const action$ = axiumState.action$;
   axiumState.actionConcepts$.next(concepts);
   axiumState.concepts$.init(concepts);
@@ -339,7 +352,7 @@ export function createAxium<T extends Record<string, unknown>>(
     strategyBegin(initializationStrategy(concepts[0].actions as Actions<AxiumQualities>, concepts)),
   );
   const close = (exit?: boolean) => {
-    action$.next(axiumPreClose({
+    action$.next(deck.axium.a.axiumPreClose({
       exit: exit ? exit : false
     }));
   };
@@ -351,21 +364,25 @@ export function createAxium<T extends Record<string, unknown>>(
       action$.next(action);
     },
     plan: axiumState.concepts$.outerPlan,
+    deck
   };
 }
 
 // [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
-export type Axium = {
+export type Axium<T extends Record<string, unknown>> = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action<any>) => void;
   plan: Planning;
+  deck: Deck<T>
 }
 
-export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState);
+export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState<AxiumDeck>);
 
-export const isAxiumOpen = (concepts: Concepts) => ((concepts[0].state as AxiumState).open);
+export const accessAxium = (concepts: Concepts) => (getAxiumState(concepts).deck.axium);
+
+export const isAxiumOpen = (concepts: Concepts) => ((concepts[0].state as AxiumState<AxiumDeck>).open);
 
 export const axium = ({
   create: createAxium,

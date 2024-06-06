@@ -13,9 +13,9 @@ export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Qu
 export function addConceptsToRemovalQueThenBlockStrategy(
   a: Actions<AxiumQualities>, concepts: Concepts, targetConcepts: AnyConcept[]
 ) {
-  const stepTwo = createActionNode(a.axiumAppendConceptsToRemoveQueQuality({concepts: targetConcepts}), {
+  const stepTwo = createActionNode(a.axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
   });
-  const stepOne = createActionNode(a.axiumSetBlockingModeQuality({concepts}), {
+  const stepOne = createActionNode(a.axiumSetBlockingMode({concepts}), {
     successNode: stepTwo,
   });
   const params: ActionStrategyParameters = {
@@ -27,19 +27,19 @@ export function addConceptsToRemovalQueThenBlockStrategy(
 // Step Two
 export const removeConceptsViaQueThenUnblockTopic = 'Remove Concepts via Que then set Axium Mode to Default';
 export function removeConceptsViaQueThenUnblockStrategy(a: Actions<AxiumQualities>, concepts: Concepts): ActionStrategy {
-  const stepThree = createActionNode(a.axiumOpenQuality({open: true}), {
+  const stepThree = createActionNode(a.axiumOpen({open: true}), {
     successNotes: {
       preposition: 'Reinstate',
       denoter: 'State.'
     },
   });
-  const stepTwo = createActionNode(a.axiumSetDefaultModeQuality({concepts}), {
+  const stepTwo = createActionNode(a.axiumSetDefaultMode({concepts}), {
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
   });
-  const stepOne = createActionNode(a.axiumRemoveConceptsViaQueQuality(), {
+  const stepOne = createActionNode(a.axiumRemoveConceptsViaQue(), {
     successNode: stepTwo,
     successNotes: {
       preposition: 'To Begin'

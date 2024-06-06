@@ -5,13 +5,9 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  counterSubtract,
-  counterSubtractType,
-  counterSubtractQuality
-] = createQualitySet<CounterState>({
+export const counterSubtract = createQualityCard<CounterState>({
   type: 'Counter Subtract',
   reducer: (state) => {
     return {

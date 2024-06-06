@@ -7,17 +7,13 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
 export type AxiumClearBadPlanFromBadPlanListPayload = {
   title: string
 };
 
-export const [
-  axiumClearBadPlanFromBadPlanList,
-  axiumClearBadPlanFromBadPlanListQualityType,
-  axiumClearBadPlanFromBadPlanListQuality
-] = createQualitySet<AxiumState>({
+export const axiumClearBadPlanFromBadPlanList = createQualityCard<AxiumState<unknown>>({
   type: 'clear Plan Topic from Axium\'s badPlan list',
   reducer: (state, action) => {
     const {title} = selectPayload<AxiumClearBadPlanFromBadPlanListPayload>(action);

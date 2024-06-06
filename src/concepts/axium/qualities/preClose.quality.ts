@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 /**
  * @parm exit - If set to true, will exit the current process.
@@ -13,11 +13,7 @@ import { createQualitySetWithPayload } from '../../../model/quality';
 export type AxiumPreClosePayload = {
   exit: boolean
 };
-export const [
-  axiumPreClose,
-  axiumPreCloseType,
-  axiumPreCloseQuality
-] = createQualitySetWithPayload<AxiumState, AxiumPreClosePayload>({
+export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown>, AxiumPreClosePayload>({
   type: 'Prepare Close Axium',
   reducer: (state, action) => ({
     ...state,

@@ -7,17 +7,13 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type AxiumSetDefaultModeIndexPayload = {
   index: number;
 };
 
-export const [
-  axiumSetDefaultModeIndex,
-  axiumSetDefaultModeIndexType,
-  axiumSetDefaultModeIndexQuality
-] = createQualitySetWithPayload<AxiumState, AxiumSetDefaultModeIndexPayload>({
+export const axiumSetDefaultModeIndex = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetDefaultModeIndexPayload>({
   type: 'set Axium\'s Default Mode Index',
   reducer: (state, action) => {
     const payload = action.payload;

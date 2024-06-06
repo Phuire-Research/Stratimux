@@ -117,7 +117,7 @@ export function primeAction<T>(concepts: Concepts, action: Action<T>): Action<T>
     if (action.axium) {
       axium = action.axium;
     } else {
-      axium = (concepts[0].state as AxiumState).name;
+      axium = (concepts[0].state as AxiumState<unknown>).name;
     }
     const newAction = {
       ...action,
@@ -164,7 +164,7 @@ export const refreshAction = (action: Action): Action => {
 };
 
 export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
-  const axiumState = concepts[0].state as AxiumState;
+  const axiumState = concepts[0].state as AxiumState<unknown>;
   const cachedSemaphores = axiumState.cachedSemaphores;
   const conceptMap = cachedSemaphores.get(conceptName);
   const special = getSpecialSemaphore(actionType);
@@ -189,7 +189,7 @@ const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaph
 };
 
 export function createCachedSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
-  const generation = (concepts[0].state as AxiumState).generation;
+  const generation = (concepts[0].state as AxiumState<unknown>).generation;
   const newCachedSemaphores = new Map<string, Map<string, [number, number, number, number]>>();
 
   forEachConcept(concepts, ((concept, ci) => {

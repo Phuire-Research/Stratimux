@@ -4,7 +4,7 @@ into the dialog state property.
 $>*/
 /*<#*/
 import { AxiumState } from '../axium.concept';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type AppendActionListToDialogPayload = {
   actionList: Array<string>;
@@ -12,13 +12,9 @@ export type AppendActionListToDialogPayload = {
   strategyData: unknown;
 }
 
-export const [
-  axiumAppendActionListToDialog,
-  axiumAppendActionListToDialogType,
-  axiumAppendActionListToDialogQuality
-] = createQualitySetWithPayload<AxiumState, AppendActionListToDialogPayload>({
+export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumState<unknown>, AppendActionListToDialogPayload>({
   type: 'append Action List to Axium\'s Dialog',
-  reducer: (state: AxiumState, action) => {
+  reducer: (state: AxiumState<unknown>, action) => {
     const payload = action.payload;
     let newDialog = '';
     if (state.storeDialog) {

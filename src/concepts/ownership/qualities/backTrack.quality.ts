@@ -5,14 +5,10 @@ $>*/
 import { nullReducer } from '../../../model/quality';
 import { strategyBackTrack } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 
-export const [
-  ownershipBackTrack,
-  ownershipBackTrackType,
-  ownershipBackTrackQuality
-] = createQualitySet({
+export const ownershipBackTrack = createQualityCard({
   type: 'backtracking to previous ActionNode',
   reducer: nullReducer,
   methodCreator: () => createMethod<OwnershipState>((action) => {

@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux generate a Counter Concept that will keep track of a count in its state.
 $>*/
 /*<#*/
-import { counterAddQuality } from './qualities/add.quality';
-import { counterSubtractQuality } from './qualities/subtract.quality';
-import { counterSetCountQuality } from './qualities/setCount.quality';
+import { counterAdd } from './qualities/add.quality';
+import { counterSubtract } from './qualities/subtract.quality';
+import { counterSetCount } from './qualities/setCount.quality';
 import { createConcept } from '../../model/concept';
-import { counterMultiplyQuality } from './qualities/multiply.quality';
+import { counterMultiply } from './qualities/multiply.quality';
 export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
 
 export type CounterState = {
@@ -20,10 +20,10 @@ const initialCounterState: CounterState = {
 };
 
 const counterQualities = {
-  counterAddQuality,
-  counterSubtractQuality,
-  counterSetCountQuality,
-  counterMultiplyQuality
+  counterAdd,
+  counterSubtract,
+  counterSetCount,
+  counterMultiply
 };
 
 export type CounterQualities = typeof counterQualities;

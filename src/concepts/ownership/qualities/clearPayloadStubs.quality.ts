@@ -8,17 +8,13 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type OwnershipClearPayloadStubsPayload = {
   stubs: OwnershipTicketStub[]
 };
 
-export const [
-  ownershipClearPayloadStubs,
-  ownershipClearPayloadStubsType,
-  ownershipClearPayloadStubsQuality
-] = createQualitySetWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload>({
+export const ownershipClearPayloadStubs = createQualityCardWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload>({
   type: 'clear payload Stubs from Ownership Ledger',
   reducer: (state, action) => {
     const stubs = selectPayload<OwnershipClearPayloadStubsPayload>(action).stubs;

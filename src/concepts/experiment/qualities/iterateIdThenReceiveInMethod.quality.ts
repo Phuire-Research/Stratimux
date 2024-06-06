@@ -7,13 +7,9 @@ import { ExperimentState } from '../experiment.concept';
 import { createMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentIterateIdThenReceiveInMethod,
-  experimentIterateIdThenReceiveInMethodType,
-  experimentIterateIdThenReceiveInMethodQuality
-] = createQualitySet<ExperimentState>({
+export const experimentIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
   type: 'Experiment iterate ID then receive in Method via State',
   reducer: (state) => {
     return {

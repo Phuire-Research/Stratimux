@@ -74,16 +74,16 @@ When in doubt simplify.
 ### Developer Experience Update v0.2.0
 * (**DONE**) Extended type safety throughout the Axium.
   * In Qualities you no longer have to use selector methods to access an action's payload and state slots in where needed. 
-    * Example: createQualitySetWithPayload<State, Qualities>({etc...})
+    * Example: createQualityCardWithPayload<State, Qualities>({etc...})
       * reducer: (state, action) => ({ ...state, someProp: action.payload.someProp })
 * (*Progressing*) Removed the need to handle semaphores across the board.
   * This imposes several breaking changes:
     * Qualities and Concepts are now passed in as an Record versus an Array.
       * You will now have to name each concept as it exists in your Axium
-      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Pending*)
+      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Progressing*)
       * This enforces that all accessed actions in an Axium will be primed by default alongside the *Deck Interface*
     * **Deck Interface**: Add the ability to access primed Actions, KeyedSelectors, and new isTypeValidator helper functions for action comparisons directly in principles, plans, and qualities.
-      * { a: Actions(**DONE**), ax: AxiumActions(**DONE**), s: KeyedSelectors(*Progressing*), ist: Ists(*Progressing*), d: Deck(*Pending*) }
+      * { a: Actions(**DONE**), ax: AxiumActions(**DONE**), s: KeyedSelectors(*Pending*), ist: Ists(*Pending*), d: Deck(*Pending*) }
       * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and IsTypeValidators (IsT via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
       * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
         * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
@@ -162,7 +162,7 @@ This isolates all the parts necessary for your actions to have impact within thi
 The semaphore is the method of quality selection within the Axium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Axium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [Huirth](https://github.com/Phuire-Research/Huirth). In addition to other scaffolding improvements, AI assistance, and more.
 ```typescript
 import {
-  createQualitySetWithPayload,
+  createQualityCardWithPayload,
   UnifiedSubject,
   createMethodWithState,
   strategySuccess,
@@ -180,7 +180,7 @@ export type uXqOfUxField = {
 };
 
 // [ActionCreator/ActionCreatorWithPayload, ActionType, Quality]
-export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualitySetWithPayload<uXqOfUxField>({
+export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPayload<uXqOfUxField>({
   type: 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
   reducer: (state: UXState) => ({...state}),
   methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>

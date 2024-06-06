@@ -14,20 +14,21 @@ import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from '
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { Axium, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
+import { Axium, HandleHardOrigin, HandleOrigin, accessAxium, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
 import { HInterface, UInterface } from './interface';
 import { Qualities } from './quality';
 import { AxiumQualities } from '../concepts/axium/qualities';
+import { Deck, accessDeck } from './deck';
 
-export type Plan<T = void> = {
+export type Plan<T = void, C = void> = {
   id: number;
   space: number;
   conceptSemaphore: number;
   conceptName: string;
   title: string;
-  stages: Staging<T>[],
+  stages: Staging<T, C>[],
   stage: number;
   stageFailed: number;
   beat: number;
@@ -36,33 +37,33 @@ export type Plan<T = void> = {
   changeAggregator: Record<string, KeyedSelector>;
 }
 
-export type Stage<T> = (params: StageParams<T>) => void;
+export type Stage<T, C> = (params: StageParams<T, C>) => void;
 
-export type StageParams<T = void> = {
+export type StageParams<T = void, C = void> = {
   concepts: Concepts,
   dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
   changes: KeyedSelector[],
   stagePlanner: StagePlanner
-} & UInterface<T>
+} & UInterface<T, C>
 
-export type Planning<T = void> = (title: string, planner: Planner<T>) => StagePlanner;
+export type Planning<T = void, C = void> = (title: string, planner: Planner<T, C>) => StagePlanner;
 
-export type Planner<T = void> = (uI: HInterface<T> & {
-  stage: typeof createStage<T>
+export type Planner<T = void, C = void> = (uI: HInterface<T, C> & {
+  stage: typeof createStage<T, C>
   stageO: typeof stageWaitForOpenThenIterate,
   conclude: typeof stageConclude
-}) => PartialStaging<T>[];
+}) => PartialStaging<T, C>[];
 
-export type Staging<T = void> = {
-  stage: Stage<T>;
+export type Staging<T = void, C = void> = {
+  stage: Stage<T, C>;
   selectors: KeyedSelector[];
   firstRun: boolean;
   priority?: number
   beat?: number,
 };
 
-export type PartialStaging<T = void> = {
-  stage: Stage<T>;
+export type PartialStaging<T = void, C = void> = {
+  stage: Stage<T, C>;
   selectors?: KeyedSelector[];
   priority?: number
   beat?: number,
@@ -117,7 +118,7 @@ export type StageDelimiter = {
 /**
  * Used in principle plans that are loaded during axium initialization
  */
-export const stageWaitForOpenThenIterate = <T>(func: () => AnyAction): Staging<T> => (createStage(({concepts, dispatch}) => {
+export const stageWaitForOpenThenIterate = <T, C>(func: () => AnyAction): Staging<T, C> => (createStage(({concepts, dispatch}) => {
   if (isAxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true
@@ -125,10 +126,10 @@ export const stageWaitForOpenThenIterate = <T>(func: () => AnyAction): Staging<T
   }
 }, { selectors: [axiumSelectOpen] }));
 
-export const stageConclude = <T>(): Staging<T> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
+export const stageConclude = <T, C>(): Staging<T, C> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
 
 export const stageWaitForOwnershipThenIterate =
-  <T>(func: () => Action): Staging<T> => (createStage(({concepts, dispatch}) => {
+  <T, C>(func: () => Action): Staging<T, C> => (createStage(({concepts, dispatch}) => {
     if (selectSlice(concepts, ownershipSelectInitialized) && getAxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
@@ -143,7 +144,10 @@ export const stageWaitForOwnershipThenIterate =
  * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
  * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
  */
-export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}): Staging<T> => {
+export const createStage = <T, C>(
+  stage: Stage<T, C>,
+  options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}
+): Staging<T, C> => {
   if (options) {
     return {
       stage,
@@ -165,7 +169,7 @@ export const createStage = <T>(stage: Stage<T>, options?: { selectors?: KeyedSel
 const ALL = '*4||*';
 
 const handleRun =
-  <T>(stageDelimiter: StageDelimiter, plan: Plan<T>, action: Action, options?: dispatchOptions)
+  <T, C>(stageDelimiter: StageDelimiter, plan: Plan<T, C>, action: Action, options?: dispatchOptions)
     : [StageDelimiter, boolean] => {
     if (options?.runOnce) {
       const stageRunner = stageDelimiter.runOnceMap.get(action.type + plan.stage);
@@ -188,7 +192,7 @@ const handleRun =
   };
 
 const handleStageDelimiter =
-  <T>(plan: Plan<T>, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
+  <T, C>(plan: Plan<T, C>, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
     let stageDelimiter = delimiter;
     let goodAction = true;
     if (stageDelimiter &&
@@ -289,7 +293,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     selectors.forEach(selector => this.addSelector(selector, id));
   }
 
-  protected handleNewStageOptions = <T>(plan: Plan<T>, options: dispatchOptions, next: number): boolean => {
+  protected handleNewStageOptions = <T, C>(plan: Plan<T, C>, options: dispatchOptions, next: number): boolean => {
     let evaluate = false;
     if (options.newPriority) {
       plan.stages[plan.stage].priority = options.newPriority;
@@ -311,7 +315,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     return evaluate;
   };
 
-  protected handleSetStageOptions = <T>(plan: Plan<T>, options: dispatchOptions) => {
+  protected handleSetStageOptions = <T, C>(plan: Plan<T, C>, options: dispatchOptions) => {
     if (options.setStageSelectors && plan.stages[options.setStageSelectors.stage]) {
       plan.stages[options.setStageSelectors.stage].selectors = options.setStageSelectors.selectors;
     }
@@ -351,10 +355,15 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan = <T = void>(title: string, planner: Planner<T>, space: number, conceptSemaphore: number): Plan<T> => {
+  protected createPlan = <T = void, C = void>(
+    title: string,
+    planner: Planner<T, C>,
+    space: number,
+    conceptSemaphore: number
+  ): Plan<T, C> => {
     const stages = planner({
+      d__: accessAxium(this.concepts) as Deck<C>,
       a__: this.concepts[conceptSemaphore].actions as Actions<any>,
-      ax__: this.concepts[0].actions as Actions<AxiumQualities>,
       s__: {},
       t__: [],
       stage: createStage,
@@ -363,7 +372,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
     const planId = this.planId;
     this.planId += 1;
-    const staged: Staging<T>[] = stages.map<Staging<T>>(s => {
+    const staged: Staging<T, C>[] = stages.map<Staging<T, C>>(s => {
       return {
         stage: s.stage,
         selectors: s.selectors ? s.selectors : [],
@@ -617,9 +626,9 @@ export class UnifiedSubject extends Subject<Concepts> {
     this.assembleGeneralQues();
   }
 
-  protected _dispatch<T>(
-    axiumState: AxiumState,
-    plan: Plan<T>,
+  protected _dispatch<T, C>(
+    axiumState: AxiumState<unknown>,
+    plan: Plan<T, C>,
     action: Action,
     options: dispatchOptions): void {
     let stageDelimiter = this.stageDelimiters.get(plan.id);
@@ -720,7 +729,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected execute<T>(plan: Plan<T>, index: number, changes: KeyedSelector[]): void {
+  protected execute<T, C>(plan: Plan<T, C>, index: number, changes: KeyedSelector[]): void {
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
@@ -738,8 +747,8 @@ export class UnifiedSubject extends Subject<Concepts> {
         conclude: conclude.bind(this)
       },
       // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
+      d: accessDeck<C>(this.concepts),
       a: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
-      ax: this.concepts[0].actions as Actions<AxiumQualities>,
       s: {},
       t: []
     });

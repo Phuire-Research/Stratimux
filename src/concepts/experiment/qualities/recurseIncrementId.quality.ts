@@ -11,17 +11,13 @@ import { selectPayload } from '../../../model/selector';
 import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentRecurseIterateId = {
   controlling: string[]
 };
 
-export const [
-  experimentRecurseIterateId,
-  experimentRecurseIterateIdType,
-  experimentRecurseIterateIdQuality
-] = createQualitySetWithPayload<ExperimentState, ExperimentRecurseIterateId>({
+export const experimentRecurseIterateId = createQualityCardWithPayload<ExperimentState, ExperimentRecurseIterateId>({
   type: 'Asynchronous experiment, recursively iterate ID and receive in Method via State',
   reducer: (state) => {
     return {

@@ -5,13 +5,9 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipInitializeOwnership,
-  ownershipInitializeOwnershipType,
-  ownershipInitializeOwnershipQuality
-] = createQualitySet<OwnershipState>({
+export const ownershipInitializeOwnership = createQualityCard<OwnershipState>({
   type: 'Ownership Initialize to True to enable Ownership Principle',
   reducer: (state) => ({...state, initialized: true}),
   methodCreator: defaultMethodCreator

@@ -3,23 +3,18 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 This mode likewise can be specified by changing the defaultModeIndex state property.
 $>*/
 /*<#*/
-import { Subject, Subscriber } from 'rxjs';
+import { Subscriber } from 'rxjs';
 import { Concepts, forEachConcept } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { defaultMethodSubscription, getAxiumState } from '../../../model/axium';
-import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
+import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumSetDefaultModePayload = {
     concepts: Concepts
 }
 
-export const [
-  axiumSetDefaultMode,
-  axiumSetDefaultModeType,
-  axiumSetDefaultModeQuality
-] = createQualitySetWithPayload<AxiumState, AxiumSetDefaultModePayload>({
+export const axiumSetDefaultMode = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetDefaultModePayload>({
   type: 'set Axium to its current Default Mode Index',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;

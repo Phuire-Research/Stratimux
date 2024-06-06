@@ -8,19 +8,15 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type OpenPayload = {
   open: boolean
 };
 
-export const [
-  axiumOpen,
-  axiumOpenType,
-  axiumOpenQuality
-] = createQualitySetWithPayload<AxiumState, OpenPayload>({
+export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown>, OpenPayload>({
   type: 'Open Axium',
-  reducer: (state: AxiumState, action) => {
+  reducer: (state, action) => {
     const {open} = action.payload;
     return {
       ...state,

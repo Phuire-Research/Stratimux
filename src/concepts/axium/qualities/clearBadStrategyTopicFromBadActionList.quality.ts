@@ -7,31 +7,28 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type AxiumClearBadStrategyTopicFromBadActionListPayload = {
   topic: string
 };
-export const [
-  axiumClearBadStrategyTopicFromBadActionList,
-  axiumClearBadStrategyTopicFromBadActionListType,
-  axiumClearBadStrategyTopicFromBadActionListQuality
-] = createQualitySetWithPayload<AxiumState, AxiumClearBadStrategyTopicFromBadActionListPayload>({
-  type: 'clear Strategy Topic from Axium\'s badAction list',
-  reducer: (state, action) => {
-    const {topic} = action.payload;
-    const badActions = state.badActions.filter(act => {
-      if (act.strategy && act.strategy.topic !== topic) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return {
-      ...state,
-      badActions,
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+export const axiumClearBadStrategyTopicFromBadActionList =
+  createQualityCardWithPayload<AxiumState<unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
+    type: 'clear Strategy Topic from Axium\'s badAction list',
+    reducer: (state, action) => {
+      const {topic} = action.payload;
+      const badActions = state.badActions.filter(act => {
+        if (act.strategy && act.strategy.topic !== topic) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      return {
+        ...state,
+        badActions,
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

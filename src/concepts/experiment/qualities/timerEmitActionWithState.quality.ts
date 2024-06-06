@@ -8,13 +8,9 @@ import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConclude } from '../../axium/qualities/conclude.quality';
 import { strategyData_unifyData } from '../../../model/actionStrategyData';
 import { ExperimentState } from '../experiment.concept';
-import { createQualitySet, nullReducer } from '../../../model/quality';
+import { createQualityCard, nullReducer } from '../../../model/quality';
 
-export const [
-  experimentTimerEmitActionWithState,
-  experimentTimerEmitActionWithStateType,
-  experimentTimerEmitActionWithStateQuality
-] = createQualitySet<ExperimentState>({
+export const experimentTimerEmitActionWithState = createQualityCard<ExperimentState>({
   type: 'Experiment create async method with timer and state, to return action',
   reducer: nullReducer,
   methodCreator: () => createAsyncMethodWithState((controller, action, state) => {

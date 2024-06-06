@@ -8,13 +8,9 @@ import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket } from '../../../model/ownership';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethodDebounce } from '../../../model/method';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipClearStrategyStubsFromLedgerAndSelf,
-  ownershipClearStrategyStubsFromLedgerAndSelfType,
-  ownershipClearStrategyStubsFromLedgerAndSelfQuality
-] = createQualitySet<OwnershipState>({
+export const ownershipClearStrategyStubsFromLedgerAndSelf = createQualityCard<OwnershipState>({
   type: 'clear current Strategy Stubs from Ownership Ledger and Itself',
   reducer: (state, action) => {
     const stubs = action?.strategy?.stubs;

@@ -4,13 +4,13 @@ And ensure that the semaphore is being set via the Axium for the actions created
 $>*/
 /*<#*/
 import { Axium, createAxium } from '../model/axium';
-import { createQualitySet, createQualitySetWithPayload } from '../model/quality';
+import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 
 test('Quality Actions', (done) => {
-  const [one, two, something] = createQualitySet({
+  const [one, two, something] = createQualityCard({
     type: 'Something',
     reducer: (state) => state
   });
@@ -19,7 +19,7 @@ test('Quality Actions', (done) => {
   };
 
   const initialState = {};
-  const [_, __, some] = createQualitySetWithPayload<typeof initialState, payload>({
+  const [_, __, some] = createQualityCardWithPayload<typeof initialState, payload>({
     type: 'Some',
     reducer: (state) => state
   });

@@ -5,17 +5,13 @@ $>*/
 /*<#*/
 import { AnyConcept, Concept } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
-import { createQualitySetWithPayload, defaultMethodCreator } from '../../../model/quality';
+import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 
 export type AxiumAppendConceptsToAddQuePayload = {
   concepts: AnyConcept[]
 }
 
-export const [
-  axiumAppendConceptsToAddQue,
-  axiumAppendConceptsToAddQueType,
-  axiumAppendConceptsToAddQueQuality
-] = createQualitySetWithPayload<AxiumState, AxiumAppendConceptsToAddQuePayload>({
+export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumState<unknown>, AxiumAppendConceptsToAddQuePayload>({
   type: 'append Concepts to Axium\'s Add Concept Que',
   reducer: (state, action) => {
     const payload = action.payload;

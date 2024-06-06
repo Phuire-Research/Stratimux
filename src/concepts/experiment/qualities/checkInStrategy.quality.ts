@@ -6,13 +6,9 @@ $>*/
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
 import { ExperimentState } from '../experiment.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentCheckInStrategy,
-  experimentCheckInStrategyType,
-  experimentCheckInStrategyQuality
-] = createQualitySet<ExperimentState>({
+export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
   type: 'Experiment check in Action',
   reducer: (state, action) => {
     if (action.strategy) {

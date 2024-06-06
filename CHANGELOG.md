@@ -51,9 +51,9 @@
 ### v0.1.55 4/24/24
 * Changed ActionNodeOptions to allow for successNode and failureNode to be left absent. Continued effort towards decreasing boilerplate.
 * Refined original paper.
-* Properly exporting the new ActionCreator and ActionCreatorWithPayload for specific createQualitySetX creator functions
+* Properly exporting the new ActionCreator and ActionCreatorWithPayload for specific createQualityCardX creator functions
 ### v0.1.53 4/23/24
-* Added createQualitySet and createQualitySetWithPayload to reduce some boilerplate.
+* Added createQualityCard and createQualityCardWithPayload to reduce some boilerplate.
 ### v0.1.52 Patch 4/03/24
 * Quick pass updating documentation
 * Synced up createAxium, etc... To properly allow for the axium to log actions incoming in the action stream if set.

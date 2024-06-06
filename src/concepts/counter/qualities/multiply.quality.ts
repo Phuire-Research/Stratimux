@@ -5,18 +5,14 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 import { selectPayload } from '../../../model/selector';
 
 type CounterMultiplyPayload = {
   by: number;
 };
 
-export const [
-  counterMultiply,
-  counterMultiplyType,
-  counterMultiplyQuality
-] = createQualitySetWithPayload<CounterState, CounterMultiplyPayload>({
+export const counterMultiply = createQualityCardWithPayload<CounterState, CounterMultiplyPayload>({
   type: 'Counter Multiply',
   reducer: (state: CounterState, {payload}) => {
     const {by} = payload;

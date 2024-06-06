@@ -11,29 +11,33 @@ import { Planning } from './stagePlanner';
 import { KeyedSelectors } from './selector';
 import { BInterface, IsT } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
+import { Deck, accessDeck } from './deck';
+import { AxiumDeck } from './axium';
+import { access } from 'fs';
 
-export type PrincipleInterface<T = void> = {
+export type PrincipleInterface<T = void, C = void> = {
   observer: Subscriber<Action>,
   concepts_: Concepts,
   subscribe: ConceptsSubscriber,
-  plan: Planning<T>,
+  plan: Planning<T, C>,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-} & BInterface<T>;
+} & BInterface<T, C>;
 
-export type PrincipleFunction<T = void> = (
-  baseI: PrincipleInterface<T>
+export type PrincipleFunction<T = void, C = void> = (
+  baseI: PrincipleInterface<T, C>
 ) => void;
 
-export function createPrinciple$<T = void>(
-  principleFunc: PrincipleFunction<T>,
+export function createPrinciple$<T = void, C = void>(
+  principleFunc: PrincipleFunction<T, C>,
   concepts_: Concepts,
-  plan: Planning<T>,
+  plan: Planning<T, C>,
   subscribe: ConceptsSubscriber,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
+  d_: Deck<C>,
   a_: Actions<T>,
   s_: KeyedSelectors,
   t_: IsT[]
@@ -46,8 +50,8 @@ export function createPrinciple$<T = void>(
       subscribe,
       nextC,
       nextA,
+      d_,
       a_,
-      ax_: concepts_[0].actions as Actions<AxiumQualities>,
       s_,
       t_,
       conceptSemaphore
@@ -55,13 +59,13 @@ export function createPrinciple$<T = void>(
   });
 }
 
-export function registerPrincipleSubscription(
+export function registerPrincipleSubscription<T extends Deck<AxiumDeck>>(
   observer: Subscriber<Action<unknown>>,
-  ax: Actions<AxiumQualities>,
+  deck: T,
   name: string,
   subscription: Subscription
 ) {
-  const primedRegisterSubscriber = ax.axiumRegisterSubscriberQuality({ subscription, name });
+  const primedRegisterSubscriber = deck.axium.a.axiumRegisterSubscriber({ subscription, name });
   observer.next(primedRegisterSubscriber);
 }
 

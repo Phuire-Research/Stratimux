@@ -8,24 +8,22 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type AxiumClearBadActionTypeFromBadActionListPayload = {
   actionType: ActionType
 };
-export const [
-  axiumClearBadActionTypeFromBadActionList,
-  axiumClearBadActionTypeFromBadActionListType,
-  axiumClearBadActionTypeFromBadActionListQuality
-] = createQualitySetWithPayload<AxiumState, AxiumClearBadActionTypeFromBadActionListPayload>({
-  type: 'clear ActionType from Axium\'s badAction list',
-  reducer: (state: AxiumState, action) => {
-    const {actionType} = action.payload;
-    return {
-      ...state,
-      badActions: state.badActions.filter(act => act.type !== actionType),
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+
+export const axiumClearBadActionTypeFromBadActionList =
+  createQualityCardWithPayload<AxiumState<unknown>, AxiumClearBadActionTypeFromBadActionListPayload>({
+    type: 'clear ActionType from Axium\'s badAction list',
+    reducer: (state, action) => {
+      const {actionType} = action.payload;
+      return {
+        ...state,
+        badActions: state.badActions.filter(act => act.type !== actionType),
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

@@ -6,13 +6,9 @@ $>*/
 import { nullReducer } from '../../../model/quality';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  axiumLog,
-  axiumLogType,
-  axiumLogQuality
-] = createQualitySet({
+export const axiumLog = createQualityCard({
   type: 'logged a message passed to Axium',
   reducer: nullReducer,
   methodCreator: () => createMethod((action) => {

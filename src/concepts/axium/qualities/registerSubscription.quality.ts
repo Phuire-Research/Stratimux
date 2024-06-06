@@ -8,18 +8,14 @@ import { Subscription } from 'rxjs';
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type AxiumRegisterSubscriberPayload = {
     subscription: Subscription;
     name: string;
 }
 
-export const [
-  axiumRegisterSubscriber,
-  axiumRegisterSubscriberType,
-  axiumRegisterSubscriberQuality
-] = createQualitySetWithPayload<AxiumState, AxiumRegisterSubscriberPayload>({
+export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown>, AxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Axium\'s General Subscriber list',
   reducer: (state, action) => {
     const payload = action.payload;

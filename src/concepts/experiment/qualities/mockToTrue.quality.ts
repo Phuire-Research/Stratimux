@@ -4,13 +4,9 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { ExperimentState } from '../experiment.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentMockToTrue,
-  experimentMockToTrueType,
-  experimentMockToTrueQuality,
-] = createQualitySet<ExperimentState>({
+export const experimentMockToTrue = createQualityCard<ExperimentState>({
   type: 'Experiment mock set to True',
   reducer: (state) => {
     return {

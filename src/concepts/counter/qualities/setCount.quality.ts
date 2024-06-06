@@ -8,16 +8,12 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { selectPayload } from '../../../model/selector';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type CounterSetCountPayload = {
   newCount: number
 }
-export const [
-  counterSetCount,
-  counterSetCountType,
-  counterSetCountQuality
-] = createQualitySetWithPayload<CounterState, CounterSetCountPayload>({
+export const counterSetCount = createQualityCardWithPayload<CounterState, CounterSetCountPayload>({
   type: 'Counter set Count',
   reducer: (state, {payload}) => {
     const {newCount} = payload;
