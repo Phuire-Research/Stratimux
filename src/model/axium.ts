@@ -33,7 +33,7 @@ export enum AxiumOrigins {
   axiumHead = 'axiumHead'
 }
 
-export const tailWhip = (axiumState: AxiumState<unknown, unknown>) => {
+export const tailWhip = <Q, C>(axiumState: AxiumState<Q, C>) => {
   if (axiumState.tailTimer.length === 0) {
     axiumState.tailTimer.push(setTimeout(() => {
       axiumState.action$.next(createAction('Kick Axium'));
@@ -55,7 +55,7 @@ export const createOrigin = (location: unknown[]): string => {
   return origin;
 };
 
-export const HandleOrigin = (state: AxiumState<unknown, unknown>, action: Action) => {
+export const HandleOrigin = <Q, C>(state: AxiumState<Q, C>, action: Action) => {
   const {
     body,
     tail
@@ -84,7 +84,7 @@ export const HandleOrigin = (state: AxiumState<unknown, unknown>, action: Action
   tailWhip(state);
 };
 
-export const HandleHardOrigin = (state: AxiumState<unknown, unknown>, action: Action) => {
+export const HandleHardOrigin = <Q, C>(state: AxiumState<Q, C>, action: Action) => {
   // Fill Bucket
   // Empty Bucket
   // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
@@ -378,7 +378,9 @@ export type Axium<Q extends Record<string, unknown>, C extends Record<string, un
   deck: Deck<C>
 }
 
-export const getAxiumState = (concepts: Concepts) => (concepts[0].state as AxiumState<AxiumQualities, AxiumDeck>);
+export const getAxiumState = <Q = void, C = void>(concepts: Concepts) => (
+  concepts[0].state as AxiumState<Q extends void ? AxiumQualities : Q, C extends void ? AxiumDeck : C>
+);
 
 export const accessAxium = (concepts: Concepts) => (getAxiumState(concepts).deck.axium);
 

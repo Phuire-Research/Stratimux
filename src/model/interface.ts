@@ -38,11 +38,11 @@ export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action)
  * Highest Order Interface
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
  */
-export type UInterface<T = void, C = void> = {
+export type UInterface<Q = void, C = void> = {
   // Deck
   d: Deck<C>
   // Entry Actions
-  e: Actions<T>
+  e: Actions<Q>
   // Comparators
   c: IsT[]
   // Keyed Selectors
@@ -55,9 +55,9 @@ export type UInterface<T = void, C = void> = {
  * Provides access to all Interfaces via concepts
  * Limited by a whitelist provided by some access property supplied to the Axium
  */
-export type OInterface<T = void, C = void> = {
+export type OInterface<Q = void, C = void> = {
   d: Deck<C>
-  e: Actions<T>
+  e: Actions<Q>
   c: IsT[]
   k: KeyedSelectors
 }
@@ -65,9 +65,9 @@ export type OInterface<T = void, C = void> = {
 /**
  * Higher Order Interface
  */
-export type HInterface<T = void, C = void> = {
+export type HInterface<Q = void, C = void> = {
   d__: Deck<C>
-  e__: Actions<T>
+  e__: Actions<Q>
   c__: IsT[]
   k__: KeyedSelectors
 }
@@ -75,9 +75,9 @@ export type HInterface<T = void, C = void> = {
 /**
  * Base Interface
  */
-export type BInterface<T = void, C = void> = {
+export type BInterface<Q = void, C = void> = {
   d_: Deck<C>,
-  e_: Actions<T>
+  e_: Actions<Q>
   c_: IsT[]
   k_: KeyedSelectors
 }

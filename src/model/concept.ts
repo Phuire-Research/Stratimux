@@ -28,7 +28,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   Action<unknown>,
   Concepts,
   Subject<Action>,
-  UnifiedSubject,
+  UnifiedSubject<any, any>,
 ]) => void;
 
 export type MethodCreatorStep<S extends Record<string, unknown>, T = void> = () => MethodCreator<S, T>;
@@ -45,10 +45,10 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   selectors: KeyedSelectors;
   typeValidators: IsT[]
   qualities: Quality<Record<string, unknown>>[];
-  q: T extends Record<string, unknown> ?
-    T
+  q: T extends void ?
+    Record<string, unknown>
     :
-    Record<string, unknown>;
+    T;
   semaphore: number;
   principles?: PrincipleFunction<T, any>[];
   mode?: Mode[];
@@ -114,7 +114,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     selectors: {},
     typeValidators: [],
     qualities: qualities ? qualities : [],
-    q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
+    q: (_qualities ? _qualities : {}),
     semaphore: -1,
     principles,
     mode,

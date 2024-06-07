@@ -12,7 +12,7 @@ import { createStage } from '../model/stagePlanner';
 
 test('Axium Counting Strategy Test', (done) => {
   const cpts = {counter: createCounterConcept()};
-  const axium = createAxium('axiumStrategyTest', cpts, {logging: true, storeDialog: true});
+  const axium = createAxium<typeof cpts>('axiumStrategyTest', cpts, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan',
     ({stage}) => [
       stage(({dispatch, d, e}) => {
