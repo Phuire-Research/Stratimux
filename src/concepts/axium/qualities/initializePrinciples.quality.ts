@@ -12,13 +12,14 @@ import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumQualities } from '.';
+import { AxiumDeck } from '../../../model/axium';
 
 export type AxiumInitializePrinciplesPayload = {
     concepts: Concepts;
 }
 
 export const axiumInitializePrinciples =
-  createQualityCardWithPayload<AxiumState<unknown>, AxiumInitializePrinciplesPayload>({
+  createQualityCardWithPayload<AxiumState<AxiumDeck>, AxiumInitializePrinciplesPayload>({
     type: 'initialize Principles and set new Subscribers to General Subscribers list',
     reducer: (state, act) => {
       const payload = act.payload;
@@ -30,17 +31,18 @@ export const axiumInitializePrinciples =
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === axiumName && concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<AxiumQualities>(
-              principle as PrincipleFunction<any>,
+            const observable = createPrinciple$<AxiumQualities, AxiumDeck>(
+              principle as PrincipleFunction<AxiumQualities, AxiumDeck>,
               concepts,
-              state.concepts$.innerPlan.bind(concepts$) as Planning<any>,
+              state.concepts$.innerPlan.bind(concepts$) as Planning<any, any>,
               state.concepts$.subscribe.bind(concepts$),
               state.concepts$.next.bind(concepts$),
               state.action$.next.bind(action$),
               semaphore,
+              state.deck,
               concept.actions as Actions<any>,
-              concept.selectors,
               concept.typeValidators,
+              concept.selectors,
             );
             principleSubscribers.push({
               name: concept.name,
@@ -50,17 +52,18 @@ export const axiumInitializePrinciples =
           conceptCounter += 1;
         } else if (concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<typeof concept.q>(
+            const observable = createPrinciple$<typeof concept.q, AxiumDeck>(
               principle,
               concepts,
-              concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any>,
+              concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any, any>,
               concepts$.subscribe.bind(concepts$),
               concepts$.next.bind(concepts$),
               action$.next.bind(action$),
               semaphore,
+              state.deck,
               concept.actions as Actions<any>,
-              concept.selectors,
               concept.typeValidators,
+              concept.selectors,
             );
             principleSubscribers.push({
               name: concept.name,

@@ -18,11 +18,11 @@ export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck &
 ): ActionStrategy {
   const {
     ownershipInitializeOwnership
-  } = deck.ownership.a;
+  } = deck.ownership.e;
   const {
     axiumSetDefaultModeIndex,
     axiumSetMode
-  } = deck.axium.a;
+  } = deck.axium.e;
   let ownershipModeIndex = 2;
   getAxiumState(concepts).modeNames.forEach((key, i) => {
     if (key === ownershipName) {

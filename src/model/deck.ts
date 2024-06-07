@@ -7,16 +7,16 @@ import { accessAxium, getAxiumState } from './axium';
 import { Concept, Concepts, conceptsToString } from './concept';
 import { Qualities } from './quality';
 
-export type Deck<T> = {
-  [K in keyof T]: {
-    a: T[K] extends Concept<Record<string, unknown>, Qualities> ?
-    T[K]['actions']
+export type Deck<C> = {
+  [K in keyof C]: {
+    e: C[K] extends Concept<Record<string, unknown>, Qualities> ?
+    C[K]['actions']
     :
-    T[K] extends Concept<Record<string, unknown>, void> ?
-    T[K]['actions']
+    C[K] extends Concept<Record<string, unknown>, void> ?
+    C[K]['actions']
     :
-    T[K] extends Concept<any, any> ?
-    T[K]['actions']
+    C[K] extends Concept<any, any> ?
+    C[K]['actions']
     :
     Actions<void>
   }

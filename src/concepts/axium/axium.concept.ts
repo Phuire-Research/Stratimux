@@ -107,7 +107,7 @@ export type NamedSubscription = {
   subscription: Subscription;
 }
 
-export type AxiumState<T> = {
+export type AxiumState<Q, C> = {
   // Would be unique identifier on a network
   name: string;
   open: boolean;
@@ -132,11 +132,11 @@ export type AxiumState<T> = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
-  concepts$: UnifiedSubject;
-  deck: Deck<T>,
+  concepts$: UnifiedSubject<Q, C>;
+  deck: Deck<C>,
   addConceptQue: AnyConcept[],
   removeConceptQue: AnyConcept[],
-  badPlans: Plan<any>[];
+  badPlans: Plan<any, any>[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
   timerLedger: Map<number, (() => Action)[]>
@@ -148,7 +148,7 @@ export type AxiumState<T> = {
 
 export const axiumName = 'axium';
 
-const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): AxiumState<unknown> => {
+const createAxiumState = <Q, C>(name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): AxiumState<Q, C> => {
   return {
     name,
     open: false,
@@ -177,7 +177,7 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
-    deck: {},
+    deck: {} as Deck<C>,
     addConceptQue: [] as AnyConcept[],
     removeConceptQue: [] as AnyConcept[],
     badPlans: [],
@@ -189,16 +189,16 @@ const createAxiumState = (name: string, storeDialog?: boolean, logging?: boolean
 };
 const axiumStaticPrinciple = [axiumClosePrinciple];
 
-export const createAxiumConcept = (
+export const createAxiumConcept = <Q, C>(
   name: string,
   storeDialog?: boolean,
   logging?: boolean,
   logActionStream?: boolean,
   dynamic?: boolean,
-): Concept<AxiumState<unknown>, AxiumQualities> =>  {
-  const state = createAxiumState(name, storeDialog, logging, logActionStream);
+): Concept<AxiumState<Q, C>, AxiumQualities> =>  {
+  const state = createAxiumState<Q, C>(name, storeDialog, logging, logActionStream);
   if (dynamic) {
-    const c = createConcept<AxiumState<unknown>, AxiumQualities>(
+    const c = createConcept<AxiumState<Q, C>, AxiumQualities>(
       axiumName,
       state,
       axiumQualities,
@@ -207,7 +207,7 @@ export const createAxiumConcept = (
     );
     return c;
   } else {
-    const c = createConcept<AxiumState<unknown>, AxiumQualities>(
+    const c = createConcept<AxiumState<Q, C>, AxiumQualities>(
       axiumName,
       state,
       axiumStaticQualities,

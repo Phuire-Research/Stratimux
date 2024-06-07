@@ -34,7 +34,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
   let initDispatch = false;
   let finalCheck = true;
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => d__.axium.a.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
+    stageO(() => d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
     stage(({concepts, d}) => {
       let newConcepts = concepts;
       let ownershipState = selectUnifiedState<OwnershipState>(newConcepts, conceptSemaphore);
@@ -77,7 +77,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
               }
             }
             if (payload.badActions.length > 0) {
-              newAction = d.axium.a.axiumBadAction(payload) as AnyAction;
+              newAction = d.axium.e.axiumBadAction(payload) as AnyAction;
               ownershipState.pendingActions = newPending;
               nextC(newConcepts);
               observer.next(newAction);
@@ -114,7 +114,7 @@ export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities,
   conceptSemaphore
 }) => {
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => (d__.axium.a.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
+    stageO(() => (d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
     stage(({concepts}) => {
       const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {

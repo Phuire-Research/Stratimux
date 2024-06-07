@@ -14,7 +14,7 @@ export function countingStrategy<T extends Deck<{counter: Concept<CounterState, 
   const {
     counterSubtract,
     counterAdd
-  } = deck.counter.a;
+  } = deck.counter.e;
 
   const stepFive = createActionNode(counterSubtract(), {
     successNotes: {

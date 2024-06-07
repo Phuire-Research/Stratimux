@@ -254,9 +254,9 @@ const Inner = 0;
 const Base = 1;
 const Outer = 2;
 
-export class UnifiedSubject extends Subject<Concepts> {
+export class UnifiedSubject<T, C> extends Subject<Concepts> {
   private planId = -1;
-  private currentPlans: Map<number, Plan<any>> = new Map();
+  private currentPlans: Map<number, Plan<any, any>> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
   private concepts: Concepts = {};
   // Assemble front of line
@@ -293,7 +293,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     selectors.forEach(selector => this.addSelector(selector, id));
   }
 
-  protected handleNewStageOptions = <T, C>(plan: Plan<T, C>, options: dispatchOptions, next: number): boolean => {
+  protected handleNewStageOptions = (plan: Plan<T, C>, options: dispatchOptions, next: number): boolean => {
     let evaluate = false;
     if (options.newPriority) {
       plan.stages[plan.stage].priority = options.newPriority;
@@ -315,7 +315,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     return evaluate;
   };
 
-  protected handleSetStageOptions = <T, C>(plan: Plan<T, C>, options: dispatchOptions) => {
+  protected handleSetStageOptions = (plan: Plan<T, C>, options: dispatchOptions) => {
     if (options.setStageSelectors && plan.stages[options.setStageSelectors.stage]) {
       plan.stages[options.setStageSelectors.stage].selectors = options.setStageSelectors.selectors;
     }
@@ -355,7 +355,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected createPlan = <T = void, C = void>(
+  protected createPlan = (
     title: string,
     planner: Planner<T, C>,
     space: number,
@@ -363,9 +363,9 @@ export class UnifiedSubject extends Subject<Concepts> {
   ): Plan<T, C> => {
     const stages = planner({
       d__: accessAxium(this.concepts) as Deck<C>,
-      a__: this.concepts[conceptSemaphore].actions as Actions<any>,
-      s__: {},
-      t__: [],
+      e__: this.concepts[conceptSemaphore].actions as Actions<any>,
+      c__: [],
+      k__: {},
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -398,7 +398,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   };
 
-  protected initPlan<T>(plan: Plan<T>): StagePlanner {
+  protected initPlan(plan: Plan<T, C>): StagePlanner {
     this.currentPlans.set(plan.id, plan);
     this.handleAddSelector(plan.stages[plan.stage].selectors, plan.id);
     this.manageQues();
@@ -416,17 +416,17 @@ export class UnifiedSubject extends Subject<Concepts> {
     };
   }
 
-  innerPlan: Planning = <T = void>(title: string, planner: Planner<T>) => {
-    return this.initPlan(this.createPlan<T>(title, planner, Inner, 0));
+  innerPlan: Planning<T, C> = (title: string, planner: Planner<T, C>) => {
+    return this.initPlan(this.createPlan(title, planner, Inner, 0));
   };
 
   // [TODO] - IMPORTANT - LIMIT THIS TO WHITE LISTED VALUES
-  outerPlan: Planning = <T = void>(title: string, planner: Planner<T>) => {
-    return this.initPlan(this.createPlan<T>(title, planner, Outer, 0));
+  outerPlan: Planning<T, C> = (title: string, planner: Planner<T, C>) => {
+    return this.initPlan(this.createPlan(title, planner, Outer, 0));
   };
 
-  plan = (conceptSemaphore: number): Planning => <T>(title: string, planner: Planner<T>): StagePlanner => {
-    return this.initPlan(this.createPlan<T>(title, planner, Base, conceptSemaphore));
+  plan = (conceptSemaphore: number): Planning<T, C> => (title: string, planner: Planner<T, C>): StagePlanner => {
+    return this.initPlan(this.createPlan(title, planner, Base, conceptSemaphore));
   };
 
   protected deletePlan(planId: number) {
@@ -626,7 +626,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     this.assembleGeneralQues();
   }
 
-  protected _dispatch<T, C>(
+  protected _dispatch(
     axiumState: AxiumState<unknown>,
     plan: Plan<T, C>,
     action: Action,
@@ -729,7 +729,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     }
   }
 
-  protected execute<T, C>(plan: Plan<T, C>, index: number, changes: KeyedSelector[]): void {
+  protected execute(plan: Plan<T, C>, index: number, changes: KeyedSelector[]): void {
     const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
@@ -748,9 +748,9 @@ export class UnifiedSubject extends Subject<Concepts> {
       },
       // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
       d: accessDeck<C>(this.concepts),
-      a: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
-      s: {},
-      t: []
+      e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
+      c: [],
+      k: {},
     });
   }
 
@@ -760,7 +760,7 @@ export class UnifiedSubject extends Subject<Concepts> {
     });
   }
 
-  protected nextPlan(plan: Plan, changes: KeyedSelector[]) {
+  protected nextPlan(plan: Plan<T, C>, changes: KeyedSelector[]) {
     const index = plan.stage;
     if (index < plan.stages.length) {
       if (plan.beat > -1) {
@@ -842,10 +842,10 @@ export class UnifiedSubject extends Subject<Concepts> {
       const ready = notifyIds.get(id);
       const plan = this.currentPlans.get(id);
       if (plan && ready !== undefined) {
-        this.nextPlan(plan as Plan, ready);
+        this.nextPlan(plan as Plan<T, C>, ready);
       } else if (plan && plan.stages[plan.stage].firstRun) {
         plan.stages[plan.stage].firstRun = false;
-        this.nextPlan(plan as Plan, []);
+        this.nextPlan(plan as Plan<T, C>, []);
       }
     };
     for (const p of this.ques[Inner].priorityQue) {

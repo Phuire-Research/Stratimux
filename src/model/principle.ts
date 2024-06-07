@@ -38,9 +38,9 @@ export function createPrinciple$<T = void, C = void>(
   nextA: (action: Action) => void,
   conceptSemaphore: number,
   d_: Deck<C>,
-  a_: Actions<T>,
-  s_: KeyedSelectors,
-  t_: IsT[]
+  e_: Actions<T>,
+  c_: IsT[],
+  k_: KeyedSelectors
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({
@@ -51,9 +51,9 @@ export function createPrinciple$<T = void, C = void>(
       nextC,
       nextA,
       d_,
-      a_,
-      s_,
-      t_,
+      e_,
+      c_,
+      k_,
       conceptSemaphore
     });
   });
@@ -65,7 +65,7 @@ export function registerPrincipleSubscription<T extends Deck<AxiumDeck>>(
   name: string,
   subscription: Subscription
 ) {
-  const primedRegisterSubscriber = deck.axium.a.axiumRegisterSubscriber({ subscription, name });
+  const primedRegisterSubscriber = deck.axium.e.axiumRegisterSubscriber({ subscription, name });
   observer.next(primedRegisterSubscriber);
 }
 

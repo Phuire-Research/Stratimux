@@ -12,7 +12,7 @@ import { createActionNode, strategy, strategyBegin } from '../../model/actionStr
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
+import { AxiumDeck, blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 
@@ -20,13 +20,13 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
     observer,
     plan,
-    a_
+    e_
   }
 ) => {
   let allowAdd = true;
   let allowRemove = true;
   const addConceptsPlan = plan('Add Concepts Plan', ({stage}) => [
-    stage(({concepts, dispatch, a}) => {
+    stage(({concepts, dispatch, e}) => {
       const axiumState = getAxiumState(concepts);
       if (axiumState.addConceptQue.length === 0) {
         allowAdd = true;
@@ -51,7 +51,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$<typeof concept.q>(
+              const observable = createPrinciple$<typeof concept.q, AxiumDeck>(
                 principle,
                 concepts,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,9 +60,10 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 axiumState.concepts$.next.bind(axiumState.concepts$),
                 axiumState.action$.next.bind(axiumState.action$),
                 concept.semaphore,
+                axiumState.deck,
                 concept.actions as Actions<any>,
-                concept.selectors,
                 concept.typeValidators,
+                concept.selectors,
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,
@@ -98,7 +99,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
 
-        dispatch(strategyBegin(addConceptsFromQueThenUnblockStrategy(a, newConcepts)), {
+        dispatch(strategyBegin(addConceptsFromQueThenUnblockStrategy(e, newConcepts)), {
           throttle: 50
         });
       }
@@ -106,7 +107,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   ]);
 
   const removeConceptsPlan = plan('Remove Concepts Plan', ({stage}) => [
-    stage(({concepts, dispatch, a}) => {
+    stage(({concepts, dispatch, e}) => {
       const axiumState = getAxiumState(concepts);
       if (axiumState.removeConceptQue.length === 0) {
         allowRemove = true;
@@ -178,7 +179,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
         dispatch(strategyBegin(
-          removeConceptsViaQueThenUnblockStrategy(a, newConcepts)), {
+          removeConceptsViaQueThenUnblockStrategy(e, newConcepts)), {
           throttle: 50
         });
       }
@@ -186,9 +187,9 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   ]);
   observer.next(strategy.begin(strategy.create({
     topic: 'Register Axium Add/Remove Plans',
-    initialNode: createActionNode(a_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}), {
+    initialNode: createActionNode(e_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: addConceptsPlan}), {
       successNode:
-      createActionNode(a_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}), {
+      createActionNode(e_.axiumRegisterStagePlanner({conceptName: axiumName, stagePlanner: removeConceptsPlan}), {
         successNode: null,
         failureNode: null
       }),

@@ -7,7 +7,7 @@ import { counterSubtract } from './qualities/subtract.quality';
 import { counterSetCount } from './qualities/setCount.quality';
 import { createConcept } from '../../model/concept';
 import { counterMultiply } from './qualities/multiply.quality';
-export { countingStrategy, primedCountingStrategy } from './strategies/counting.strategy';
+export { countingStrategy } from './strategies/counting.strategy';
 
 export type CounterState = {
     count: number

@@ -50,7 +50,7 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
     :
     Record<string, unknown>;
   semaphore: number;
-  principles?: PrincipleFunction<T>[];
+  principles?: PrincipleFunction<T, any>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
@@ -77,7 +77,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
   name: string,
   state: S,
   _qualities?: Record<string, unknown>,
-  principles?: PrincipleFunction<T>[],
+  principles?: PrincipleFunction<T, any>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

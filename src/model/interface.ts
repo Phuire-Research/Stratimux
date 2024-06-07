@@ -39,10 +39,14 @@ export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action)
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
  */
 export type UInterface<T = void, C = void> = {
+  // Deck
   d: Deck<C>
-  a: Actions<T>
-  s: KeyedSelectors
-  t: IsT[]
+  // Entry Actions
+  e: Actions<T>
+  // Comparators
+  c: IsT[]
+  // Keyed Selectors
+  k: KeyedSelectors
 }
 
 /**
@@ -53,9 +57,9 @@ export type UInterface<T = void, C = void> = {
  */
 export type OInterface<T = void, C = void> = {
   d: Deck<C>
-  a: Actions<T>
-  s: KeyedSelectors
-  t: IsT[]
+  e: Actions<T>
+  c: IsT[]
+  k: KeyedSelectors
 }
 
 /**
@@ -63,9 +67,9 @@ export type OInterface<T = void, C = void> = {
  */
 export type HInterface<T = void, C = void> = {
   d__: Deck<C>
-  a__: Actions<T>
-  s__: KeyedSelectors
-  t__: IsT[]
+  e__: Actions<T>
+  c__: IsT[]
+  k__: KeyedSelectors
 }
 
 /**
@@ -73,8 +77,8 @@ export type HInterface<T = void, C = void> = {
  */
 export type BInterface<T = void, C = void> = {
   d_: Deck<C>,
-  a_: Actions<T>
-  s_: KeyedSelectors
-  t_: IsT[]
+  e_: Actions<T>
+  c_: IsT[]
+  k_: KeyedSelectors
 }
 /*#>*/
