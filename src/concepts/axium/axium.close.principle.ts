@@ -16,12 +16,12 @@ export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
 ) => {
   let init = false;
   plan('Plan Axium Close', ({stage, conclude}) => [
-    stage(({concepts, dispatch, stagePlanner}) => {
-      const state = selectUnifiedState<AxiumState>(concepts, 0);
+    stage(({concepts, dispatch, stagePlanner, e}) => {
+      const state = selectUnifiedState<AxiumState<unknown, unknown>>(concepts, 0);
       if (!init && state?.prepareClose) {
         init = true;
         nextC({0: concepts[0]});
-        dispatch(axiumClose({exit: state.exit}), {
+        dispatch(e.axiumClose({exit: state.exit}), {
           iterateStage: true
         });
         stagePlanner.conclude();

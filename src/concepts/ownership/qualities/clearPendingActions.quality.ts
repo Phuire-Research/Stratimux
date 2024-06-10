@@ -7,11 +7,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipClearPendingActions,
-  ownershipClearPendingActionsType,
-  ownershipClearPendingActionsQuality
-] = createQualityCard<OwnershipState>({
+export const ownershipClearPendingActions = createQualityCard<OwnershipState>({
   type: 'clear Ownership\'s Pending Actions',
   reducer: (state) => ({...state, pendingActions: []}),
   methodCreator: defaultMethodCreator

@@ -20,10 +20,10 @@ test('prioritized plans with selectors Test', (done) => {
     console.log('INIT ', id);
     planPrioritizedSelectors.plan('Ensure that prioritized plans with selectors allow for each plan to be informed',
       ({stage}) => [
-        stage(({concepts, dispatch}) => {
+        stage(({concepts, dispatch, e}) => {
           if (selectSlice(concepts, axiumSelectOpen)) {
             console.log(`FIRE ${id}`, allShouldBeTrue, getAxiumState(concepts).open);
-            dispatch(axiumKick(), {
+            dispatch(e.axiumKick(), {
               iterateStage: true
             });
           }
@@ -36,7 +36,7 @@ test('prioritized plans with selectors Test', (done) => {
     );
   };
   allShouldBeTrue.forEach((_, id) => stressTest(id));
-  planPrioritizedSelectors.dispatch(experimentPlanOptionsIsReady());
+  planPrioritizedSelectors.dispatch(planPrioritizedSelectors.deck.experiment.e.experimentPlanOptionsIsReady());
   setTimeout(() => {
     let trueCount = 0;
     allShouldBeTrue.forEach(b => {

@@ -67,23 +67,13 @@ export function createQualityCard<S extends Record<string, unknown>>(q: {
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): [ActionCreator, ActionType, Quality<S, void>] {
+}): Quality<S, void> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreator = prepareActionCreator(q.type, bucket);
   if (q.methodCreator) {
-    return [
-      actionCreator,
-      q.type,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
-    ];
+    return createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
   }
-  return [
-    actionCreator,
-    q.type,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics)
-  ];
+  return createQuality<S, void>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
 }
 
 export function createQualityCardWithPayload<
@@ -127,8 +117,7 @@ export const quality = {
   defaultReducer,
   nullReducer,
   defaultMethodCreator,
-  create: createQuality,
-  createSet: createQualityCard,
-  createSetWithPayload: createQualityCardWithPayload
+  create: createQualityCard,
+  createWithPayload: createQualityCardWithPayload
 };
 /*#>*/

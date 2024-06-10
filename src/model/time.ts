@@ -10,7 +10,7 @@ import { Concepts } from './concept';
 import { handlePriority, isPriorityValid } from './priority';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleTimedRun = (axiumState: AxiumState, func: (() => Action)[], timed: number) => {
+const handleTimedRun = (axiumState: AxiumState<any, any>, func: (() => Action)[], timed: number) => {
   func.forEach(f => {
     const action = f();
     if (action.type !== 'Conclude') {

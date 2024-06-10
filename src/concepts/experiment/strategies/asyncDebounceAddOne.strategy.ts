@@ -4,19 +4,28 @@ Then when the debounce time expires enacts the counter add one quality.
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { counterAdd } from '../../counter/qualities/add.quality';
+import { Concept } from '../../../model/concept';
+import { Deck } from '../../../model/deck';
+import { CounterDeck } from '../../counter/counter.concept';
+import { ExperimentState } from '../experiment.concept';
 import { experimentAsyncDebounceNextActionNode } from '../qualities/debounceAsyncNextActionNode.quality';
 
+const qs = {experimentAsyncDebounceNextActionNode};
+type ExperimentDeck = {
+  experiment : Concept<ExperimentState, typeof qs>
+}
+export type ExperimentAsyncDebounceStrategyDeck = Deck<CounterDeck & ExperimentDeck>
+
 export const experimentAsyncDebounceAddOneTopic = 'Async debounce add one';
-export function experimentAsyncDebounceAddOneStrategy(): ActionStrategy {
-  const stepTwo = createActionNode(counterAdd(), {
+export function experimentAsyncDebounceAddOneStrategy(deck: ExperimentAsyncDebounceStrategyDeck): ActionStrategy {
+  const stepTwo = createActionNode(deck.counter.e.counterAdd(), {
     successNotes: {
       preposition: '',
       denoter: 'One;',
     },
     agreement: 1000,
   });
-  const stepOne = createActionNode(experimentAsyncDebounceNextActionNode(), {
+  const stepOne = createActionNode(deck.experiment.e.experimentAsyncDebounceNextActionNode(), {
     successNode: stepTwo,
     successNotes: {
       preposition: '',

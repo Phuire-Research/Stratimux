@@ -37,7 +37,8 @@ test('Axium Selector State Slice Test', (done) => {
 });
 
 test('Axium Selector Payload Test', (done) => {
-  const setCount = counterSetCount({newCount: 10 });
+  // For testing purposes only, access actionCreators via the Deck Interface in production.
+  const setCount = counterSetCount.actionCreator({newCount: 10 });
   const payload = selectPayload<CounterSetCountPayload>(setCount);
   expect(payload.newCount).toBe(10);
   done();

@@ -8,8 +8,9 @@ import { Action, AnyAction, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumBadActionPayload } from './qualities/badAction.quality';
+import { getAxiumState } from '../../model/axium';
 
-export const isActionable = (axiumState: AxiumState, action: Action): boolean => {
+export const isActionable = (axiumState: AxiumState<any, any>, action: Action): boolean => {
   let actionable = true;
   // We are logically determining these semaphore values by hand for now.
   if (
@@ -28,7 +29,7 @@ export const isActionable = (axiumState: AxiumState, action: Action): boolean =>
 export const permissiveMode: Mode = (
   [action, concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
 ) => {
-  const axiumState = concepts[0].state as AxiumState;
+  const axiumState = getAxiumState(concepts);
   if (isActionable(axiumState, action)) {
     // Logical Determination: axiumSetBlockingModeType
     if (action.semaphore[3] !== 4) {
@@ -71,7 +72,7 @@ export const permissiveMode: Mode = (
 export const blockingMode: Mode = (
   [action, concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
 ) => {
-  const axiumState = concepts[0].state as AxiumState;
+  const axiumState = getAxiumState(concepts);
   if (isActionable(axiumState, action)) {
     if (action.semaphore[2] === axiumState.generation && action.expiration > Date.now()) {
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;

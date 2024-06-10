@@ -15,7 +15,7 @@ export type AxiumRegisterStagePlannerPayload = {
     conceptName: string;
 }
 
-export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState<unknown>, AxiumRegisterStagePlannerPayload>({
+export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterStagePlannerPayload>({
   type: 'register Stage Planner to Axium\'s Named Stage Planner list',
   reducer: (state, action) => {
     const payload = action.payload;

@@ -16,7 +16,7 @@ export type AxiumSetBlockingModePayload = {
     concepts: Concepts
 }
 
-export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetBlockingModePayload>({
+export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetBlockingModePayload>({
   type: 'set Axium to Blocking Mode',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;

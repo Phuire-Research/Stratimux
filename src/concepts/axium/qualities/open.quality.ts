@@ -14,7 +14,7 @@ export type OpenPayload = {
   open: boolean
 };
 
-export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown>, OpenPayload>({
+export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown, unknown>, OpenPayload>({
   type: 'Open Axium',
   reducer: (state, action) => {
     const {open} = action.payload;

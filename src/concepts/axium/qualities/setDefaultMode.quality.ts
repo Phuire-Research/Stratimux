@@ -14,7 +14,7 @@ export type AxiumSetDefaultModePayload = {
     concepts: Concepts
 }
 
-export const axiumSetDefaultMode = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetDefaultModePayload>({
+export const axiumSetDefaultMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetDefaultModePayload>({
   type: 'set Axium to its current Default Mode Index',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;

@@ -137,14 +137,14 @@ export const stageWaitForOwnershipThenIterate =
     }
   }, { selectors: [ownershipSelectInitialized] }));
 /**
- * Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
+ * <Qualities, Concepts> Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
  * @param stage - (concepts, dispatch) => {}
  * @param selectors - Array of observed dependencies to execute your stage
  * @param priority - Adding this property will change the order in which your plan is notified on each state change
  * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
  * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
  */
-export const createStage = <Q, C>(
+export const createStage = <Q = void, C = void>(
   stage: Stage<Q, C>,
   options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}
 ): Staging<Q, C> => {
@@ -362,7 +362,7 @@ export class UnifiedSubject<Q = void, C = void> extends Subject<Concepts> {
     conceptSemaphore: number
   ): Plan<Q, C> => {
     const stages = planner({
-      d__: accessAxium(this.concepts) as Deck<C>,
+      d__: accessDeck(this.concepts),
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
       c__: [],
       k__: {},
@@ -747,7 +747,7 @@ export class UnifiedSubject<Q = void, C = void> extends Subject<Concepts> {
         conclude: conclude.bind(this)
       },
       // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
-      d: accessDeck<C>(this.concepts),
+      d: accessDeck(this.concepts),
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       c: [],
       k: {},

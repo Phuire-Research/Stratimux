@@ -6,9 +6,15 @@ reached its expiration. Emitting a Strategy Failed if the Action was a Strategy,
 not provided.
 $>*/
 /*<#*/
-import { Action, axiumBadAction, strategyFailed } from '../index';
+import { Action, AnyAction, axiumBadAction, createAction, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+
+const badAction = (payload: {
+  badActions: AnyAction[]
+}) => createAction('Axium received a Bad Action', {
+  payload
+});
 
 export class ActionController extends Subject<[Action<any>, boolean]> {
   expiration: number;
@@ -27,7 +33,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
-        this.next([axiumBadAction({badActions: [this.action]}), true]);
+        this.next([badAction({badActions: [this.action]}), true]);
       }
     } else {
       this.timer = setTimeout(() => {
@@ -38,7 +44,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
             strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
           ), true]);
         } else {
-          this.next([axiumBadAction({badActions: [this.action]}), true]);
+          this.next([badAction({badActions: [this.action]}), true]);
         }
       }, this.expiration - Date.now());
     }

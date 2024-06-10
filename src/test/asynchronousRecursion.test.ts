@@ -6,7 +6,7 @@ $>*/
 import { axiumSelectLastStrategy, axiumSelectLastStrategyData, axiumSelectLastStrategyDialog } from '../concepts/axium/axium.selector';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
-import { experimentRecurseIterateIdQuality } from '../concepts/experiment/qualities/recurseIncrementId.quality';
+import { experimentRecurseIterateId } from '../concepts/experiment/qualities/recurseIncrementId.quality';
 import {
   experimentRecursivelyIterateId,
   experimentRecursivelyIterateIdTopic
@@ -18,13 +18,13 @@ import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner'
 
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
-  const qualities = {experimentRecurseIterateIdQuality};
+  const qualities = {experimentRecurseIterateId};
   const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment async method creator with Concepts', {experiment}, {storeDialog: true});
-  const plan = axium.plan('Experiment debounce add one', ({stage, stageO, ax__}) => [
-    stageO(() => ax__.axiumKickQuality()),
-    stage(({dispatch}) => {
-      dispatch(strategyBegin(experimentRecursivelyIterateId([...list])), {
+  const plan = axium.plan('Experiment debounce add one', ({stage, stageO, e__}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({dispatch, d}) => {
+      dispatch(strategyBegin(experimentRecursivelyIterateId(d, [...list])), {
         iterateStage: true
       });
     }),

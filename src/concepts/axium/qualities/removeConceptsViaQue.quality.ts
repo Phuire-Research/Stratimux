@@ -10,7 +10,7 @@ import { AxiumState } from '../axium.concept';
 import { NamedStagePlanner } from '../../../model/stagePlanner';
 import { createQualityCard } from '../../../model/quality';
 
-export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown>>({
+export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, unknown>>({
   type: 'remove Concepts via Axium\'s Removal Concept Que',
   reducer: (state) => {
     const principleSubscribers = state.methodSubscribers;

@@ -3,14 +3,13 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 And ensure that the semaphore is being set via the Axium for the actions created using said qualities.
 $>*/
 /*<#*/
-import { Axium, createAxium } from '../model/axium';
+import { createAxium } from '../model/axium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 
 test('Quality Actions', (done) => {
-  const [one, two, something] = createQualityCard({
+  const something = createQualityCard({
     type: 'Something',
     reducer: (state) => state
   });
@@ -19,7 +18,7 @@ test('Quality Actions', (done) => {
   };
 
   const initialState = {};
-  const [_, __, some] = createQualityCardWithPayload<typeof initialState, payload>({
+  const some = createQualityCardWithPayload<typeof initialState, payload>({
     type: 'Some',
     reducer: (state) => state
   });
@@ -42,11 +41,11 @@ test('Quality Actions', (done) => {
     return actions.something();
   };
   const c = createConcept<typeof initialState, typeof qs>('Some', initialState, qs, [
-    ({a_}) => {
-      console.log('HIT PRINCIPLE', a_.some({
+    ({e_}) => {
+      console.log('HIT PRINCIPLE', e_.some({
         here: 2
       }));
-      expect(a_.something().type).toBe('Something');
+      expect(e_.something().type).toBe('Something');
     }
   ]);
   c.actions.something;
@@ -60,10 +59,10 @@ test('Quality Actions', (done) => {
   const axium = createAxium('Quality Actions', {
     someConcept: c
   });
-  const p = axium.plan('outer plan', ({ax__, stage, stageO}) => [
-    stageO(() => ax__.axiumKickQuality()),
-    stage(({ax, stagePlanner}) => {
-      const log = ax.axiumLogQuality();
+  const p = axium.plan('outer plan', ({e__, stage, stageO}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({e, stagePlanner}) => {
+      const log = e.axiumLog();
       console.log('CHECK LOG', log);
       stagePlanner.conclude();
       done();

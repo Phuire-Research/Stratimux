@@ -16,7 +16,7 @@ export type AxiumRegisterTimeOutPayload = {
   timeOut: number
 }
 
-export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown>, AxiumRegisterTimeOutPayload>({
+export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>({
   type: 'register an Action to Axium\'s timerLedger',
   reducer: defaultReducer,
   methodCreator: () => createMethodWithConcepts((action, concepts) => {

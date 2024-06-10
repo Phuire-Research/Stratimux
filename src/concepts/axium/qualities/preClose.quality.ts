@@ -13,7 +13,7 @@ import { createQualityCardWithPayload } from '../../../model/quality';
 export type AxiumPreClosePayload = {
   exit: boolean
 };
-export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown>, AxiumPreClosePayload>({
+export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumPreClosePayload>({
   type: 'Prepare Close Axium',
   reducer: (state, action) => ({
     ...state,

@@ -4,25 +4,30 @@ BeatSelectorChanges count variants for 100 steps.
 $>*/
 /*<#*/
 import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { beatSelectorChangesAddToCountOne } from '../qualities/addToCountOne.quality';
-import { beatSelectorChangesAddToCountThree } from '../qualities/addToCountThree.quality';
-import { beatSelectorChangesAddToCountTwo } from '../qualities/addToCountTwo.quality';
-import { beatSelectorChangesAddToCountFour } from '../qualities/addToCountFour.quality';
-import { beatSelectorChangesAddToCountFive } from '../qualities/addToCountFive.quality';
-import { beatSelectorChangesAddToCountSix } from '../qualities/addToCountSix.quality';
-import { beatSelectorChangesAddToCountSeven } from '../qualities/addToCountSeven.quality';
+import { AxiumDeck } from '../../../model/axium';
+import { Deck } from '../../../model/deck';
+import { BeatSelectorChangesDeck } from '../beatSelectorChanges.concept';
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export const generateRandomCountingStrategy = (): [
+export const generateRandomCountingStrategy = (deck: Deck<AxiumDeck & BeatSelectorChangesDeck>): [
   [number, number, number, number, number, number, number],
   ActionStrategy,
   string
 ] => {
   const steps = 100;
   const variantTally = new Array(7).fill(0) as [number, number, number, number, number, number, number];
+  const {
+    beatSelectorChangesAddToCountOne,
+    beatSelectorChangesAddToCountTwo,
+    beatSelectorChangesAddToCountThree,
+    beatSelectorChangesAddToCountFour,
+    beatSelectorChangesAddToCountFive,
+    beatSelectorChangesAddToCountSix,
+    beatSelectorChangesAddToCountSeven,
+  } = deck.beatSelectors.e;
   const variants = [
     beatSelectorChangesAddToCountOne,
     beatSelectorChangesAddToCountTwo,

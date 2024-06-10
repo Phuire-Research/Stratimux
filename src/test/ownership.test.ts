@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
 $>*/
 /*<#*/
-import { createAxium  } from '../model/axium';
+import { createAxium, getAxiumState  } from '../model/axium';
 import { ConceptDeck, Concepts } from '../model/concept';
 import { selectConcept, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
@@ -13,19 +13,19 @@ import { createExperimentState, createExperimentConcept } from '../concepts/expe
 import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import {
-  experimentPrimedCountingStrategy,
+  experimentCountingStrategy,
   experimentCountingTopic,
-  experimentPrimedCountingTopic
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
 import { axiumLog } from '../concepts/axium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { experimentCheckInStrategyQuality } from '../concepts/experiment/qualities/checkInStrategy.quality';
+import { experimentCheckInStrategy } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrincipleCreator } from '../concepts/experiment/experiment.principle';
+import { additionalCountingStrategyTopic } from '../concepts/counter/strategies/counting.strategy';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
-  const qualities = {experimentCheckInStrategyQuality};
+  const qualities = {experimentCheckInStrategy};
   const deck = {
     ownership: createOwnershipConcept(),
     counter: createCounterConcept(),
@@ -34,8 +34,8 @@ test('Ownership Test', (done) => {
   const axium = createAxium<typeof deck>('ownershipTest', deck, {logging: true, storeDialog: true});
   const plan = axium.plan(
     'Testing Ownership Staging', ({stage}) => [
-      stage(({concepts, dispatch}) => {
-        const axiumState = concepts[0].state as AxiumState;
+      stage(({stagePlanner, concepts, dispatch, d}) => {
+        const axiumState = getAxiumState(concepts);
         console.log(axiumState.lastStrategy);
         if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(concepts, ownershipName);
@@ -46,36 +46,43 @@ test('Ownership Test', (done) => {
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
             //    Via its principle, to simulate an action moving off premise.
-            dispatch(strategyBegin(experimentPuntCountingStrategy()), {
-              iterateStage: true
-            });
+            const str = experimentPuntCountingStrategy(d);
+            if (str) {
+              dispatch(strategyBegin(str), {
+                iterateStage: true
+              });
+            } else {
+              stagePlanner.conclude();
+              expect(false).toBe(true);
+              setTimeout(() => {done();}, 500);
+            }
           }
         }
       }),
       // Comment out if testing log and the halting quality of the Unified Turing Machine.
-      stage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch, d}) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 2', ownership.ownershipLedger, ownership.pendingActions);
           console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
-          dispatch(counterSetCount({newCount: 1000}, {agreement: 7000} ), { iterateStage: true});
+          dispatch(d.counter.e.counterSetCount({newCount: 1000}, {agreement: 7000} ), { iterateStage: true});
         }
       }),
-      stage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch, d}) => {
         const ownership = selectState<OwnershipState>(concepts, ownershipName);
         if (ownership) {
           console.log('Stage 3', ownership.ownershipLedger, ownership.pendingActions);
           console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           const counter = selectState<CounterState>(concepts, counterName);
           console.log('Count: ', counter?.count);
-          dispatch(strategyBegin(experimentPrimedCountingStrategy(concepts)), {
+          dispatch(strategyBegin(experimentCountingStrategy(d)), {
             iterateStage: true
           });
         }
       }),
-      stage(({concepts, dispatch}) => {
-        const axiumState = concepts[0].state as AxiumState;
+      stage(({concepts, dispatch, e}) => {
+        const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         if (counter) {
           console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(concepts, ownershipName)?.state);
@@ -90,14 +97,12 @@ test('Ownership Test', (done) => {
             // setTimeout(() => {done();}, 1000);
             plan.conclude();
           } else if (
-            (axiumState.lastStrategy === experimentCountingTopic ||
-            axiumState.lastStrategy === experimentPrimedCountingTopic) &&
+            (axiumState.lastStrategy === experimentCountingTopic || axiumState.lastStrategy === additionalCountingStrategyTopic) &&
             orderOfTopics.length === 0) {
             console.log('Stage 3, If #1 | Count: ', counter.count);
             orderOfTopics.push(axiumState.lastStrategy);
           } else if (
-            (axiumState.lastStrategy === experimentCountingTopic ||
-            axiumState.lastStrategy === experimentPrimedCountingTopic) &&
+            (axiumState.lastStrategy === experimentCountingTopic || axiumState.lastStrategy === additionalCountingStrategyTopic) &&
             orderOfTopics.length === 1) {
             if (orderOfTopics[0] !== axiumState.lastStrategy) {
               console.log('Stage 3, If #2 | Count: ', counter.count);
@@ -109,7 +114,7 @@ test('Ownership Test', (done) => {
               //    Then enabling the axiumLog dispatch will allow the test to conclude.
               //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
               //      This proves Stratimux as a Unified Turing Machine and this configuration Halting Complete.
-              dispatch(axiumLog(), {
+              dispatch(e.axiumLog(), {
                 runOnce: true
               });
             }
@@ -120,7 +125,7 @@ test('Ownership Test', (done) => {
   const sub = axium.subscribe((concepts: Concepts) => {
     const state = selectState<OwnershipState>(concepts, ownershipName);
     if (state) {
-      const _axiumState = concepts[0].state as AxiumState;
+      const _axiumState = getAxiumState(concepts);
       if (state.initialized && _axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
         expect(state.initialized).toBe(true);
       }

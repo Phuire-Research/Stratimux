@@ -19,7 +19,7 @@ export type AxiumInitializePrinciplesPayload = {
 }
 
 export const axiumInitializePrinciples =
-  createQualityCardWithPayload<AxiumState<AxiumDeck>, AxiumInitializePrinciplesPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumInitializePrinciplesPayload>({
     type: 'initialize Principles and set new Subscribers to General Subscribers list',
     reducer: (state, act) => {
       const payload = act.payload;
@@ -31,8 +31,8 @@ export const axiumInitializePrinciples =
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === axiumName && concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<AxiumQualities, AxiumDeck>(
-              principle as PrincipleFunction<AxiumQualities, AxiumDeck>,
+            const observable = createPrinciple$<unknown, unknown>(
+              principle as PrincipleFunction<unknown, unknown>,
               concepts,
               state.concepts$.innerPlan.bind(concepts$) as Planning<any, any>,
               state.concepts$.subscribe.bind(concepts$),
@@ -52,7 +52,7 @@ export const axiumInitializePrinciples =
           conceptCounter += 1;
         } else if (concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<typeof concept.q, AxiumDeck>(
+            const observable = createPrinciple$<any, any>(
               principle,
               concepts,
               concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any, any>,

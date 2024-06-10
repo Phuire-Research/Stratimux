@@ -1,9 +1,8 @@
 import { createAxium, getAxiumState } from '../../model/axium';
 import { strategyBegin } from '../../model/actionStrategy';
 import { selectState } from '../../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 
 test('Axium Counting Strategy Test', (done) => {
@@ -15,10 +14,10 @@ test('Axium Counting Strategy Test', (done) => {
   const repeat = 10;
   let steps = 0;
   const plan = axium.plan('Counting Strategy Stage',
-    () => [
-      stageWaitForOpenThenIterate(() => axiumKick()),
-      createStage(({dispatch}) => {
-        const [shouldBe, strategy] = generateRandomCountingStrategy(count);
+    ({e__}) => [
+      stageWaitForOpenThenIterate(() => e__.axiumKick()),
+      createStage(({dispatch, d}) => {
+        const [shouldBe, strategy] = generateRandomCountingStrategy(d, count);
         strategyTopic = strategy.topic;
         expectedOutput = shouldBe;
         totalExpected += expectedOutput;
@@ -28,7 +27,7 @@ test('Axium Counting Strategy Test', (done) => {
           throttle: 1
         });
       }),
-      createStage(({concepts, dispatch}) => {
+      createStage(({concepts, dispatch, e}) => {
         const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('HIT, AX', axiumState.lastStrategy);
@@ -41,7 +40,7 @@ test('Axium Counting Strategy Test', (done) => {
             steps++;
             count = counter.count;
             console.log('KICK');
-            dispatch(axiumKick(), {
+            dispatch(e.axiumKick(), {
               setStage: 1,
               throttle: 1
             });

@@ -45,10 +45,10 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   selectors: KeyedSelectors;
   typeValidators: IsT[]
   qualities: Quality<Record<string, unknown>>[];
-  q: T extends void ?
-    Record<string, unknown>
+  q: T extends Record<string, unknown> ?
+    T
     :
-    T;
+    Record<string, unknown>;
   semaphore: number;
   principles?: PrincipleFunction<T, any>[];
   mode?: Mode[];
@@ -114,7 +114,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     selectors: {},
     typeValidators: [],
     qualities: qualities ? qualities : [],
-    q: (_qualities ? _qualities : {}),
+    q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
     semaphore: -1,
     principles,
     mode,

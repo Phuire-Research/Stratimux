@@ -4,14 +4,9 @@ $>*/
 /*<#*/
 import { createAxium } from '../model/axium';
 import { Concepts } from '../model/concept';
-import { primeAction } from '../model/action';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { ChainState, chainName, createChainConcept } from '../concepts/chain/chain.concept';
-import { chainPrepareChain } from '../concepts/chain/qualities/prepareChain.quality';
-import { counterAdd } from '../concepts/counter/qualities/add.quality';
-import { counterSubtract } from '../concepts/counter/qualities/subtract.quality';
-import { chainEnd } from '../concepts/chain/qualities/chainEnd.quality';
 
 test('Axium Test', (done) => {
   const axium = createAxium('chainConceptTest',
@@ -25,23 +20,22 @@ test('Axium Test', (done) => {
     count++;
     if (willDispatch) {
       willDispatch = false;
-      const primedAdd = primeAction(concepts, counterAdd());
-      const primedSubtract = primeAction(concepts, counterSubtract());
-      const primedEnd = primeAction(concepts, chainEnd());
-      const primedPrepareChain =
-      primeAction(concepts,
-        chainPrepareChain({
+      const add = axium.deck.counter.e.counterAdd();
+      const subtract = axium.deck.counter.e.counterSubtract();
+      const end = axium.deck.chain.e.chainEnd();
+      const prepareChain =
+        axium.deck.chain.e.chainPrepareChain({
           actions: [
-            primedAdd,
-            primedAdd,
-            primedSubtract,
-            primedAdd,
-            primedSubtract,
-            primedAdd,
-            primedEnd
+            add,
+            add,
+            subtract,
+            add,
+            subtract,
+            add,
+            end
           ]
-        }));
-      axium.dispatch(primedPrepareChain);
+        });
+      axium.dispatch(prepareChain);
     }
     else if (selectState<ChainState>(concepts, chainName)?.end) {
       const counter = selectState<CounterState>(concepts, counterName);

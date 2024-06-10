@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the axium can properly remove concepts from its current load.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { createAxium, getAxiumState } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import {
@@ -19,20 +19,20 @@ test('Axium remove Concepts Strategy Test', (done) => {
     { counter: createCounterConcept() },
     { logging: true, storeDialog: true, dynamic: true }
   );
-  const plan = axium.plan('Remove Concepts Stage', ({stage, stageO}) => [
-    stageO(() => axiumKick()),
-    stage(({concepts, dispatch, ax}) => {
+  const plan = axium.plan('Remove Concepts Stage', ({stage, stageO, e__}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({concepts, dispatch, e}) => {
       console.log('REMOVE');
       dispatch(
         strategyBegin(
-          addConceptsToRemovalQueThenBlockStrategy(ax, concepts,[createCounterConcept()])
+          addConceptsToRemovalQueThenBlockStrategy(e, concepts,[createCounterConcept()])
         ), {
           iterateStage: true
         }
       );
     }),
     stage(({concepts}) => {
-      const axiumState = concepts[0].state as AxiumState;
+      const axiumState = getAxiumState(concepts);
       console.log('VERIFY', axiumState.lastStrategy);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;

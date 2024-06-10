@@ -1,12 +1,20 @@
 import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../model/actionStrategy';
-import { counterAdd, counterAddType } from '../../concepts/counter/qualities/add.quality';
-import { counterSubtract } from '../../concepts/counter/qualities/subtract.quality';
+import { Deck } from '../../model/deck';
+import { CounterDeck } from '../../concepts/counter/counter.concept';
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export const generateRandomCountingStrategy = (count: number): [number, ActionStrategy] => {
+export type GenerateRandomCountingStrategyDeck = Deck<CounterDeck>;
+
+export const generateRandomCountingStrategy = (deck: GenerateRandomCountingStrategyDeck,  count: number): [number, ActionStrategy] => {
+  const {
+    counterAdd,
+    counterSubtract
+  } = deck.counter.e;
+  // [TODO] Add deck.c for Comparator
+  const counterAddType = counterAdd().type;
   const length = Math.round(getRandomRange(1, 20));
   let numPos = 0;
   let numNeg = 0;

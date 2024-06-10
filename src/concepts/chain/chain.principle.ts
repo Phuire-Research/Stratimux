@@ -12,14 +12,15 @@ import { ChainQualities, ChainState, chainName } from './chain.concept';
 import { selectUnifiedState } from '../../model/selector';
 import { AxiumState } from '../axium/axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
+import { AxiumDeck } from '../../model/axium';
 
-export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
+export const chainPrinciple: PrincipleFunction<ChainQualities, AxiumDeck> = ({
   observer,
   subscribe,
-  ax_,
   nextC,
   nextA,
-  conceptSemaphore
+  conceptSemaphore,
+  d_
 }) => {
   const subscription = subscribe((concepts: Concepts) => {
     const chainState = selectUnifiedState<ChainState>(concepts, conceptSemaphore);
@@ -31,6 +32,6 @@ export const chainPrinciple: PrincipleFunction<ChainQualities> = ({
       nextA(nextAction);
     }
   });
-  registerPrincipleSubscription(observer, ax_, chainName, subscription);
+  registerPrincipleSubscription(observer, d_, chainName, subscription);
 };
 /*#>*/

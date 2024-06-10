@@ -15,7 +15,7 @@ export type AxiumClearBadActionTypeFromBadActionListPayload = {
 };
 
 export const axiumClearBadActionTypeFromBadActionList =
-  createQualityCardWithPayload<AxiumState<unknown>, AxiumClearBadActionTypeFromBadActionListPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadActionTypeFromBadActionListPayload>({
     type: 'clear ActionType from Axium\'s badAction list',
     reducer: (state, action) => {
       const {actionType} = action.payload;

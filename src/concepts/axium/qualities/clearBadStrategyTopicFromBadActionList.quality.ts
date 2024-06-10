@@ -13,7 +13,7 @@ export type AxiumClearBadStrategyTopicFromBadActionListPayload = {
   topic: string
 };
 export const axiumClearBadStrategyTopicFromBadActionList =
-  createQualityCardWithPayload<AxiumState<unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
     type: 'clear Strategy Topic from Axium\'s badAction list',
     reducer: (state, action) => {
       const {topic} = action.payload;

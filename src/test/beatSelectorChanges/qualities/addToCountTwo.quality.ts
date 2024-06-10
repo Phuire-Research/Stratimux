@@ -7,11 +7,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { BeatSelectorChangesState } from '../beatSelectorChanges.concept';
 import { createQualityCard } from '../../../model/quality';
 
-export const [
-  beatSelectorChangesAddToCountTwo,
-  beatSelectorChangesAddToCountTwoType,
-  beatSelectorChangesAddToCountTwoQuality
-] = createQualityCard({
+export const beatSelectorChangesAddToCountTwo = createQualityCard({
   type: 'BeatSelectorChanges AddToCountTwo',
   reducer: (state: BeatSelectorChangesState) => {
     return {

@@ -216,17 +216,17 @@ export type AxiumDeck = {
 
 export type BaseDeck = Deck<AxiumDeck>;
 
-export function createAxium<C extends Record<string, unknown>>(
+export function createAxium<C extends Record<string, Concept<any, any>>>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deckLoad: ConceptDeck<C>,
+  deckLoad: C,
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
     logActionStream?: boolean,
     dynamic?: boolean,
   }
-): Axium<AxiumQualities, AxiumDeck & C> {
+): Axium<AxiumQualities, AxiumDeck & typeof deckLoad> {
   const concepts: Concepts = {
     0: createAxiumConcept(
       name,
@@ -364,7 +364,8 @@ export function createAxium<C extends Record<string, unknown>>(
       action$.next(action);
     },
     plan: axiumState.concepts$.outerPlan,
-    deck
+    deck,
+    e: deck.axium.e
   };
 }
 
@@ -375,7 +376,8 @@ export type Axium<Q extends Record<string, unknown>, C extends Record<string, un
   close: (exit?: boolean) => void;
   dispatch: (action: Action<any>) => void;
   plan: Planning<Q, C>;
-  deck: Deck<C>
+  deck: Deck<C>,
+  e: Actions<AxiumQualities>
 }
 
 export const getAxiumState = <Q = void, C = void>(concepts: Concepts) => (

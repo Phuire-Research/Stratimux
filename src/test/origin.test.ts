@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { createAction } from '../model/action';
-import { counterAdd, counterAddQuality, counterAddType } from '../concepts/counter/qualities/add.quality';
+import { counterAdd } from '../concepts/counter/qualities/add.quality';
 import { createAxium, createOrigin, getAxiumState } from '../model/axium';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { CounterState } from '../concepts/counter/counter.concept';
-import { counterSetCount, counterSetCountQuality } from '../concepts/counter/qualities/setCount.quality';
+import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { KeyedSelector, createUnifiedKeyedSelector, selectState, selectUnifiedState } from '../model/selector';
@@ -24,8 +24,8 @@ test('Test Dispatch Override', (done) => {
   let finalDispatchedSet = -1;
   let finalCount = -1;
   const experimentCounterQualities = {
-    counterAddQuality,
-    counterSetCountQuality
+    counterAdd,
+    counterSetCount
   };
   type ExperimentCounterQualities = typeof experimentCounterQualities;
   const axium = createAxium('Override actions based on Plan and Stage', {experiment: createExperimentConcept<ExperimentCounterQualities>({
@@ -37,33 +37,31 @@ test('Test Dispatch Override', (done) => {
         body
       } = getAxiumState(concepts_);
       const stageName = 'Test Override';
-      const planTestOverride = plan(stageName, ({stage, stageO, ax__}) => [
-        stageO(() => {
-          return ax__.axiumKickQuality();
-        }),
-        stage(({dispatch}) => {
-          new Array(10).fill('').forEach(() => body.push(counterAdd()));
-          body.push(counterSetCount({
+      const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
+        stageO(() => d__.axium.e.axiumKick()),
+        stage(({dispatch, e, d}) => {
+          new Array(10).fill('').forEach(() => body.push(e.counterAdd()));
+          body.push(e.counterSetCount({
             newCount: Infinity
           }, {
             origin: createOrigin([stageName, 3])
           }));
-          dispatch(counterAdd(), {
+          dispatch(e.counterAdd(), {
             iterateStage: true
           });
         }),
-        stage(({concepts, dispatch, ax}) => {
+        stage(({concepts, dispatch, d, e}) => {
           const count = selectState<CounterState>(concepts, experimentName)?.count;
           let exists = false;
           getAxiumState(concepts).body.forEach(a => {
-            if (a.type === counterAddType) {
+            if (a.type === e.counterAdd().type) {
               exists = true;
             }
           });
           if (exists) {
             const newCount = count !== undefined ? count  * 2 : 0;
             finalDispatchedSet = newCount;
-            dispatch(counterSetCount({
+            dispatch(e.counterSetCount({
               newCount
             }), {
               // iterateStage: true,
@@ -71,7 +69,7 @@ test('Test Dispatch Override', (done) => {
               override: true,
             });
           } else {
-            dispatch(ax.axiumKickQuality(), {
+            dispatch(d.axium.e.axiumKick(), {
               iterateStage: true
             });
           }

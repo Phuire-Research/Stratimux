@@ -13,7 +13,7 @@ import { AxiumState } from '../axium.concept';
 export type AxiumBadActionPayload = {
   badActions: AnyAction[],
 }
-export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown>, AxiumBadActionPayload>({
+export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumBadActionPayload>({
   type: 'Axium received a Bad Action',
   reducer: (state, action) => {
     const payload = action.payload.badActions;

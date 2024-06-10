@@ -15,10 +15,10 @@ test('Mixed Plan Options Test', (done) => {
   });
   const allShouldBeTrue = [false, false, false, false, false, false, false, false];
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE One');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -44,10 +44,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Two');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -58,10 +58,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Three');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -72,10 +72,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Four');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -86,10 +86,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Five');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -100,10 +100,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Six');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -114,10 +114,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Seven');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -128,10 +128,10 @@ test('Mixed Plan Options Test', (done) => {
     })
   ]);
   planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Eight');
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true
         });
       }
@@ -141,6 +141,6 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[7] = true;
     })
   ]);
-  planMixedPlanOptions.dispatch(experimentPlanOptionsIsReady());
+  planMixedPlanOptions.dispatch(planMixedPlanOptions.deck.experiment.e.experimentPlanOptionsIsReady());
 });
 /*#>*/

@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 In addition utilize the onChange detection feature for the UnifiedSubject is working as intended.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { createAxium, getAxiumState } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
@@ -24,20 +24,27 @@ test('Axium onChange Test', (done) => {
   const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan with selectors',
     ({stage}) => [
-      stage(({concepts, dispatch}) => {
+      stage(({stagePlanner, concepts, dispatch, d}) => {
         console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
-          dispatch(strategyBegin(countingStrategy()), {
-            iterateStage: true
-          });
+          const str = countingStrategy(d);
+          if (str) {
+            dispatch(strategyBegin(str), {
+              iterateStage: true
+            });
+          } else {
+            stagePlanner.conclude();
+            expect(true).toBe(false);
+            setTimeout(() => done(), 50);
+          }
         }
       }, {selectors: [axiumSelectLastStrategy]}),
-      stage(({concepts, dispatch, changes}) => {
+      stage(({concepts, dispatch, changes, e}) => {
         console.log('Check Changes: ',  changes);
         changes?.forEach(keyed => {
           selectorRouter[keyed.keys] ? selectorRouter[keyed.keys](concepts) : null;
         });
-        const axiumState = concepts[0].state as AxiumState;
+        const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         if (axiumState.lastStrategy === countingTopic) {
           expect(counter?.count).toBe(1);
@@ -45,7 +52,7 @@ test('Axium onChange Test', (done) => {
           plan.conclude();
           axium.close();
         } else {
-          dispatch(axiumKick(), {
+          dispatch(e.axiumKick(), {
             newSelectors: [counterSelectCount, axiumSelectLastStrategy],
             throttle: 0
           });

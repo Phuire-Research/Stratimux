@@ -63,8 +63,8 @@ test('Axium advanced usage: StrategyStitch', (done) => {
   setTimeout(() => {
     const axium = createAxium('Test advanced usage', {counter: createCounterConcept()});
     const strategy = yourComposingStrategy(yourStrategyStitch);
-    const plan = axium.plan('Test Stitch', ({ax__, stage, stageO}) => [
-      stageO(() => ax__.axiumKickQuality()),
+    const plan = axium.plan('Test Stitch', ({e__, stage, stageO}) => [
+      stageO(() => e__.axiumKick()),
       stage(({dispatch}) => {
         dispatch(strategyBegin(strategy), {
           iterateStage: true

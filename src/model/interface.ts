@@ -4,6 +4,7 @@ $>*/
 
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
+import { AxiumDeck } from './axium';
 import { Deck } from './deck';
 import { KeyedSelectors } from './selector';
 
@@ -40,7 +41,7 @@ export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action)
  */
 export type UInterface<Q = void, C = void> = {
   // Deck
-  d: Deck<C>
+  d: Deck<C extends void ? AxiumDeck : C>
   // Entry Actions
   e: Actions<Q>
   // Comparators
@@ -56,7 +57,7 @@ export type UInterface<Q = void, C = void> = {
  * Limited by a whitelist provided by some access property supplied to the Axium
  */
 export type OInterface<Q = void, C = void> = {
-  d: Deck<C>
+  d: Deck<C extends void ? AxiumDeck : C>
   e: Actions<Q>
   c: IsT[]
   k: KeyedSelectors
@@ -66,7 +67,7 @@ export type OInterface<Q = void, C = void> = {
  * Higher Order Interface
  */
 export type HInterface<Q = void, C = void> = {
-  d__: Deck<C>
+  d__: Deck<C extends void ? AxiumDeck : C>
   e__: Actions<Q>
   c__: IsT[]
   k__: KeyedSelectors
@@ -76,7 +77,7 @@ export type HInterface<Q = void, C = void> = {
  * Base Interface
  */
 export type BInterface<Q = void, C = void> = {
-  d_: Deck<C>,
+  d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<Q>
   c_: IsT[]
   k_: KeyedSelectors

@@ -8,8 +8,8 @@ $>*/
 import { Action } from '../../index';
 import { createConcept } from '../../model/concept';
 import { chainPrinciple } from './chain.principle';
-import { chainEndQuality } from './qualities/chainEnd.quality';
-import { chainPrepareChainQuality } from './qualities/prepareChain.quality';
+import { chainEnd } from './qualities/chainEnd.quality';
+import { chainPrepareChain } from './qualities/prepareChain.quality';
 
 export type ChainState = {
   actionQue: Action[];
@@ -24,8 +24,8 @@ const initialChainState: ChainState = {
 };
 
 const chainQualities = {
-  chainPrepareChainQuality,
-  chainEndQuality
+  chainPrepareChain,
+  chainEnd
 };
 
 export type ChainQualities = typeof chainQualities;

@@ -15,19 +15,20 @@ import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { handlePriority } from '../model/priority';
 
 test('Axium Counting Strategy Priority Test', (done) => {
+  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+  const deck = axium.deck;
   const concluded = [false, false, false];
-  const [count1, strategy1] = generateRandomCountingStrategy(0);
+  const [count1, strategy1] = generateRandomCountingStrategy(deck, 0);
   strategy1.topic += 1;
   strategy1.priority = 100;
-  const [count2, strategy2] = generateRandomCountingStrategy(0);
+  const [count2, strategy2] = generateRandomCountingStrategy(deck, 0);
   strategy1.topic += 2;
-  const [count3, strategy3] = generateRandomCountingStrategy(0);
+  const [count3, strategy3] = generateRandomCountingStrategy(deck, 0);
   strategy3.priority = 50;
   strategy1.topic += 3;
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy with Priority Plan',
     ({stage}) => [
-      stage(({concepts, dispatch}) => {
+      stage(({concepts, dispatch, d}) => {
         if (isAxiumOpen(concepts)) {
           handlePriority(getAxiumState(concepts), strategyBegin(strategy1));
           handlePriority(getAxiumState(concepts), strategyBegin(strategy2));
@@ -35,13 +36,13 @@ test('Axium Counting Strategy Priority Test', (done) => {
           console.log('COUNT ONE STRATEGY OUTCOME: ', count1);
           console.log('COUNT TWO STRATEGY OUTCOME: ', count2);
           console.log('COUNT THREE STRATEGY OUTCOME: ', count3);
-          dispatch(axiumKick(), {
+          dispatch(d.axium.e.axiumKick(), {
             iterateStage: true
           });
         }
       }),
       stage(({concepts}) => {
-        const axiumState = concepts[0].state as AxiumState;
+        const axiumState = getAxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         // console.log('CHECK COUNT', counter, 'HEAD', axiumState.head, 'BODY', axiumState.body, 'TAIL', axiumState.tail);
         if (axiumState.lastStrategy === strategy1.topic && !concluded[0]) {

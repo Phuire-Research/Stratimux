@@ -13,23 +13,20 @@ export type ExperimentPlanOptionsAddValuePayload = {
   newValue: number
 };
 
-export const [
-  experimentPlanOptionsAddValue,
-  experimentPlanOptionsAddValueType,
-  experimentPlanOptionsAddValueQuality
-] = quality.createSetWithPayload<ExperimentPlanOptionsState, ExperimentPlanOptionsAddValuePayload>({
-  type: 'experimentPlanOptions Add value',
-  reducer: (state, action) => {
-    const { newValue } = action.payload;
-    if (newValue) {
+export const experimentPlanOptionsAddValue =
+  quality.createWithPayload<ExperimentPlanOptionsState, ExperimentPlanOptionsAddValuePayload>({
+    type: 'experimentPlanOptions Add value',
+    reducer: (state, action) => {
+      const { newValue } = action.payload;
+      if (newValue) {
+        return {
+          ...state,
+          value: newValue + state.value
+        };
+      }
       return {
         ...state,
-        value: newValue + state.value
       };
-    }
-    return {
-      ...state,
-    };
-  },
-});
+    },
+  });
 /*#>*/

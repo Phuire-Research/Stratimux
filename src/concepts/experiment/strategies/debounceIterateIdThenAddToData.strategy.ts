@@ -4,13 +4,27 @@ then debounce notify the Axium of its conclusion while appending the ID to its d
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { Concept } from '../../../model/concept';
+import { Deck } from '../../../model/deck';
+import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceIterateIdThenReceiveInMethod } from '../qualities/debounceIterateIdThenReceiveInMethod.quality';
 
+const qs = {experimentDebounceIterateIdThenReceiveInMethod};
+type ExperimentDeck = {
+  experiment : Concept<ExperimentState, typeof qs>
+}
+export type ExperimentDebounceAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck>
+
 export const experimentDebounceIterateIdThenAddToDataTopic = 'Debounce iterate experiment ID then add to strategy data';
-export function experimentDebounceIterateIdThenAddToData(setId: number): ActionStrategy {
+export function experimentDebounceIterateIdThenAddToData(
+  deck: ExperimentDebounceAsyncIterateIdThenAddToDataDeck,
+  setId: number
+): ActionStrategy {
   return createStrategy({
     topic: experimentDebounceIterateIdThenAddToDataTopic,
-    initialNode: createActionNode(experimentDebounceIterateIdThenReceiveInMethod({setId}))
+    initialNode: createActionNode(deck.experiment.e.experimentDebounceIterateIdThenReceiveInMethod({
+      setId
+    }))
   });
 }
 /*#>*/

@@ -10,11 +10,8 @@ $>*/
 import { createAxium } from '../model/axium';
 import { selectSlice, selectState } from '../model/selector';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
-import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { counterAdd } from '../concepts/counter/qualities/add.quality';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
+import { createStage } from '../model/stagePlanner';
 jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
@@ -23,9 +20,9 @@ test('Stage Planner Beat Test', (done) => {
     counter: createCounterConcept()
   }, {logging: true, storeDialog: true});
   const beat = 105;
-  const plan = axium.plan('Stage Planner Beat Test', ({stage, stageO}) => [
-    stageO(() => axiumKick()),
-    stage(({concepts, dispatch}) => {
+  const plan = axium.plan('Stage Planner Beat Test', ({stage, stageO, e__}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({concepts, dispatch, e}) => {
       console.log('HIT 1');
       timerActive = true;
       setTimeout(() => {
@@ -33,31 +30,31 @@ test('Stage Planner Beat Test', (done) => {
         timerActive = false;
       }, 1000);
       if (selectSlice(concepts, axiumSelectOpen)) {
-        dispatch(axiumKick(), {
+        dispatch(e.axiumKick(), {
           iterateStage: true,
         });
       }
     }, {beat}),
-    stage(({dispatch}) => {
+    stage(({dispatch, d}) => {
       console.log('HIT 2');
-      dispatch(counterAdd(), {
+      dispatch(d.counter.e.counterAdd(), {
         iterateStage: true
       });
     }, {beat}),
-    stage(({concepts, dispatch}) => {
+    stage(({concepts, dispatch, d, e}) => {
       // console.log('HIT 3', timerActive, selectState<CounterState>(concepts, counterName));
       if (!timerActive) {
         const state = selectState<CounterState>(concepts, counterName);
         if (state) {
           expect(state.count).toBe(9);
           setTimeout(() => done(), 1000);
-          dispatch(axiumPreClose({exit: false}), {
+          dispatch(e.axiumPreClose({exit: false}), {
             iterateStage: true
           });
           plan.conclude();
         }
       } else {
-        dispatch(counterAdd(), {
+        dispatch(d.counter.e.counterAdd(), {
           throttle: 1
         });
       }

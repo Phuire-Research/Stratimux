@@ -153,47 +153,40 @@ export {
   axium_createStitchNode
 } from './concepts/axium/model/stitch.model';
 // Qualities
-export { axiumKick, axiumKickType } from './concepts/axium/qualities/kick.quality';
+export { axiumKick } from './concepts/axium/qualities/kick.quality';
 export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
-export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
-export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
-export { axiumStitch, axiumStitchType } from './concepts/axium/qualities/stitch.quality';
-export { axiumPreClose, axiumPreCloseType, AxiumPreClosePayload } from './concepts/axium/qualities/preClose.quality';
-export { axiumBadAction, axiumBadActionType } from './concepts/axium/qualities/badAction.quality';
-export { axiumSetMode, axiumSetModeType, AxiumSetModePayload } from './concepts/axium/qualities/setMode.quality';
+export { axiumOpen } from './concepts/axium/qualities/open.quality';
+export { axiumLog } from './concepts/axium/qualities/log.quality';
+export { axiumStitch } from './concepts/axium/qualities/stitch.quality';
+export { axiumPreClose, AxiumPreClosePayload } from './concepts/axium/qualities/preClose.quality';
+export { axiumBadAction } from './concepts/axium/qualities/badAction.quality';
+export { axiumSetMode, AxiumSetModePayload } from './concepts/axium/qualities/setMode.quality';
 export {
   axiumSetDefaultModeIndex,
-  axiumSetDefaultModeIndexType,
   AxiumSetDefaultModeIndexPayload
 } from './concepts/axium/qualities/setDefaultModeIndex.quality';
 export {
   axiumRegisterSubscriber,
   AxiumRegisterSubscriberPayload,
-  axiumRegisterSubscriberType
 } from './concepts/axium/qualities/registerSubscription.quality';
 export {
   axiumRegisterStagePlanner,
   AxiumRegisterStagePlannerPayload,
-  axiumRegisterStagePlannerType
 } from './concepts/axium/qualities/registerStagePlanner.quality';
 export {
   axiumClearDialog,
-  axiumClearDialogType
 } from './concepts/axium/qualities/clearDialog.quality';
 export {
   axiumSetDefaultMode,
-  axiumSetDefaultModeType,
   AxiumSetDefaultModePayload
 } from './concepts/axium/qualities/setDefaultMode.quality';
 export {
   axiumSetBlockingMode,
-  axiumSetBlockingModeType,
   AxiumSetBlockingModePayload
 } from './concepts/axium/qualities/setBlockingMode.quality';
 export {
   axiumRegisterTimeOut,
   AxiumRegisterTimeOutPayload,
-  axiumRegisterTimeOutType
 } from './concepts/axium/qualities/registerTimeOut.quality';
 // Strategies
 export {
@@ -208,15 +201,13 @@ export {
 export { CounterState, counterName, createCounterConcept } from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';
 // Qualities
-export { counterAdd, counterAddType } from './concepts/counter/qualities/add.quality';
-export { counterSubtract, counterSubtractType } from './concepts/counter/qualities/subtract.quality';
-export { counterSetCount, counterSetCountType, CounterSetCountPayload } from './concepts/counter/qualities/setCount.quality';
+export { counterAdd } from './concepts/counter/qualities/add.quality';
+export { counterSubtract } from './concepts/counter/qualities/subtract.quality';
+export { counterSetCount, CounterSetCountPayload } from './concepts/counter/qualities/setCount.quality';
 // Strategies
 export {
   countingStrategy,
   countingTopic,
-  primedCountingStrategy,
-  primedCountingTopic
 } from './concepts/counter/strategies/counting.strategy';
 
 // Chain
@@ -224,36 +215,30 @@ export { ChainState, chainName, createChainConcept } from './concepts/chain/chai
 // Qualities
 export {
   chainPrepareChain,
-  chainPrepareChainType,
   ChainPrepareChainPayload,
-  chainPrepareChainQuality
 } from './concepts/chain/qualities/prepareChain.quality';
-export {chainEnd, chainEndType} from './concepts/chain/qualities/chainEnd.quality';
+export { chainEnd } from './concepts/chain/qualities/chainEnd.quality';
 
 // Ownership
 export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
 export { ownershipSelectInitialized, ownershipSelectLedger } from './concepts/ownership/ownership.selector';
 // Qualities
-export { ownershipBackTrack, ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
+export { ownershipBackTrack } from './concepts/ownership/qualities/backTrack.quality';
 export {
   ownershipClearPayloadStubs,
   OwnershipClearPayloadStubsPayload,
-  ownershipClearPayloadStubsType
 } from './concepts/ownership/qualities/clearPayloadStubs.quality';
-export { ownershipClearPendingActions, ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
+export { ownershipClearPendingActions } from './concepts/ownership/qualities/clearPendingActions.quality';
 export {
   ownershipClearPendingActionsOfStrategy,
   OwnershipClearPendingActionsOfStrategyPayload,
-  ownershipClearPendingActionsOfStrategyType
 } from './concepts/ownership/qualities/clearPendingActionsOfStrategy.quality';
 export {
   ownershipClearStrategyStubsFromLedgerAndSelf,
-  ownershipClearStrategyStubsFromLedgerAndSelfType
 } from './concepts/ownership/qualities/clearStrategyStubsFromLedgerAndSelf.quality';
 export {
   ownershipResetOwnershipLedger,
-  ownershipResetOwnershipLedgerType
 } from './concepts/ownership/qualities/resetOwnershipLedger.quality';
 
 // Experiment
@@ -264,15 +249,11 @@ export {
   experimentName
 } from './concepts/experiment/experiment.concept';
 export {
-  experimentCheckInStrategyQuality,
   experimentCheckInStrategy,
-  experimentCheckInStrategyType
 } from './concepts/experiment/qualities/checkInStrategy.quality';
 export {
   experimentCountingStrategy,
   experimentCountingTopic,
-  experimentPrimedCountingStrategy,
-  experimentPrimedCountingTopic
 } from './concepts/experiment/strategies/experimentCounting.strategy';
 export {experimentActionQuePrincipleCreator} from './concepts/experiment/experiment.principle';
 /*#>*/

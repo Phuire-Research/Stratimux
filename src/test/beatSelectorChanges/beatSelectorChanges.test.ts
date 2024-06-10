@@ -22,10 +22,10 @@ import { selectSlice, selectState } from '../../model/selector';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
   const beat = 7000;
-  const [tally, strategy, topic] = generateRandomCountingStrategy();
   const axium = createAxium('Beat Selector Changes properly defers accumulated changes', {
     beatSelectors: createBeatSelectorChangesConcept()
   });
+  const [tally, strategy, topic] = generateRandomCountingStrategy(axium.deck);
   const plan = axium.plan('Prolonged Counting Strategy', () => [
     createStage(({concepts, dispatch}) => {
       if (isAxiumOpen(concepts)) {

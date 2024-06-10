@@ -11,6 +11,7 @@ import { selectState } from './selector';
 import { ActionNode, ActionStrategy } from './actionStrategy';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { randomUUID } from 'crypto';
+import { getAxiumState } from './axium';
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 
@@ -147,7 +148,7 @@ export const checkIn =
       }
       if (!found) {
         const expiration = action.expiration;
-        const axiumState = concepts[0].state as AxiumState;
+        const axiumState = getAxiumState(concepts);
         const ticket = axiumState.name + randomUUID();
         const newTicketStub = {
           key,

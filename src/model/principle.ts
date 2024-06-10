@@ -37,7 +37,7 @@ export function createPrinciple$<T = void, C = void>(
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-  d_: Deck<C>,
+  d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<T>,
   c_: IsT[],
   k_: KeyedSelectors

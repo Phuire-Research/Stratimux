@@ -12,20 +12,21 @@ export type AxiumAppendConceptsToRemoveQuePayload = {
   concepts: AnyConcept[]
 }
 
-export const axiumAppendConceptsToRemoveQue = createQualityCardWithPayload<AxiumState<unknown>, AxiumAppendConceptsToRemoveQuePayload>({
-  type: 'append Concepts to Axium\'s Remove Concept Que',
-  reducer: (state, action) => {
-    const payload = action.payload;
-    let removeQue = state.removeConceptQue;
-    removeQue = [
-      ...removeQue,
-      ...payload.concepts
-    ];
-    return {
-      ...state,
-      removeConceptQue: removeQue
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+export const axiumAppendConceptsToRemoveQue =
+  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumAppendConceptsToRemoveQuePayload>({
+    type: 'append Concepts to Axium\'s Remove Concept Que',
+    reducer: (state, action) => {
+      const payload = action.payload;
+      let removeQue = state.removeConceptQue;
+      removeQue = [
+        ...removeQue,
+        ...payload.concepts
+      ];
+      return {
+        ...state,
+        removeConceptQue: removeQue
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

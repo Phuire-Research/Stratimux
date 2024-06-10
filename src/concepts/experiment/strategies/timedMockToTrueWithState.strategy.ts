@@ -6,14 +6,24 @@ step that will finally set the value to true. Then notify the axium of the strat
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { Concept } from '../../../model/concept';
+import { Deck } from '../../../model/deck';
+import { ExperimentState } from '../experiment.concept';
 import { experimentMockToTrue } from '../qualities/mockToTrue.quality';
 import { experimentTimerEmitActionWithState } from '../qualities/timerEmitActionWithState.quality';
 
+const qs = {
+  experimentMockToTrue,
+  experimentTimerEmitActionWithState
+};
+type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};
+export type ExperimentTimedMockToTrueWithStateDeck = Deck<ExperimentDeck>
+
 export const experimentTimedMockToTrueWithStateTopic =
   'This will use a async method to eventually set mock to True via State and append mock to strategy data.';
-export function timedMockToTrueWithState(): ActionStrategy {
-  const stepTwo = createActionNode(experimentMockToTrue());
-  const stepOne = createActionNode(experimentTimerEmitActionWithState(), {
+export function timedMockToTrueWithState(deck: ExperimentTimedMockToTrueWithStateDeck): ActionStrategy {
+  const stepTwo = createActionNode(deck.experiment.e.experimentMockToTrue());
+  const stepOne = createActionNode(deck.experiment.e.experimentTimerEmitActionWithState(), {
     successNode: stepTwo,
   });
 

@@ -12,9 +12,9 @@ export type AppendActionListToDialogPayload = {
   strategyData: unknown;
 }
 
-export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumState<unknown>, AppendActionListToDialogPayload>({
+export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumState<unknown, unknown>, AppendActionListToDialogPayload>({
   type: 'append Action List to Axium\'s Dialog',
-  reducer: (state: AxiumState<unknown>, action) => {
+  reducer: (state, action) => {
     const payload = action.payload;
     let newDialog = '';
     if (state.storeDialog) {

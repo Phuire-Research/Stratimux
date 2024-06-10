@@ -13,7 +13,7 @@ export type AxiumSetModePayload = {
   modeName: string;
 }
 
-export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetModePayload>({
+export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetModePayload>({
   type: 'set Axium Mode',
   reducer: (state, action) => {
     const payload = action.payload;

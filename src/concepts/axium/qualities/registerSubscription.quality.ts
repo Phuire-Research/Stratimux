@@ -15,7 +15,7 @@ export type AxiumRegisterSubscriberPayload = {
     name: string;
 }
 
-export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown>, AxiumRegisterSubscriberPayload>({
+export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Axium\'s General Subscriber list',
   reducer: (state, action) => {
     const payload = action.payload;

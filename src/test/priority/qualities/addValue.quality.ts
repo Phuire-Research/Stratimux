@@ -12,11 +12,7 @@ export type ExperimentPriorityAddValuePayload = {
   newValue: number
 };
 
-export const [
-  experimentPriorityAddValue,
-  experimentPriorityAddValueType,
-  experimentPriorityAddValueQuality
-] = quality.createSetWithPayload<ExperimentPriorityState, ExperimentPriorityAddValuePayload>({
+export const experimentPriorityAddValue = quality.createWithPayload<ExperimentPriorityState, ExperimentPriorityAddValuePayload>({
   type: 'experimentPriority Add value',
   reducer: (state, action) => {
     const { newValue } = action.payload;

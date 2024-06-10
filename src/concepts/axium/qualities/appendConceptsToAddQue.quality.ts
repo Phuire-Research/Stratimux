@@ -11,7 +11,7 @@ export type AxiumAppendConceptsToAddQuePayload = {
   concepts: AnyConcept[]
 }
 
-export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumState<unknown>, AxiumAppendConceptsToAddQuePayload>({
+export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumAppendConceptsToAddQuePayload>({
   type: 'append Concepts to Axium\'s Add Concept Que',
   reducer: (state, action) => {
     const payload = action.payload;

@@ -6,18 +6,22 @@ $>*/
 /*<#*/
 import { ActionStrategy, createActionNode, createStrategy, strategyPunt } from '../../../model/actionStrategy';
 import { counterSelectCount } from '../../counter/counter.selector';
-import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality';
-import { experimentCountingStrategy } from './experimentCounting.strategy';
+import { additionalCountingStrategy } from '../../counter/strategies/counting.strategy';
+import { ExperimentCountingDeck } from './experimentCounting.strategy';
 
 export const experimentPuntCountingStrategyTopic = 'This will Punt the Counting Strategy into the Experiment\'s Action Que';
-export function experimentPuntCountingStrategy(): ActionStrategy {
-  const stepOne = createActionNode(experimentCheckInStrategy(), {
+export function experimentPuntCountingStrategy(deck: ExperimentCountingDeck): ActionStrategy | undefined {
+  const stepOne = createActionNode(deck.experiment.e.experimentCheckInStrategy(), {
     keyedSelectors: [counterSelectCount]
   });
 
-  return strategyPunt(experimentCountingStrategy(), createStrategy({
-    topic: experimentPuntCountingStrategyTopic,
-    initialNode: stepOne,
-  }));
+  const strategy = additionalCountingStrategy(deck);
+  if (strategy) {
+    return strategyPunt(strategy, createStrategy({
+      topic: experimentPuntCountingStrategyTopic,
+      initialNode: stepOne,
+    }));
+  }
+  return undefined;
 }
 /*#>*/

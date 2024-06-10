@@ -19,6 +19,7 @@ import { UnifiedSubject } from '../../model/stagePlanner';
 import { axiumAppendActionListToDialog } from '../axium/qualities/appendActionListToDialog.quality';
 import { AxiumState } from '../axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { getAxiumState } from '../../model/axium';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
@@ -27,7 +28,8 @@ export const ownershipMode: Mode = (
   let concepts = _concepts;
   const conceptsSize = Object.keys(concepts).length;
   let finalMode: Mode = permissiveMode;
-  const axiumState = concepts[0].state as AxiumState;
+  const axiumState = getAxiumState(concepts);
+  const deck = axiumState.deck;
   // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
@@ -56,7 +58,7 @@ export const ownershipMode: Mode = (
             // eslint-disable-next-line max-depth
             if (nextAction.semaphore[3] === 3) {
               concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
-              nextAction = axiumAppendActionListToDialog({
+              nextAction = deck.axium.e.axiumAppendActionListToDialog({
                 actionList: action.strategy.actionList,
                 strategyTopic: action.strategy.topic,
                 strategyData: action.strategy.data

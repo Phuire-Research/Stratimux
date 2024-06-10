@@ -13,7 +13,7 @@ export type AxiumSetDefaultModeIndexPayload = {
   index: number;
 };
 
-export const axiumSetDefaultModeIndex = createQualityCardWithPayload<AxiumState<unknown>, AxiumSetDefaultModeIndexPayload>({
+export const axiumSetDefaultModeIndex = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetDefaultModeIndexPayload>({
   type: 'set Axium\'s Default Mode Index',
   reducer: (state, action) => {
     const payload = action.payload;

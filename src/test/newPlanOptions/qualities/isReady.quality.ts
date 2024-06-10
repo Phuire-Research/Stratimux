@@ -6,11 +6,7 @@ import { Action } from '../../../model/action';
 import { quality } from '../../../model/quality';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
-export const [
-  experimentPlanOptionsIsReady,
-  experimentPlanOptionsIsReadyType,
-  experimentPlanOptionsIsReadyQuality
-] = quality.createSet<ExperimentPlanOptionsState>({
+export const experimentPlanOptionsIsReady = quality.create<ExperimentPlanOptionsState>({
   type: 'experimentPlanOptions is ready',
   reducer: (state): ExperimentPlanOptionsState => ({
     ...state,

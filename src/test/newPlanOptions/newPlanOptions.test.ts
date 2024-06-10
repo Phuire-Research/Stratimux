@@ -8,9 +8,6 @@ import { createAxium } from '../../model/axium';
 import { createStage } from '../../model/stagePlanner';
 import { KeyedSelector, selectSlice } from '../../model/selector';
 import { planOptionsSelect } from './newPlanOptions.selectors';
-import { experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
-import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
-import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 
 test('New Plan Options Selector Test', (done) => {
@@ -19,7 +16,7 @@ test('New Plan Options Selector Test', (done) => {
   });
   let count = 0;
   const plan = planNewStageSelectors.plan('Ensure New Selectors Can be set on a single stage', () => [
-    createStage(({dispatch, changes}) => {
+    createStage(({dispatch, changes, d}) => {
       // First run will be all
       const selectors: KeyedSelector[] = [];
       let final = false;
@@ -73,13 +70,13 @@ test('New Plan Options Selector Test', (done) => {
       console.log(`Run: ${count}`);
       count++;
       if (final) {
-        dispatch(experimentToggleAllSeven(), {
+        dispatch(d.experiment.e.experimentToggleAllSeven(), {
           newSelectors: selectors,
           throttle: 0,
           iterateStage: true
         });
       } else {
-        dispatch(experimentToggleAllSeven(), {
+        dispatch(d.experiment.e.experimentToggleAllSeven(), {
           newSelectors: selectors,
           throttle: 0
         });
@@ -107,14 +104,14 @@ test('New Plan Options Priority Test', (done) => {
   let count = 0;
   let planOneCount = 0;
   planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
-    createStage(({concepts, dispatch}) => {
+    createStage(({concepts, dispatch, d}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 1 Count: ', count, planOneCount);
         if (planOneCount === 0) {
           planOneCount++;
           count++;
           expect(count).toBe(1);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 100,
           }), {
             throttle: 0,
@@ -124,7 +121,7 @@ test('New Plan Options Priority Test', (done) => {
           planOneCount++;
           count++;
           expect(count).toBe(6);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 100,
           }), {
             throttle: 0,
@@ -145,14 +142,14 @@ test('New Plan Options Priority Test', (done) => {
 
   let planTwoCount = 0;
   planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
-    createStage(({concepts, dispatch}) => {
+    createStage(({concepts, dispatch, d}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 2 Count: ', count, planTwoCount);
         if (planTwoCount === 0) {
           planTwoCount++;
           count++;
           expect(count).toBe(2);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 50,
           }), {
             throttle: 0,
@@ -162,7 +159,7 @@ test('New Plan Options Priority Test', (done) => {
           planTwoCount++;
           count++;
           expect(count).toBe(5);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 50,
           }), {
             throttle: 0,
@@ -178,14 +175,14 @@ test('New Plan Options Priority Test', (done) => {
 
   let planThreeCount = 0;
   planNewStagePriority.plan('Ensure New Priority Can be set on a single stage', () => [
-    createStage(({concepts, dispatch}) => {
+    createStage(({concepts, dispatch, d}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('Plan 3 Count: ', count, planThreeCount);
         if (planThreeCount === 0) {
           planThreeCount++;
           count++;
           expect(count).toBe(3);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 50,
           }), {
             throttle: 0,
@@ -195,7 +192,7 @@ test('New Plan Options Priority Test', (done) => {
           planThreeCount++;
           count++;
           expect(count).toBe(4);
-          dispatch(experimentPlanOptionsAddValue({
+          dispatch(d.experiment.e.experimentPlanOptionsAddValue({
             newValue: 50,
           }), {
             throttle: 0,
@@ -208,6 +205,6 @@ test('New Plan Options Priority Test', (done) => {
       stagePlanner.conclude();
     })
   ]);
-  planNewStagePriority.dispatch(experimentPlanOptionsIsReady());
+  planNewStagePriority.dispatch(planNewStagePriority.deck.experiment.e.experimentPlanOptionsIsReady());
 });
 /*#>*/
