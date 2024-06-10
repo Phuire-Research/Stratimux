@@ -23,12 +23,12 @@ export const createExperimentState = (): ExperimentState => {
   };
 };
 
-export const createExperimentConcept = <T = void>(
-  state: Record<string, unknown>,
+export const createExperimentConcept = <S extends Record<string, unknown>, T = void>(
+  state: S,
   qualities?: Record<string, unknown>,
   principles?: PrincipleFunction<T>[],
   mode?: Mode[]) => {
-  return createConcept<Record<string, unknown>, T>(
+  return createConcept<S, T>(
     experimentName,
     state,
     qualities,

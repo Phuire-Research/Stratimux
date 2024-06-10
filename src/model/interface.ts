@@ -44,7 +44,7 @@ export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (act
  * Highest Order Interface
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
  */
-export type UInterface<Q = void, C = void> = {
+export type UInterface<Q = void, C = void, S = void> = {
   // Deck
   d: Deck<C extends void ? AxiumDeck : C>
   // Entry Actions
@@ -52,7 +52,7 @@ export type UInterface<Q = void, C = void> = {
   // Comparators
   c: Comparators<Q>
   // Keyed Selectors
-  k: KeyedSelectors
+  k: KeyedSelectors<S>
 }
 
 /**
@@ -61,30 +61,30 @@ export type UInterface<Q = void, C = void> = {
  * Provides access to all Interfaces via concepts
  * Limited by a whitelist provided by some access property supplied to the Axium
  */
-export type OInterface<Q = void, C = void> = {
+export type OInterface<Q = void, C = void, S = void> = {
   d: Deck<C extends void ? AxiumDeck : C>
   e: Actions<Q>
-  c: Comparators
-  k: KeyedSelectors
+  c: Comparators<Q>
+  k: KeyedSelectors<S>
 }
 
 /**
  * Higher Order Interface
  */
-export type HInterface<Q = void, C = void> = {
+export type HInterface<Q = void, C = void, S = void> = {
   d__: Deck<C extends void ? AxiumDeck : C>
   e__: Actions<Q>
-  c__: Comparators
-  k__: KeyedSelectors
+  c__: Comparators<Q>
+  k__: KeyedSelectors<S>
 }
 
 /**
  * Base Interface
  */
-export type BInterface<Q = void, C = void> = {
+export type BInterface<Q = void, C = void, S = void> = {
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<Q>
-  c_: Comparators
-  k_: KeyedSelectors
+  c_: Comparators<Q>
+  k_: KeyedSelectors<S>
 }
 /*#>*/

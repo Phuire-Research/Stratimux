@@ -26,17 +26,17 @@ export const axiumInitializePrinciples =
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === axiumName && concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<unknown, unknown>(
-              principle as PrincipleFunction<unknown, unknown>,
+            const observable = createPrinciple$<unknown, unknown, unknown>(
+              principle as PrincipleFunction<unknown, unknown, unknown>,
               concepts,
-              state.concepts$.innerPlan.bind(concepts$) as Planning<any, any>,
+              state.concepts$.innerPlan.bind(concepts$) as Planning<any, any, any>,
               state.concepts$.subscribe.bind(concepts$),
               state.concepts$.next.bind(concepts$),
               state.action$.next.bind(action$),
               semaphore,
               state.deck,
               concept.actions as Actions<any>,
-              concept.comparators as Comparators<void>,
+              concept.comparators as Comparators<any>,
               concept.selectors,
             );
             principleSubscribers.push({
@@ -47,17 +47,17 @@ export const axiumInitializePrinciples =
           conceptCounter += 1;
         } else if (concept.principles) {
           concept.principles.forEach(principle => {
-            const observable = createPrinciple$<any, any>(
+            const observable = createPrinciple$<any, any, any>(
               principle,
               concepts,
-              concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any, any>,
+              concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any, any, any>,
               concepts$.subscribe.bind(concepts$),
               concepts$.next.bind(concepts$),
               action$.next.bind(action$),
               semaphore,
               state.deck,
               concept.actions as Actions<any>,
-              concept.comparators as Comparators<void>,
+              concept.comparators as Comparators<any>,
               concept.selectors,
             );
             principleSubscribers.push({

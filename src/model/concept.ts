@@ -9,7 +9,7 @@ import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, Act
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
-import { KeyedSelector, KeyedSelectors } from './selector';
+import { KeyedSelector, KeyedSelectors, createDummyKeyedSelectors, createUnifiedKeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { Comparators, createComparator } from './interface';
@@ -43,14 +43,14 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   state: S;
   actions: Actions<T>;
   comparators: Comparators<T>;
-  selectors: KeyedSelectors;
+  selectors: KeyedSelectors<S>;
   qualities: Quality<Record<string, unknown>>[];
   q: T extends Record<string, unknown> ?
     T
     :
     Record<string, unknown>;
   semaphore: number;
-  principles?: PrincipleFunction<T, any>[];
+  principles?: PrincipleFunction<T, any, any>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
@@ -115,7 +115,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     actions: actions as Actions<T extends void ? any : T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     comparators: comparators as Comparators<T extends void ? any : T>,
-    selectors: {},
+    selectors: createDummyKeyedSelectors(state),
     qualities: qualities ? qualities : [],
     q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
     semaphore: -1,

@@ -20,7 +20,10 @@ export type KeyedSelector = {
   setKeys?: (number | string)[]
   setSelector?: SelectorFunction
 };
-export type KeyedSelectors =  Record<string, KeyedSelector>;
+export type KeyedSelectors<S = void> = {
+  [K in keyof S]: KeyedSelector
+};
+
 
 /**
  * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage
@@ -89,6 +92,35 @@ export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
     console.warn('ERROR AT: ', keys);
   }
   return undefined;
+};
+
+export const createDummyKeyedSelectors = <S = void>(
+  state: S
+): KeyedSelectors<S> => {
+  const selectors = {} as KeyedSelectors<any>;
+  const keys = Object.keys(state as Record<string, unknown>);
+  keys.forEach(key => {
+    selectors[key] = {
+      conceptName: '',
+      conceptSemaphore: -1,
+      keys: 'dummy.' + key,
+      selector: () => undefined
+    };
+  });
+  return selectors;
+};
+
+export const updateKeyedSelectors = <S = void>(
+  concepts: Concepts,
+  selectors: KeyedSelectors<S>,
+  semaphore: number
+): KeyedSelectors<S> => {
+  const newSelectors = {};
+  const keys = Object.keys(selectors);
+  keys.forEach(key => {
+    (newSelectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
+  });
+  return newSelectors as KeyedSelectors<S>;
 };
 
 /**

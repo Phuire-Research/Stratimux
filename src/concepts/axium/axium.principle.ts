@@ -17,6 +17,7 @@ import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
+import { KeyedSelectors, updateKeyedSelectors } from '../../model/selector';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -44,6 +45,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         addKeys.forEach((key, _index) => {
           const concept = axiumState.addConceptQue[key] as unknown as AnyConcept;
           concept.semaphore = axiumState.conceptCounter;
+          concept.selectors = updateKeyedSelectors(concepts, concept.selectors, concept.semaphore);
           if (concept.mode !== undefined) {
             const names = axiumState.modeNames;
             const modes = concepts[0].mode as Mode[];
@@ -54,7 +56,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$<typeof concept.q, AxiumDeck>(
+              const observable = createPrinciple$<typeof concept.q, AxiumDeck, typeof concept.state>(
                 principle,
                 concepts,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,8 +67,8 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 concept.semaphore,
                 axiumState.deck,
                 concept.actions as Actions<any>,
-                concept.comparators as Comparators<void>,
-                concept.selectors,
+                concept.comparators as Comparators<any>,
+                concept.selectors as KeyedSelectors<any>,
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,
@@ -96,7 +98,9 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           axiumState.deck = {
             ...axiumState.deck,
             [key]: {
-              e: concept.actions
+              e: concept.actions,
+              c: concept.comparators,
+              k: concept.selectors
             }
           };
           axiumState.conceptCounter += 1;

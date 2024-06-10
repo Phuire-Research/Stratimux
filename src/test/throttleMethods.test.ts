@@ -29,7 +29,7 @@ import { selectSlice, selectState } from '../model/selector';
 
 test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleIterateIdThenReceiveInMethod};
-  const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
+  const experiment = createExperimentConcept<ExperimentState, typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = axium.plan('Throttle Iterate id with Concepts', ({stage, stageO, e__}) => [
     stageO(() => e__.axiumKick()),
@@ -93,7 +93,7 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
 jest.setTimeout(7000);
 test('Action Throttle Async Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleAsyncIterateIdThenReceiveInMethod};
-  const experiment = createExperimentConcept<typeof qualities>(createExperimentState(), qualities);
+  const experiment = createExperimentConcept<ExperimentState, typeof qualities>(createExperimentState(), qualities);
   const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = axium.plan('Action Throttle Async Iterate id with Concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {

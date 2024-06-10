@@ -26,6 +26,7 @@ import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck } from './deck';
+import { KeyedSelector, KeyedSelectors, updateKeyedSelectors } from './selector';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -236,18 +237,23 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       options?.dynamic
     )
   };
+  const _cpts = concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
   const baseDeck: BaseDeck = {
     axium: {
-      e: (concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>).actions,
-      c: (concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>).comparators
+      e: _cpts.actions,
+      c: _cpts.comparators,
+      k: updateKeyedSelectors(concepts, _cpts.selectors, 0)
     },
   };
   concepts[0].semaphore = 0;
   Object.keys(deckLoad).forEach((k, i) => {
+    const updatedSelectors = updateKeyedSelectors(concepts, deckLoad[k].selectors, i + 1);
     (baseDeck as Deck<any>)[k] = {
       e: deckLoad[k].actions,
-      c: deckLoad[k].comparators
+      c: deckLoad[k].comparators,
+      k: updateKeyedSelectors
     };
+    deckLoad[k].selectors = updatedSelectors;
     deckLoad[k].semaphore = i + 1;
     concepts[i + 1] = deckLoad[k];
   });

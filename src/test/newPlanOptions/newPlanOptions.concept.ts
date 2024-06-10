@@ -35,7 +35,7 @@ const experimentPlanOptionsQualities = {
 
 export type ExperimentPlanOptionsQualities = typeof experimentPlanOptionsQualities;
 
-export const createExperimentPlanOptionsConcept = () => createExperimentConcept<ExperimentPlanOptionsQualities>(
+export const createExperimentPlanOptionsConcept = () => createExperimentConcept<ExperimentPlanOptionsState, ExperimentPlanOptionsQualities>(
   createExperimentPlanOptionsState(),
   experimentPlanOptionsQualities,
   []

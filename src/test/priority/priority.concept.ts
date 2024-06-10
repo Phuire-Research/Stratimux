@@ -16,7 +16,7 @@ const experimentPriorityQualities = {
 
 export type ExperimentPriorityQualities = typeof experimentPriorityQualities;
 
-export const createExperimentPriorityConcept = () => createExperimentConcept<ExperimentPriorityQualities>(
+export const createExperimentPriorityConcept = () => createExperimentConcept<ExperimentPriorityState, ExperimentPriorityQualities>(
   createExperimentPriorityState(),
   experimentPriorityQualities,
   []

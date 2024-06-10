@@ -15,32 +15,32 @@ import { Deck, accessDeck } from './deck';
 import { AxiumDeck } from './axium';
 import { access } from 'fs';
 
-export type PrincipleInterface<T = void, C = void> = {
+export type PrincipleInterface<T = void, C = void, S = void> = {
   observer: Subscriber<Action>,
   concepts_: Concepts,
   subscribe: ConceptsSubscriber,
-  plan: Planning<T, C>,
+  plan: Planning<T, C, S>,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-} & BInterface<T, C>;
+} & BInterface<T, C, S>;
 
-export type PrincipleFunction<T = void, C = void> = (
-  baseI: PrincipleInterface<T, C>
+export type PrincipleFunction<T = void, C = void, S = void> = (
+  baseI: PrincipleInterface<T, C, S>
 ) => void;
 
-export function createPrinciple$<T = void, C = void>(
-  principleFunc: PrincipleFunction<T, C>,
+export function createPrinciple$<T = void, C = void, S = void>(
+  principleFunc: PrincipleFunction<T, C, S>,
   concepts_: Concepts,
-  plan: Planning<T, C>,
+  plan: Planning<T, C, S>,
   subscribe: ConceptsSubscriber,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<T>,
-  c_: Comparators,
-  k_: KeyedSelectors
+  c_: Comparators<T>,
+  k_: KeyedSelectors<S>
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({

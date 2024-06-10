@@ -136,7 +136,7 @@ export type AxiumState<Q, C> = {
   deck: Deck<C>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
-  badPlans: Plan<any, any>[];
+  badPlans: Plan<any, any, any>[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
   timerLedger: Map<number, (() => Action)[]>
