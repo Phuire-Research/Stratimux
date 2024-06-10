@@ -6,14 +6,8 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
-import { selectPayload } from '../../../model/selector';
-import { StagePlanner } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type AxiumRegisterStagePlannerPayload = {
-    stagePlanner: StagePlanner;
-    conceptName: string;
-}
+import { AxiumRegisterStagePlannerPayload } from '.';
 
 export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterStagePlannerPayload>({
   type: 'register Stage Planner to Axium\'s Named Stage Planner list',

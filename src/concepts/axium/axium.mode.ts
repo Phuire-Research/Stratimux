@@ -7,8 +7,8 @@ import { Concepts, Mode } from '../../model/concept';
 import { Action, AnyAction, primeAction } from '../../model/action';
 import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
-import { AxiumBadActionPayload } from './qualities/badAction.quality';
 import { getAxiumState } from '../../model/axium';
+import { AxiumBadActionPayload } from './qualities';
 
 export const isActionable = (axiumState: AxiumState<any, any>, action: Action): boolean => {
   let actionable = true;

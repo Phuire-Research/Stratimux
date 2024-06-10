@@ -13,7 +13,7 @@ export const axiumAddConceptsFromQue =
     reducer: (state) => {
       return {
         ...state,
-        addConceptQue: []
+        addConceptQue: {}
       };
     },
     methodCreator: defaultMethodCreator

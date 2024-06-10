@@ -5,14 +5,9 @@ This list is utilized by future on the fly error correction for handling generat
 $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
-import { ActionType } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
-import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type AxiumClearBadActionTypeFromBadActionListPayload = {
-  actionType: ActionType
-};
+import { AxiumClearBadActionTypeFromBadActionListPayload } from '.';
 
 export const axiumClearBadActionTypeFromBadActionList =
   createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadActionTypeFromBadActionListPayload>({

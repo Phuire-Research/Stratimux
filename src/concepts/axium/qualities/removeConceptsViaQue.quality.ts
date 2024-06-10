@@ -20,11 +20,12 @@ export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, u
     const stagePlanners = state.stagePlanners;
     const newStagePlanners = [] as NamedStagePlanner[];
     const removeConceptQue = state.removeConceptQue;
+    const removeKeys = Object.keys(removeConceptQue);
 
     principleSubscribers.forEach(named => {
       let exists = false;
-      removeConceptQue.forEach(concept => {
-        if (concept.name === named.name) {
+      removeKeys.forEach(key => {
+        if (removeConceptQue[key].name === named.name) {
           exists = true;
         }
       });
@@ -37,8 +38,8 @@ export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, u
 
     generalSubscribers.forEach(named => {
       let exists = false;
-      removeConceptQue.forEach(concept => {
-        if (concept.name === named.name) {
+      removeKeys.forEach(key => {
+        if (removeConceptQue[key].name === named.name) {
           exists = true;
         }
       });
@@ -51,8 +52,8 @@ export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, u
 
     stagePlanners.forEach(named => {
       let exists = false;
-      removeConceptQue.forEach(concept => {
-        if (concept.name === named.name) {
+      removeKeys.forEach(key => {
+        if (removeConceptQue[key].name === named.name) {
           exists = true;
         }
       });
@@ -67,7 +68,7 @@ export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, u
       ...state,
       generalSubscribers: newGeneralSubscribers,
       stagePlanners: newStagePlanners,
-      removeConceptQue: []
+      removeConceptQue: {}
     };
   },
   methodCreator: defaultMethodCreator

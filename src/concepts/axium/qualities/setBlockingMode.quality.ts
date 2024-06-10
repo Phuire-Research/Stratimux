@@ -11,10 +11,7 @@ import { AxiumState } from '../axium.concept';
 import { blockingMethodSubscription } from '../../../model/axium';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
-
-export type AxiumSetBlockingModePayload = {
-    concepts: Concepts
-}
+import { AxiumSetBlockingModePayload } from '.';
 
 export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetBlockingModePayload>({
   type: 'set Axium to Blocking Mode',

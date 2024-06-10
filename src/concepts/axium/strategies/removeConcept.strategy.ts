@@ -6,12 +6,12 @@ $>*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { AnyConcept, Concepts } from '../../../model/concept';
 import { Actions } from '../../../model/action';
-import { AxiumQualities } from '../qualities';
+import { AxiumAppendConceptsToRemoveQuePayload, AxiumQualities } from '../qualities';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Axium Mode to Blocking';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addConceptsToRemovalQueThenBlockStrategy(
-  a: Actions<AxiumQualities>, concepts: Concepts, targetConcepts: AnyConcept[]
+  a: Actions<AxiumQualities>, concepts: Concepts, targetConcepts: Record<string, AnyConcept>
 ) {
   const stepTwo = createActionNode(a.axiumAppendConceptsToRemoveQue({concepts: targetConcepts}), {
   });

@@ -7,9 +7,9 @@ import { Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { AxiumBadActionPayload } from '../concepts/axium/qualities/badAction.quality';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 import { Quality } from './quality';
+import { AxiumBadActionPayload } from '../concepts/axium/qualities';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.

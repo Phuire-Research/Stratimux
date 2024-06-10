@@ -11,14 +11,18 @@ import { AxiumQualities } from '../qualities';
 // Step One to Add Concepts to Axium
 export const addConceptsToAddQueThenBlockTopic = 'Add Concepts to add que then set Axium Mode to Blocking';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function addConceptsToAddQueThenBlockStrategy(ax: Actions<AxiumQualities>, concepts: Concepts, newConcepts: AnyConcept[]) {
-  const stepTwo = createActionNode(ax.axiumAppendConceptsToAddQue({concepts: newConcepts}),{
+export function addConceptsToAddQueThenBlockStrategy(
+  e: Actions<AxiumQualities>,
+  concepts: Concepts,
+  newConcepts: Record<string, AnyConcept>
+) {
+  const stepTwo = createActionNode(e.axiumAppendConceptsToAddQue({concepts: newConcepts}),{
     successNode: null,
     successNotes: {
       preposition: 'Then Safely'
     },
   });
-  const stepOne = createActionNode(ax.axiumSetBlockingMode({concepts}), {
+  const stepOne = createActionNode(e.axiumSetBlockingMode({concepts}), {
     successNode: stepTwo,
     successNotes: {
       preposition: 'Immediately'

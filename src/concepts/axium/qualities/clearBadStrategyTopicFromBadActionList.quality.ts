@@ -6,12 +6,9 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
-import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { AxiumClearBadStrategyTopicFromBadActionListPayload } from '.';
 
-export type AxiumClearBadStrategyTopicFromBadActionListPayload = {
-  topic: string
-};
 export const axiumClearBadStrategyTopicFromBadActionList =
   createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
     type: 'clear Strategy Topic from Axium\'s badAction list',

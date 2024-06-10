@@ -380,9 +380,8 @@ export type Axium<Q extends Record<string, unknown>, C extends Record<string, un
   e: Actions<AxiumQualities>
 }
 
-export const getAxiumState = <Q = void, C = void>(concepts: Concepts) => (
-  concepts[0].state as AxiumState<Q extends void ? AxiumQualities : Q, C extends void ? AxiumDeck : C>
-);
+export const getAxiumState = <Q = void, C = void>(concepts: Concepts) =>
+  (concepts[0].state as AxiumState<Q extends void ? AxiumQualities : Q, C extends void ? AxiumDeck : C>);
 
 export const accessAxium = (concepts: Concepts) => (getAxiumState(concepts).deck.axium);
 

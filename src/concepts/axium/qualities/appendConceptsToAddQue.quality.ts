@@ -6,18 +6,16 @@ $>*/
 import { AnyConcept, Concept } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
-
-export type AxiumAppendConceptsToAddQuePayload = {
-  concepts: AnyConcept[]
-}
+import { AxiumAppendConceptsToAddQuePayload } from '.';
 
 export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumAppendConceptsToAddQuePayload>({
   type: 'append Concepts to Axium\'s Add Concept Que',
   reducer: (state, action) => {
     const payload = action.payload;
-    const addConceptQue = [
+    const addConceptQue = {
+      ...state.addConceptQue,
       ...payload.concepts
-    ];
+    };
     return {
       ...state,
       addConceptQue,

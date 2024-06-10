@@ -10,11 +10,7 @@ import { axiumTimeOut } from '../../../model/time';
 import { AnyAction } from '../../../model/action';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
-
-export type AxiumRegisterTimeOutPayload = {
-  act: AnyAction;
-  timeOut: number
-}
+import { AxiumRegisterTimeOutPayload } from '.';
 
 export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>({
   type: 'register an Action to Axium\'s timerLedger',

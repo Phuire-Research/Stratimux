@@ -9,11 +9,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type AxiumRegisterSubscriberPayload = {
-    subscription: Subscription;
-    name: string;
-}
+import { AxiumRegisterSubscriberPayload } from '.';
 
 export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Axium\'s General Subscriber list',

@@ -9,29 +9,32 @@ import { AxiumState } from '../axium.concept';
 import { AnyConcept, Concepts } from '../../../model/concept';
 import { ActionType } from '../../../model/method';
 
-type OpenPayload = {
+export type OpenPayload = {
   open: boolean
 };
 
-type AxiumBadActionPayload = {
+export type AxiumBadActionPayload = {
   badActions: AnyAction[],
 }
 
-type AxiumClosePayload = {
+/**
+ * @parm exit - If set to true, will exit the current process.
+ */
+export type AxiumClosePayload = {
   exit: boolean
 };
 
-type AxiumPreClosePayload = {
+export type AxiumPreClosePayload = {
   exit: boolean
 };
 
-type AppendActionListToDialogPayload = {
+export type AppendActionListToDialogPayload = {
   actionList: Array<string>;
   strategyTopic: string;
   strategyData: unknown;
 }
 
-type AxiumRegisterSubscriberPayload = {
+export type AxiumRegisterSubscriberPayload = {
   subscription: Subscription;
   name: string;
 }
@@ -42,20 +45,20 @@ export type StagePlanner = {
   conclude: () => void;
 }
 
-type AxiumRegisterStagePlannerPayload = {
+export type AxiumRegisterStagePlannerPayload = {
   stagePlanner: StagePlanner;
   conceptName: string;
 }
 
-type AxiumInitializePrinciplesPayload = {
+export type AxiumInitializePrinciplesPayload = {
   concepts: Concepts;
 }
 
-type AxiumSetBlockingModePayload = {
+export type AxiumSetBlockingModePayload = {
   concepts: Concepts
 }
 
-type AxiumSetDefaultModePayload = {
+export type AxiumSetDefaultModePayload = {
   concepts: Concepts
 }
 
@@ -64,11 +67,15 @@ export type AxiumSetDefaultModeIndexPayload = {
 };
 
 export type AxiumAppendConceptsToAddQuePayload = {
-  concepts: AnyConcept[]
+  concepts: Record<string, AnyConcept>;
 }
 
 export type AxiumAppendConceptsToRemoveQuePayload = {
-  concepts: AnyConcept[]
+  concepts: Record<string, AnyConcept>;
+}
+
+export type AxiumClearBadPlanFromBadPlanListPayload = {
+  title: string;
 }
 
 export type AxiumSetModePayload = {
@@ -111,7 +118,7 @@ export type AxiumQualities = {
   axiumSetMode: Quality<AxiumState<unknown, unknown>, AxiumSetModePayload>,
   axiumClearBadActionTypeFromBadActionList: Quality<AxiumState<unknown, unknown>, AxiumClearBadActionTypeFromBadActionListPayload>,
   axiumClearBadStrategyTopicFromBadActionList: Quality<AxiumState<unknown, unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>,
-  axiumClearBadPlanFromBadPlanList: Quality<AxiumState<unknown, unknown>, void>,
+  axiumClearBadPlanFromBadPlanList: Quality<AxiumState<unknown, unknown>, AxiumClearBadPlanFromBadPlanListPayload>,
   axiumStitch: Quality<Record<string, unknown>, void>,
   axiumRegisterTimeOut: Quality<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>
 }

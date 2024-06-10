@@ -7,13 +7,8 @@ $>*/
 import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { AxiumClosePayload } from '.';
 
-/**
- * @parm exit - If set to true, will exit the current process.
- */
-export type AxiumClosePayload = {
-  exit: boolean
-};
 export const axiumClose = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClosePayload>({
   type: 'Close Axium',
   reducer: (state, action) => {

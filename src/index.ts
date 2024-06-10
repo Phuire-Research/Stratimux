@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { createAxium, getAxiumState, Axium, isAxiumOpen } from './model/axium';
+export { createAxium, getAxiumState, Axium, isAxiumOpen, AxiumDeck } from './model/axium';
 export type {
   ActionNode,
   ActionNotes,
@@ -158,35 +158,29 @@ export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/con
 export { axiumOpen } from './concepts/axium/qualities/open.quality';
 export { axiumLog } from './concepts/axium/qualities/log.quality';
 export { axiumStitch } from './concepts/axium/qualities/stitch.quality';
-export { axiumPreClose, AxiumPreClosePayload } from './concepts/axium/qualities/preClose.quality';
+export { axiumPreClose } from './concepts/axium/qualities/preClose.quality';
 export { axiumBadAction } from './concepts/axium/qualities/badAction.quality';
-export { axiumSetMode, AxiumSetModePayload } from './concepts/axium/qualities/setMode.quality';
+export { axiumSetMode } from './concepts/axium/qualities/setMode.quality';
 export {
   axiumSetDefaultModeIndex,
-  AxiumSetDefaultModeIndexPayload
 } from './concepts/axium/qualities/setDefaultModeIndex.quality';
 export {
   axiumRegisterSubscriber,
-  AxiumRegisterSubscriberPayload,
 } from './concepts/axium/qualities/registerSubscription.quality';
 export {
   axiumRegisterStagePlanner,
-  AxiumRegisterStagePlannerPayload,
 } from './concepts/axium/qualities/registerStagePlanner.quality';
 export {
   axiumClearDialog,
 } from './concepts/axium/qualities/clearDialog.quality';
 export {
   axiumSetDefaultMode,
-  AxiumSetDefaultModePayload
 } from './concepts/axium/qualities/setDefaultMode.quality';
 export {
   axiumSetBlockingMode,
-  AxiumSetBlockingModePayload
 } from './concepts/axium/qualities/setBlockingMode.quality';
 export {
   axiumRegisterTimeOut,
-  AxiumRegisterTimeOutPayload,
 } from './concepts/axium/qualities/registerTimeOut.quality';
 // Strategies
 export {
@@ -256,4 +250,27 @@ export {
   experimentCountingTopic,
 } from './concepts/experiment/strategies/experimentCounting.strategy';
 export {experimentActionQuePrincipleCreator} from './concepts/experiment/experiment.principle';
+
+// Axium Qualities Index Dump
+export type {
+  AppendActionListToDialogPayload,
+  AxiumAppendConceptsToAddQuePayload,
+  AxiumAppendConceptsToRemoveQuePayload,
+  AxiumBadActionPayload,
+  AxiumClearBadActionTypeFromBadActionListPayload,
+  AxiumClearBadPlanFromBadPlanListPayload,
+  AxiumClearBadStrategyTopicFromBadActionListPayload,
+  AxiumClosePayload,
+  AxiumInitializePrinciplesPayload,
+  AxiumPreClosePayload,
+  AxiumQualities,
+  AxiumRegisterStagePlannerPayload,
+  AxiumRegisterSubscriberPayload,
+  AxiumRegisterTimeOutPayload,
+  AxiumSetBlockingModePayload,
+  AxiumSetDefaultModeIndexPayload,
+  AxiumSetDefaultModePayload,
+  AxiumSetModePayload,
+  OpenPayload
+} from './concepts/axium/qualities';
 /*#>*/

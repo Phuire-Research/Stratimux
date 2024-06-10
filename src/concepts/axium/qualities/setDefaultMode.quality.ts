@@ -4,15 +4,12 @@ This mode likewise can be specified by changing the defaultModeIndex state prope
 $>*/
 /*<#*/
 import { Subscriber } from 'rxjs';
-import { Concepts, forEachConcept } from '../../../model/concept';
+import { forEachConcept } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { defaultMethodSubscription, getAxiumState } from '../../../model/axium';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
-
-export type AxiumSetDefaultModePayload = {
-    concepts: Concepts
-}
+import { AxiumSetDefaultModePayload } from '.';
 
 export const axiumSetDefaultMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetDefaultModePayload>({
   type: 'set Axium to its current Default Mode Index',

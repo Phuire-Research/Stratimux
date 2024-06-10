@@ -5,14 +5,10 @@ is currently not loaded, part of the wrong generation, expired, etc... If state 
 of the bad action that was received.
 $>*/
 /*<#*/
-import { Action, AnyAction } from '../../../model/action';
+import { AxiumBadActionPayload } from '.';
 import { createQualityCardWithPayload } from '../../../model/quality';
-import { selectPayload } from '../../../model/selector';
 import { AxiumState } from '../axium.concept';
 
-export type AxiumBadActionPayload = {
-  badActions: AnyAction[],
-}
 export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumBadActionPayload>({
   type: 'Axium received a Bad Action',
   reducer: (state, action) => {

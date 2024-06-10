@@ -4,14 +4,9 @@ $>*/
 /*<#*/
 import { AxiumState } from '../axium.concept';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { selectPayload } from '../../../model/selector';
 import { createMethod } from '../../../model/method';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type AxiumSetModePayload = {
-  modeIndex: number;
-  modeName: string;
-}
+import { AxiumSetModePayload } from '.';
 
 export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetModePayload>({
   type: 'set Axium Mode',

@@ -25,13 +25,13 @@ test('Axium remove Concepts Strategy Test', (done) => {
       console.log('REMOVE');
       dispatch(
         strategyBegin(
-          addConceptsToRemovalQueThenBlockStrategy(e, concepts,[createCounterConcept()])
+          addConceptsToRemovalQueThenBlockStrategy(e, concepts, {counter: createCounterConcept()})
         ), {
           iterateStage: true
         }
       );
     }),
-    stage(({concepts}) => {
+    stage(({concepts, d}) => {
       const axiumState = getAxiumState(concepts);
       console.log('VERIFY', axiumState.lastStrategy);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
@@ -42,6 +42,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
           }
         }));
         expect(exists).toBe(false);
+        expect(Object.keys(d).length).toBe(1);
         setTimeout(() => {done();}, 500);
         plan.conclude();
         axium.close();

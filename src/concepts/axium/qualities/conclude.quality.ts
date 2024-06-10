@@ -5,7 +5,7 @@ Functionally. This is a pure action with no method or reducer. That will instead
 within each qualities method if specified. As well as ownership if loaded in the Axium's concept set.
 $>*/
 /*<#*/
-import { ActionType, getSemaphore, getSpecialSemaphore, prepareActionCreator } from '../../../model/action';
+import { ActionType, getSpecialSemaphore, prepareActionCreator } from '../../../model/action';
 
 /**
  * axiumConcludeType

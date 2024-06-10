@@ -7,12 +7,8 @@ $>*/
 /*<#*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
-import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type OpenPayload = {
-  open: boolean
-};
+import { OpenPayload } from '.';
 
 export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown, unknown>, OpenPayload>({
   type: 'Open Axium',

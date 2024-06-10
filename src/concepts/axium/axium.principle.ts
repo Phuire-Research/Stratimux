@@ -15,6 +15,7 @@ import { blockingMode, permissiveMode } from './axium.mode';
 import { AxiumDeck, blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
+import { Deck } from '../../model/deck';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -28,18 +29,19 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   const addConceptsPlan = plan('Add Concepts Plan', ({stage}) => [
     stage(({concepts, dispatch, e}) => {
       const axiumState = getAxiumState(concepts);
-      if (axiumState.addConceptQue.length === 0) {
+      const addKeys = Object.keys(axiumState.addConceptQue);
+      if (addKeys.length === 0) {
         allowAdd = true;
       }
-      if (axiumState.addConceptQue.length !== 0 && allowAdd) {
+      if (addKeys.length !== 0 && allowAdd) {
         allowAdd = false;
         axiumState.generation += 1;
         const newConcepts: Concepts = {};
         forEachConcept(concepts, (concept, se) => {
           newConcepts[Number(se)] = concept;
         });
-        axiumState.addConceptQue.forEach((cpt, _index) => {
-          const concept = cpt as unknown as AnyConcept;
+        addKeys.forEach((key, _index) => {
+          const concept = axiumState.addConceptQue[key] as unknown as AnyConcept;
           concept.semaphore = axiumState.conceptCounter;
           if (concept.mode !== undefined) {
             const names = axiumState.modeNames;
@@ -90,12 +92,16 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
           newConcepts[concept.semaphore] = concept as AnyConcept;
+          axiumState.deck = {
+            ...axiumState.deck,
+            [key]: {
+              e: concept.actions
+            }
+          };
           axiumState.conceptCounter += 1;
         });
-
-        const newAxiumState = getAxiumState(newConcepts[0]);
+        const newAxiumState = getAxiumState(newConcepts);
         newAxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
-
         axiumState.actionConcepts$.next(newConcepts);
         axiumState.concepts$.next(newConcepts);
 
@@ -109,18 +115,19 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   const removeConceptsPlan = plan('Remove Concepts Plan', ({stage}) => [
     stage(({concepts, dispatch, e}) => {
       const axiumState = getAxiumState(concepts);
-      if (axiumState.removeConceptQue.length === 0) {
+      const removeKeys = Object.keys(axiumState.removeConceptQue);
+      if (removeKeys.length === 0) {
         allowRemove = true;
       }
-      if (axiumState.removeConceptQue.length > 0 && allowRemove) {
+      if (removeKeys.length > 0 && allowRemove) {
         allowRemove = false;
         const newConcepts: Concepts = {};
         axiumState.generation += 1;
         const newModes: Mode[] = [blockingMode, permissiveMode];
         const newModeNames: string[] = [axiumName, axiumName];
         forEachConcept(concepts, ((concept, se) => {
-          axiumState.removeConceptQue.forEach(target => {
-            if (concept.name !== target.name) {
+          removeKeys.forEach(key => {
+            if (concept.name !== axiumState.removeConceptQue[key].name) {
               newConcepts[se as number] = (concept);
             }
           });
@@ -128,11 +135,11 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         const newAxiumState = getAxiumState(newConcepts);
         newAxiumState.modeNames.forEach((modeName, modeIndex) => {
           let shouldAdd = false;
-          axiumState.removeConceptQue.forEach(removeTarget => {
+          removeKeys.forEach(key => {
             if (modeName !== axiumName) {
-              if (modeName !== removeTarget.name) {
+              if (modeName !== axiumState.removeConceptQue[key].name) {
                 shouldAdd = true;
-              } else if (modeName === removeTarget.name && modeIndex === newAxiumState.defaultModeIndex) {
+              } else if (modeName === axiumState.removeConceptQue[key].name && modeIndex === newAxiumState.defaultModeIndex) {
                 newAxiumState.defaultModeIndex = 1;
               }
             }
@@ -151,6 +158,13 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           named.subscription.unsubscribe();
         });
         newAxiumState.methodSubscribers = [];
+        const newDeck = {} as Deck<any>;
+        Object.keys(axiumState.deck).forEach((key) => {
+          if (!removeKeys.includes(key)) {
+            newDeck[key] = (axiumState.deck as any)[key];
+          }
+        });
+        newAxiumState.deck = newDeck;
 
         forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {

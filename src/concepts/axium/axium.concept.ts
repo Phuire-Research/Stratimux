@@ -134,8 +134,8 @@ export type AxiumState<Q, C> = {
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject<Q, C>;
   deck: Deck<C>,
-  addConceptQue: AnyConcept[],
-  removeConceptQue: AnyConcept[],
+  addConceptQue: Record<string, AnyConcept>,
+  removeConceptQue: Record<string, AnyConcept>,
   badPlans: Plan<any, any>[];
   badActions: Action[];
   timer: NodeJS.Timeout[];
@@ -178,8 +178,8 @@ const createAxiumState = <Q, C>(name: string, storeDialog?: boolean, logging?: b
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
     deck: {} as Deck<C>,
-    addConceptQue: [] as AnyConcept[],
-    removeConceptQue: [] as AnyConcept[],
+    addConceptQue: {},
+    removeConceptQue: {},
     badPlans: [],
     badActions: [],
     timer: [],

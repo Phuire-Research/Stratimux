@@ -5,12 +5,7 @@ $>*/
 /*<#*/
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
-
-export type AppendActionListToDialogPayload = {
-  actionList: Array<string>;
-  strategyTopic: string;
-  strategyData: unknown;
-}
+import { AppendActionListToDialogPayload } from '.';
 
 export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumState<unknown, unknown>, AppendActionListToDialogPayload>({
   type: 'append Action List to Axium\'s Dialog',
