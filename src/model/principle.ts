@@ -9,7 +9,7 @@ import { Concepts, ConceptsSubscriber } from './concept';
 import { Action, Actions } from './action';
 import { Planning } from './stagePlanner';
 import { KeyedSelectors } from './selector';
-import { BInterface, IsT } from './interface';
+import { BInterface, Comparators } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck, accessDeck } from './deck';
 import { AxiumDeck } from './axium';
@@ -39,7 +39,7 @@ export function createPrinciple$<T = void, C = void>(
   conceptSemaphore: number,
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<T>,
-  c_: IsT[],
+  c_: Comparators,
   k_: KeyedSelectors
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {

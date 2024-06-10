@@ -12,7 +12,7 @@ import { map } from 'rxjs';
 import { KeyedSelector, KeyedSelectors } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
-import { IsT } from './interface';
+import { Comparators, createComparator } from './interface';
 import { Qualities, Quality } from './quality';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,8 +42,8 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   unified: string[];
   state: S;
   actions: Actions<T>;
+  comparators: Comparators<T>;
   selectors: KeyedSelectors;
-  typeValidators: IsT[]
   qualities: Quality<Record<string, unknown>>[];
   q: T extends Record<string, unknown> ?
     T
@@ -93,11 +93,13 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     });
   }
   const actions: Record<string, unknown> = {};
+  const comparators: Comparators<any> = {};
   const qualities: Quality<Record<string, unknown>>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
       try {
         actions[q] = (_qualities[q] as Quality<any>).actionCreator;
+        comparators[q] = createComparator((_qualities[q] as Quality<any>).actionSemaphoreBucket);
         qualities.push(_qualities[q] as Quality<Record<string, unknown>>);
       } catch (error) {
         console.error('ERROR @: ', q, _qualities[q]);
@@ -111,8 +113,9 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     state,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     actions: actions as Actions<T extends void ? any : T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    comparators: comparators as Comparators<T extends void ? any : T>,
     selectors: {},
-    typeValidators: [],
     qualities: qualities ? qualities : [],
     q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
     semaphore: -1,

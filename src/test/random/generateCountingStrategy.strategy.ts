@@ -13,29 +13,29 @@ export const generateRandomCountingStrategy = (deck: GenerateRandomCountingStrat
     counterAdd,
     counterSubtract
   } = deck.counter.e;
-  // [TODO] Add deck.c for Comparator
-  const counterAddType = counterAdd().type;
   const length = Math.round(getRandomRange(1, 20));
   let numPos = 0;
   let numNeg = 0;
-  let previousStep: ActionNode =
-    createActionNode(Math.round(getRandomRange(1, 5)) % 2 === 0 ? counterAdd() : counterSubtract(), {
-      successNode: null,
-      failureNode: null
-    });
+  const firstAction = Math.round(getRandomRange(1, 5)) % 2 === 0 ? counterAdd() : counterSubtract();
+  let previousStep: ActionNode = createActionNode(firstAction, {
+    successNode: null,
+    failureNode: null
+  });
   const stepFirst = previousStep;
-  if (previousStep.actionType === counterAddType) {
+  console.log('CHECK', deck.counter.c);
+  if (deck.counter.c.counterAdd(firstAction)) {
     numPos++;
   } else {
     numNeg++;
   }
   for (let i = 1; i < length; i++) {
+    const newAction = Math.round(getRandomRange(1, 5)) % 2 ? counterAdd() : counterSubtract();
     const newStep: ActionNode =
-      createActionNode(Math.round(getRandomRange(1, 5)) % 2 ? counterAdd() : counterSubtract(), {
+      createActionNode(newAction, {
         successNode: null,
         failureNode: null
       });
-    if (newStep.actionType === counterAddType) {
+    if (deck.counter.c.counterAdd(newAction)) {
       numPos++;
     } else {
       numNeg++;

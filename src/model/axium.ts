@@ -238,13 +238,15 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
   };
   const baseDeck: BaseDeck = {
     axium: {
-      e: (concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>).actions
+      e: (concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>).actions,
+      c: (concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>).comparators
     },
   };
   concepts[0].semaphore = 0;
   Object.keys(deckLoad).forEach((k, i) => {
     (baseDeck as Deck<any>)[k] = {
-      e: deckLoad[k].actions
+      e: deckLoad[k].actions,
+      c: deckLoad[k].comparators
     };
     deckLoad[k].semaphore = i + 1;
     concepts[i + 1] = deckLoad[k];

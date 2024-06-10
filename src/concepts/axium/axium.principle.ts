@@ -16,6 +16,7 @@ import { AxiumDeck, blockingMethodSubscription, getAxiumState } from '../../mode
 import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { Deck } from '../../model/deck';
+import { Comparators } from '../../model/interface';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -64,7 +65,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 concept.semaphore,
                 axiumState.deck,
                 concept.actions as Actions<any>,
-                concept.typeValidators,
+                concept.comparators as Comparators<void>,
                 concept.selectors,
               );
               axiumState.principleSubscribers.push({

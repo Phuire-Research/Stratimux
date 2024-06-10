@@ -5,6 +5,7 @@ $>*/
 import { Actions } from './action';
 import { accessAxium, getAxiumState } from './axium';
 import { Concept, Concepts, conceptsToString } from './concept';
+import { Comparators } from './interface';
 import { Qualities } from './quality';
 
 export type Deck<C> = {
@@ -19,6 +20,16 @@ export type Deck<C> = {
     C[K]['actions']
     :
     Actions<void>
+    c: C[K] extends Concept<Record<string, unknown>, Qualities> ?
+    C[K]['comparators']
+    :
+    C[K] extends Concept<Record<string, unknown>, void> ?
+    C[K]['comparators']
+    :
+    C[K] extends Concept<any, any> ?
+    C[K]['comparators']
+    :
+    Comparators<void>
   }
 }
 

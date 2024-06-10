@@ -9,10 +9,7 @@ import {
   addConceptsToRemovalQueThenBlockStrategy,
   removeConceptsViaQueThenUnblockTopic
 } from '../concepts/axium/strategies/removeConcept.strategy';
-import { AxiumState } from '../concepts/axium/axium.concept';
 import { forEachConcept } from '../model/concept';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
 test('Axium remove Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumRemoveConceptsTest',

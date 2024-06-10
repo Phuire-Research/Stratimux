@@ -5,6 +5,7 @@ $>*/
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
 import { AxiumDeck } from './axium';
+import { AnyConcept, Concept } from './concept';
 import { Deck } from './deck';
 import { KeyedSelectors } from './selector';
 
@@ -12,9 +13,13 @@ import { KeyedSelectors } from './selector';
 /**
  * is Type Validator, utilizes semaphore in place of ActionType to provide a stringless abstraction for later purposes.
  */
-export type IsT = (action: Action) => boolean;
+export type Comparator = (action: Action) => boolean;
 
-export type PrimeIsT = (actionSemaphoreBucket: [number, number, number, number][]) => IsT;
+export type Comparators<T = void> = {
+  [K in keyof T]: Comparator
+};
+
+export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, number][]) => Comparator;
 
 /**
  * This will curry the actionSemaphoreBucket into a function that will supply type validation without the utilization of string comparison.
@@ -22,7 +27,7 @@ export type PrimeIsT = (actionSemaphoreBucket: [number, number, number, number][
  * @returns True of False if the action's semaphore matches the curried actionSemaphoreBucket
  * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the axium.
  */
-export const createTypeValidator: PrimeIsT = (actionSemaphoreBucket) => (action) => {
+export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (action) => {
   const semaphore = actionSemaphoreBucket[0];
   if (semaphore[0] && semaphore[0] !== -1) {
     return action.semaphore[0] === semaphore[0] && action.semaphore[1] === semaphore[1];
@@ -45,7 +50,7 @@ export type UInterface<Q = void, C = void> = {
   // Entry Actions
   e: Actions<Q>
   // Comparators
-  c: IsT[]
+  c: Comparators<Q>
   // Keyed Selectors
   k: KeyedSelectors
 }
@@ -59,7 +64,7 @@ export type UInterface<Q = void, C = void> = {
 export type OInterface<Q = void, C = void> = {
   d: Deck<C extends void ? AxiumDeck : C>
   e: Actions<Q>
-  c: IsT[]
+  c: Comparators
   k: KeyedSelectors
 }
 
@@ -69,7 +74,7 @@ export type OInterface<Q = void, C = void> = {
 export type HInterface<Q = void, C = void> = {
   d__: Deck<C extends void ? AxiumDeck : C>
   e__: Actions<Q>
-  c__: IsT[]
+  c__: Comparators
   k__: KeyedSelectors
 }
 
@@ -79,7 +84,7 @@ export type HInterface<Q = void, C = void> = {
 export type BInterface<Q = void, C = void> = {
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<Q>
-  c_: IsT[]
+  c_: Comparators
   k_: KeyedSelectors
 }
 /*#>*/

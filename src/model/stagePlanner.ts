@@ -10,17 +10,16 @@ $>*/
 import { Subject } from 'rxjs';
 import { Concepts } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { KeyedSelector, createConceptKeyedSelector, select, selectSlice } from './selector';
+import { KeyedSelector, KeyedSelectors, createConceptKeyedSelector, select, selectSlice } from './selector';
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { Axium, AxiumDeck, HandleHardOrigin, HandleOrigin, accessAxium, createOrigin, getAxiumState, isAxiumOpen } from './axium';
+import { AxiumDeck, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
-import { HInterface, UInterface } from './interface';
-import { Qualities } from './quality';
+import { Comparators, HInterface, UInterface } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
-import { Deck, accessDeck } from './deck';
+import { accessDeck } from './deck';
 
 export type Plan<Q = void, C = void> = {
   id: number;
@@ -364,8 +363,8 @@ export class UnifiedSubject<Q = void, C = void> extends Subject<Concepts> {
     const stages = planner({
       d__: accessDeck(this.concepts),
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
-      c__: [],
-      k__: {},
+      c__: this.concepts[conceptSemaphore].comparators as Comparators,
+      k__: this.concepts[conceptSemaphore].selectors as KeyedSelectors,
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -749,8 +748,8 @@ export class UnifiedSubject<Q = void, C = void> extends Subject<Concepts> {
       // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
       d: accessDeck(this.concepts),
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
-      c: [],
-      k: {},
+      c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},
+      k: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].selectors as KeyedSelectors : {},
     });
   }
 

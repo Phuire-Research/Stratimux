@@ -11,6 +11,7 @@ import { AxiumState, axiumName } from '../axium.concept';
 import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumInitializePrinciplesPayload } from '.';
+import { Comparators } from '../../../model/interface';
 
 export const axiumInitializePrinciples =
   createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumInitializePrinciplesPayload>({
@@ -35,7 +36,7 @@ export const axiumInitializePrinciples =
               semaphore,
               state.deck,
               concept.actions as Actions<any>,
-              concept.typeValidators,
+              concept.comparators as Comparators<void>,
               concept.selectors,
             );
             principleSubscribers.push({
@@ -56,7 +57,7 @@ export const axiumInitializePrinciples =
               semaphore,
               state.deck,
               concept.actions as Actions<any>,
-              concept.typeValidators,
+              concept.comparators as Comparators<void>,
               concept.selectors,
             );
             principleSubscribers.push({
