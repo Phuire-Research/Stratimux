@@ -20,12 +20,10 @@ export const experimentPlanOptionsAddValue =
       const { newValue } = action.payload;
       if (newValue) {
         return {
-          ...state,
           value: newValue + state.value
         };
       }
       return {
-        ...state,
       };
     },
   });

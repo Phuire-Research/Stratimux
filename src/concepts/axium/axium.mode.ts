@@ -9,6 +9,7 @@ import { AxiumState } from './axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
 import { getAxiumState } from '../../model/axium';
 import { AxiumBadActionPayload } from './qualities';
+import { KeyedSelector, updateAtomicSelects } from '../../model/selector';
 
 export const isActionable = (axiumState: AxiumState<any, any>, action: Action): boolean => {
   let actionable = true;
@@ -46,9 +47,13 @@ export const permissiveMode: Mode = (
           const newConcepts = {...concepts};
           const newConcept = {...newConcepts[action.semaphore[0]]};
           newConcepts[action.semaphore[0]] = newConcept;
-          newConcepts[action.semaphore[0]].state = newState;
+          newConcepts[action.semaphore[0]].state = {
+            ...newConcepts[action.semaphore[0]].state,
+            ...newState
+          };
+          const ks = updateAtomicSelects(newConcepts, newConcept.selectors, newState);
           axiumState.actionConcepts$.next(newConcepts);
-          concepts$.next(newConcepts);
+          concepts$.next(newConcepts, ks);
         }
       } else {
         const nextAction = primeAction(concepts, action) as AnyAction;
@@ -82,9 +87,13 @@ export const blockingMode: Mode = (
         const newConcepts = {...concepts};
         const newConcept = {...newConcepts[action.semaphore[0]]};
         newConcepts[action.semaphore[0]] = newConcept;
-        newConcepts[action.semaphore[0]].state = newState;
+        newConcepts[action.semaphore[0]].state = {
+          ...newConcepts[action.semaphore[0]].state,
+          ...newState
+        };
+        const ks = updateAtomicSelects(newConcepts, newConcept.selectors, newState);
         axiumState.actionConcepts$.next(newConcepts);
-        axiumState.concepts$.nextBlocking(newConcepts);
+        axiumState.concepts$.nextBlocking(newConcepts, ks);
       }
       let subject: Subject<Action>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {

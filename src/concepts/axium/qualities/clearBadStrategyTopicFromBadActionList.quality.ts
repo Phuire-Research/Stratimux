@@ -22,7 +22,6 @@ export const axiumClearBadStrategyTopicFromBadActionList =
         }
       });
       return {
-        ...state,
         badActions,
       };
     },

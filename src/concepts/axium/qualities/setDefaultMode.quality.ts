@@ -35,7 +35,6 @@ export const axiumSetDefaultMode = createQualityCardWithPayload<AxiumState<unkno
     }));
 
     return {
-      ...state,
       modeIndex: state.defaultModeIndex,
       methodSubscribers,
     };

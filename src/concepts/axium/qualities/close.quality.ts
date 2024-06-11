@@ -23,7 +23,6 @@ export const axiumClose = createQualityCardWithPayload<AxiumState<unknown, unkno
       process.exit();
     }
     return {
-      ...state,
       methodSubscribers: [],
       generalSubscribers: [],
       stagePlanners: [],

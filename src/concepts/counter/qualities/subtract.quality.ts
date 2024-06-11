@@ -11,7 +11,6 @@ export const counterSubtract = createQualityCard<CounterState>({
   type: 'Counter Subtract',
   reducer: (state) => {
     return {
-      ...state,
       count: state.count - 1
     };
   },

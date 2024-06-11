@@ -65,7 +65,6 @@ export const axiumRemoveConceptsViaQue = createQualityCard<AxiumState<unknown, u
     });
 
     return {
-      ...state,
       generalSubscribers: newGeneralSubscribers,
       stagePlanners: newStagePlanners,
       removeConceptQue: {}

@@ -11,7 +11,6 @@ export const beatSelectorChangesAddToCountFour = createQualityCard({
   type: 'BeatSelectorChanges AddToCountFour',
   reducer: (state: BeatSelectorChangesState) => {
     return {
-      ...state,
       countFour: state.countFour + 1
     };
   },

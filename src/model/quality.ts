@@ -6,7 +6,7 @@ $>*/
 import { Subject, map } from 'rxjs';
 import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
 import { strategySuccess } from './actionStrategy';
-import { Concepts, Method, MethodCreator, MethodCreatorStep, Reducer, createQuality } from './concept';
+import { Concepts, Method, MethodCreator, MethodCreatorStep, Reducer, SpecificReducer, createQuality } from './concept';
 import { ActionType } from './method';
 import { KeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
@@ -16,7 +16,7 @@ export type Quality<S extends Record<string, unknown>, T = void> = {
   actionType: ActionType;
   actionSemaphoreBucket: [number, number, number, number][];
   actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
-  reducer: Reducer<any, T>;
+  reducer: SpecificReducer<any, T>;
   toString: () => string;
   methodCreator?: MethodCreatorStep<S, T>;
   method?: Method<unknown>;
@@ -62,7 +62,7 @@ export const defaultMethodCreator = <T = void>() =>
 
 export function createQualityCard<S extends Record<string, unknown>>(q: {
   type: string,
-  reducer: Reducer<S, void>,
+  reducer: SpecificReducer<S, void>,
   methodCreator?: MethodCreatorStep<S, void>,
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
@@ -81,7 +81,7 @@ export function createQualityCardWithPayload<
   T extends Record<string, unknown>
 >(q: {
   type: string,
-  reducer: Reducer<S, T>,
+  reducer: SpecificReducer<S, T>,
   methodCreator?: MethodCreatorStep<S, T>,
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,

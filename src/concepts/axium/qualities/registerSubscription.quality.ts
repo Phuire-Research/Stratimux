@@ -20,7 +20,6 @@ export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<u
     const name = payload.name;
     generalSubscribers.push({name, subscription});
     return {
-      ...state,
       generalSubscribers,
     };
   },

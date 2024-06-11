@@ -8,7 +8,6 @@ import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 export const experimentToggleAllSeven = quality.create<ExperimentPlanOptionsState>({
   type: 'experimentPriority Add value',
   reducer: (state) => ({
-    ...state,
     one: !state.one,
     two: !state.two,
     three: !state.three,

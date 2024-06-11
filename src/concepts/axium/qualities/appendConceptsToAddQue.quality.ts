@@ -17,7 +17,6 @@ export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumSta
       ...payload.concepts
     };
     return {
-      ...state,
       addConceptQue,
     };
   },

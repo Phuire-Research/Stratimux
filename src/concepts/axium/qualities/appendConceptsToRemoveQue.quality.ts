@@ -18,7 +18,6 @@ export const axiumAppendConceptsToRemoveQue =
         ...payload.concepts
       };
       return {
-        ...state,
         removeConceptQue: removeQue
       };
     },

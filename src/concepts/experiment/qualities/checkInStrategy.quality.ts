@@ -15,13 +15,11 @@ export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
       const nextAction = strategySuccess(action.strategy);
       if (nextAction.type !== axiumConcludeType) {
         return {
-          ...state,
           actionQue: [... state.actionQue, nextAction]
         };
       }
     }
     return {
-      ...state
     };
   }
 });

@@ -36,7 +36,6 @@ export const ownershipClearPayloadStubs = createQualityCardWithPayload<Ownership
       }
     });
     return {
-      ...state,
       ownershipLedger: ownershipLedger
     };
   },

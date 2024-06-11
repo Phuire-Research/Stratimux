@@ -18,7 +18,6 @@ export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState
     const name = payload.conceptName;
     stagePlanners.push({name, ...stagePlanner});
     return {
-      ...state,
       stagePlanners,
     };
   },

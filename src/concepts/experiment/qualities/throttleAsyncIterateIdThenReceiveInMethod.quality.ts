@@ -19,7 +19,6 @@ export const experimentThrottleAsyncIterateIdThenReceiveInMethod =
     type: 'Action Debounce Experiment asynchronously iterate ID then receive in Method via State',
     reducer: (state: ExperimentState) => {
       return {
-        ...state,
         id: state.id + 1
       };
     },

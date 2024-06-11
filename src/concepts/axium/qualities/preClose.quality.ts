@@ -10,7 +10,6 @@ import { AxiumPreClosePayload } from '.';
 export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumPreClosePayload>({
   type: 'Prepare Close Axium',
   reducer: (state, action) => ({
-    ...state,
     prepareClose: true,
     exit: action.payload.exit
   })

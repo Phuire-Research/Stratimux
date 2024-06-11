@@ -10,7 +10,6 @@ export const experimentMockToTrue = createQualityCard<ExperimentState>({
   type: 'Experiment mock set to True',
   reducer: (state) => {
     return {
-      ...state,
       mock: true
     };
   },

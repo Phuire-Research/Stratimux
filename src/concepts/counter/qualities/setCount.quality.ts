@@ -18,7 +18,6 @@ export const counterSetCount = createQualityCardWithPayload<CounterState, Counte
   reducer: (state, {payload}) => {
     const {newCount} = payload;
     return {
-      ...state,
       count: newCount
     };
   },

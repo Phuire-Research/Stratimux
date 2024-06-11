@@ -9,7 +9,7 @@ import { createQualityCard } from '../../../model/quality';
 
 export const ownershipClearPendingActions = createQualityCard<OwnershipState>({
   type: 'clear Ownership\'s Pending Actions',
-  reducer: (state) => ({...state, pendingActions: []}),
+  reducer: () => ({pendingActions: []}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

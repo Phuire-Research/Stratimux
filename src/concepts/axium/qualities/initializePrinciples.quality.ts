@@ -69,7 +69,6 @@ export const axiumInitializePrinciples =
         }
       }));
       return {
-        ...state,
         principleSubscribers,
         conceptCounter,
       };

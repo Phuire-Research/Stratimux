@@ -19,7 +19,6 @@ export const experimentDebounceIterateIdThenReceiveInMethod =
     type: 'Experiment debounce iterate ID then receive in Method via State',
     reducer: (state: ExperimentState) => {
       return {
-        ...state,
         id: state.id + 1
       };
     },

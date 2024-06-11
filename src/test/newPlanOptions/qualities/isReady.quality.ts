@@ -8,8 +8,7 @@ import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
 export const experimentPlanOptionsIsReady = quality.create<ExperimentPlanOptionsState>({
   type: 'experimentPlanOptions is ready',
-  reducer: (state): ExperimentPlanOptionsState => ({
-    ...state,
+  reducer: () => ({
     ready: true
   }),
 });

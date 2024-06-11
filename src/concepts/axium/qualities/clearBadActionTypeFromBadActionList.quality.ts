@@ -15,7 +15,6 @@ export const axiumClearBadActionTypeFromBadActionList =
     reducer: (state, action) => {
       const {actionType} = action.payload;
       return {
-        ...state,
         badActions: state.badActions.filter(act => act.type !== actionType),
       };
     },

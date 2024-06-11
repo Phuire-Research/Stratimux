@@ -14,7 +14,6 @@ export const axiumClearBadPlanFromBadPlanList =
     reducer: (state, action) => {
       const {title} = action.payload;
       return {
-        ...state,
         badPlans: state.badPlans.filter(act => act.title !== title),
       };
     },

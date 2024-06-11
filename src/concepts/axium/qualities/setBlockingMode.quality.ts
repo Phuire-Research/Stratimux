@@ -38,7 +38,6 @@ export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unkn
     }));
 
     return {
-      ...state,
       modeIndex: 0,
       methodSubscribers,
       open: false,

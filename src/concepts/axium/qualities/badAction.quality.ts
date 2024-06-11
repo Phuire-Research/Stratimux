@@ -17,7 +17,6 @@ export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown, u
       console.log('Axium Received a Bad Action: ', action);
     }
     return {
-      ...state,
       badActions: [
         ...state.badActions, ...payload
       ]

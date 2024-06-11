@@ -166,6 +166,7 @@ export const createStage = <Q = void, C = void, S = void>(
 
 // Token to denote ALL, using a selector that utilizes this token should return undefined
 const ALL = '*4||*';
+const ALL_KEYS = '*4||*.*4||*';
 
 const handleRun =
   <Q, C, S>(stageDelimiter: StageDelimiter, plan: Plan<Q, C, S>, action: Action, options?: dispatchOptions)
@@ -805,36 +806,73 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
     nextSub(0);
   }
 
-  protected handleChange(concepts: Concepts, blocking = false) {
+  protected handleChange(concepts: Concepts, blocking = false, keyedSelectors?: KeyedSelector<any>[]) {
     const oldConcepts = this.concepts;
     this.concepts = concepts;
     const notifyIds: Map<number, KeyedSelector[]> = new Map();
-    for (const [_, slice] of this.selectors) {
-      const {selector, ids} = slice;
-      let notify = false;
-      if (slice.selector.conceptName === ALL) {
-        notify = true;
-      } else {
-        const incoming = select.slice(this.concepts, selector);
-        const original = select.slice(oldConcepts, selector);
-        if (typeof incoming === 'object' && !Object.is(incoming, original)) {
-          // stuff
-          notify = true;
-        } else if (incoming !== original) {
-          notify = true;
-        }
-      }
-      if (notify) {
+    if (keyedSelectors) {
+      // Specific shortest path
+      const all = this.selectors.get(ALL_KEYS);
+      if (all) {
+        const {ids} = all;
         ids.forEach(id => {
-          const n = notifyIds.get(id);
-          if (n && selector.conceptName !== ALL) {
-            n.push(selector);
-          } else if (selector.conceptName !== ALL) {
-            notifyIds.set(id, [selector]);
-          } else {
-            notifyIds.set(id, []);
-          }
+          notifyIds.set(id, []);
         });
+      }
+      keyedSelectors.forEach(ks => {
+        const selectorSet = this.selectors.get(ks.keys);
+        if (selectorSet) {
+          let notify = false;
+          const incoming = ks.select();
+          const original = select.slice(oldConcepts, ks);
+          if (typeof incoming === 'object' && !Object.is(incoming, original)) {
+            // stuff
+            notify = true;
+          } else if (incoming !== original) {
+            notify = true;
+          }
+          const {ids, selector} = selectorSet;
+          if (notify) {
+            ids.forEach(id => {
+              const n = notifyIds.get(id);
+              if (n) {
+                n.push(selector);
+              } else {
+                notifyIds.set(id, [selector]);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // Generalized search for user comfort
+      for (const [_, slice] of this.selectors) {
+        const {selector, ids} = slice;
+        let notify = false;
+        if (slice.selector.conceptName === ALL) {
+          notify = true;
+        } else {
+          const incoming = select.slice(this.concepts, selector);
+          const original = select.slice(oldConcepts, selector);
+          if (typeof incoming === 'object' && !Object.is(incoming, original)) {
+            // stuff
+            notify = true;
+          } else if (incoming !== original) {
+            notify = true;
+          }
+        }
+        if (notify) {
+          ids.forEach(id => {
+            const n = notifyIds.get(id);
+            if (n && selector.conceptName !== ALL) {
+              n.push(selector);
+            } else if (selector.conceptName !== ALL) {
+              notifyIds.set(id, [selector]);
+            } else {
+              notifyIds.set(id, []);
+            }
+          });
+        }
       }
     }
     const notification = (id: number) => {
@@ -869,9 +907,13 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
     }
   }
 
-  next(concepts: Concepts) {
+  next(concepts: Concepts, keyedSelectors?: KeyedSelector<any>[]) {
     if (!this.closed) {
-      this.handleChange(concepts);
+      if (keyedSelectors && keyedSelectors.length !== 0) {
+        this.handleChange(concepts, false, keyedSelectors);
+      } else {
+        this.handleChange(concepts, false);
+      }
       // We notify subs last to encourage actions being acted upon observations
       // Then by utilizing a set quality we may inform the next observation of the change
       this.nextSubs();
@@ -880,9 +922,13 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
   init(concepts: Concepts) {
     this.concepts = concepts;
   }
-  nextBlocking(concepts: Concepts) {
+  nextBlocking(concepts: Concepts, keyedSelectors?: KeyedSelector<any>[]) {
     if (!this.closed) {
-      this.handleChange(concepts, true);
+      if (keyedSelectors && keyedSelectors.length !== 0) {
+        this.handleChange(concepts, true, keyedSelectors);
+      } else {
+        this.handleChange(concepts, true);
+      }
     }
   }
 }

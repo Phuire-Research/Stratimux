@@ -10,9 +10,8 @@ import { createQualityCard } from '../../../model/quality';
 export const axiumAddConceptsFromQue =
   createQualityCard<AxiumState<unknown, unknown>>({
     type: 'Add Concepts from Axium Concept Que',
-    reducer: (state) => {
+    reducer: () => {
       return {
-        ...state,
         addConceptQue: {}
       };
     },

@@ -21,6 +21,8 @@ export type Reducer<
   T = void
 > = (state: S, action: Action<T>) => S | null;
 
+export type SpecificReducer<S extends Record<string, unknown>, T = void> = (state: S, action: Action<T>) => Partial<S> | null;
+
 export type Method<T = void> = Observable<[Action<T>, boolean]>;
 export type Principle = Observable<Action>;
 
@@ -129,7 +131,7 @@ export function createQuality<S extends Record<string, unknown>, T = void>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
-  reducer: Reducer<S, T>,
+  reducer: SpecificReducer<S, T>,
   methodCreator?: MethodCreatorStep<S, T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],

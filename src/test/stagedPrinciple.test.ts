@@ -19,7 +19,6 @@ const createExperimentState = (): ExperimentState => ({ mock: false });
 
 function experimentMockToTrueReducer(state: ExperimentState, action: Action): ExperimentState {
   return {
-    ...state,
     mock: true
   };
 }

@@ -27,7 +27,6 @@ export const ownershipClearPendingActionsOfStrategy =
         }
       }
       return {
-        ...state,
         pendingActions: newPendingActions
       };
     }

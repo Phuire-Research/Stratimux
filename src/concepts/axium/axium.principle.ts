@@ -94,7 +94,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
           newConcepts[concept.semaphore] = concept as AnyConcept;
-          concept.selectors = updateKeyedSelectors(newConcepts, concept.selectors, concept.semaphore);
+          updateKeyedSelectors(newConcepts, concept.selectors, concept.semaphore);
           axiumState.deck = {
             ...axiumState.deck,
             [key]: {

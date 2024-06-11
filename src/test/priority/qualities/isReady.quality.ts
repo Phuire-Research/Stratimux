@@ -9,7 +9,6 @@ import { ExperimentPriorityState } from '../priority.concept';
 export const experimentPriorityIsReady = quality.create<ExperimentPriorityState>({
   type: 'experimentPriority is ready',
   reducer: (state) => ({
-    ...state,
     ready: true
   }),
 });

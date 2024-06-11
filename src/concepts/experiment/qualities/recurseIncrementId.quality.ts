@@ -21,7 +21,6 @@ export const experimentRecurseIterateId = createQualityCardWithPayload<Experimen
   type: 'Asynchronous experiment, recursively iterate ID and receive in Method via State',
   reducer: (state) => {
     return {
-      ...state,
       id: state.id + 1
     };
   },

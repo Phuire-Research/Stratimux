@@ -34,7 +34,6 @@ export const ownershipClearStrategyStubsFromLedgerAndSelf = createQualityCard<Ow
       });
     }
     return {
-      ...state,
       ownershipLedger: ownershipLedger
     };
   },

@@ -18,7 +18,6 @@ export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumS
         console.log(newDialog);
       }
       return {
-        ...state,
         dialog: state.dialog + newDialog,
         lastStrategy: payload.strategyTopic,
         lastStrategyData: payload.strategyData,
@@ -26,7 +25,6 @@ export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumS
       };
     }
     return {
-      ...state,
       lastStrategy: payload.strategyTopic,
       lastStrategyData: payload.strategyData,
     };

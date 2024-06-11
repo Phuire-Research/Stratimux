@@ -9,9 +9,8 @@ import { createQualityCard } from '../../../model/quality';
 
 export const axiumClearDialog = createQualityCard<AxiumState<unknown, unknown>>({
   type: 'clear Axium Dialog',
-  reducer: (state) => {
+  reducer: () => {
     return {
-      ...state,
       dialog: '',
     };
   },

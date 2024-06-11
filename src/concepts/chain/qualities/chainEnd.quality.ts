@@ -9,7 +9,6 @@ export const chainEnd = createQualityCard<ChainState>({
   type: 'set chain end property to true',
   reducer: (state) => {
     return {
-      ...state,
       end: true
     };
   }

@@ -5,14 +5,10 @@ $>*/
 /*<#*/
 import { createAxium, getAxiumState } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
-import { KeyedSelector, selectSlice, selectState } from '../model/selector';
+import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { createStage } from '../model/stagePlanner';
-import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
 import { Concepts } from '../model/concept';
 
@@ -56,7 +52,7 @@ test('Axium onChange Test', (done) => {
           axium.close();
         } else {
           dispatch(e.axiumKick(), {
-            newSelectors: [counterSelectCount, axiumSelectLastStrategy],
+            newSelectors: [d.counter.k.count, d.axium.k.lastStrategy],
             throttle: 0
           });
         }

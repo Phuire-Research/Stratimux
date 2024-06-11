@@ -11,10 +11,9 @@ import { AxiumSetDefaultModeIndexPayload } from '.';
 
 export const axiumSetDefaultModeIndex = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetDefaultModeIndexPayload>({
   type: 'set Axium\'s Default Mode Index',
-  reducer: (state, action) => {
+  reducer: (_, action) => {
     const payload = action.payload;
     return {
-      ...state,
       defaultModeIndex: payload.index,
     };
   },

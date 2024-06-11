@@ -10,10 +10,9 @@ import { AxiumSetModePayload } from '.';
 
 export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetModePayload>({
   type: 'set Axium Mode',
-  reducer: (state, action) => {
+  reducer: (_, action) => {
     const payload = action.payload;
     return {
-      ...state,
       modeIndex: payload.modeIndex,
     };
   },

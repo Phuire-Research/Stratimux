@@ -12,10 +12,9 @@ import { OpenPayload } from '.';
 
 export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown, unknown>, OpenPayload>({
   type: 'Open Axium',
-  reducer: (state, action) => {
+  reducer: (_, action) => {
     const {open} = action.payload;
     return {
-      ...state,
       open
     };
   },

@@ -122,17 +122,14 @@ export const updateKeyedSelectors = <S = void>(
   concepts: Concepts,
   selectors: KeyedSelectors<S>,
   semaphore: number
-): KeyedSelectors<S> => {
-  const newSelectors = {};
+): void => {
   const keys = Object.keys(selectors);
-  console.log('CHECK', selectors, semaphore, Object.keys(concepts));
   keys.forEach(key => {
-    (newSelectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
-    const keyed = (newSelectors as any)[key] as KeyedSelector<any>;
+    (selectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
+    const keyed = (selectors as any)[key] as KeyedSelector<any>;
     const val = selectSlice<any>(concepts, keyed);
     keyed.select = () => val;
   });
-  return newSelectors as KeyedSelectors<S>;
 };
 
 export const updateSelects = <S= void>(
@@ -145,6 +142,21 @@ export const updateSelects = <S= void>(
     const val = selectSlice<any>(concepts, keyed);
     keyed.select = () => val;
   });
+};
+
+export const updateAtomicSelects = <S = void>(
+  concepts: Concepts,
+  selectors: KeyedSelectors<S>,
+  partialState: Partial<S extends Record<string, unknown> ? S : Record<string, unknown>>,
+): KeyedSelector<any>[] => {
+  const kss: KeyedSelector<any>[] = [];
+  Object.keys(partialState).forEach(key => {
+    const selector = ((selectors as any)[key] as KeyedSelector<any>);
+    const val = selectSlice(concepts, selector);
+    selector.select = () => val;
+    kss.push(selector);
+  });
+  return kss;
 };
 
 /**

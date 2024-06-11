@@ -16,7 +16,6 @@ export const experimentAsyncIterateIdThenReceiveInMethod = createQualityCard<Exp
   type: 'Experiment asynchronously iterate ID then receive in Method via State',
   reducer: (state) => {
     return {
-      ...state,
       id: state.id + 1
     };
   },

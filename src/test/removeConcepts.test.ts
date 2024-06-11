@@ -30,7 +30,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
     }),
     stage(({concepts, d}) => {
       const axiumState = getAxiumState(concepts);
-      console.log('VERIFY', axiumState.lastStrategy);
+      console.log('VERIFY', axiumState.lastStrategy, '\n', removeConceptsViaQueThenUnblockTopic);
       if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;
         forEachConcept(concepts, (concept => {
@@ -46,5 +46,8 @@ test('Axium remove Concepts Strategy Test', (done) => {
       }
     })
   ]);
+  const sub = axium.subscribe(concepts => {
+    console.log(getAxiumState(concepts).lastStrategy);
+  });
 });
 /*#>*/

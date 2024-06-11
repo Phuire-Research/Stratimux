@@ -18,7 +18,6 @@ export const counterMultiply = createQualityCardWithPayload<CounterState, Counte
     const {by} = payload;
     console.log(state.count, 'by', by);
     return {
-      ...state,
       count: state.count * by
     };
   },

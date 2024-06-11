@@ -83,7 +83,7 @@ When in doubt simplify.
       * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Progressing*)
       * This enforces that all accessed actions in an Axium will be primed by default alongside the *Deck Interface*
     * **Deck Interface**: Add the ability to access primed Actions, KeyedSelectors, and new isTypeValidator helper functions for action comparisons directly in principles, plans, and qualities.
-      * { d: Deck<AxiumDeck & More>(**done**) e: Actions(**DONE**), c: Comparators(**DONE**), k: KeyedSelectors(*Pending*) }
+      * { d: Deck<AxiumDeck & More>(**DONE**) e: Actions(**DONE**), c: Comparators(**DONE**), k: KeyedSelectors(**DONE**) }
       * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and Comparators (via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
       * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
         * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.

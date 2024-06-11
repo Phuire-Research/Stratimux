@@ -24,7 +24,6 @@ export const experimentThrottleIterateIdThenReceiveInMethod =
     type: 'Experiment throttle iterate ID then receive in Method via State',
     reducer: (state) => {
       return {
-        ...state,
         id: state.id + 1
       };
     },
