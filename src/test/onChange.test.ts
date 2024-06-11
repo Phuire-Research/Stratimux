@@ -25,7 +25,7 @@ test('Axium onChange Test', (done) => {
   const plan = axium.plan('Counting Strategy Plan with selectors',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
-        // console.log('What is this Keyed Selector?', d.counter.k);
+        console.log('What is this Keyed Selector?', d.counter.k.count.select());
         console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
           const str = countingStrategy(d);
@@ -40,7 +40,7 @@ test('Axium onChange Test', (done) => {
           }
         }
       }, {selectors: [d__.axium.k.lastStrategy]}),
-      stage(({concepts, dispatch, changes, e}) => {
+      stage(({concepts, dispatch, changes, d, e}) => {
         console.log('Check Changes: ',  changes);
         changes?.forEach(keyed => {
           selectorRouter[keyed.keys] ? selectorRouter[keyed.keys](concepts) : null;
@@ -49,6 +49,8 @@ test('Axium onChange Test', (done) => {
         const counter = selectState<CounterState>(concepts, counterName);
         if (axiumState.lastStrategy === countingTopic) {
           expect(counter?.count).toBe(1);
+          // After next improvement
+          // expect(d.counter.k.count.select()).toBe(1);
           setTimeout(() => {done();}, 500);
           plan.conclude();
           axium.close();

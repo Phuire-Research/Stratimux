@@ -26,7 +26,7 @@ import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck } from './deck';
-import { KeyedSelector, KeyedSelectors, updateKeyedSelectors } from './selector';
+import { updateKeyedSelectors } from './selector';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {

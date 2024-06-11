@@ -45,7 +45,6 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         addKeys.forEach((key, _index) => {
           const concept = axiumState.addConceptQue[key] as unknown as AnyConcept;
           concept.semaphore = axiumState.conceptCounter;
-          concept.selectors = updateKeyedSelectors(concepts, concept.selectors, concept.semaphore);
           if (concept.mode !== undefined) {
             const names = axiumState.modeNames;
             const modes = concepts[0].mode as Mode[];
@@ -95,6 +94,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
           newConcepts[concept.semaphore] = concept as AnyConcept;
+          concept.selectors = updateKeyedSelectors(newConcepts, concept.selectors, concept.semaphore);
           axiumState.deck = {
             ...axiumState.deck,
             [key]: {

@@ -10,7 +10,7 @@ $>*/
 import { Subject } from 'rxjs';
 import { Concepts } from './concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
-import { KeyedSelector, KeyedSelectors, createConceptKeyedSelector, select, selectSlice } from './selector';
+import { KeyedSelector, KeyedSelectors, createConceptKeyedSelector, select, selectSlice, updateSelects } from './selector';
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';

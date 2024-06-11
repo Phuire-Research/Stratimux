@@ -15,7 +15,7 @@ export type KeyedSelector<T = void> = {
   conceptName: string,
   conceptSemaphore: number,
   keys: string,
-  select: () => T | undefined,
+  select: () => T,
   _selector: SelectorFunction<T>,
   setKeys?: (number | string)[]
   setSelector?: SelectorFunction
@@ -128,8 +128,23 @@ export const updateKeyedSelectors = <S = void>(
   console.log('CHECK', selectors, semaphore, Object.keys(concepts));
   keys.forEach(key => {
     (newSelectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
+    const keyed = (newSelectors as any)[key] as KeyedSelector<any>;
+    const val = selectSlice<any>(concepts, keyed);
+    keyed.select = () => val;
   });
   return newSelectors as KeyedSelectors<S>;
+};
+
+export const updateSelects = <S= void>(
+  concepts: Concepts,
+  selectors: KeyedSelectors<S>,
+): void => {
+  const keys = Object.keys(selectors);
+  keys.forEach(key => {
+    const keyed = (selectors as any)[key] as KeyedSelector<any>;
+    const val = selectSlice<any>(concepts, keyed);
+    keyed.select = () => val;
+  });
 };
 
 /**
