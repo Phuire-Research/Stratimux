@@ -24,6 +24,9 @@ export type AxiumClosePayload = {
   exit: boolean
 };
 
+/**
+ * @parm exit - If set to true, will exit the current process.
+ */
 export type AxiumPreClosePayload = {
   exit: boolean
 };
