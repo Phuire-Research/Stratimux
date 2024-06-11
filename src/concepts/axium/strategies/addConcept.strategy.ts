@@ -37,21 +37,21 @@ export function addConceptsToAddQueThenBlockStrategy(
 }
 // Step Two
 export const addConceptsFromQueThenUnblockTopic = 'Add Concepts from Que then set Axium Mode to Default';
-export function addConceptsFromQueThenUnblockStrategy(ax: Actions<AxiumQualities>, conceptualSet: Concepts): ActionStrategy {
-  const stepThree = createActionNode(ax.axiumOpen({open: true}), {
+export function addConceptsFromQueThenUnblockStrategy(e: Actions<AxiumQualities>, conceptualSet: Concepts): ActionStrategy {
+  const stepThree = createActionNode(e.axiumOpen({open: true}), {
     successNode: null,
     successNotes: {
       preposition: 'Reinstate',
       denoter: 'State.'
     },
   });
-  const stepTwo = createActionNode(ax.axiumSetDefaultMode({concepts: conceptualSet}), {
+  const stepTwo = createActionNode(e.axiumSetDefaultMode({concepts: conceptualSet}), {
     successNode: stepThree,
     successNotes: {
       preposition: 'Then'
     },
   });
-  const stepOne = createActionNode(ax.axiumAddConceptsFromQue(),{
+  const stepOne = createActionNode(e.axiumAddConceptsFromQue(),{
     successNode: stepTwo,
     successNotes: {
       preposition: 'First'
