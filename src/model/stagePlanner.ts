@@ -145,7 +145,7 @@ export const stageWaitForOwnershipThenIterate =
  */
 export const createStage = <Q = void, C = void, S = void>(
   stage: Stage<Q, C, S>,
-  options?: { selectors?: KeyedSelector[], priority?: number, beat?: number}
+  options?: { selectors?: KeyedSelector<any>[], priority?: number, beat?: number}
 ): Staging<Q, C, S> => {
   if (options) {
     return {

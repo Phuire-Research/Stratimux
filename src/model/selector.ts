@@ -6,22 +6,25 @@ $>*/
 import { Action } from './action';
 import { AnyConcept, Concept, Concepts } from './concept';
 import { DotPath } from './dotPath';
-import { Qualities } from './quality';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
  */
-export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
-export type KeyedSelector = {
+export type SelectorFunction<T = void> = (obj: Record<string, unknown>) => T extends void ? unknown : T | undefined;
+export type KeyedSelector<T = void> = {
   conceptName: string,
   conceptSemaphore: number,
   keys: string,
-  selector: SelectorFunction,
+  select: () => T | undefined,
+  _selector: SelectorFunction<T>,
   setKeys?: (number | string)[]
   setSelector?: SelectorFunction
 };
 export type KeyedSelectors<S = void> = {
-  [K in keyof S]: KeyedSelector
+  [K in keyof S]: S[K] extends KeyedSelector<void> ?
+  KeyedSelector<void>
+  :
+  KeyedSelector<S[K]>
 };
 
 
@@ -39,7 +42,8 @@ export const createConceptKeyedSelector =
         conceptName,
         conceptSemaphore: -1,
         keys: conceptName + '.' + keys,
-        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        select: () => undefined,
+        _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
         setKeys,
         setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
       };
@@ -48,7 +52,8 @@ export const createConceptKeyedSelector =
       conceptName,
       conceptSemaphore: -1,
       keys: conceptName + '.' + keys,
-      selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+      select: () => undefined,
+      _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
       setKeys
     };
   };
@@ -74,7 +79,8 @@ export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
         return {
           conceptName: concept.name,
           conceptSemaphore: semaphore,
-          selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          select: () => undefined,
           keys: concept.name + '.' + keys,
           setKeys,
           setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
@@ -83,7 +89,8 @@ export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
       return {
         conceptName: concept.name,
         conceptSemaphore: semaphore,
-        selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+        select: () => undefined,
+        _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
         keys: concept.name + '.' + keys,
       };
     }
@@ -103,8 +110,9 @@ export const createDummyKeyedSelectors = <S = void>(
     selectors[key] = {
       conceptName: '',
       conceptSemaphore: -1,
+      select: () => undefined,
       keys: 'dummy.' + key,
-      selector: () => undefined
+      _selector: () => undefined
     };
   });
   return selectors;
@@ -117,6 +125,7 @@ export const updateKeyedSelectors = <S = void>(
 ): KeyedSelectors<S> => {
   const newSelectors = {};
   const keys = Object.keys(selectors);
+  console.log('CHECK', selectors, semaphore, Object.keys(concepts));
   keys.forEach(key => {
     (newSelectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
   });
@@ -132,12 +141,13 @@ export const updateUnifiedKeyedSelector =
     if (concepts[semaphore]) {
       const selectorBase = keyedSelector.keys.split('.');
       selectorBase[0] = concepts[semaphore].name;
-      const selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
+      const _selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
       if (keyedSelector.setKeys) {
         return {
           conceptName: concepts[semaphore].name,
           conceptSemaphore: semaphore,
-          selector,
+          _selector,
+          select: () => undefined,
           keys: selectorBase.join('.'),
           setKeys: keyedSelector.setKeys,
           setSelector: keyedSelector.setSelector
@@ -146,7 +156,8 @@ export const updateUnifiedKeyedSelector =
       return {
         conceptName: concepts[semaphore].name,
         conceptSemaphore: semaphore,
-        selector,
+        _selector,
+        select: () => undefined,
         keys: selectorBase.join('.')
       };
     } else {
@@ -287,7 +298,7 @@ export function selectSlice<T>(
   if (concept === undefined) {return undefined;}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cast = concept.state as Record<string, any>;
-  return keyed.selector(cast) as T | undefined;
+  return keyed._selector(cast) as T | undefined;
 }
 
 export function selectSet<T>(concepts: Concepts, keyed: KeyedSelector): T | undefined {

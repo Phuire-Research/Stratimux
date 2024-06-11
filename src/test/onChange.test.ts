@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { createAxium, getAxiumState } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
-import { selectSlice, selectState } from '../model/selector';
+import { KeyedSelector, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
@@ -23,8 +23,9 @@ test('Axium onChange Test', (done) => {
   };
   const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const plan = axium.plan('Counting Strategy Plan with selectors',
-    ({stage}) => [
+    ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
+        // console.log('What is this Keyed Selector?', d.counter.k);
         console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
         if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
           const str = countingStrategy(d);
@@ -38,7 +39,7 @@ test('Axium onChange Test', (done) => {
             setTimeout(() => done(), 50);
           }
         }
-      }, {selectors: [axiumSelectLastStrategy]}),
+      }, {selectors: [d__.axium.k.lastStrategy]}),
       stage(({concepts, dispatch, changes, e}) => {
         console.log('Check Changes: ',  changes);
         changes?.forEach(keyed => {
@@ -58,7 +59,7 @@ test('Axium onChange Test', (done) => {
           });
         }
       }, {
-        selectors: [counterSelectCount]
+        selectors: [d__.counter.k.count]
       })
     ]);
 });

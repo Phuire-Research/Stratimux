@@ -196,7 +196,6 @@ export function createCachedSemaphores(concepts: Concepts): Map<string, Map<stri
     const qualityMap = new Map<string, [number, number, number, number]>();
     concept.qualities.forEach((quality, qi) => {
       const semaphore: [number, number, number, number] = [ci as number, qi, generation, getSpecialSemaphore(quality.actionType)];
-      console.log((quality as any).length, quality.actionSemaphoreBucket);
       quality.actionSemaphoreBucket.shift();
       quality.actionSemaphoreBucket.push(semaphore);
       // console.log(quality.actionType, semaphore);

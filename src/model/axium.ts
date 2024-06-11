@@ -238,24 +238,26 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
     )
   };
   const _cpts = concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
-  const baseDeck: BaseDeck = {
+  const akUpdate = updateKeyedSelectors(concepts, _cpts.selectors, 0);
+  const baseDeck: Deck<any> = {
     axium: {
       e: _cpts.actions,
       c: _cpts.comparators,
-      k: updateKeyedSelectors(concepts, _cpts.selectors, 0)
+      k: akUpdate,
     },
   };
   concepts[0].semaphore = 0;
-  Object.keys(deckLoad).forEach((k, i) => {
-    const updatedSelectors = updateKeyedSelectors(concepts, deckLoad[k].selectors, i + 1);
-    (baseDeck as Deck<any>)[k] = {
-      e: deckLoad[k].actions,
-      c: deckLoad[k].comparators,
-      k: updateKeyedSelectors
+  Object.keys(deckLoad).forEach((key, i) => {
+    concepts[i + 1] = deckLoad[key];
+    const updatedSelectors = updateKeyedSelectors(concepts, deckLoad[key].selectors, i + 1);
+    console.log('CHECK THIS', updatedSelectors);
+    (baseDeck as Deck<any>)[key] = {
+      e: deckLoad[key].actions,
+      c: deckLoad[key].comparators,
+      k: updatedSelectors
     };
-    deckLoad[k].selectors = updatedSelectors;
-    deckLoad[k].semaphore = i + 1;
-    concepts[i + 1] = deckLoad[k];
+    deckLoad[key].selectors = updatedSelectors;
+    deckLoad[key].semaphore = i + 1;
   });
 
   const deck = baseDeck as BaseDeck & Deck<C>;
