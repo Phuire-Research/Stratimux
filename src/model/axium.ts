@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { Action, Actions, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -26,7 +26,7 @@ import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck } from './deck';
-import { updateKeyedSelectors } from './selector';
+import { createBufferedSelectorsSet, updateKeyedSelectors } from './selector';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -237,13 +237,14 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       options?.dynamic
     )
   };
-  const _cpts = concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
+  const _cpts = concepts[0];
   updateKeyedSelectors(concepts, _cpts.selectors, 0);
   const baseDeck: Deck<any> = {
     axium: {
       e: _cpts.actions,
       c: _cpts.comparators,
       k: _cpts.selectors,
+      s: createBufferedSelectorsSet(0)
     },
   };
   concepts[0].semaphore = 0;
@@ -253,7 +254,8 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
     (baseDeck as Deck<any>)[key] = {
       e: deckLoad[key].actions,
       c: deckLoad[key].comparators,
-      k: deckLoad[key].selectors
+      k: deckLoad[key].selectors,
+      s: createBufferedSelectorsSet(i + 1)
     };
     deckLoad[key].semaphore = i + 1;
   });
@@ -261,7 +263,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
   const deck = baseDeck as BaseDeck & Deck<C>;
 
   let axiumState = concepts[0].state as AxiumState<AxiumQualities, AxiumDeck & C>;
-  axiumState.deck = deck;
+  axiumState.deck = deck as Deck<AxiumDeck & C>;
   axiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     axiumState.conceptCounter += 1;
@@ -372,7 +374,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       action$.next(action);
     },
     plan: axiumState.concepts$.outerPlan,
-    deck,
+    deck: deck as Deck<AxiumDeck & C>,
     e: deck.axium.e
   };
 }

@@ -7,7 +7,7 @@ import { Action, Actions } from './action';
 import { AxiumDeck } from './axium';
 import { AnyConcept, Concept } from './concept';
 import { Deck } from './deck';
-import { KeyedSelectors } from './selector';
+import { KeyedSelectors, Selectors } from './selector';
 
 /*<#*/
 /**
@@ -53,7 +53,9 @@ export type UInterface<Q = void, C = void, S = void> = {
   c: Comparators<Q>
   // Keyed Selectors
   k: KeyedSelectors<S>
-}
+  // s: Selectors<S, C>
+  s: Selectors<S>
+};
 
 /**
  * [TODO] - IMPORTANT
@@ -66,6 +68,8 @@ export type OInterface<Q = void, C = void, S = void> = {
   e: Actions<Q>
   c: Comparators<Q>
   k: KeyedSelectors<S>
+  s: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>>
+  // s: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>, C extends AnyConcept ? C : AnyConcept>
 }
 
 /**
@@ -76,6 +80,8 @@ export type HInterface<Q = void, C = void, S = void> = {
   e__: Actions<Q>
   c__: Comparators<Q>
   k__: KeyedSelectors<S>
+  // s__: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>, C extends AnyConcept ? C : AnyConcept>
+  s__: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>>
 }
 
 /**
@@ -86,5 +92,8 @@ export type BInterface<Q = void, C = void, S = void> = {
   e_: Actions<Q>
   c_: Comparators<Q>
   k_: KeyedSelectors<S>
+  // s_: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>, C extends AnyConcept ? C : AnyConcept>
+  s_: Selectors<S extends Record<string, unknown> ? S : Record<string, unknown>>
 }
+
 /*#>*/

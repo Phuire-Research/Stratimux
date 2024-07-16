@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { Subscription } from 'rxjs';
 import { AnyAction } from '../../../model/action';
-import { Quality } from '../../../model/quality';
+import { Qualities, Quality } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { AnyConcept, Concepts } from '../../../model/concept';
 import { ActionType } from '../../../model/method';
@@ -124,6 +124,6 @@ export type AxiumQualities = {
   axiumClearBadPlanFromBadPlanList: Quality<AxiumState<unknown, unknown>, AxiumClearBadPlanFromBadPlanListPayload>,
   axiumStitch: Quality<Record<string, unknown>, void>,
   axiumRegisterTimeOut: Quality<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>
-}
+} & Qualities;
 
 /*#>*/

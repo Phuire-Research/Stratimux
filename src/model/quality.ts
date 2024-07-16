@@ -27,7 +27,10 @@ export type Quality<S extends Record<string, unknown>, T = void> = {
 };
 
 export type Qualities = {
-  [s: string]: Quality<Record<string, unknown>, Record<string, unknown>> | Quality<Record<string, unknown>, undefined>;
+  [s: string]: Quality<Record<string, unknown>, Record<string, unknown>> |
+    Quality<Record<string, unknown>, undefined> |
+    Quality<Record<string, unknown>, void> |
+    Quality<Record<string, unknown>, any>;
   // [s: string]: Quality<Record<string, unknown>>
 };
 

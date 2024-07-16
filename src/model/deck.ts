@@ -4,10 +4,12 @@ $>*/
 /*<#*/
 import { Actions } from './action';
 import { accessAxium, getAxiumState } from './axium';
-import { Concept, Concepts, conceptsToString } from './concept';
+import { AnyConcept, Concept, Concepts, conceptsToString } from './concept';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
-import { KeyedSelectors } from './selector';
+import { ConceptSelector, KeyedSelectors, Selectors, StateSelector, UnifiedKeyedSelector } from './selector';
+
+
 
 export type Deck<C> = {
   [K in keyof C]: {
@@ -41,6 +43,20 @@ export type Deck<C> = {
     C[K]['selectors']
     :
     KeyedSelectors<void>
+    s: C[K] extends Concept<Record<string, unknown>, Qualities> ?
+    // Selectors<C[K]['state'], C[K]>
+    Selectors<C[K]['state']>
+    :
+    C[K] extends Concept<Record<string, unknown>, void> ?
+    // Selectors<C[K]['state'], C[K]>
+    Selectors<C[K]['state']>
+    :
+    C[K] extends Concept<any, any> ?
+    // Selectors<Record<string, unknown>, C[K]>
+    Selectors<Record<string, unknown>>
+    :
+    // Selectors<Record<string, unknown>, AnyConcept>
+    Selectors<Record<string, unknown>>
   }
 }
 

@@ -3,12 +3,12 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concept, Concepts } from './concept';
+import { AnyConcept, Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
-import { Quality } from './quality';
+import { Qualities, Quality } from './quality';
 import { AxiumBadActionPayload } from '../concepts/axium/qualities';
 
 export const nullActionType: ActionType = 'null';
@@ -55,8 +55,13 @@ export type ActionCreatorType<T = void> =
 
 export type Actions<T = void> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends Quality<Record<string, unknown>, any> ?
-    T[K]['actionCreator'] : ActionCreator;
+  [K in keyof T]: T[K] extends void ?
+    ActionCreator
+    :
+    T[K] extends Quality<Record<string, unknown>, Record<string, unknown>> ?
+    T[K]['actionCreator']
+    :
+    ActionCreator;
 };
 
 export type ActionCreator = (
@@ -180,7 +185,7 @@ export function getSemaphore(concepts: Concepts, conceptName: string, actionType
 
 // For proper compilation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore?: number) => void) => {
+const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphore?: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);

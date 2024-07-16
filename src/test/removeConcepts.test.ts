@@ -46,8 +46,5 @@ test('Axium remove Concepts Strategy Test', (done) => {
       }
     })
   ]);
-  const sub = axium.subscribe(concepts => {
-    console.log(getAxiumState(concepts).lastStrategy);
-  });
 });
 /*#>*/

@@ -6,6 +6,7 @@ $>*/
 import { Action } from './action';
 import { AnyConcept, Concept, Concepts } from './concept';
 import { DotPath } from './dotPath';
+import { Qualities } from './quality';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.
@@ -14,7 +15,7 @@ export type SelectorFunction<T = void> = (obj: Record<string, unknown>) => T ext
 export type KeyedSelector<T = void> = {
   conceptName: string,
   conceptSemaphore: number,
-  keys: string,
+  keys: DotPath<T extends Record<string, unknown> ? T : Record<string, unknown>>,
   select: () => T,
   _selector: SelectorFunction<T>,
   setKeys?: (number | string)[]
@@ -24,9 +25,9 @@ export type KeyedSelectors<S = void> = {
   [K in keyof S]: S[K] extends KeyedSelector<void> ?
   KeyedSelector<void>
   :
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   KeyedSelector<S[K]>
 };
-
 
 /**
  * Will create a new KeyedSelector based on a concept name comparison during runtime, mainly used for external usage
@@ -99,6 +100,105 @@ export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
     console.warn('ERROR AT: ', keys);
   }
   return undefined;
+};
+
+export type CreateBufferedUnifiedKeyedSelector = <T = void> (semaphore: number) =>
+  UnifiedKeyedSelector<T>;
+export type UnifiedKeyedSelector<T = void> = (
+  concepts: Concepts,
+  keys: DotPath<T extends Record<string, unknown> ? T : Record<string, unknown>>,
+  setKeys?: (number | string)[]
+) => KeyedSelector | undefined;
+
+export const createBufferedUnifiedKeyedSelector: CreateBufferedUnifiedKeyedSelector =
+  <T extends Record<string, unknown>> (semaphore: number) => (
+    concepts: Concepts,
+    keys: DotPath<T>,
+    setKeys?: (number | string)[]
+  ): KeyedSelector | undefined => {
+    const concept = concepts[semaphore];
+    try {
+      if (concept) {
+        const selectorBase = [concept.name, ...keys.split('.')];
+        if (setKeys) {
+          return {
+            conceptName: concept.name,
+            conceptSemaphore: semaphore,
+            _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+            select: () => undefined,
+            keys: concept.name + '.' + keys,
+            setKeys,
+            setSelector: setCreation(setKeys, setKeys.length - 1, setKeys.length)
+          };
+        }
+        return {
+          conceptName: concept.name,
+          conceptSemaphore: semaphore,
+          select: () => undefined,
+          _selector: creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction,
+          keys: concept.name + '.' + keys,
+        };
+      }
+    } catch (err) {
+      console.error(err);
+      console.warn('ERROR AT: ', keys);
+    }
+    return undefined;
+  };
+
+export type StateValidator<S = void> = S extends Record<string, unknown> ? S : Record<string, unknown>;
+export type CreateBufferedStateSelector = <S = void>(semaphore: number) =>
+  StateSelector<S>;
+export type StateSelector<S = void> = (concepts: Concepts) => StateValidator<S> | undefined;
+
+export const createBufferedStateSelector: CreateBufferedStateSelector =
+  <S = void>(semaphore: number): StateSelector<S> => (concepts: Concepts):
+    StateValidator<S> | undefined => {
+    const concept = concepts[semaphore];
+    if (concept) {
+      return concept.state as StateValidator<S>;
+    }
+    return undefined;
+  };
+
+export type CreateBufferedConceptSelector = <C = void>(semaphore: number) =>
+  ConceptSelector<C extends Concept<Record<string, unknown>> ? C : AnyConcept>;
+export type ConceptSelector<C extends Concept<Record<string, unknown>, any>> = (concepts: Concepts) => C | undefined;
+
+export const createBufferedConceptSelector: CreateBufferedConceptSelector =
+  <C extends Concept<Record<string, unknown>, any>>(semaphore: number): ConceptSelector<C> => (concepts: Concepts): C | undefined => {
+    const concept = concepts[semaphore];
+    if (concept) {
+      return concept as C;
+    }
+    return undefined;
+  };
+
+// export type Selectors<S = void, C = void> = {
+export type Selectors<S = void> = {
+  create: UnifiedKeyedSelector<S>,
+  state: StateSelector<S>,
+  // concept: ConceptSelector<C>
+}
+
+// export const createBufferedSelectorsSet = <S extends Record<string, unknown>, C extends Concept<any, any>>(
+export const createBufferedSelectorsSet = <S = void>(
+  semaphore: number
+): Selectors<S>   => {
+  return {
+    create: createBufferedUnifiedKeyedSelector<S>(semaphore),
+    // concept: createBufferedConceptSelector<C>(semaphore),
+    state: createBufferedStateSelector<S>(semaphore)
+  };
+};
+
+export const createDummySelectorsSet = <S = void>(
+): Selectors<S>   => {
+  return {
+    create: createBufferedUnifiedKeyedSelector<S>(-1),
+    // concept: createBufferedConceptSelector<C>(semaphore),
+    state: createBufferedStateSelector<S>(-1)
+  };
 };
 
 export const createDummyKeyedSelectors = <S = void>(

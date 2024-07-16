@@ -9,7 +9,7 @@ import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, Act
 import { PrincipleFunction } from '../model/principle';
 import { strategySuccess } from './actionStrategy';
 import { map } from 'rxjs';
-import { KeyedSelector, KeyedSelectors, createDummyKeyedSelectors, createUnifiedKeyedSelector } from './selector';
+import { KeyedSelector, KeyedSelectors, Selectors, createBufferedSelectorsSet, createDummyKeyedSelectors, createDummySelectorsSet, createUnifiedKeyedSelector } from './selector';
 import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
 import { UnifiedSubject } from './stagePlanner';
 import { Comparators, createComparator } from './interface';
@@ -46,6 +46,7 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   actions: Actions<T>;
   comparators: Comparators<T>;
   selectors: KeyedSelectors<S>;
+  baseSelectors: Selectors<S>;
   qualities: Quality<Record<string, unknown>>[];
   q: T extends Record<string, unknown> ?
     T
@@ -57,8 +58,10 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   meta?: Record<string,unknown>;
 };
 
+export type AnyConcept =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
+  Concept<Record<string, unknown>, void> |
+  Concept<Record<string, unknown>, Qualities>;
 
 export type Concepts = Record<number, AnyConcept>;
 
@@ -118,6 +121,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     comparators: comparators as Comparators<T extends void ? any : T>,
     selectors: createDummyKeyedSelectors(state),
+    baseSelectors: createDummySelectorsSet(),
     qualities: qualities ? qualities : [],
     q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
     semaphore: -1,
@@ -219,8 +223,8 @@ function filterSimilarQualities(concept: AnyConcept) {
 }
 
 function unify<T extends Qualities, K extends Qualities>(
-  base: Concept<Record<string, unknown>, T>,
-  target: Concept<Record<string, unknown>, K>
+  base: AnyConcept,
+  target: AnyConcept
 ): Concept<Record<string, unknown>, T & K> {
   if (target.name !== '') {
     base.unified.push(target.name);
@@ -292,7 +296,7 @@ export function unifyConcepts<S extends Record<string, unknown>, T extends Quali
   emergentConcept: AnyConcept
 ): Concept<S, T> {
   const dummy = {};
-  let newConcept = createConcept<typeof dummy, T>('', dummy);
+  let newConcept = createConcept<typeof dummy, T>('', dummy) as AnyConcept;
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
   }));
