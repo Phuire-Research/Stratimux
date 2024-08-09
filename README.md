@@ -64,15 +64,12 @@ When in doubt simplify.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 
-## Road Map (*Updated*  6/20/24)
+## Road Map (*Updated*  08/09/24)
 ### Beyond v0.2.0
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
-* Planned
-  * Action Graph
-  * Project Scaffolding
-  * *Spoilers*
+* Extended Roadmap Set
 ### Developer Experience Decks Interface v0.2.0
-This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates and apologize for taking time necessary to ensure the internal type safety. Soon.
+This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates. Making the time as of 08/09/24 
 * DECKS Interface - No longer need to import actions, selectors, or prime semaphores.
   * [X] d - Entry point supplied to all points of observation, allows for the selection of each deck currently loaded into the Axium. Providing access to their e, c, k, s properties.
   * [X] e - Entry point for the current point of observation, providing access to all loaded actions for such.
