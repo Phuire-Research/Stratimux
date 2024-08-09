@@ -244,6 +244,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       e: _cpts.actions,
       c: _cpts.comparators,
       k: _cpts.selectors,
+      s: {}
     },
   };
   concepts[0].semaphore = 0;
@@ -253,7 +254,8 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
     (baseDeck as Deck<any>)[key] = {
       e: deckLoad[key].actions,
       c: deckLoad[key].comparators,
-      k: deckLoad[key].selectors
+      k: deckLoad[key].selectors,
+      s: {}
     };
     deckLoad[key].semaphore = i + 1;
   });

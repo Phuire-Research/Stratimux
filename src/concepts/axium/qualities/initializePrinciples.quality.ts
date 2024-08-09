@@ -38,6 +38,7 @@ export const axiumInitializePrinciples =
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
               concept.selectors,
+              {}
             );
             principleSubscribers.push({
               name: concept.name,
@@ -59,6 +60,7 @@ export const axiumInitializePrinciples =
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
               concept.selectors,
+              {}
             );
             principleSubscribers.push({
               name: concept.name,

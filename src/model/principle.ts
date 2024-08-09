@@ -40,7 +40,8 @@ export function createPrinciple$<T = void, C = void, S = void>(
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<T>,
   c_: Comparators<T>,
-  k_: KeyedSelectors<S>
+  k_: KeyedSelectors<S>,
+  s_: unknown
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({
@@ -54,6 +55,7 @@ export function createPrinciple$<T = void, C = void, S = void>(
       e_,
       c_,
       k_,
+      s_,
       conceptSemaphore
     });
   });

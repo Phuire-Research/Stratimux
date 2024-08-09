@@ -41,9 +41,24 @@ export type Deck<C> = {
     C[K]['selectors']
     :
     KeyedSelectors<void>
+    s: unknown
+    // s: C[K] extends Concept<Record<string, unknown>, Qualities> ?
+    // // Selectors<C[K]['state'], C[K]>
+    // Selectors<C[K]['state']>
+    // :
+    // C[K] extends Concept<Record<string, unknown>, void> ?
+    // // Selectors<C[K]['state'], C[K]>
+    // Selectors<C[K]['state']>
+    // :
+    // C[K] extends Concept<any, any> ?
+    // // Selectors<Record<string, unknown>, C[K]>
+    // Selectors<Record<string, unknown>>
+    // :
+    // // Selectors<Record<string, unknown>, AnyConcept>
+    // Selectors<Record<string, unknown>>
   }
 }
 
-export const accessDeck = <T>(concepts: Concepts): Deck<T> => (getAxiumState(concepts).deck as Deck<T>);
+export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getAxiumState(concepts).deck as Deck<C>);
 
 /*#>*/

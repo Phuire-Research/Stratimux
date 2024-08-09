@@ -68,6 +68,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 concept.actions as Actions<any>,
                 concept.comparators as Comparators<any>,
                 concept.selectors as KeyedSelectors<any>,
+                {}
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,

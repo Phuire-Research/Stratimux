@@ -52,7 +52,9 @@ export type UInterface<Q = void, C = void, S = void> = {
   // Comparators
   c: Comparators<Q>
   // Keyed Selectors
-  k: KeyedSelectors<S>
+  k: KeyedSelectors<S>,
+  // Selectors
+  s: unknown
 }
 
 /**
@@ -65,7 +67,8 @@ export type OInterface<Q = void, C = void, S = void> = {
   d: Deck<C extends void ? AxiumDeck : C>
   e: Actions<Q>
   c: Comparators<Q>
-  k: KeyedSelectors<S>
+  k: KeyedSelectors<S>,
+  s: unknown
 }
 
 /**
@@ -75,7 +78,8 @@ export type HInterface<Q = void, C = void, S = void> = {
   d__: Deck<C extends void ? AxiumDeck : C>
   e__: Actions<Q>
   c__: Comparators<Q>
-  k__: KeyedSelectors<S>
+  k__: KeyedSelectors<S>,
+  s__: unknown
 }
 
 /**
@@ -85,6 +89,7 @@ export type BInterface<Q = void, C = void, S = void> = {
   d_: Deck<C extends void ? AxiumDeck : C>,
   e_: Actions<Q>
   c_: Comparators<Q>
-  k_: KeyedSelectors<S>
+  k_: KeyedSelectors<S>,
+  s_: unknown
 }
 /*#>*/

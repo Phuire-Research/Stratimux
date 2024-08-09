@@ -366,6 +366,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
       c__: this.concepts[conceptSemaphore].comparators as Comparators<any>,
       k__: this.concepts[conceptSemaphore].selectors as KeyedSelectors<any>,
+      s__: {},
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -751,6 +752,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},
       k: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].selectors as KeyedSelectors<any> : {},
+      s: {}
     });
   }
 
