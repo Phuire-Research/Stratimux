@@ -2,13 +2,15 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the base selector consumer functions are working as intended.
 $>*/
 /*<#*/
-import { createAxium  } from '../model/axium';
+import { AxiumDeck, createAxium  } from '../model/axium';
 import { Concept, Concepts } from '../model/concept';
 import { select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
+import { createStage } from '../model/stagePlanner';
+import { AxiumQualities } from '../concepts/axium/qualities';
 
 test('Axium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -85,4 +87,18 @@ test('Axium Unified Selector Test', (done) => {
     }
   }
 });
+
+test('Axium Deck Selector Test', (done) => {
+  const ax = createAxium('Test Base Selectors', {});
+  ax.plan('Test Base Selectors', ({stageO, stage, e__}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({s, stagePlanner}) => {
+      s;
+      stagePlanner.conclude();
+      ax.close();
+      done();
+    })
+  ]);
+});
+
 /*#>*/

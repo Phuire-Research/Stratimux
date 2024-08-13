@@ -57,13 +57,13 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   meta?: Record<string,unknown>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 // export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
 export type AnyConcept =
   Concept<Record<string, unknown>, Qualities>
   |
   Concept<Record<string, unknown>, void>
   |
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   Concept<any, any>;
 
 export type Concepts = Record<number, AnyConcept>;
