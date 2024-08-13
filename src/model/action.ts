@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concept, Concepts } from './concept';
+import { AnyConcept, Concept, Concepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
@@ -180,7 +180,7 @@ export function getSemaphore(concepts: Concepts, conceptName: string, actionType
 
 // For proper compilation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore?: number) => void) => {
+const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphore?: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);

@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { Action, Actions, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
@@ -235,9 +235,10 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       options?.logging,
       options?.logActionStream,
       options?.dynamic
-    )
+    ) as unknown as AnyConcept
   };
-  const _cpts = concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
+  const _cpts = concepts[0];
+  // as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
   updateKeyedSelectors(concepts, _cpts.selectors, 0);
   const baseDeck: Deck<any> = {
     axium: {
@@ -359,7 +360,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
   axiumState.actionConcepts$.next(concepts);
   axiumState.concepts$.init(concepts);
   axiumState.action$.next(
-    strategyBegin(initializationStrategy(concepts[0].actions as Actions<AxiumQualities>, concepts)),
+    strategyBegin(initializationStrategy(concepts[0].actions as unknown as Actions<AxiumQualities>, concepts)),
   );
   const close = (exit?: boolean) => {
     action$.next(deck.axium.e.axiumPreClose({

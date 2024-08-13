@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux generate the Axium Qu
 $>*/
 /*<#*/
 import { Subscription } from 'rxjs';
-import { AnyAction } from '../../../model/action';
+import { Actions, AnyAction } from '../../../model/action';
 import { Quality } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { AnyConcept, Concepts } from '../../../model/concept';

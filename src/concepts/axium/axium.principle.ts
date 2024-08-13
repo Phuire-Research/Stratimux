@@ -55,7 +55,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$<typeof concept.q, AxiumDeck, typeof concept.state>(
+              const observable = createPrinciple$(
                 principle,
                 concepts,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any

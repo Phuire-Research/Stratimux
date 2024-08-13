@@ -47,10 +47,10 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   comparators: Comparators<T>;
   selectors: KeyedSelectors<S>;
   qualities: Quality<Record<string, unknown>>[];
-  q: T extends Record<string, unknown> ?
+  q: T extends Qualities ?
     T
     :
-    Record<string, unknown>;
+    Qualities;
   semaphore: number;
   principles?: PrincipleFunction<T, any, any>[];
   mode?: Mode[];
@@ -58,7 +58,13 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
+// export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
+export type AnyConcept =
+  Concept<Record<string, unknown>, Qualities>
+  |
+  Concept<Record<string, unknown>, void>
+  |
+  Concept<any, any>;
 
 export type Concepts = Record<number, AnyConcept>;
 
@@ -119,7 +125,7 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     comparators: comparators as Comparators<T extends void ? any : T>,
     selectors: createDummyKeyedSelectors(state),
     qualities: qualities ? qualities : [],
-    q: (_qualities ? _qualities : {}) as T extends Record<string, unknown> ? T : Record<string, unknown>,
+    q: (_qualities ? _qualities : {}) as T extends Qualities ? T : Qualities,
     semaphore: -1,
     principles,
     mode,
@@ -220,7 +226,7 @@ function filterSimilarQualities(concept: AnyConcept) {
 
 function unify<T extends Qualities, K extends Qualities>(
   base: Concept<Record<string, unknown>, T>,
-  target: Concept<Record<string, unknown>, K>
+  target: Concept<Record<string, unknown>, K> | AnyConcept
 ): Concept<Record<string, unknown>, T & K> {
   if (target.name !== '') {
     base.unified.push(target.name);
@@ -291,7 +297,7 @@ export function unifyConcepts<S extends Record<string, unknown>, T extends Quali
   concepts: AnyConcept[],
   emergentConcept: AnyConcept
 ): Concept<S, T> {
-  const dummy = {};
+  const dummy: Record<string, unknown> = {};
   let newConcept = createConcept<typeof dummy, T>('', dummy);
   forEachConcept(concepts, (concept => {
     newConcept = unify(newConcept, concept);
@@ -309,7 +315,7 @@ export function unifyConcepts<S extends Record<string, unknown>, T extends Quali
       p.toString = () => `PRINCIPLE: ${newConcept.name} ${i}`;
     });
   }
-  return filterSimilarQualities(newConcept) as Concept<S, T>;
+  return filterSimilarQualities(newConcept as AnyConcept) as Concept<S, T>;
 }
 
 export const getUnifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);

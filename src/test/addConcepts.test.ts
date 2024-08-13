@@ -8,7 +8,7 @@ import { select, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/axium/strategies/addConcept.strategy';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { forEachConcept } from '../model/concept';
+import { AnyConcept, forEachConcept } from '../model/concept';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { Deck } from '../model/deck';
 
@@ -21,7 +21,7 @@ test('Axium add Concepts Strategy Test', (done) => {
       expect(Object.keys(d).length).toBe(1);
       dispatch(
         strategyBegin(
-          addConceptsToAddQueThenBlockStrategy(e, concepts, { counter: createCounterConcept()})
+          addConceptsToAddQueThenBlockStrategy(e, concepts, { counter: createCounterConcept() as unknown as AnyConcept})
         ),
         {
           iterateStage: true
