@@ -4,10 +4,18 @@ $>*/
 /*<#*/
 import { Actions } from './action';
 import { accessAxium, getAxiumState } from './axium';
-import { Concept, Concepts, conceptsToString } from './concept';
+import { AnyConcept, Concept, Concepts, conceptsToString } from './concept';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
 import { KeyedSelectors } from './selector';
+
+export type Decks<BaseQ, BaseS, Extended> = {
+  d: Deck<Extended>;
+  e: Actions<BaseQ>
+  c: Comparators<BaseQ>
+  k: KeyedSelectors<BaseS>
+  s: unknown
+};
 
 export type Deck<C> = {
   [K in keyof C]: {
@@ -17,7 +25,7 @@ export type Deck<C> = {
     C[K] extends Concept<Record<string, unknown>, void> ?
     C[K]['actions']
     :
-    C[K] extends Concept<any, any> ?
+    C[K] extends AnyConcept ?
     C[K]['actions']
     :
     Actions<void>
@@ -27,38 +35,24 @@ export type Deck<C> = {
     C[K] extends Concept<Record<string, unknown>, void> ?
     C[K]['comparators']
     :
-    C[K] extends Concept<any, any> ?
+    C[K] extends AnyConcept ?
     C[K]['comparators']
     :
     Comparators<void>
     k: C[K] extends Concept<Record<string, unknown>, Qualities> ?
-    C[K]['selectors']
+    C[K]['keyedSelectors']
     :
     C[K] extends Concept<Record<string, unknown>, void> ?
-    C[K]['selectors']
+    C[K]['keyedSelectors']
     :
-    C[K] extends Concept<any, any> ?
-    C[K]['selectors']
+    C[K] extends AnyConcept ?
+    C[K]['keyedSelectors']
     :
     KeyedSelectors<void>
     s: unknown
-    // s: C[K] extends Concept<Record<string, unknown>, Qualities> ?
-    // // Selectors<C[K]['state'], C[K]>
-    // Selectors<C[K]['state']>
-    // :
-    // C[K] extends Concept<Record<string, unknown>, void> ?
-    // // Selectors<C[K]['state'], C[K]>
-    // Selectors<C[K]['state']>
-    // :
-    // C[K] extends Concept<any, any> ?
-    // // Selectors<Record<string, unknown>, C[K]>
-    // Selectors<Record<string, unknown>>
-    // :
-    // // Selectors<Record<string, unknown>, AnyConcept>
-    // Selectors<Record<string, unknown>>
   }
 }
 
-export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getAxiumState(concepts).deck as Deck<C>);
+export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getAxiumState(concepts).deck.d as Deck<C>);
 
 /*#>*/

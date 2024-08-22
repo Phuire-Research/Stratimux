@@ -14,8 +14,9 @@ import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
-import { AxiumDeck, accessAxium, getAxiumState } from '../../model/axium';
+import { accessAxium, getAxiumState } from '../../model/axium';
 import { AxiumBadActionPayload } from '../axium/qualities';
+import { AxiumDeck } from '../axium/axium.concept';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {

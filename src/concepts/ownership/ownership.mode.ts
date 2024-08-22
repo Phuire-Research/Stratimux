@@ -58,7 +58,7 @@ export const ownershipMode: Mode = (
             // eslint-disable-next-line max-depth
             if (nextAction.semaphore[3] === 3) {
               concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
-              nextAction = deck.axium.e.axiumAppendActionListToDialog({
+              nextAction = deck.d.axium.e.axiumAppendActionListToDialog({
                 actionList: action.strategy.actionList,
                 strategyTopic: action.strategy.topic,
                 strategyData: action.strategy.data

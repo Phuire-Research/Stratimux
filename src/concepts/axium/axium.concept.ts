@@ -29,7 +29,7 @@ import { axiumPreClose } from './qualities/preClose.quality';
 import { axiumStitch } from './qualities/stitch.quality';
 import { axiumRegisterTimeOut } from './qualities/registerTimeOut.quality';
 import { Subject, Subscription } from 'rxjs';
-import { AnyConcept, Concept, ConceptDeck, Concepts } from '../../model/concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts } from '../../model/concept';
 import { Action, AnyAction } from '../../model/action';
 import { axiumPrinciple } from './axium.principle';
 import { axiumClosePrinciple } from './axium.close.principle';
@@ -38,8 +38,8 @@ export { initializationStrategy } from './strategies/initialization.strategy';
 import { createConcept } from '../../model/concept';
 import { NamedStagePlanner, Plan, UnifiedSubject } from '../../model/stagePlanner';
 import { AxiumQualities } from './qualities';
-import { Deck } from '../../model/deck';
-import { AxiumDeck } from '../../model/axium';
+import { Deck, Decks } from '../../model/deck';
+import { AxiumLoad } from '../../model/axium';
 
 export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {
@@ -107,7 +107,7 @@ export type NamedSubscription = {
   subscription: Subscription;
 }
 
-export type AxiumState<Q, C> = {
+export type AxiumState<Q, C extends LoadConcepts> = {
   // Would be unique identifier on a network
   name: string;
   open: boolean;
@@ -133,7 +133,7 @@ export type AxiumState<Q, C> = {
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
   concepts$: UnifiedSubject<Q, C>;
-  deck: Deck<C>,
+  deck: Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
   badPlans: Plan<any, any, any>[];
@@ -146,9 +146,18 @@ export type AxiumState<Q, C> = {
   tailTimer: NodeJS.Timeout[];
 }
 
+export type AxiumDeck = {
+  axium: Concept<AxiumState<AxiumQualities, LoadConcepts>, AxiumQualities>
+};
+
 export const axiumName = 'axium';
 
-const createAxiumState = <Q, C>(name: string, storeDialog?: boolean, logging?: boolean, logActionStream?: boolean): AxiumState<Q, C> => {
+const createAxiumState = <Q, C extends LoadConcepts>(
+  name: string,
+  storeDialog?: boolean,
+  logging?: boolean,
+  logActionStream?: boolean
+): AxiumState<Q, C> => {
   return {
     name,
     open: false,
@@ -177,7 +186,7 @@ const createAxiumState = <Q, C>(name: string, storeDialog?: boolean, logging?: b
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new UnifiedSubject(),
-    deck: {} as Deck<C>,
+    deck: {} as Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
     addConceptQue: {},
     removeConceptQue: {},
     badPlans: [],
@@ -189,7 +198,7 @@ const createAxiumState = <Q, C>(name: string, storeDialog?: boolean, logging?: b
 };
 const axiumStaticPrinciple = [axiumClosePrinciple];
 
-export const createAxiumConcept = <Q, C>(
+export const createAxiumConcept = <Q, C extends LoadConcepts>(
   name: string,
   storeDialog?: boolean,
   logging?: boolean,

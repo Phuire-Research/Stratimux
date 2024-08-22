@@ -4,7 +4,7 @@ is managing plan notifications as intended.
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { AxiumDeck, createAxium, getAxiumState } from '../../model/axium';
+import { createAxium, getAxiumState } from '../../model/axium';
 import { select, selectPayload, selectState } from '../../model/selector';
 import { StagePlanner, createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
@@ -14,6 +14,7 @@ import { experimentPriorityAddValue } from './qualities/addValue.quality';
 import { handlePriority } from '../../model/priority';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';
+import { AxiumDeck } from '../../concepts/axium/axium.concept';
 
 test('Priority Action Test', (done) => {
   console.log('Priority Test');
@@ -104,7 +105,7 @@ test('Priority Action Test', (done) => {
       concludePlan(),
     ]);
   setTimeout(() => {
-    priorityTest.dispatch(priorityTest.deck.experiment.e.experimentPriorityIsReady());
+    priorityTest.dispatch(priorityTest.deck.d.experiment.e.experimentPriorityIsReady());
   }, 1000);
   priorityTest.subscribe(val => console.log('CHECK STATE: ', select.state(val, experimentName)));
 });

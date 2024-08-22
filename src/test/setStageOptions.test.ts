@@ -156,6 +156,6 @@ test('Axium setStagePriority Test', (done) => {
       })
     ]);
   ready = true;
-  axium.dispatch(axium.deck.axium.e.axiumKick());
+  axium.dispatch(axium.e.axiumKick());
 });
 /*#>*/

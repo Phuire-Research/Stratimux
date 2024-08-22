@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
 $>*/
 /*<#*/
-import { AxiumDeck, createAxium } from '../model/axium';
+import { createAxium } from '../model/axium';
 import { selectState } from '../model/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
@@ -10,6 +10,7 @@ import { Action } from '../model/action';
 import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
 import { createQualityCard } from '../model/quality';
 import { AxiumQualities } from '../concepts/axium/qualities';
+import { AxiumDeck } from '../concepts/axium/axium.concept';
 
 type ExperimentState = {
   mock: boolean;
@@ -44,7 +45,7 @@ test('Axium Principle Stage', (done) => {
     ]);
   };
   createAxium('axiumStrategyTest', {
-    experiment: createExperimentConcept(createExperimentState(), qualities, [experimentPrinciple])
+    experiment: createExperimentConcept<ExperimentState, AxiumDeck>(createExperimentState(), qualities, [experimentPrinciple])
   }, {logging: true, storeDialog: true});
 });
 /*#>*/

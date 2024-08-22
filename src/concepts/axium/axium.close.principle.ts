@@ -7,6 +7,7 @@ import { AxiumState } from './axium.concept';
 import { axiumClose } from './qualities/close.quality';
 import { axiumSelectPrepareClose } from './axium.selector';
 import { AxiumQualities } from './qualities';
+import { LoadConcepts } from '../../model/concept';
 /*<#*/
 export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -17,7 +18,7 @@ export const axiumClosePrinciple: PrincipleFunction<AxiumQualities> = (
   let init = false;
   plan('Plan Axium Close', ({stage, conclude}) => [
     stage(({concepts, dispatch, stagePlanner, e}) => {
-      const state = selectUnifiedState<AxiumState<unknown, unknown>>(concepts, 0);
+      const state = selectUnifiedState<AxiumState<unknown, LoadConcepts>>(concepts, 0);
       if (!init && state?.prepareClose) {
         init = true;
         nextC({0: concepts[0]});

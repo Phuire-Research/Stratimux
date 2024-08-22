@@ -5,14 +5,13 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts, ConceptsSubscriber } from './concept';
+import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept';
 import { Action, Actions } from './action';
 import { Planning } from './stagePlanner';
-import { KeyedSelectors } from './selector';
+import { KeyedSelectors, Selectors } from './selector';
 import { BInterface, Comparators } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck, accessDeck } from './deck';
-import { AxiumDeck } from './axium';
 import { access } from 'fs';
 import { Qualities } from './quality';
 
@@ -38,11 +37,11 @@ export function createPrinciple$<Q = void, C = void, S = void>(
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-  d_: Deck<C extends void ? AxiumDeck : C>,
+  d_: Deck<C extends void ? LoadConcepts : C>,
   e_: Actions<Q extends Qualities ? Q : Qualities>,
   c_: Comparators<Q extends Qualities ? Q : Qualities>,
   k_: KeyedSelectors<S>,
-  s_: unknown
+  s_: Selectors<S>
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({
@@ -62,7 +61,7 @@ export function createPrinciple$<Q = void, C = void, S = void>(
   });
 }
 
-export function registerPrincipleSubscription<T extends Deck<AxiumDeck>>(
+export function registerPrincipleSubscription<T extends Deck<LoadConcepts>>(
   observer: Subscriber<Action<unknown>>,
   deck: T,
   name: string,

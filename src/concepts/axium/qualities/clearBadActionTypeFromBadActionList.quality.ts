@@ -8,9 +8,10 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumClearBadActionTypeFromBadActionListPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
 export const axiumClearBadActionTypeFromBadActionList =
-  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadActionTypeFromBadActionListPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumClearBadActionTypeFromBadActionListPayload>({
     type: 'clear ActionType from Axium\'s badAction list',
     reducer: (state, action) => {
       const {actionType} = action.payload;

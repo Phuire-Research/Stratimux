@@ -5,12 +5,9 @@ A concept is composed of name, unified, state, qualities, semaphore, principles,
 $>*/
 /*<#*/
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
+import { Action, ActionCreatorType, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
-import { strategySuccess } from './actionStrategy';
-import { map } from 'rxjs';
-import { KeyedSelector, KeyedSelectors, createDummyKeyedSelectors, createUnifiedKeyedSelector } from './selector';
-import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { KeyedSelector, KeyedSelectors, Selectors, createDummyKeyedSelectors, createDummySelectors, createUnifiedKeyedSelector } from './selector';
 import { UnifiedSubject } from './stagePlanner';
 import { Comparators, createComparator } from './interface';
 import { Qualities, Quality } from './quality';
@@ -45,7 +42,8 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
   state: S;
   actions: Actions<T>;
   comparators: Comparators<T>;
-  selectors: KeyedSelectors<S>;
+  keyedSelectors: KeyedSelectors<S>;
+  selectors: Selectors<S>;
   qualities: Quality<Record<string, unknown>>[];
   q: T extends Qualities ?
     T
@@ -61,12 +59,13 @@ export type Concept<S extends Record<string, unknown>, T = void> = {
 export type AnyConcept =
   Concept<Record<string, unknown>, Qualities>
   |
-  Concept<Record<string, unknown>, void>
-  |
+  // Concept<Record<string, unknown>, void>
+  // |
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Concept<any, any>;
 
 export type Concepts = Record<number, AnyConcept>;
+export type LoadConcepts = Record<string, AnyConcept>;
 
 export type ConceptDeck<T> = {
   [K in keyof T]:
@@ -123,7 +122,8 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     actions: actions as Actions<T extends void ? any : T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     comparators: comparators as Comparators<T extends void ? any : T>,
-    selectors: createDummyKeyedSelectors(state),
+    keyedSelectors: createDummyKeyedSelectors(state),
+    selectors: createDummySelectors(),
     qualities: qualities ? qualities : [],
     q: (_qualities ? _qualities : {}) as T extends Qualities ? T : Qualities,
     semaphore: -1,

@@ -4,7 +4,7 @@ BeatSelectorChanges count variants for 100 steps.
 $>*/
 /*<#*/
 import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { AxiumDeck } from '../../../model/axium';
+import { AxiumDeck } from '../../../concepts/axium/axium.concept';
 import { Deck } from '../../../model/deck';
 import { BeatSelectorChangesDeck } from '../beatSelectorChanges.concept';
 

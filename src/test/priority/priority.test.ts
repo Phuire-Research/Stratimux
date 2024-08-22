@@ -3,8 +3,9 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 is managing plan notifications as intended.
 $>*/
 /*<#*/
+import { AxiumDeck } from '../../concepts/axium/axium.concept';
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { AxiumDeck, createAxium } from '../../model/axium';
+import { createAxium } from '../../model/axium';
 import { select } from '../../model/selector';
 import { createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
@@ -95,7 +96,7 @@ test('Priority Test', (done) => {
       concludePlan(),
     ]);
   setTimeout(() => {
-    priorityTest.dispatch(priorityTest.deck.experiment.e.experimentPriorityIsReady());
+    priorityTest.dispatch(priorityTest.deck.d.experiment.e.experimentPriorityIsReady());
   }, 1000);
   priorityTest.subscribe(val => console.log('CHECK STATE: ', select.state(val, experimentName))); });
 /*#>*/

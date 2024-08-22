@@ -18,12 +18,12 @@ test('Axium Counting Strategy Priority Test', (done) => {
   const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const deck = axium.deck;
   const concluded = [false, false, false];
-  const [count1, strategy1] = generateRandomCountingStrategy(deck, 0);
+  const [count1, strategy1] = generateRandomCountingStrategy(deck.d, 0);
   strategy1.topic += 1;
   strategy1.priority = 100;
-  const [count2, strategy2] = generateRandomCountingStrategy(deck, 0);
+  const [count2, strategy2] = generateRandomCountingStrategy(deck.d, 0);
   strategy1.topic += 2;
-  const [count3, strategy3] = generateRandomCountingStrategy(deck, 0);
+  const [count3, strategy3] = generateRandomCountingStrategy(deck.d, 0);
   strategy3.priority = 50;
   strategy1.topic += 3;
   const plan = axium.plan('Counting Strategy with Priority Plan',
@@ -36,6 +36,7 @@ test('Axium Counting Strategy Priority Test', (done) => {
           console.log('COUNT ONE STRATEGY OUTCOME: ', count1);
           console.log('COUNT TWO STRATEGY OUTCOME: ', count2);
           console.log('COUNT THREE STRATEGY OUTCOME: ', count3);
+          console.log('CHECK 1', d.axium, 'CHECK 2', d.counter, 'CHECK 3', d);
           dispatch(d.axium.e.axiumKick(), {
             iterateStage: true
           });

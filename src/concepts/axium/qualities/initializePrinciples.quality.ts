@@ -4,7 +4,7 @@ generate a quality that will initialize principles loaded into the Axium's conce
 $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';
-import { forEachConcept  } from '../../../model/concept';
+import { forEachConcept, LoadConcepts  } from '../../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
 import { Action, Actions, } from '../../../model/action';
 import { AxiumState, axiumName } from '../axium.concept';
@@ -12,16 +12,17 @@ import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
+import { Selectors } from '../../../model/selector';
 
 export const axiumInitializePrinciples =
-  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumInitializePrinciplesPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumInitializePrinciplesPayload>({
     type: 'initialize Principles and set new Subscribers to General Subscribers list',
     reducer: (state, act) => {
       const payload = act.payload;
       const concepts = payload.concepts;
       let conceptCounter = state.conceptCounter;
       const action$ = state.action$ as Subject<Action>;
-      const concepts$ = state.concepts$ as UnifiedSubject;
+      const concepts$ = state.concepts$ as UnifiedSubject<unknown, LoadConcepts, unknown>;
       const principleSubscribers = state.generalSubscribers;
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === axiumName && concept.principles) {
@@ -37,8 +38,8 @@ export const axiumInitializePrinciples =
               state.deck,
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
-              concept.selectors,
-              {}
+              concept.keyedSelectors,
+              concept.selectors as Selectors<unknown>
             );
             principleSubscribers.push({
               name: concept.name,
@@ -56,11 +57,11 @@ export const axiumInitializePrinciples =
               concepts$.next.bind(concepts$),
               action$.next.bind(action$),
               semaphore,
-              state.deck,
+              state.deck.d,
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
-              concept.selectors,
-              {}
+              concept.keyedSelectors,
+              concept.selectors
             );
             principleSubscribers.push({
               name: concept.name,

@@ -5,7 +5,7 @@ the Axium operates in a synchronous behavior to quickly modify the Axium's conce
 $>*/
 /*<#*/
 import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
-import { Concepts, forEachConcept } from '../../../model/concept';
+import { Concepts, forEachConcept, LoadConcepts } from '../../../model/concept';
 import { Action } from '../../../model/action';
 import { AxiumState } from '../axium.concept';
 import { blockingMethodSubscription } from '../../../model/axium';
@@ -13,7 +13,7 @@ import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumSetBlockingModePayload } from '.';
 
-export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetBlockingModePayload>({
+export const axiumSetBlockingMode = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumSetBlockingModePayload>({
   type: 'set Axium to Blocking Mode',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;

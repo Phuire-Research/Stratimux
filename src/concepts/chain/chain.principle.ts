@@ -10,9 +10,8 @@ import { Action } from '../../model/action';
 import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
 import { ChainQualities, ChainState, chainName } from './chain.concept';
 import { selectUnifiedState } from '../../model/selector';
-import { AxiumState } from '../axium/axium.concept';
+import { AxiumDeck, AxiumState } from '../axium/axium.concept';
 import { UnifiedSubject } from '../../model/stagePlanner';
-import { AxiumDeck } from '../../model/axium';
 
 export const chainPrinciple: PrincipleFunction<ChainQualities, AxiumDeck> = ({
   observer,

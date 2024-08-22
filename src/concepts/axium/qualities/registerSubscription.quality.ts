@@ -10,8 +10,9 @@ import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumRegisterSubscriberPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterSubscriberPayload>({
+export const axiumRegisterSubscriber = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Axium\'s General Subscriber list',
   reducer: (state, action) => {
     const payload = action.payload;

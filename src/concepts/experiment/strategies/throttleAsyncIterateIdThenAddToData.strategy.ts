@@ -6,9 +6,9 @@ to the strategy's data field.
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { AxiumDeck } from '../../../model/axium';
 import { Concept } from '../../../model/concept';
 import { Deck } from '../../../model/deck';
+import { AxiumDeck } from '../../axium/axium.concept';
 import { ExperimentState } from '../experiment.concept';
 import {
   experimentThrottleAsyncIterateIdThenReceiveInMethod

@@ -6,28 +6,30 @@ $>*/
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AppendActionListToDialogPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumAppendActionListToDialog = createQualityCardWithPayload<AxiumState<unknown, unknown>, AppendActionListToDialogPayload>({
-  type: 'append Action List to Axium\'s Dialog',
-  reducer: (state, action) => {
-    const payload = action.payload;
-    let newDialog = '';
-    if (state.storeDialog) {
-      payload.actionList.forEach(str => {newDialog += str + ' ';});
-      if (state.logging) {
-        console.log(newDialog);
+export const axiumAppendActionListToDialog =
+  createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AppendActionListToDialogPayload>({
+    type: 'append Action List to Axium\'s Dialog',
+    reducer: (state, action) => {
+      const payload = action.payload;
+      let newDialog = '';
+      if (state.storeDialog) {
+        payload.actionList.forEach(str => {newDialog += str + ' ';});
+        if (state.logging) {
+          console.log(newDialog);
+        }
+        return {
+          dialog: state.dialog + newDialog,
+          lastStrategy: payload.strategyTopic,
+          lastStrategyData: payload.strategyData,
+          lastStrategyDialog: newDialog
+        };
       }
       return {
-        dialog: state.dialog + newDialog,
         lastStrategy: payload.strategyTopic,
         lastStrategyData: payload.strategyData,
-        lastStrategyDialog: newDialog
       };
     }
-    return {
-      lastStrategy: payload.strategyTopic,
-      lastStrategyData: payload.strategyData,
-    };
-  }
-});
+  });
 /*#>*/

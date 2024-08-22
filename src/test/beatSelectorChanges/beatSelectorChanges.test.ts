@@ -25,7 +25,7 @@ test('Deferred Beat Selector Changes Test', (done) => {
   const axium = createAxium('Beat Selector Changes properly defers accumulated changes', {
     beatSelectors: createBeatSelectorChangesConcept()
   });
-  const [tally, strategy, topic] = generateRandomCountingStrategy(axium.deck);
+  const [tally, strategy, topic] = generateRandomCountingStrategy(axium.deck.d);
   const plan = axium.plan('Prolonged Counting Strategy', () => [
     createStage(({concepts, dispatch}) => {
       if (isAxiumOpen(concepts)) {

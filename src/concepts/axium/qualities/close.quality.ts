@@ -8,8 +8,9 @@ import { AxiumState } from '../axium.concept';
 import { selectPayload } from '../../../model/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumClosePayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumClose = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClosePayload>({
+export const axiumClose = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumClosePayload>({
   type: 'Close Axium',
   reducer: (state, action) => {
     const {exit} = action.payload;

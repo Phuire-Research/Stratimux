@@ -192,7 +192,14 @@ export const createBufferedSelectorsSet = <S = void>(
   };
 };
 
-export const createDummySelectorsSet = <S = void>(
+export const createSelectors = <S = void>(
+  semaphore: number
+): Selectors<S> => ({
+    create: createBufferedUnifiedKeyedSelector<S>(semaphore),
+    state: createBufferedStateSelector<S>(semaphore)
+  });
+
+export const createDummySelectors = <S = void>(
 ): Selectors<S>   => {
   return {
     create: createBufferedUnifiedKeyedSelector<S>(-1),

@@ -6,9 +6,10 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualityCard } from '../../../model/quality';
+import { LoadConcepts } from '../../../model/concept';
 
 export const axiumAddConceptsFromQue =
-  createQualityCard<AxiumState<unknown, unknown>>({
+  createQualityCard<AxiumState<unknown, LoadConcepts>>({
     type: 'Add Concepts from Axium Concept Que',
     reducer: () => {
       return {

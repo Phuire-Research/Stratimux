@@ -11,8 +11,9 @@ import { AnyAction } from '../../../model/action';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { AxiumState } from '../axium.concept';
 import { AxiumRegisterTimeOutPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>({
+export const axiumRegisterTimeOut = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumRegisterTimeOutPayload>({
   type: 'register an Action to Axium\'s timerLedger',
   reducer: defaultReducer,
   methodCreator: () => createMethodWithConcepts((action, concepts) => {

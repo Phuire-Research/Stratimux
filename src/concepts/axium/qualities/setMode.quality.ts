@@ -7,8 +7,9 @@ import { strategySuccess } from '../../../model/actionStrategy';
 import { createMethod } from '../../../model/method';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumSetModePayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumSetModePayload>({
+export const axiumSetMode = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumSetModePayload>({
   type: 'set Axium Mode',
   reducer: (_, action) => {
     const payload = action.payload;

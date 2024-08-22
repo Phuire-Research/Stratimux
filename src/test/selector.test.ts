@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the base selector consumer functions are working as intended.
 $>*/
 /*<#*/
-import { AxiumDeck, createAxium  } from '../model/axium';
+import { createAxium  } from '../model/axium';
 import { Concept, Concepts } from '../model/concept';
 import { select, selectPayload, selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';

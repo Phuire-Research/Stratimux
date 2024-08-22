@@ -12,12 +12,12 @@ import { createActionNode, strategy, strategyBegin } from '../../model/actionStr
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { AxiumDeck, blockingMethodSubscription, getAxiumState } from '../../model/axium';
+import { blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
-import { KeyedSelectors, updateKeyedSelectors } from '../../model/selector';
+import { KeyedSelectors, Selectors, updateKeyedSelectors } from '../../model/selector';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -64,11 +64,11 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 axiumState.concepts$.next.bind(axiumState.concepts$),
                 axiumState.action$.next.bind(axiumState.action$),
                 concept.semaphore,
-                axiumState.deck,
+                axiumState.deck.d,
                 concept.actions as Actions<any>,
                 concept.comparators as Comparators<any>,
-                concept.selectors as KeyedSelectors<any>,
-                {}
+                concept.keyedSelectors as KeyedSelectors<any>,
+                concept.selectors as Selectors<any>
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,
@@ -95,13 +95,13 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
           newConcepts[concept.semaphore] = concept as AnyConcept;
-          updateKeyedSelectors(newConcepts, concept.selectors, concept.semaphore);
+          updateKeyedSelectors(newConcepts, concept.keyedSelectors, concept.semaphore);
           axiumState.deck = {
             ...axiumState.deck,
             [key]: {
               e: concept.actions,
               c: concept.comparators,
-              k: concept.selectors
+              k: concept.keyedSelectors
             }
           };
           axiumState.conceptCounter += 1;
@@ -170,7 +170,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             newDeck[key] = (axiumState.deck as any)[key];
           }
         });
-        newAxiumState.deck = newDeck;
+        // newAxiumState.deck = newDeck as Deck<AxiumQualities>;
 
         forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {

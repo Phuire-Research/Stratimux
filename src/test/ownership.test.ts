@@ -13,6 +13,7 @@ import { createExperimentState, createExperimentConcept } from '../concepts/expe
 import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import { strategyBegin } from '../model/actionStrategy';
 import {
+  ExperimentCountingDeck,
   experimentCountingStrategy,
   experimentCountingTopic,
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
@@ -46,7 +47,7 @@ test('Ownership Test', (done) => {
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.
             //    Via its principle, to simulate an action moving off premise.
-            const str = experimentPuntCountingStrategy(d);
+            const str = experimentPuntCountingStrategy(d as unknown as ExperimentCountingDeck);
             if (str) {
               dispatch(strategyBegin(str), {
                 iterateStage: true
@@ -76,7 +77,7 @@ test('Ownership Test', (done) => {
           console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           const counter = selectState<CounterState>(concepts, counterName);
           console.log('Count: ', counter?.count);
-          dispatch(strategyBegin(experimentCountingStrategy(d)), {
+          dispatch(strategyBegin(experimentCountingStrategy(d as unknown as ExperimentCountingDeck)), {
             iterateStage: true
           });
         }

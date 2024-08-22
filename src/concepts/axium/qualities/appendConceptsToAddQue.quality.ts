@@ -3,23 +3,24 @@ For the asynchronous graph programming framework Stratimux and Axium Concept, ge
 addConceptQue. This will then be observed via the Axium's principle.
 $>*/
 /*<#*/
-import { AnyConcept, Concept } from '../../../model/concept';
+import { AnyConcept, Concept, LoadConcepts } from '../../../model/concept';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumAppendConceptsToAddQuePayload } from '.';
 
-export const axiumAppendConceptsToAddQue = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumAppendConceptsToAddQuePayload>({
-  type: 'append Concepts to Axium\'s Add Concept Que',
-  reducer: (state, action) => {
-    const payload = action.payload;
-    const addConceptQue = {
-      ...state.addConceptQue,
-      ...payload.concepts
-    };
-    return {
-      addConceptQue,
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+export const axiumAppendConceptsToAddQue =
+  createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumAppendConceptsToAddQuePayload>({
+    type: 'append Concepts to Axium\'s Add Concept Que',
+    reducer: (state, action) => {
+      const payload = action.payload;
+      const addConceptQue = {
+        ...state.addConceptQue,
+        ...payload.concepts
+      };
+      return {
+        addConceptQue,
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

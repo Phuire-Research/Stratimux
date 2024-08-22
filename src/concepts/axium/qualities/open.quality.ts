@@ -9,8 +9,9 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { OpenPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown, unknown>, OpenPayload>({
+export const axiumOpen = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, OpenPayload>({
   type: 'Open Axium',
   reducer: (_, action) => {
     const {open} = action.payload;
