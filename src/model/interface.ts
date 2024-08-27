@@ -6,7 +6,7 @@ import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
 import { AnyConcept, Concept, LoadConcepts } from './concept';
 import { Deck } from './deck';
-import { KeyedSelectors, Selectors } from './selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 
 /*<#*/
 /**
@@ -51,9 +51,7 @@ export type UInterface<Q = void, C = void, S = void> = {
   // Comparators
   c: Comparators<Q>
   // Keyed Selectors
-  k: KeyedSelectors<S>,
-  // Selectors
-  s: Selectors<S>
+  k: BundledSelectors<S>,
 }
 
 /**
@@ -66,8 +64,7 @@ export type OInterface<Q = void, C = void, S = void> = {
   d: Deck<C extends void ? LoadConcepts : C>
   e: Actions<Q>
   c: Comparators<Q>
-  k: KeyedSelectors<S>,
-  s: Selectors<S>
+  k: BundledSelectors<S>
 }
 
 /**
@@ -77,8 +74,7 @@ export type HInterface<Q = void, C = void, S = void> = {
   d__: Deck<C extends void ? LoadConcepts : C>
   e__: Actions<Q>
   c__: Comparators<Q>
-  k__: KeyedSelectors<S>,
-  s__: Selectors<S>
+  k__: BundledSelectors<S>,
 }
 
 /**
@@ -88,7 +84,6 @@ export type BInterface<Q = void, C = void, S = void> = {
   d_: Deck<C extends void ? LoadConcepts : C>,
   e_: Actions<Q>
   c_: Comparators<Q>
-  k_: KeyedSelectors<S>,
-  s_: Selectors<S>
+  k_: BundledSelectors<S>,
 }
 /*#>*/

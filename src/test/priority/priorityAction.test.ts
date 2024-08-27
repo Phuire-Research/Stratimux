@@ -14,7 +14,8 @@ import { experimentPriorityAddValue } from './qualities/addValue.quality';
 import { handlePriority } from '../../model/priority';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';
-import { AxiumDeck } from '../../concepts/axium/axium.concept';
+import { AxiumDeck, AxiumState } from '../../concepts/axium/axium.concept';
+import { AxiumQualities } from '../../concepts/axium/qualities';
 
 test('Priority Action Test', (done) => {
   console.log('Priority Test');
@@ -35,7 +36,7 @@ test('Priority Action Test', (done) => {
     experiment
   }, {logging: true, storeDialog: true, logActionStream: true});
 
-  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck>(({concepts, dispatch, changes, d}) => {
+  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(({concepts, dispatch, changes, d}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     console.log('HIT: ', name, changes);
     if (priorityState?.ready) {
@@ -45,7 +46,7 @@ test('Priority Action Test', (done) => {
       });
     }
   }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number, override?: number) => createStage<unknown, ExperimentDeck>(
+  const secondStage = (name: string, newValue: number, priority: number, override?: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
     ({concepts, dispatch, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState) {
@@ -59,7 +60,7 @@ test('Priority Action Test', (done) => {
         });
       }
     }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck>(
+  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState && changes.length > 0) {
@@ -71,7 +72,7 @@ test('Priority Action Test', (done) => {
         });
       }
     }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = () => createStage<unknown, ExperimentDeck>(({stagePlanner}) => {
+  const concludePlan = () => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(({stagePlanner}) => {
     console.log(`${stagePlanner.title} Priority END`);
     stagePlanner.conclude();
     finalize();

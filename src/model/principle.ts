@@ -8,7 +8,7 @@ import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept';
 import { Action, Actions } from './action';
 import { Planning } from './stagePlanner';
-import { KeyedSelectors, Selectors } from './selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 import { BInterface, Comparators } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck, accessDeck } from './deck';
@@ -40,8 +40,7 @@ export function createPrinciple$<Q = void, C = void, S = void>(
   d_: Deck<C extends void ? LoadConcepts : C>,
   e_: Actions<Q extends Qualities ? Q : Qualities>,
   c_: Comparators<Q extends Qualities ? Q : Qualities>,
-  k_: KeyedSelectors<S>,
-  s_: Selectors<S>
+  k_: BundledSelectors<S>,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({
@@ -55,7 +54,6 @@ export function createPrinciple$<Q = void, C = void, S = void>(
       e_,
       c_,
       k_,
-      s_,
       conceptSemaphore
     });
   });

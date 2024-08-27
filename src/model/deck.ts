@@ -7,14 +7,13 @@ import { accessAxium, getAxiumState } from './axium';
 import { AnyConcept, Concept, Concepts, conceptsToString } from './concept';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
-import { KeyedSelectors } from './selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 
 export type Decks<BaseQ, BaseS, Extended> = {
   d: Deck<Extended>;
   e: Actions<BaseQ>
   c: Comparators<BaseQ>
-  k: KeyedSelectors<BaseS>
-  s: unknown
+  k: BundledSelectors<BaseS>
 };
 
 export type Deck<C> = {
@@ -40,16 +39,18 @@ export type Deck<C> = {
     :
     Comparators<void>
     k: C[K] extends Concept<Record<string, unknown>, Qualities> ?
-    C[K]['keyedSelectors']
+    C[K]['keyedSelectors'] & Selectors<C[K]['state']>
+    // C[K]['keyedSelectors']
     :
     C[K] extends Concept<Record<string, unknown>, void> ?
-    C[K]['keyedSelectors']
+    C[K]['keyedSelectors'] & Selectors<C[K]['state']>
+    // C[K]['keyedSelectors']
     :
     C[K] extends AnyConcept ?
-    C[K]['keyedSelectors']
+    C[K]['keyedSelectors'] & Selectors<C[K]['state']>
+    // C[K]['keyedSelectors']
     :
-    KeyedSelectors<void>
-    s: unknown
+    KeyedSelectors<void> & Selectors<void>
   }
 }
 

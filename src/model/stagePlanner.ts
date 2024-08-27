@@ -10,7 +10,13 @@ $>*/
 import { Subject } from 'rxjs';
 import { Concepts, LoadConcepts } from './concept';
 import { AxiumDeck, AxiumState } from '../concepts/axium/axium.concept';
-import { KeyedSelector, KeyedSelectors, Selectors, createConceptKeyedSelector, select, selectSlice, updateSelects } from './selector';
+import {
+  BundledSelectors,
+  KeyedSelector,
+  createConceptKeyedSelector,
+  select,
+  selectSlice,
+} from './selector';
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
@@ -365,8 +371,9 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       d__: accessDeck(this.concepts),
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
       c__: this.concepts[conceptSemaphore].comparators as Comparators<any>,
-      k__: this.concepts[conceptSemaphore].keyedSelectors as KeyedSelectors<any>,
-      s__: this.concepts[conceptSemaphore].selectors as Selectors<any>,
+      k__: (
+        this.concepts[conceptSemaphore].keyedSelectors
+      ) as unknown as BundledSelectors<any>,
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -751,8 +758,12 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       d: accessDeck(this.concepts),
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},
-      k: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].keyedSelectors as KeyedSelectors<any> : {},
-      s: ( this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].selectors : {} ) as Selectors<any>
+      k: (
+        this.concepts[plan.conceptSemaphore] ?
+          this.concepts[plan.conceptSemaphore].keyedSelectors
+          :
+          {}
+        ) as unknown as BundledSelectors<any>,
     });
   }
 

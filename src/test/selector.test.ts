@@ -92,8 +92,7 @@ test('Axium Deck Selector Test', (done) => {
   const ax = createAxium('Test Base Selectors', {});
   ax.plan('Test Base Selectors', ({stageO, stage, e__}) => [
     stageO(() => e__.axiumKick()),
-    stage(({s, stagePlanner}) => {
-      s;
+    stage(({k, e, stagePlanner}) => {
       stagePlanner.conclude();
       ax.close();
       done();

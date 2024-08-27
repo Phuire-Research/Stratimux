@@ -27,8 +27,7 @@ import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck, Decks } from './deck';
-import { createSelectors, KeyedSelectors, updateKeyedSelectors } from './selector';
-import { Comparators } from './interface';
+import { BundledSelectors, createBufferedSelectorsSet, createSelectors, KeyedSelectors, updateKeyedSelectors } from './selector';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -232,7 +231,7 @@ export function createAxium<C extends LoadConcepts>(
     logActionStream?: boolean,
     dynamic?: boolean,
   }
-): Axium<AxiumQualities, C & AxiumDeck> {
+): Axium<AxiumQualities, C & AxiumDeck, AxiumState<AxiumQualities, C>> {
   const axiumConcept = createAxiumConcept<AxiumQualities, C>(
     name,
     options?.storeDialog,
@@ -245,31 +244,34 @@ export function createAxium<C extends LoadConcepts>(
   };
   // as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
   updateKeyedSelectors(concepts, axiumConcept.keyedSelectors, 0);
+  const bundledSelectors = {
+    ...axiumConcept.keyedSelectors,
+    ...createBufferedSelectorsSet(0)
+  } as BundledSelectors<AxiumState<AxiumQualities, C>>;
   const baseDeck: Decks<AxiumQualities, AxiumState<AxiumQualities, C>, AxiumLoad<AxiumDeck>> = {
     d: { axium: {
       e: axiumConcept.actions,
       c: axiumConcept.comparators,
-      k: axiumConcept.keyedSelectors,
-      s: {}
+      k: bundledSelectors,
     },
     } as Deck<AxiumLoad<AxiumDeck>>,
     e: axiumConcept.actions,
     c: axiumConcept.comparators,
-    k: axiumConcept.keyedSelectors,
-    s: {}
+    k: bundledSelectors,
   };
   axiumConcept.semaphore = 0;
   axiumConcept.selectors = createSelectors(0);
   Object.keys(deckLoad).forEach((key, i) => {
-    concepts[i + 1] = deckLoad[key];
-    updateKeyedSelectors(concepts, deckLoad[key].keyedSelectors, i + 1);
+    const target = i + 1;
+    concepts[target] = deckLoad[key];
+    updateKeyedSelectors(concepts, deckLoad[key].keyedSelectors, target);
     (baseDeck as any).d[key] = {
       e: deckLoad[key].actions,
       c: deckLoad[key].comparators,
-      k: deckLoad[key].keyedSelectors,
+      k: {...deckLoad[key].keyedSelectors, ...createBufferedSelectorsSet(target)},
       s: {}
     };
-    deckLoad[key].semaphore = i + 1;
+    deckLoad[key].semaphore = target;
   });
 
   const deck = baseDeck as Decks<AxiumQualities, AxiumState<AxiumQualities, C>, AxiumLoad<C & AxiumDeck>>;
@@ -389,16 +391,16 @@ export function createAxium<C extends LoadConcepts>(
     plan: axiumState.concepts$.outerPlan,
     deck,
     e: deck.d.axium.e
-  } as Axium<AxiumQualities, C & AxiumDeck>;
+  } as unknown as Axium<AxiumQualities, C & AxiumDeck, AxiumState<AxiumQualities, C>>;
 }
 
 // [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
-export type Axium<Q extends Record<string, unknown>, C extends LoadConcepts> = {
+export type Axium<Q extends Record<string, unknown>, C extends LoadConcepts, S extends Record<string, unknown>> = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action<any>) => void;
-  plan: Planning<Q, C>;
+  plan: Planning<Q, C, S>;
   deck: Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
   e: Actions<AxiumQualities>
 }

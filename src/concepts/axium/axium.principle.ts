@@ -17,7 +17,7 @@ import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
-import { KeyedSelectors, Selectors, updateKeyedSelectors } from '../../model/selector';
+import { BundledSelectors, KeyedSelectors, Selectors, updateKeyedSelectors } from '../../model/selector';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -67,8 +67,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 axiumState.deck.d,
                 concept.actions as Actions<any>,
                 concept.comparators as Comparators<any>,
-                concept.keyedSelectors as KeyedSelectors<any>,
-                concept.selectors as Selectors<any>
+                {...concept.keyedSelectors, ...concept.selectors} as BundledSelectors<any>,
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,

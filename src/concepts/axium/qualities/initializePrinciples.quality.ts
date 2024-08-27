@@ -12,7 +12,7 @@ import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
-import { Selectors } from '../../../model/selector';
+import { BundledSelectors, Selectors } from '../../../model/selector';
 
 export const axiumInitializePrinciples =
   createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumInitializePrinciplesPayload>({
@@ -38,8 +38,7 @@ export const axiumInitializePrinciples =
               state.deck,
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
-              concept.keyedSelectors,
-              concept.selectors as Selectors<unknown>
+              {...concept.keyedSelectors, ...concept.selectors } as BundledSelectors<any>,
             );
             principleSubscribers.push({
               name: concept.name,
@@ -60,8 +59,7 @@ export const axiumInitializePrinciples =
               state.deck.d,
               concept.actions as Actions<any>,
               concept.comparators as Comparators<any>,
-              concept.keyedSelectors,
-              concept.selectors
+              {...concept.keyedSelectors, ...concept.selectors} as BundledSelectors<any>,
             );
             principleSubscribers.push({
               name: concept.name,

@@ -181,6 +181,8 @@ export type Selectors<S = void> = {
   // concept: ConceptSelector<C>
 }
 
+export type BundledSelectors<S = void> = KeyedSelectors<S> & Selectors<S>
+
 // export const createBufferedSelectorsSet = <S extends Record<string, unknown>, C extends Concept<any, any>>(
 export const createBufferedSelectorsSet = <S = void>(
   semaphore: number
