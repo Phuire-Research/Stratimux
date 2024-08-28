@@ -36,6 +36,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         forEachConcept(concepts, (concept) => {
           if (concept.name === counterName) {
             exists = true;
+            console.log('Check: ', Object.keys(d));
             const str = countingStrategy(d as Deck<AxiumDeck & CounterDeck>);
             console.log('Dispatched', str);
             if (str) {
