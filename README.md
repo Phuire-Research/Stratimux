@@ -21,8 +21,7 @@
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
-* [Huirth](https://github.com/Phuire-Research/Huirth) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
-* [Stratimux Assistant](https://chat.openai.com/g/g-Io9NDT4Z0-stratimux-assistant) Work in progress GPT, rough sketch supplied information on this repository and a few articles about the project. Will flesh out more in the future.
+* [Huirth](https://github.com/Phuire-Research/Huirth) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository. *Note* This is a proof of concept of a User Interface System using Stratimux written in less than three weeks. A little rough around the edges.
 
 ### Advice when Encountering Branch Prediction Errors.
 The easiest means of detecting if your application is starting to encounter such errors is to enable the dialog and logging options on your Axium. To avoid running into these branch prediction errors. Attempt to limit your strategy assembly, qualities, and plans to be less than O(n^3). You will find that your functions will suddenly become probabilistic in their ability execution deterministically.
@@ -64,18 +63,17 @@ When in doubt simplify.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 
-## Road Map (*Updated*  08/09/24)
+## Road Map (*Updated*  08/28/24)
 ### Beyond v0.2.0
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
 * Extended Roadmap Set
 ### Developer Experience Decks Interface v0.2.0
-This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates. Making the time as of 08/09/24 
-* DECKS Interface - No longer need to import actions, selectors, or prime semaphores.
+This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates. *All tests are now passing, will be testing in Huirth to create a migration guide. No longer have to self manage **semaphores*** 
+* DECK Interface - No longer need to import actions, selectors, or prime semaphores.
   * [X] d - Entry point supplied to all points of observation, allows for the selection of each deck currently loaded into the Axium. Providing access to their e, c, k, s properties.
   * [X] e - Entry point for the current point of observation, providing access to all loaded actions for such.
   * [X] c - Entry point for new semaphore comparator functions. Since we no longer have to handle semaphores directly this provides a means of stringless comparisons to see if two actions are of the same type.
-  * [X] k - Entry point for generated KeyedSelectors. Internal changes attaches a new select function that can be used to access the KeyedSelectors value directly.
-  * [ ] s - Entry point for base selectors that are primed with their associated semaphores. The current can of worms being iron sided. Just need to find the time to ensure that these generated functions return with the right type definitions. The designated primed Keyed Selector Creator, and designated state/concept with type definitions associated. Otherwise the DECK interface is ready for release, just pending testing in Huirth.
+  * [X] k - Entry point for generated KeyedSelectors, can be seen as K for Constant like in Mathematics. Internal changes attaches a new select function that can be used to access the KeyedSelectors value directly. While folding in the ability to create new selectors on the fly and access state directly.
 * [X] **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
 * [X] **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * [ ] Origin, Override, Hard Override
