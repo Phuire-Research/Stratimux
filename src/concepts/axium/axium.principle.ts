@@ -164,11 +164,10 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         const newDeck = {} as Deck<any>;
         Object.keys(axiumState.deck.d).forEach((key) => {
           if (!removeKeys.includes(key) || key === axiumName) {
-            newDeck[key] = (axiumState.deck as any)[key];
+            newDeck[key] = (axiumState.deck.d as any)[key];
           }
         });
         newAxiumState.deck.d = newDeck as Deck<AxiumLoad<AxiumDeck>>;
-        console.log(newAxiumState.deck.e);
 
         forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {

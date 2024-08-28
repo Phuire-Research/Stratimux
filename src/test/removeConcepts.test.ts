@@ -16,7 +16,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
     { counter: createCounterConcept() },
     { logging: true, storeDialog: true, dynamic: true }
   );
-  const plan = axium.plan('Remove Concepts Stage', ({stage, stageO, e__}) => [
+  const plan = axium.plan('Remove Concepts Stage', ({stage, stageO, e__, k__}) => [
     stageO(() => e__.axiumKick()),
     stage(({concepts, dispatch, e}) => {
       console.log('REMOVE');
@@ -44,10 +44,7 @@ test('Axium remove Concepts Strategy Test', (done) => {
         plan.conclude();
         axium.close();
       }
-    })
+    }, { selectors: [k__.lastStrategy] })
   ]);
-  const sub = axium.subscribe(concepts => {
-    console.log(getAxiumState(concepts).lastStrategy);
-  });
 });
 /*#>*/
