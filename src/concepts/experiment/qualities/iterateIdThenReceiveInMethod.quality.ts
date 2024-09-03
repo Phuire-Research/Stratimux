@@ -6,7 +6,7 @@ $>*/
 import { ExperimentState } from '../experiment.concept';
 import { createMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { createQualityCard } from '../../../model/quality';
 
 export const experimentIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
@@ -18,7 +18,7 @@ export const experimentIterateIdThenReceiveInMethod = createQualityCard<Experime
   },
   methodCreator: () => createMethodWithState((action, state) => {
     if (action.strategy) {
-      const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
+      const data = strategyData_muxifyData<ExperimentState>(action.strategy, {id: state.id});
       const strategy = strategySuccess(action.strategy, data);
       return strategy;
     }

@@ -46,7 +46,7 @@ test('Axium Selector Payload Test', (done) => {
   done();
 });
 
-test('Axium Unified Selector Test', (done) => {
+test('Axium Muxified Selector Test', (done) => {
   type SomeDeepObject = {
     something : {
       somethingElse: string,
@@ -72,7 +72,7 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment as Concept<any>
   };
-  const selector = select.createUnifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const selector = select.createMuxifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
   const conceptSelector = select.createConceptKeyedSelector<DeepNested>(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);

@@ -36,7 +36,7 @@ import { axiumClosePrinciple } from './axium.close.principle';
 import { blockingMode, permissiveMode } from './axium.mode';
 export { initializationStrategy } from './strategies/initialization.strategy';
 import { createConcept } from '../../model/concept';
-import { NamedStagePlanner, Plan, UnifiedSubject } from '../../model/stagePlanner';
+import { NamedStagePlanner, Plan, MuxifiedSubject } from '../../model/stagePlanner';
 import { AxiumQualities } from './qualities';
 import { Deck, Decks } from '../../model/deck';
 import { AxiumLoad } from '../../model/axium';
@@ -132,7 +132,7 @@ export type AxiumState<Q, C extends LoadConcepts> = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
-  concepts$: UnifiedSubject<Q, C>;
+  concepts$: MuxifiedSubject<Q, C>;
   deck: Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
@@ -185,7 +185,7 @@ const createAxiumState = <Q, C extends LoadConcepts>(
     body: [],
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
-    concepts$: new UnifiedSubject(),
+    concepts$: new MuxifiedSubject(),
     deck: {} as Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
     addConceptQue: {},
     removeConceptQue: {},

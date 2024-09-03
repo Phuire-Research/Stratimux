@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Stage Planner model file.
-This file introduces the Unified Subject, that allows for users to stage plans based on observation of the Concepts stream.
+This file introduces the Muxified Subject, that allows for users to stage plans based on observation of the Concepts stream.
 The Stage Planner paradigm is what allows for the ease of working within a recursive run time, via setting plans to specific stages
 in order to prevent action overflow. Action overflow is when a function is stuck within a recursive loop. This paradigm
 also ensures Stratimux of its own provable termination in majority of configurations.
@@ -260,7 +260,7 @@ const Inner = 0;
 const Base = 1;
 const Outer = 2;
 
-export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
+export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
   private planId = -1;
   private currentPlans: Map<number, Plan<any, any, any>> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
@@ -276,7 +276,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
     generalQue: number[],
   }[] = [{generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}];
   // private generalQue: number[] = [];
-  // [TODO Unify Streams]: Simplify streams into one single UnifiedSubject
+  // [TODO Unify Streams]: Simplify streams into one single MuxifiedSubject
   // [Experiment notes]: When attempting to unify all streams the chain test presented a ghost count repeating at 14 with both 0 and 2
   // [Punt]: The main issue with this simplification is the order in which withLatest is notified
   // In order to fully facilitate this change we would need to add an innerQue, but likewise can just have 3 streams

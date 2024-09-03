@@ -6,7 +6,7 @@ $>*/
 /*<#*/
 import { PrincipleFunction } from '../../model/principle';
 import { StagePlanner, createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
-import { selectUnifiedState } from '../../model/selector';
+import { selectMuxifiedState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
 import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
 
@@ -23,7 +23,7 @@ export const experimentActionQuePrincipleCreator = <T>() => {
         (d__.axium.e.axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))
       ),
       createStage(({concepts}) => {
-        const experimentState = selectUnifiedState<ExperimentState>(concepts, conceptSemaphore);
+        const experimentState = selectMuxifiedState<ExperimentState>(concepts, conceptSemaphore);
         if (experimentState && experimentState.actionQue.length > 0) {
           if (!readyToGo) {
             readyToGo = true;

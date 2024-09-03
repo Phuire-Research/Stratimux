@@ -11,11 +11,11 @@ Conceptual Symbolic Expression:
 Logic Conceptual Explanation:
 Using Force with Flint and Stone. Creates Sparks towards Dry Brush and Air, ignites to create Fire.
 ```
-The above demonstrates the inherit conceptual quality of human language and highlights those concepts that may cascade some state changes into a subject. Such as the concept of sparks created from flint, stone, and force. Is an act of unifying some concepts spatially to form that of sparks. Which carry some transformational quality that can be applied to dry brush and the friction from air to create ignition and thusly fire. If this seems simple, that is the point. As we are introducing this simplicity to afford for greater explainability of the world around us. This would be the advent of a Unified Conceptual Formula.
+The above demonstrates the inherit conceptual quality of human language and highlights those concepts that may cascade some state changes into a subject. Such as the concept of sparks created from flint, stone, and force. Is an act of unifying some concepts spatially to form that of sparks. Which carry some transformational quality that can be applied to dry brush and the friction from air to create ignition and thusly fire. If this seems simple, that is the point. As we are introducing this simplicity to afford for greater explainability of the world around us. This would be the advent of a Muxified Conceptual Formula.
 
 With our technology we may visit the exact logic that allows for this abstraction to exist. But for the majority, all that would matter is access to a developed library of knowledge that would facilitate such conceptualizations into reality for us. The goal is a system that is capable of: Car + Plane = Flying Car. And not only have such be created via some process, but the exact blueprints and the instructions for the rapid assembly to bring such into reality. Even better if we may simulate such before its creation and test to see if it is worthy to brought into reality in the first place.
 
-The difficulty of constructs. Is that you cannot readily decompose their qualities and how they interact with their parts to make that construct. That there is some information loss in the construction process. As constructs are just concepts, just like everything else. We are merely working with the most simplified terms possible, for the opportunity of greater arrangement of sets. That constructs themselves can have qualities, but likewise using such in this system of study we would determine their decomposed parts. This is the pursuit of the new Unified Conceptual Science that is being formalized.
+The difficulty of constructs. Is that you cannot readily decompose their qualities and how they interact with their parts to make that construct. That there is some information loss in the construction process. As constructs are just concepts, just like everything else. We are merely working with the most simplified terms possible, for the opportunity of greater arrangement of sets. That constructs themselves can have qualities, but likewise using such in this system of study we would determine their decomposed parts. This is the pursuit of the new Muxified Logical Conceptual Science that is being formalized.
 
 As in the scope of some rapid rise of generative information. This simplicity of concepts is the most fundamental mechanism to explain new information and discovery in any age. Insisting upon constructs, obfuscates concepts, and summarily the total bounds of what can be created. Would be similar to striking entire sets of numbers from equations is the most blunted example to the difference in approach.
 
@@ -48,7 +48,7 @@ export type Quality = {
 export type Concept = {
   name: string;
   state: unknown;
-  unified: string[];
+  muxified: string[];
   qualities: Quality[];
   principles?: PrincipleFunction[];
   mode?: Mode[];
@@ -57,7 +57,7 @@ export type Concept = {
 ```
 * name - The identifier of the concept to be used in conjunction with selection.
 * state - Is the state of the concept of properties identified by the programmer to achieve functionality.
-* unified - A simple list keeping track of what concepts have been unified to formalize the concept. Assigned via the unifyConcepts function.
+* muxified - A simple list keeping track of what concepts have been muxified to formalize the concept. Assigned via the muxifyConcepts function.
 * qualities - Is a list of qualities that relay to the actions that mechanize the concept throughout your applications.
 * principles - Are observers of state of your application or that of external mechanisms. That emit some action into the axium based upon that observation.
 * mode - A mode is a function and point of recursion of the runtime that the concept may utilize to achieve a specific functionality necessary for that concept. This should rarely be expanded upon.
@@ -68,14 +68,14 @@ export type Concept = {
 export type PrincipleFunction = (
   observer: Subscriber<Action>,
   concepts: Concepts,
-  concept$: UnifiedSubject,
+  concept$: MuxifiedSubject,
   conceptSemaphore: number
 ) => void;
 
 export function createPrinciple$(
   principleFunc: PrincipleFunction,
   concepts: Concepts,
-  concepts$: UnifiedSubject,
+  concepts$: MuxifiedSubject,
   conceptSemaphore: number
 ): Observable<Action>;
 ```
@@ -91,7 +91,7 @@ As this functionality lacks the addition of some abstraction to hand hold the us
 
 Later we may create specific types of principles to handle the nuances of repeating the same functionality over and over again. But likewise that is not the scope of this release.
 
-*Note the concept semaphore is specifically in utilization with "selectUnifiedState(concepts, semaphore)" to select your Concept's state regardless of its current state of unification.*
+*Note the concept semaphore is specifically in utilization with "selectMuxifiedState(concepts, semaphore)" to select your Concept's state regardless of its current state of muxification.*
 
 ## Mode - The point of Recursion
 ```typescript
@@ -99,7 +99,7 @@ export type Mode = ([action, concept, action$, concepts$]: [
   Action,
   Concepts,
   Subject<Action>,
-  UnifiedSubject,
+  MuxifiedSubject,
 ]) => void;
 ```
 This is similar to the principle function that is lacking some hand holding capacity. And if one is creating new modes to govern the flow of actions within the axium. One should be mindful of the implementation of permissiveMode, blockingMode, and ownershipMode. And should be avoided, for the sake of enhancement, is allowed for the one's own explorations with the concept.
@@ -115,7 +115,7 @@ The design of this approach is to be open and transparent of its implementations
 
 As what point is some intelligent notion, without some shared reference? How can one know if what they hold is true and valid without testing. As a flawed individual, I would always choose chance of failure, over that of perfection for the sake of enhancing understanding. As intelligence is complex, but likewise within that complexity can one find themselves without that common point of reference. And this is my attempt to establish such. Noting that there are very few references throughout this work. And concepts and logical associations take the center stage.
 
-Beyond the scope of this application. Would be a method of being able to translate these concepts into any other language as they come into being. The power of intelligence comes from seeing the world as mundane, but respecting the decisions made. As even in the scope of this work. I never planned on creating a framework, nor the logical system that it represents. I attempted to extend FLUX to serve my own purpose with that ActionStrategy pattern. But at every turn, someone else's naming decision reared its head that hampered my ability to articulate the Unified Turing Machine.
+Beyond the scope of this application. Would be a method of being able to translate these concepts into any other language as they come into being. The power of intelligence comes from seeing the world as mundane, but respecting the decisions made. As even in the scope of this work. I never planned on creating a framework, nor the logical system that it represents. I attempted to extend FLUX to serve my own purpose with that ActionStrategy pattern. But at every turn, someone else's naming decision reared its head that hampered my ability to articulate the Muxified Turing Machine.
 
 If my Own Work of Concepts gets in your way. Have fun!
 

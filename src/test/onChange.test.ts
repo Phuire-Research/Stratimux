@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, generate a test that ensures that ActionStrategies are working as intended.
-In addition utilize the onChange detection feature for the UnifiedSubject is working as intended.
+In addition utilize the onChange detection feature for the MuxifiedSubject is working as intended.
 $>*/
 /*<#*/
 import { createAxium, getAxiumState } from '../model/axium';

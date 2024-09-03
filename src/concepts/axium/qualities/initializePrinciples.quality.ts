@@ -8,7 +8,7 @@ import { forEachConcept, LoadConcepts  } from '../../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
 import { Action, Actions, } from '../../../model/action';
 import { AxiumState, axiumName } from '../axium.concept';
-import { Planning, UnifiedSubject } from '../../../model/stagePlanner';
+import { Planning, MuxifiedSubject } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { AxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
@@ -22,7 +22,7 @@ export const axiumInitializePrinciples =
       const concepts = payload.concepts;
       let conceptCounter = state.conceptCounter;
       const action$ = state.action$ as Subject<Action>;
-      const concepts$ = state.concepts$ as UnifiedSubject<unknown, LoadConcepts, unknown>;
+      const concepts$ = state.concepts$ as MuxifiedSubject<unknown, LoadConcepts, unknown>;
       const principleSubscribers = state.generalSubscribers;
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === axiumName && concept.principles) {

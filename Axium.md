@@ -26,7 +26,7 @@ export type Axium = {
 
 Note here an additional departure of what would be supplied to the store is an array of concepts over that of a constructed dictionary of features. As the typical check of what action to choose at run Time had been that of comparing the type of actions via a reducer and/or effect via a string comparison. Here we are allowing for the additional buffer of knowing the concepts and their qualities ahead of time. This populates the action's semaphore tuple that corresponds the its concept and placement in the array of qualities that it contains. However you may still dispatch actions without the semaphore supplied and this comparison is made once to find that semaphore at run time.
 
-The design decision here allows us to forgo the need for dependency injection. And later we will discuss axium qualities that would allow the change of concepts loaded or generated into the axium at run time. Which if one chooses to alter the composition of the Axium, the generation is iterated upon. This accomplishes one of the primary qualities that satisfies the specification laid out by the Unified Turing Machine. Where by the finite symbol reference table is of a logical selection and permitting some testable ability to halt. Is the logical deterministic means of solving the halting problem of the classical turing machine. But this is only if we accept that concepts and their qualities have an amount of completeness towards their ability to halt. That the inability to halt, is a specific design choice or consequence of the machine at some point of scale, not yet accounted for, or done so on purpose. For example: while(true). As the axium in reality is just a recursive self transforming function, that removes the need for a loop.
+The design decision here allows us to forgo the need for dependency injection. And later we will discuss axium qualities that would allow the change of concepts loaded or generated into the axium at run time. Which if one chooses to alter the composition of the Axium, the generation is iterated upon. This accomplishes one of the primary qualities that satisfies the specification laid out by the Muxified Turing Machine. Where by the finite symbol reference table is of a logical selection and permitting some testable ability to halt. Is the logical deterministic means of solving the halting problem of the classical turing machine. But this is only if we accept that concepts and their qualities have an amount of completeness towards their ability to halt. That the inability to halt, is a specific design choice or consequence of the machine at some point of scale, not yet accounted for, or done so on purpose. For example: while(true). As the axium in reality is just a recursive self transforming function, that removes the need for a loop.
 
 ```typescript
 export type AxiumState = {
@@ -54,7 +54,7 @@ export type AxiumState = {
   stagePlanners: NamedStagePlanner[];
   action$: Subject<Action>;
   actionConcepts$: Subject<Concepts>;
-  concepts$: UnifiedSubject;
+  concepts$: MuxifiedSubject;
   addConceptQue: Concept[],
   removeConceptQue: Concept[],
   badPlans: Plan[];
@@ -104,7 +104,7 @@ export type AxiumState = {
 ## The Anatomy of an Axium
 * Action - Is a dumb object that is supplied some data as payload or performs some transformation of state based on its semaphore which is inferred via its type. Is the messaging protocol of an axium.
 * Concept - A grouping of aspects via a shared concept
-* Quality - Contains all useful aspects that enable some actions unified functionality within the axium. 
+* Quality - Contains all useful aspects that enable some actions muxified functionality within the axium. 
 * Method - Is created from a quality at run time and is the strategy pattern's method that allows for the complete ActionStrategy work flow. If in Redux, this would be referred to as an effect, but instead here is the primary point of decision making that handles the ActionStrategy pattern. Otherwise we utilize the principle for what would ordinarily be considered functional side effects.
 * Reducer - Transforms the state after the method runs and is placed on the next life cycle of the application, if in blocking mode however, this relationship is reversed to facilitate synchronous blocking changes to the axium.
 * Mode - Is the specific point of recursion that defines the axium's functionality. This is where the semaphores make their selection of a qualities methods and reducers at run time.
@@ -136,7 +136,7 @@ Please avoid using these qualities, but are providing explanations to understand
 * axiumClearBadActionTypeFromBadActionList - This is to allow for plans to take into account for expired actions and clear such.
 * axiumClearBadStrategyTopicFromBadActionList - Allows plans to accounts for specific ActionStrategy topics that might find themselves in badActions and clear such.
 * axiumClearBadPlanFromBadPlanList - This additionally allows for concepts to take into account potentially failed plans that are set by axium.plan(). Via their topic as payload and clears such.
-* axiumKick - This is a pure action that will just trigger the next function via the UnifiedSubject to prime subscribers or stages. Noting that the downside of Stratimux's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
+* axiumKick - This is a pure action that will just trigger the next function via the MuxifiedSubject to prime subscribers or stages. Noting that the downside of Stratimux's halting quality, is you have to kick it into gear if it hasn't received an action recently for your staged Plans to operate as intended.
 * axiumRegisterTimeOut - This will call the axiumTimeOut function on the incoming payload's act and timeOut properties. Then will succeed a strategy if present.
 
 ## Axium Strategies Concept Set Transformation

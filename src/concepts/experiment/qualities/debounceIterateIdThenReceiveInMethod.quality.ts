@@ -7,7 +7,7 @@ $>*/
 import { ExperimentState } from '../experiment.concept';
 import { createMethodDebounceWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
@@ -25,7 +25,7 @@ export const experimentDebounceIterateIdThenReceiveInMethod =
     methodCreator: () => createMethodDebounceWithState((action, state) => {
       const payload = action.payload;
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
+        const data = strategyData_muxifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
           id: state.id,
           setId: payload.setId
         });

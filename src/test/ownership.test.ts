@@ -60,7 +60,7 @@ test('Ownership Test', (done) => {
           }
         }
       }),
-      // Comment out if testing log and the halting quality of the Unified Turing Machine.
+      // Comment out if testing log and the halting quality of the Muxified Turing Machine.
       stage(({concepts, dispatch, d}) => {
         // Will be ran after both counting strategies conclude.
         const ownership = selectState<OwnershipState>(concepts, ownershipName);
@@ -108,13 +108,13 @@ test('Ownership Test', (done) => {
             if (orderOfTopics[0] !== axiumState.lastStrategy) {
               console.log('Stage 3, If #2 | Count: ', counter.count);
               orderOfTopics.push(axiumState.lastStrategy);
-              // Due to the halting behavior of a Unified Turing Machine, this will trigger before set Count at step 2.
+              // Due to the halting behavior of a Muxified Turing Machine, this will trigger before set Count at step 2.
               //  If commented out, set Count will trigger the the "If #3" check.
               //  If commenting out setCount stage, disable the test in the subscription
               //    Then be sure to enabled the final done check in "If #3".
               //    Then enabling the axiumLog dispatch will allow the test to conclude.
               //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
-              //      This proves Stratimux as a Unified Turing Machine and this configuration Halting Complete.
+              //      This proves Stratimux as a Muxified Turing Machine and this configuration Halting Complete.
               dispatch(e.axiumLog(), {
                 runOnce: true
               });

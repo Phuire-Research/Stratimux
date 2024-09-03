@@ -21,7 +21,7 @@ import { KeyedSelector } from './selector';
  * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
  * @param payload - `optional` Will set the payload of the action.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
- * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
  * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
@@ -54,7 +54,7 @@ export interface ActionNode {
  * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
  * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
- * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
  * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.

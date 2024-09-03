@@ -68,7 +68,7 @@ export interface ActionNotes {
 * action - Is an union data pattern to bind the functionality of the ActionNode, ActionStrategy, and Action. This allows for each part to be responsible for itself and to allow for additional functionality at runtime.
 * actionType - Is merely the type of action to be created at runtime, these should be verbose as to their intended effect as it informs the Stratimux sentence structure's body.
 * payload - Is set to unknown to allow for the explicit typecasting during consumption, reducer, method, or principle. Be sure to import actions directly to ensure payload type safety in the reducer. This is a logical determination in line with Javascript core functionality.
-* conceptSemaphore - Used when dispatching to a foreign Axium. Where the effecting action will trigger on some unified concept on such that the current axium has observation of.
+* conceptSemaphore - Used when dispatching to a foreign Axium. Where the effecting action will trigger on some muxified concept on such that the current axium has observation of.
 * priority - By default all action's dispatched via quality observations will be pushed to the end of the tail que on the Axium. By setting this value, it will force the handlePriority internal function to trigger and assign the action to the determined slot on the body que instead.
 * keyedSelectors - An Array of KeyedSelector that locks some property during the life time of the created action.
 * semaphore - First is concept's index, second is the quality's index, and the final is the generation of the sets of concepts currently stored on the Axium. *Explicitly setting this value, denotes a primed action without additional look up at runtime.*
@@ -159,37 +159,37 @@ This was a purposeful design choice, if you find yourself doing such. Known this
 
 ## Helper Functions for Standard Method Creators
 You still need to create a function of type MethodCreator to use these Helpers. :MethodCreator = () =>  methodCreator
-*Update Note 0.0.48 - Updated helpers methods to receive their governing concepts state, this is due to how the act of Unifying Concepts works within Stratimux. As without this approach we cannot Unify multiple "counters," to your loaded concepts. This allows for that unified state to be made consistent via the "Universal Spacial Quality" of semaphores within this system.*
+*Update Note 0.0.48 - Updated helpers methods to receive their governing concepts state, this is due to how the act of Unifying Concepts works within Stratimux. As without this approach we cannot Unify multiple "counters," to your loaded concepts. This allows for that muxified state to be made consistent via the "Universal Spacial Quality" of semaphores within this system.*
 ```typescript
 export const createMethod =
   (method: (action: Action) => Action): [Method, Subject<Action>] => {}
 export const createMethodWithState =
-  (method: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number): [Method, Subject<Action>] => {}
+  (method: (action: Action, concepts: Concepts) => Action, concepts$: MuxifiedSubject, semaphore: number): [Method, Subject<Action>] => {}
 export const createAsyncMethod =
   (asyncMethod: (controller: ActionController, action: Action) => void): [Method, Subject<Action>] => {}
 export const createAsyncMethodWithState =
-  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) => void, concepts$: UnifiedSubject, semaphore: number)
+  (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) => void, concepts$: MuxifiedSubject, semaphore: number)
     : [Method, Subject<Action>] => {}
 export const createMethodDebounce =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
 export const createMethodDebounceWithState =
-  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
+  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: MuxifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodDebounce =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
 export const createAsyncMethodDebounceWithState =
   (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
-    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
+    void, concepts$: MuxifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 export const createMethodThrottle =
   (method: (action: Action) => Action, duration: number): [Method, Subject<Action>] => {}
 export const createMethodThrottleWithState =
-  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: UnifiedSubject, semaphore: number, duration: number)
+  (methodWithState: (action: Action, concepts: Concepts) => Action, concepts$: MuxifiedSubject, semaphore: number, duration: number)
     : [Method, Subject<Action>] => {}
 export const createAsyncMethodThrottle =
   (asyncMethod: (controller: ActionController, action: Action) => void, duration: number): [Method, Subject<Action>] => {}
 export const createAsyncMethodThrottleWithState =
   (asyncMethodWithState: (controller: ActionController, action: Action, concepts: Concepts) =>
-    void, concepts$: UnifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
+    void, concepts$: MuxifiedSubject, semaphore: number, duration: number): [Method, Subject<Action>] => {}
 ```
 * createMethod - Your standard method, be sure to handle the action.strategy via one of the strategy decision functions, in addition to passing the action if there is no attached strategy.
 * createMethodWithState - This will allow your method to have the most recent state to be accessed via the asyncMethod function.

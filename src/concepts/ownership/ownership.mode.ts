@@ -15,14 +15,14 @@ import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../axium/axium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
-import { UnifiedSubject } from '../../model/stagePlanner';
+import { MuxifiedSubject } from '../../model/stagePlanner';
 import { axiumAppendActionListToDialog } from '../axium/qualities/appendActionListToDialog.quality';
 import { AxiumState } from '../axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
 import { getAxiumState } from '../../model/axium';
 
 export const ownershipMode: Mode = (
-  [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
+  [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, MuxifiedSubject]
 ) => {
   let action = _action;
   let concepts = _concepts;

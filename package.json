@@ -2,7 +2,7 @@
   "name": "stratimux",
   "license": "GPL-3.0",
   "version": "0.1.73",
-  "description": "Unified Turing Machine",
+  "description": "Muxified Turing Machine",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -36,7 +36,7 @@
     }
   },
   "keywords": [
-    "Unified Turing Machine",
+    "Muxified Turing Machine",
     "Asynchronous Graph Programming",
     "Framework"
   ],

@@ -6,7 +6,7 @@ $>*/
 import { ExperimentState } from '../experiment.concept';
 import { createAsyncMethodThrottleWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload = {
@@ -26,7 +26,7 @@ export const experimentThrottleAsyncIterateIdThenReceiveInMethod =
       setTimeout(() => {
         const payload = action.payload;
         if (action.strategy) {
-          const data = strategyData_unifyData<Data>(action.strategy, {
+          const data = strategyData_muxifyData<Data>(action.strategy, {
             id: state.id,
             setId: payload.setId
           });

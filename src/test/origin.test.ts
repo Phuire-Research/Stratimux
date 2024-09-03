@@ -10,7 +10,7 @@ import { CounterState } from '../concepts/counter/counter.concept';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
 import { axiumKick } from '../concepts/axium/qualities/kick.quality';
-import { KeyedSelector, createUnifiedKeyedSelector, selectState, selectUnifiedState } from '../model/selector';
+import { KeyedSelector, createMuxifiedKeyedSelector, selectState, selectMuxifiedState } from '../model/selector';
 
 test('Origin Creation', (done) => {
   expect(createOrigin(['one'])).toBe('one');
@@ -72,7 +72,7 @@ test('Test Dispatch Override', (done) => {
               iterateStage: true
             });
           }
-        // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
+        // }, {selectors: [createMuxifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
         }),
         stage(() => {
           planTestOverride.conclude();
@@ -167,7 +167,7 @@ test('Test Dispatch Override', (done) => {
 //               iterateStage: true
 //             });
 //           }
-//         // }, {selectors: [createUnifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
+//         // }, {selectors: [createMuxifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
 //         }),
 //         createStage(() => {
 //           plan.conclude();

@@ -66,7 +66,7 @@ export const createConceptKeyedSelector =
  * @tutorial *Note* This will only extend 6 levels into a deeply nested record.
  * @tutorial **Use createAdvancedKeys** function in place of keys if attempted to scaffold into through arrays
  */
-export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
+export const createMuxifiedKeyedSelector = <T extends Record<string, unknown>>(
   concepts: Concepts,
   semaphore: number,
   keys: DotPath<T>,
@@ -102,15 +102,15 @@ export const createUnifiedKeyedSelector = <T extends Record<string, unknown>>(
   return undefined;
 };
 
-export type CreateBufferedUnifiedKeyedSelector = <T = void> (semaphore: number) =>
-  UnifiedKeyedSelector<T>;
-export type UnifiedKeyedSelector<T = void> = (
+export type CreateBufferedMuxifiedKeyedSelector = <T = void> (semaphore: number) =>
+  MuxifiedKeyedSelector<T>;
+export type MuxifiedKeyedSelector<T = void> = (
   concepts: Concepts,
   keys: DotPath<T extends Record<string, unknown> ? T : Record<string, unknown>>,
   setKeys?: (number | string)[]
 ) => KeyedSelector | undefined;
 
-export const createBufferedUnifiedKeyedSelector: CreateBufferedUnifiedKeyedSelector =
+export const createBufferedMuxifiedKeyedSelector: CreateBufferedMuxifiedKeyedSelector =
   <T extends Record<string, unknown>> (semaphore: number) => (
     concepts: Concepts,
     keys: DotPath<T>,
@@ -176,7 +176,7 @@ export const createBufferedConceptSelector: CreateBufferedConceptSelector =
 
 // export type Selectors<S = void, C = void> = {
 export type Selectors<S = void> = {
-  create: UnifiedKeyedSelector<S>,
+  create: MuxifiedKeyedSelector<S>,
   state: StateSelector<S>,
   // concept: ConceptSelector<C>
 }
@@ -188,7 +188,7 @@ export const createBufferedSelectorsSet = <S = void>(
   semaphore: number
 ): Selectors<S>   => {
   return {
-    create: createBufferedUnifiedKeyedSelector<S>(semaphore),
+    create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
     // concept: createBufferedConceptSelector<C>(semaphore),
     state: createBufferedStateSelector<S>(semaphore)
   };
@@ -197,14 +197,14 @@ export const createBufferedSelectorsSet = <S = void>(
 export const createSelectors = <S = void>(
   semaphore: number
 ): Selectors<S> => ({
-    create: createBufferedUnifiedKeyedSelector<S>(semaphore),
+    create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
     state: createBufferedStateSelector<S>(semaphore)
   });
 
 export const createDummySelectors = <S = void>(
 ): Selectors<S>   => {
   return {
-    create: createBufferedUnifiedKeyedSelector<S>(-1),
+    create: createBufferedMuxifiedKeyedSelector<S>(-1),
     // concept: createBufferedConceptSelector<C>(semaphore),
     state: createBufferedStateSelector<S>(-1)
   };
@@ -234,7 +234,7 @@ export const updateKeyedSelectors = <S = void>(
 ): void => {
   const keys = Object.keys(selectors);
   keys.forEach(key => {
-    (selectors as any)[key] = updateUnifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
+    (selectors as any)[key] = updateMuxifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
     const keyed = (selectors as any)[key] as KeyedSelector<any>;
     const val = selectSlice<any>(concepts, keyed);
     keyed.select = () => val;
@@ -269,10 +269,10 @@ export const updateAtomicSelects = <S = void>(
 };
 
 /**
- * This will update a concepts KeyedSelector to its currently unified concept.
- * @Note Use this in place of createUnifiedSelector if you find yourself needing to lock deep values.
+ * This will update a concepts KeyedSelector to its currently muxified concept.
+ * @Note Use this in place of createMuxifiedSelector if you find yourself needing to lock deep values.
  */
-export const updateUnifiedKeyedSelector =
+export const updateMuxifiedKeyedSelector =
   (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
     if (concepts[semaphore]) {
       const selectorBase = keyedSelector.keys.split('.');
@@ -475,13 +475,13 @@ export function createAdvancedKeys<T extends object>(arr: unknown[]): DotPath<T>
 
 //createConceptKeyedSelector<{something: unknown}>('something', 'something.1' as DotPath<{something:unknown}>);
 /**
- * Allows for the Unification of Concepts and a form of Data Oriented Functional Inheritance.
+ * Allows for the Muxification of Concepts and a form of Data Oriented Functional Inheritance.
  * @within_principles Simply pass the supplied semaphore passed to your PrincipleFunction to gain access to that State.
- * @outside_selection Use selectState targeting that Unified Concept Name
+ * @outside_selection Use selectState targeting that Muxified Concept Name
  */
 
-// Either returns the current concept's unified state, or informs that the concept has been removed and the principles needs shutdown
-export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T | undefined {
+// Either returns the current concept's muxified state, or informs that the concept has been removed and the principles needs shutdown
+export function selectMuxifiedState<T>(concepts: Concepts, semaphore: number): T | undefined {
   if (concepts[semaphore]) {
     return concepts[semaphore].state as T;
   } else {
@@ -490,15 +490,15 @@ export function selectUnifiedState<T>(concepts: Concepts, semaphore: number): T 
 }
 
 export const select = ({
-  createUnifiedKeyedSelector,
+  createMuxifiedKeyedSelector,
   createConceptKeyedSelector,
   createAdvancedKeys,
-  updateUnifiedKeyedSelector,
+  updateMuxifiedKeyedSelector,
   state: selectState,
   set: selectSet,
   payLoad: selectPayload,
   slice: selectSlice,
   concept: selectConcept,
-  unifiedState: selectUnifiedState,
+  muxifiedState: selectMuxifiedState,
 });
 /*#>*/
