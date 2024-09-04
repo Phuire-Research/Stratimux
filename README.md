@@ -1,5 +1,5 @@
 ![Stratimux](https://github.com/Phuire-Research/Stratimux/blob/main/Stratimux.png?raw=true)
-### *The Unified Turing Machine - The Mythical Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
+### *The Advent of the Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
 
 **Features:**
 * Universal Transformer
@@ -63,10 +63,11 @@ When in doubt simplify.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 
-## Road Map (*Updated*  08/28/24)
+## Road Map (*Updated*  09/04/24)
 ### Beyond v0.2.0
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
 * Extended Roadmap Set
+* **Beginning testing of new update**
 ### Developer Experience Decks Interface v0.2.0
 This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates. *All tests are now passing, will be testing in Huirth to create a migration guide. No longer have to self manage **semaphores*** 
 * DECK Interface - No longer need to import actions, selectors, or prime semaphores.
