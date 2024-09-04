@@ -15,18 +15,19 @@ import {
 } from 'rxjs';
 import { Action, Actions, createAction, createCachedSemaphores } from './action';
 import { strategyBegin } from './actionStrategy';
-import { Concept, ConceptDeck, Concepts, Mode, forEachConcept, qualityToString } from './concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts, Mode, forEachConcept, qualityToString } from './concept';
 import {
   createAxiumConcept,
   AxiumState,
   initializationStrategy,
+  AxiumDeck,
 } from '../concepts/axium/axium.concept';
 import { Planning } from './stagePlanner';
 import { axiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { AxiumQualities } from '../concepts/axium/qualities';
-import { Deck } from './deck';
-import { updateKeyedSelectors } from './selector';
+import { Deck, Decks } from './deck';
+import { BundledSelectors, createBufferedSelectorsSet, createSelectors, KeyedSelectors, updateKeyedSelectors } from './selector';
 
 // eslint-disable-next-line no-shadow
 export enum AxiumOrigins {
@@ -34,7 +35,7 @@ export enum AxiumOrigins {
   axiumHead = 'axiumHead'
 }
 
-export const tailWhip = <Q, C>(axiumState: AxiumState<Q, C>) => {
+export const tailWhip = <Q, C extends LoadConcepts>(axiumState: AxiumState<Q, C>) => {
   if (axiumState.tailTimer.length === 0) {
     axiumState.tailTimer.push(setTimeout(() => {
       axiumState.action$.next(createAction('Kick Axium'));
@@ -56,7 +57,7 @@ export const createOrigin = (location: unknown[]): string => {
   return origin;
 };
 
-export const HandleOrigin = <Q, C>(state: AxiumState<Q, C>, action: Action) => {
+export const HandleOrigin = <Q, C extends LoadConcepts>(state: AxiumState<Q, C>, action: Action) => {
   const {
     body,
     tail
@@ -85,7 +86,7 @@ export const HandleOrigin = <Q, C>(state: AxiumState<Q, C>, action: Action) => {
   tailWhip(state);
 };
 
-export const HandleHardOrigin = <Q, C>(state: AxiumState<Q, C>, action: Action) => {
+export const HandleHardOrigin = <Q, C extends LoadConcepts>(state: AxiumState<Q, C>, action: Action) => {
   // Fill Bucket
   // Empty Bucket
   // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
@@ -211,13 +212,16 @@ export const defaultMethodSubscription = (
   }
 };
 
-export type AxiumDeck = {
-  axium: Concept<AxiumState<AxiumDeck, AxiumQualities>, AxiumQualities>
+// export type AxiumLoad<C extends LoadConcepts> = {
+//   axium: Concept<AxiumState<AxiumQualities, C>, AxiumQualities>,
+//   [key: string] : AnyConcept;
+// };
+
+export type AxiumLoad<C extends LoadConcepts> = {
+  [K in keyof C] : C[K] extends AnyConcept ? C[K] : AnyConcept
 };
 
-export type BaseDeck = Deck<AxiumDeck>;
-
-export function createAxium<C extends Record<string, Concept<any, any>>>(
+export function createAxium<C extends LoadConcepts>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deckLoad: C,
@@ -227,44 +231,57 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
     logActionStream?: boolean,
     dynamic?: boolean,
   }
-): Axium<AxiumQualities, AxiumDeck & typeof deckLoad> {
+): Axium<AxiumQualities, C & AxiumDeck, AxiumState<AxiumQualities, C>> {
+  const axiumConcept = createAxiumConcept<AxiumQualities, C>(
+    name,
+    options?.storeDialog,
+    options?.logging,
+    options?.logActionStream,
+    options?.dynamic
+  );
   const concepts: Concepts = {
-    0: createAxiumConcept(
-      name,
-      options?.storeDialog,
-      options?.logging,
-      options?.logActionStream,
-      options?.dynamic
-    )
+    0: axiumConcept
   };
-  const _cpts = concepts[0] as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
-  updateKeyedSelectors(concepts, _cpts.selectors, 0);
-  const baseDeck: Deck<any> = {
-    axium: {
-      e: _cpts.actions,
-      c: _cpts.comparators,
-      k: _cpts.selectors,
+  // as Concept<AxiumState<AxiumQualities, AxiumDeck & C>, AxiumQualities>;
+  updateKeyedSelectors(concepts, axiumConcept.keyedSelectors, 0);
+  const bundledSelectors = {
+    ...axiumConcept.keyedSelectors,
+    ...createBufferedSelectorsSet(0)
+  } as BundledSelectors<AxiumState<AxiumQualities, C>>;
+  const baseDeck: Decks<AxiumQualities, AxiumState<AxiumQualities, C>, AxiumLoad<AxiumDeck>> = {
+    d: { axium: {
+      e: axiumConcept.actions,
+      c: axiumConcept.comparators,
+      k: bundledSelectors,
     },
+    } as Deck<AxiumLoad<AxiumDeck>>,
+    e: axiumConcept.actions,
+    c: axiumConcept.comparators,
+    k: bundledSelectors,
   };
-  concepts[0].semaphore = 0;
+  axiumConcept.semaphore = 0;
+  axiumConcept.selectors = createSelectors(0);
   Object.keys(deckLoad).forEach((key, i) => {
-    concepts[i + 1] = deckLoad[key];
-    updateKeyedSelectors(concepts, deckLoad[key].selectors, i + 1);
-    (baseDeck as Deck<any>)[key] = {
+    const target = i + 1;
+    concepts[target] = deckLoad[key];
+    updateKeyedSelectors(concepts, deckLoad[key].keyedSelectors, target);
+    (baseDeck as any).d[key] = {
       e: deckLoad[key].actions,
       c: deckLoad[key].comparators,
-      k: deckLoad[key].selectors
+      k: {...deckLoad[key].keyedSelectors, ...createBufferedSelectorsSet(target)},
+      s: {}
     };
-    deckLoad[key].semaphore = i + 1;
+    deckLoad[key].semaphore = target;
   });
 
-  const deck = baseDeck as BaseDeck & Deck<C>;
-
-  let axiumState = concepts[0].state as AxiumState<AxiumQualities, AxiumDeck & C>;
+  const deck = baseDeck as Decks<AxiumQualities, AxiumState<AxiumQualities, C>, AxiumLoad<C & AxiumDeck>>;
+  baseDeck.d.axium.c.axiumAddConceptsFromQue;
+  let axiumState = concepts[0].state as AxiumState<AxiumQualities, C>;
   axiumState.deck = deck;
   axiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     axiumState.conceptCounter += 1;
+    concept.selectors = createSelectors(semaphore);
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator()(axiumState.concepts$, semaphore);
@@ -279,7 +296,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
         const methodSub = quality.method.subscribe(([action, _]) => {
           blockingMethodSubscription(concepts, axiumState.tail, action);
         }) as Subscriber<Action>;
-        axiumState = concepts[0].state as AxiumState<AxiumQualities, AxiumDeck & C>;
+        axiumState = concepts[0].state as AxiumState<AxiumQualities, C>;
         axiumState.methodSubscribers.push({
           name: concept.name,
           subscription: methodSub,
@@ -287,7 +304,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       }
     });
     if (semaphore !== 0 && concept.mode !== undefined) {
-      axiumState = concepts[0].state as AxiumState<AxiumQualities, AxiumDeck & C>;
+      axiumState = concepts[0].state as AxiumState<AxiumQualities, C>;
       const names = axiumState.modeNames;
       const modes = concepts[0].mode as Mode[];
       concept.mode.forEach((mode) => {
@@ -317,7 +334,7 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
           ' topic: ', action.strategy?.topic
         );
       }
-      const _axiumState = _concepts[0].state as AxiumState<AxiumDeck & C, AxiumQualities>;
+      const _axiumState = _concepts[0].state as AxiumState<AxiumQualities, C>;
       if (_axiumState.head.length === 0) {
         action.origin = AxiumOrigins.axiumHead;
         _axiumState.head.push(action);
@@ -352,15 +369,15 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
       }
     });
 
-  axiumState = concepts[0].state as AxiumState<AxiumQualities, AxiumDeck & C>;
+  axiumState = concepts[0].state as AxiumState<AxiumQualities, C>;
   const action$ = axiumState.action$;
   axiumState.actionConcepts$.next(concepts);
   axiumState.concepts$.init(concepts);
   axiumState.action$.next(
-    strategyBegin(initializationStrategy(concepts[0].actions as Actions<AxiumQualities>, concepts)),
+    strategyBegin(initializationStrategy(concepts[0].actions as unknown as Actions<AxiumQualities>, concepts)),
   );
   const close = (exit?: boolean) => {
-    action$.next(deck.axium.e.axiumPreClose({
+    action$.next(baseDeck.d.axium.e.axiumPreClose({
       exit: exit ? exit : false
     }));
   };
@@ -373,27 +390,27 @@ export function createAxium<C extends Record<string, Concept<any, any>>>(
     },
     plan: axiumState.concepts$.outerPlan,
     deck,
-    e: deck.axium.e
-  };
+    e: deck.d.axium.e
+  } as unknown as Axium<AxiumQualities, C & AxiumDeck, AxiumState<AxiumQualities, C>>;
 }
 
 // [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
-export type Axium<Q extends Record<string, unknown>, C extends Record<string, unknown>> = {
+export type Axium<Q extends Record<string, unknown>, C extends LoadConcepts, S extends Record<string, unknown>> = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action<any>) => void;
-  plan: Planning<Q, C>;
-  deck: Deck<C>,
+  plan: Planning<Q, C, S>;
+  deck: Decks<AxiumQualities, AxiumState<Q, C>, AxiumLoad<C>>,
   e: Actions<AxiumQualities>
 }
 
 export const getAxiumState = <Q = void, C = void>(concepts: Concepts) =>
-  (concepts[0].state as AxiumState<Q extends void ? AxiumQualities : Q, C extends void ? AxiumDeck : C>);
+  (concepts[0].state as AxiumState<Q extends void ? AxiumQualities : Q, C extends LoadConcepts ? C : AxiumDeck >);
 
-export const accessAxium = (concepts: Concepts) => (getAxiumState(concepts).deck.axium);
+export const accessAxium = (concepts: Concepts) => (getAxiumState(concepts).deck.d.axium);
 
-export const isAxiumOpen = (concepts: Concepts) => ((concepts[0].state as AxiumState<AxiumQualities, AxiumDeck>).open);
+export const isAxiumOpen = (concepts: Concepts) => ((concepts[0].state as AxiumState<AxiumQualities, AxiumLoad<any>>).open);
 
 export const axium = ({
   create: createAxium,

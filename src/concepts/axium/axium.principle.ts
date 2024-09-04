@@ -7,17 +7,17 @@ import { Observable, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../model/principle';
 import { Action, Actions, createCachedSemaphores } from '../../model/action';
-import { axiumName } from './axium.concept';
+import { AxiumDeck, axiumName } from './axium.concept';
 import { createActionNode, strategy, strategyBegin } from '../../model/actionStrategy';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './axium.mode';
-import { AxiumDeck, blockingMethodSubscription, getAxiumState } from '../../model/axium';
+import { AxiumLoad, blockingMethodSubscription, getAxiumState } from '../../model/axium';
 import { AxiumQualities } from './qualities';
 import { axiumSelectAddConceptQue, axiumSelectRemoveConceptQue } from './axium.selector';
 import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
-import { KeyedSelectors, updateKeyedSelectors } from '../../model/selector';
+import { BundledSelectors, createBufferedSelectorsSet, KeyedSelectors, Selectors, updateKeyedSelectors } from '../../model/selector';
 
 export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
   {
@@ -45,6 +45,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         addKeys.forEach((key, _index) => {
           const concept = axiumState.addConceptQue[key] as unknown as AnyConcept;
           concept.semaphore = axiumState.conceptCounter;
+          axiumState.conceptCounter += 1;
           if (concept.mode !== undefined) {
             const names = axiumState.modeNames;
             const modes = concepts[0].mode as Mode[];
@@ -55,7 +56,7 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
           }
           if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$<typeof concept.q, AxiumDeck, typeof concept.state>(
+              const observable = createPrinciple$(
                 principle,
                 concepts,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,10 +65,10 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
                 axiumState.concepts$.next.bind(axiumState.concepts$),
                 axiumState.action$.next.bind(axiumState.action$),
                 concept.semaphore,
-                axiumState.deck,
+                axiumState.deck.d,
                 concept.actions as Actions<any>,
                 concept.comparators as Comparators<any>,
-                concept.selectors as KeyedSelectors<any>,
+                {...concept.keyedSelectors, ...concept.selectors} as BundledSelectors<any>,
               );
               axiumState.principleSubscribers.push({
                 name: concept.name,
@@ -94,16 +95,13 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
             }
           });
           newConcepts[concept.semaphore] = concept as AnyConcept;
-          updateKeyedSelectors(newConcepts, concept.selectors, concept.semaphore);
-          axiumState.deck = {
-            ...axiumState.deck,
-            [key]: {
-              e: concept.actions,
-              c: concept.comparators,
-              k: concept.selectors
-            }
+
+          updateKeyedSelectors(newConcepts, concept.keyedSelectors, concept.semaphore);
+          (axiumState.deck.d as any)[key] = {
+            e: concept.actions,
+            c: concept.comparators,
+            k: {...concept.keyedSelectors, ...createBufferedSelectorsSet(concept.semaphore)}
           };
-          axiumState.conceptCounter += 1;
         });
         const newAxiumState = getAxiumState(newConcepts);
         newAxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
@@ -164,12 +162,12 @@ export const axiumPrinciple: PrincipleFunction<AxiumQualities> = (
         });
         newAxiumState.methodSubscribers = [];
         const newDeck = {} as Deck<any>;
-        Object.keys(axiumState.deck).forEach((key) => {
-          if (!removeKeys.includes(key)) {
-            newDeck[key] = (axiumState.deck as any)[key];
+        Object.keys(axiumState.deck.d).forEach((key) => {
+          if (!removeKeys.includes(key) || key === axiumName) {
+            newDeck[key] = (axiumState.deck.d as any)[key];
           }
         });
-        newAxiumState.deck = newDeck;
+        newAxiumState.deck.d = newDeck as Deck<AxiumLoad<AxiumDeck>>;
 
         forEachConcept(newConcepts, (concept, se) => {
           concept.qualities.forEach(quality => {

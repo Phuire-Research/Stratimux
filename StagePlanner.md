@@ -1,8 +1,8 @@
 ## Stage Planner
 ### Abstract
-This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no throttle option. That plan will conclude and be added to the axium's badPlans property.
+This is derived from the newly created MuxifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Muxified Turing Machine was created to be halting complete. The MuxifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no throttle option. That plan will conclude and be added to the axium's badPlans property.
 
-Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
+Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Muxified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
 
 *"You stage a plan and a plan has multiple stages."*
 
@@ -95,7 +95,7 @@ export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?:
   };
 };
 
-export class UnifiedSubject extends Subject<Concepts> {
+export class MuxifiedSubject extends Subject<Concepts> {
   plan(title: string, stages: PartialStaging[]): StagePlanner {}
 }
 ```
@@ -105,7 +105,7 @@ export class UnifiedSubject extends Subject<Concepts> {
   * **dispatch** - Use to dispatch new actions and strategies into your axium
   * **changes** - Informs which properties of the supplied KeyedSelectors for the current stage have changed.
 * createStage - Helper function that guides assembly of a Staging entity
-* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
+* MuxifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
 
 ## Example
 ```typescript

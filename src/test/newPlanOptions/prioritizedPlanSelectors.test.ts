@@ -17,12 +17,12 @@ test('prioritized plans with selectors Test', (done) => {
   const num = 100;
   const allShouldBeTrue = new Array(num).fill(false);
   const stressTest = (id: number) => {
-    console.log('INIT ', id);
+    // console.log('INIT ', id);
     planPrioritizedSelectors.plan('Ensure that prioritized plans with selectors allow for each plan to be informed',
       ({stage}) => [
         stage(({concepts, dispatch, e}) => {
           if (selectSlice(concepts, axiumSelectOpen)) {
-            console.log(`FIRE ${id}`, allShouldBeTrue, getAxiumState(concepts).open);
+            // console.log(`FIRE ${id}`, allShouldBeTrue, getAxiumState(concepts).open);
             dispatch(e.axiumKick(), {
               iterateStage: true
             });
@@ -36,7 +36,7 @@ test('prioritized plans with selectors Test', (done) => {
     );
   };
   allShouldBeTrue.forEach((_, id) => stressTest(id));
-  planPrioritizedSelectors.dispatch(planPrioritizedSelectors.deck.experiment.e.experimentPlanOptionsIsReady());
+  planPrioritizedSelectors.dispatch(planPrioritizedSelectors.deck.d.experiment.e.experimentPlanOptionsIsReady());
   setTimeout(() => {
     let trueCount = 0;
     allShouldBeTrue.forEach(b => {
@@ -44,13 +44,12 @@ test('prioritized plans with selectors Test', (done) => {
         trueCount++;
       }
     });
-    console.log('FINAL: ', allShouldBeTrue);
+    // console.log('FINAL: ', allShouldBeTrue);
     expect(trueCount).toBe(allShouldBeTrue.length);
     planPrioritizedSelectors.close();
     setTimeout(() => {
       done();
-    }, 5000);
-    done();
+    }, 50);
   }, 2000);
 });
 /*#>*/

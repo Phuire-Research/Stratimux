@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test that ensures that the Axium can add concepts into its conceptual sets.
 $>*/
 /*<#*/
-import { AxiumDeck, createAxium, getAxiumState } from '../model/axium';
+import { createAxium, getAxiumState } from '../model/axium';
 import { strategyBegin } from '../model/actionStrategy';
 import { select, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
@@ -11,6 +11,7 @@ import { countingTopic } from '../concepts/counter/strategies/counting.strategy'
 import { forEachConcept } from '../model/concept';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { Deck } from '../model/deck';
+import { AxiumDeck } from '../concepts/axium/axium.concept';
 
 test('Axium add Concepts Strategy Test', (done) => {
   const axium = createAxium('axiumAddConceptTest', {}, {logging: true, storeDialog: true, dynamic: true});
@@ -35,6 +36,7 @@ test('Axium add Concepts Strategy Test', (done) => {
         forEachConcept(concepts, (concept) => {
           if (concept.name === counterName) {
             exists = true;
+            console.log('Check: ', Object.keys(d));
             const str = countingStrategy(d as Deck<AxiumDeck & CounterDeck>);
             console.log('Dispatched', str);
             if (str) {

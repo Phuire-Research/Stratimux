@@ -9,13 +9,14 @@ import { PrincipleFunction } from '../../model/principle';
 import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
-import { selectUnifiedState } from '../../model/selector';
+import { selectMuxifiedState } from '../../model/selector';
 import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
-import { AxiumDeck, accessAxium, getAxiumState } from '../../model/axium';
+import { accessAxium, getAxiumState } from '../../model/axium';
 import { AxiumBadActionPayload } from '../axium/qualities';
+import { AxiumDeck } from '../axium/axium.concept';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -37,7 +38,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
     stageO(() => d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
     stage(({concepts, d}) => {
       let newConcepts = concepts;
-      let ownershipState = selectUnifiedState<OwnershipState>(newConcepts, conceptSemaphore);
+      let ownershipState = selectMuxifiedState<OwnershipState>(newConcepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         // This will be the point of dispatch of Qued Actions
         let newAction;
@@ -52,7 +53,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
             }
           }
           if (newAction) {
-            ownershipState = selectUnifiedState(newConcepts, conceptSemaphore) as OwnershipState;
+            ownershipState = selectMuxifiedState(newConcepts, conceptSemaphore) as OwnershipState;
             const newPendingActions = [];
             for (const pending of ownershipState.pendingActions) {
               if (!areSemaphoresEqual(pending, newAction) && pending.expiration !== newAction.expiration) {
@@ -116,7 +117,7 @@ export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities,
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
     stageO(() => (d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
     stage(({concepts}) => {
-      const ownershipState = selectUnifiedState<OwnershipState>(concepts, conceptSemaphore);
+      const ownershipState = selectMuxifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         let modified = false;
         const newLedger = createOwnershipLedger();

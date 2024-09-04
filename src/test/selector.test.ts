@@ -9,6 +9,8 @@ import { CounterState, createCounterConcept, counterName  } from '../concepts/co
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
+import { createStage } from '../model/stagePlanner';
+import { AxiumQualities } from '../concepts/axium/qualities';
 
 test('Axium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -44,7 +46,7 @@ test('Axium Selector Payload Test', (done) => {
   done();
 });
 
-test('Axium Unified Selector Test', (done) => {
+test('Axium Muxified Selector Test', (done) => {
   type SomeDeepObject = {
     something : {
       somethingElse: string,
@@ -70,7 +72,7 @@ test('Axium Unified Selector Test', (done) => {
   const concepts: Concepts = {
     0: experiment as Concept<any>
   };
-  const selector = select.createUnifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
+  const selector = select.createMuxifiedKeyedSelector<DeepNested>(concepts, 0, 'anything.something.somethingArray', [10, 9, 8, 7]);
   const conceptSelector = select.createConceptKeyedSelector<DeepNested>(experimentName, 'anything.something.somethingElse');
   if (selector) {
     const slices = select.set<string[]>(concepts, selector);
@@ -85,4 +87,17 @@ test('Axium Unified Selector Test', (done) => {
     }
   }
 });
+
+test('Axium Deck Selector Test', (done) => {
+  const ax = createAxium('Test Base Selectors', {});
+  ax.plan('Test Base Selectors', ({stageO, stage, e__}) => [
+    stageO(() => e__.axiumKick()),
+    stage(({k, e, stagePlanner}) => {
+      stagePlanner.conclude();
+      ax.close();
+      done();
+    })
+  ]);
+});
+
 /*#>*/

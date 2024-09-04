@@ -6,7 +6,7 @@ $>*/
 import { createAsyncMethodWithState } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
 import { axiumConclude } from '../../axium/qualities/conclude.quality';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { ExperimentState } from '../experiment.concept';
 import { createQualityCard, nullReducer } from '../../../model/quality';
 
@@ -16,7 +16,7 @@ export const experimentTimerEmitActionWithState = createQualityCard<ExperimentSt
   methodCreator: () => createAsyncMethodWithState((controller, action, state) => {
     setTimeout(() => {
       if (action.strategy) {
-        const data = strategyData_unifyData(action.strategy, { mock: state.mock });
+        const data = strategyData_muxifyData(action.strategy, { mock: state.mock });
         controller.fire(strategySuccess(action.strategy, data));
       } else {
         controller.fire(axiumConclude());

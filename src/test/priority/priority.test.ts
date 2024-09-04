@@ -3,8 +3,10 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 is managing plan notifications as intended.
 $>*/
 /*<#*/
+import { AxiumDeck, AxiumState } from '../../concepts/axium/axium.concept';
+import { AxiumQualities } from '../../concepts/axium/qualities';
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { AxiumDeck, createAxium } from '../../model/axium';
+import { createAxium } from '../../model/axium';
 import { select } from '../../model/selector';
 import { createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
@@ -28,7 +30,7 @@ test('Priority Test', (done) => {
   };
   const priorityTest = createAxium('Priority Test', deck, {logging: true, storeDialog: true, logActionStream: true});
 
-  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck>(
+  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       console.log('HIT: ', name, changes);
@@ -39,7 +41,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number) => createStage<unknown, ExperimentDeck>(
+  const secondStage = (name: string, newValue: number, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
     ({concepts, dispatch, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState) {
@@ -49,7 +51,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck>(
+  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState && changes.length > 0) {
@@ -61,7 +63,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = () => createStage<unknown, ExperimentDeck>(({stagePlanner}) => {
+  const concludePlan = () => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(({stagePlanner}) => {
     console.log(`${stagePlanner.title} Priority END`);
     stagePlanner.conclude();
     finalize();
@@ -95,7 +97,7 @@ test('Priority Test', (done) => {
       concludePlan(),
     ]);
   setTimeout(() => {
-    priorityTest.dispatch(priorityTest.deck.experiment.e.experimentPriorityIsReady());
+    priorityTest.dispatch(priorityTest.deck.d.experiment.e.experimentPriorityIsReady());
   }, 1000);
   priorityTest.subscribe(val => console.log('CHECK STATE: ', select.state(val, experimentName))); });
 /*#>*/

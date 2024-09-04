@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux generate the Axium Qu
 $>*/
 /*<#*/
 import { Subscription } from 'rxjs';
-import { AnyAction } from '../../../model/action';
+import { Actions, AnyAction } from '../../../model/action';
 import { Quality } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { AnyConcept, Concepts } from '../../../model/concept';
@@ -102,28 +102,28 @@ export type AxiumRegisterTimeOutPayload = {
 export type AxiumQualities = {
   axiumKick: Quality<Record<string, unknown>, void>,
   axiumOpen: Quality<Record<string, unknown>, OpenPayload>,
-  axiumBadAction: Quality<AxiumState<unknown, unknown>, AxiumBadActionPayload>,
-  axiumClose: Quality<AxiumState<unknown, unknown>, AxiumClosePayload>,
-  axiumPreClose: Quality<AxiumState<unknown, unknown>, AxiumPreClosePayload>,
-  axiumAppendActionListToDialog: Quality<AxiumState<unknown, unknown>, AppendActionListToDialogPayload>,
-  axiumClearDialog: Quality<AxiumState<unknown, unknown>, void>,
+  axiumBadAction: Quality<AxiumState<unknown, any>, AxiumBadActionPayload>,
+  axiumClose: Quality<AxiumState<unknown, any>, AxiumClosePayload>,
+  axiumPreClose: Quality<AxiumState<unknown, any>, AxiumPreClosePayload>,
+  axiumAppendActionListToDialog: Quality<AxiumState<unknown, any>, AppendActionListToDialogPayload>,
+  axiumClearDialog: Quality<AxiumState<unknown, any>, void>,
   axiumLog: Quality<Record<string, unknown>, void>,
-  axiumRegisterSubscriber: Quality<AxiumState<unknown, unknown>, AxiumRegisterSubscriberPayload>,
-  axiumRegisterStagePlanner: Quality<AxiumState<unknown, unknown>, AxiumRegisterStagePlannerPayload>,
-  axiumInitializePrinciples: Quality<AxiumState<unknown, unknown>, AxiumInitializePrinciplesPayload>,
-  axiumSetBlockingMode: Quality<AxiumState<unknown, unknown>, AxiumSetBlockingModePayload>,
-  axiumSetDefaultMode: Quality<AxiumState<unknown, unknown>, AxiumSetDefaultModePayload>,
-  axiumSetDefaultModeIndex: Quality<AxiumState<unknown, unknown>, AxiumSetDefaultModeIndexPayload>,
-  axiumAddConceptsFromQue: Quality<AxiumState<unknown, unknown>, void>,
-  axiumAppendConceptsToAddQue: Quality<AxiumState<unknown, unknown>, AxiumAppendConceptsToAddQuePayload>,
-  axiumAppendConceptsToRemoveQue: Quality<AxiumState<unknown, unknown>, AxiumAppendConceptsToRemoveQuePayload>,
-  axiumRemoveConceptsViaQue: Quality<AxiumState<unknown, unknown>, void>,
-  axiumSetMode: Quality<AxiumState<unknown, unknown>, AxiumSetModePayload>,
-  axiumClearBadActionTypeFromBadActionList: Quality<AxiumState<unknown, unknown>, AxiumClearBadActionTypeFromBadActionListPayload>,
-  axiumClearBadStrategyTopicFromBadActionList: Quality<AxiumState<unknown, unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>,
-  axiumClearBadPlanFromBadPlanList: Quality<AxiumState<unknown, unknown>, AxiumClearBadPlanFromBadPlanListPayload>,
+  axiumRegisterSubscriber: Quality<AxiumState<unknown, any>, AxiumRegisterSubscriberPayload>,
+  axiumRegisterStagePlanner: Quality<AxiumState<unknown, any>, AxiumRegisterStagePlannerPayload>,
+  axiumInitializePrinciples: Quality<AxiumState<unknown, any>, AxiumInitializePrinciplesPayload>,
+  axiumSetBlockingMode: Quality<AxiumState<unknown, any>, AxiumSetBlockingModePayload>,
+  axiumSetDefaultMode: Quality<AxiumState<unknown, any>, AxiumSetDefaultModePayload>,
+  axiumSetDefaultModeIndex: Quality<AxiumState<unknown, any>, AxiumSetDefaultModeIndexPayload>,
+  axiumAddConceptsFromQue: Quality<AxiumState<unknown, any>, void>,
+  axiumAppendConceptsToAddQue: Quality<AxiumState<unknown, any>, AxiumAppendConceptsToAddQuePayload>,
+  axiumAppendConceptsToRemoveQue: Quality<AxiumState<unknown, any>, AxiumAppendConceptsToRemoveQuePayload>,
+  axiumRemoveConceptsViaQue: Quality<AxiumState<unknown, any>, void>,
+  axiumSetMode: Quality<AxiumState<unknown, any>, AxiumSetModePayload>,
+  axiumClearBadActionTypeFromBadActionList: Quality<AxiumState<unknown, any>, AxiumClearBadActionTypeFromBadActionListPayload>,
+  axiumClearBadStrategyTopicFromBadActionList: Quality<AxiumState<unknown, any>, AxiumClearBadStrategyTopicFromBadActionListPayload>,
+  axiumClearBadPlanFromBadPlanList: Quality<AxiumState<unknown, any>, AxiumClearBadPlanFromBadPlanListPayload>,
   axiumStitch: Quality<Record<string, unknown>, void>,
-  axiumRegisterTimeOut: Quality<AxiumState<unknown, unknown>, AxiumRegisterTimeOutPayload>
+  axiumRegisterTimeOut: Quality<AxiumState<unknown, any>, AxiumRegisterTimeOutPayload>
 }
 
 /*#>*/

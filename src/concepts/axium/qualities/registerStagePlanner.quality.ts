@@ -8,8 +8,9 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumRegisterStagePlannerPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumRegisterStagePlannerPayload>({
+export const axiumRegisterStagePlanner = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumRegisterStagePlannerPayload>({
   type: 'register Stage Planner to Axium\'s Named Stage Planner list',
   reducer: (state, action) => {
     const payload = action.payload;

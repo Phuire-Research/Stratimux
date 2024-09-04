@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Stage Planner model file.
-This file introduces the Unified Subject, that allows for users to stage plans based on observation of the Concepts stream.
+This file introduces the Muxified Subject, that allows for users to stage plans based on observation of the Concepts stream.
 The Stage Planner paradigm is what allows for the ease of working within a recursive run time, via setting plans to specific stages
 in order to prevent action overflow. Action overflow is when a function is stuck within a recursive loop. This paradigm
 also ensures Stratimux of its own provable termination in majority of configurations.
@@ -8,13 +8,19 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { Concepts } from './concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
-import { KeyedSelector, KeyedSelectors, createConceptKeyedSelector, select, selectSlice, updateSelects } from './selector';
+import { Concepts, LoadConcepts } from './concept';
+import { AxiumDeck, AxiumState } from '../concepts/axium/axium.concept';
+import {
+  BundledSelectors,
+  KeyedSelector,
+  createConceptKeyedSelector,
+  select,
+  selectSlice,
+} from './selector';
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
 import { axiumSelectOpen } from '../concepts/axium/axium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { AxiumDeck, HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
+import { HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { axiumTimeOut } from './time';
 import { Comparators, HInterface, UInterface } from './interface';
@@ -254,7 +260,7 @@ const Inner = 0;
 const Base = 1;
 const Outer = 2;
 
-export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
+export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
   private planId = -1;
   private currentPlans: Map<number, Plan<any, any, any>> = new Map();
   private stageDelimiters: Map<number, StageDelimiter> = new Map();
@@ -270,7 +276,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
     generalQue: number[],
   }[] = [{generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}, {generalQue: [], priorityQue: []}];
   // private generalQue: number[] = [];
-  // [TODO Unify Streams]: Simplify streams into one single UnifiedSubject
+  // [TODO Unify Streams]: Simplify streams into one single MuxifiedSubject
   // [Experiment notes]: When attempting to unify all streams the chain test presented a ghost count repeating at 14 with both 0 and 2
   // [Punt]: The main issue with this simplification is the order in which withLatest is notified
   // In order to fully facilitate this change we would need to add an innerQue, but likewise can just have 3 streams
@@ -365,7 +371,9 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       d__: accessDeck(this.concepts),
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
       c__: this.concepts[conceptSemaphore].comparators as Comparators<any>,
-      k__: this.concepts[conceptSemaphore].selectors as KeyedSelectors<any>,
+      k__: (
+        this.concepts[conceptSemaphore].keyedSelectors
+      ) as unknown as BundledSelectors<any>,
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -627,7 +635,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
   }
 
   protected _dispatch(
-    axiumState: AxiumState<Q extends void ? AxiumQualities: Q, C extends void ? AxiumDeck : C>,
+    axiumState: AxiumState<AxiumQualities, AxiumDeck>,
     plan: Plan<Q, C, S>,
     action: Action,
     options: dispatchOptions): void {
@@ -730,7 +738,7 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
   }
 
   protected execute(plan: Plan<Q, C, S>, index: number, changes: KeyedSelector[]): void {
-    const axiumState = getAxiumState<Q, C>(this.concepts);
+    const axiumState = getAxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
       this._dispatch(axiumState, plan, action, options);
     }).bind(this)();
@@ -750,7 +758,12 @@ export class UnifiedSubject<Q = void, C = void, S = void> extends Subject<Concep
       d: accessDeck(this.concepts),
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},
-      k: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].selectors as KeyedSelectors<any> : {},
+      k: (
+        this.concepts[plan.conceptSemaphore] ?
+          this.concepts[plan.conceptSemaphore].keyedSelectors
+          :
+          {}
+        ) as unknown as BundledSelectors<any>,
     });
   }
 

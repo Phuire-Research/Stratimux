@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Priority Model File
-This unified concept further enhances the ability to control the halting nature of an Axium
+This muxified concept further enhances the ability to control the halting nature of an Axium
 $>*/
 /*<#*/
 import { AxiumState } from '../concepts/axium/axium.concept';

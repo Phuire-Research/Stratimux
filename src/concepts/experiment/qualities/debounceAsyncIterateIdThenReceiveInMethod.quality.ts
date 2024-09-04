@@ -5,11 +5,11 @@ $>*/
 /*<#*/
 import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner';
 import { createAsyncMethodDebounceWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
@@ -29,7 +29,7 @@ export const experimentDebounceAsyncIterateIdThenReceiveInMethod =
       setTimeout(() => {
         const payload = action.payload;
         if (action.strategy) {
-          const data = strategyData_unifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
+          const data = strategyData_muxifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
             action.strategy,
             {
               id: state.id,

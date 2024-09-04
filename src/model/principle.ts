@@ -5,42 +5,42 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts, ConceptsSubscriber } from './concept';
+import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept';
 import { Action, Actions } from './action';
 import { Planning } from './stagePlanner';
-import { KeyedSelectors } from './selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 import { BInterface, Comparators } from './interface';
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Deck, accessDeck } from './deck';
-import { AxiumDeck } from './axium';
 import { access } from 'fs';
+import { Qualities } from './quality';
 
-export type PrincipleInterface<T = void, C = void, S = void> = {
+export type PrincipleInterface<Q = void, C = void, S = void> = {
   observer: Subscriber<Action>,
   concepts_: Concepts,
   subscribe: ConceptsSubscriber,
-  plan: Planning<T, C, S>,
+  plan: Planning<Q, C, S>,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-} & BInterface<T, C, S>;
+} & BInterface<Q, C, S>;
 
-export type PrincipleFunction<T = void, C = void, S = void> = (
-  baseI: PrincipleInterface<T, C, S>
+export type PrincipleFunction<Q = void, C = void, S = void> = (
+  baseI: PrincipleInterface<Q, C, S>
 ) => void;
 
-export function createPrinciple$<T = void, C = void, S = void>(
-  principleFunc: PrincipleFunction<T, C, S>,
+export function createPrinciple$<Q = void, C = void, S = void>(
+  principleFunc: PrincipleFunction<Q, C, S>,
   concepts_: Concepts,
-  plan: Planning<T, C, S>,
+  plan: Planning<Q, C, S>,
   subscribe: ConceptsSubscriber,
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-  d_: Deck<C extends void ? AxiumDeck : C>,
-  e_: Actions<T>,
-  c_: Comparators<T>,
-  k_: KeyedSelectors<S>
+  d_: Deck<C extends void ? LoadConcepts : C>,
+  e_: Actions<Q extends Qualities ? Q : Qualities>,
+  c_: Comparators<Q extends Qualities ? Q : Qualities>,
+  k_: BundledSelectors<S>,
 ): Observable<Action> {
   return new Observable(function (obs: Subscriber<Action>) {
     principleFunc({
@@ -59,7 +59,7 @@ export function createPrinciple$<T = void, C = void, S = void>(
   });
 }
 
-export function registerPrincipleSubscription<T extends Deck<AxiumDeck>>(
+export function registerPrincipleSubscription<T extends Deck<LoadConcepts>>(
   observer: Subscriber<Action<unknown>>,
   deck: T,
   name: string,

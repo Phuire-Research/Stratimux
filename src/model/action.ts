@@ -3,13 +3,13 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concept, Concepts } from './concept';
+import { AnyConcept, Concept, Concepts, LoadConcepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
 import { AxiumState } from '../concepts/axium/axium.concept';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 import { Quality } from './quality';
-import { AxiumBadActionPayload } from '../concepts/axium/qualities';
+import { AxiumBadActionPayload, AxiumQualities } from '../concepts/axium/qualities';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
@@ -117,7 +117,7 @@ export function primeAction<T>(concepts: Concepts, action: Action<T>): Action<T>
     if (action.axium) {
       axium = action.axium;
     } else {
-      axium = (concepts[0].state as AxiumState<unknown, unknown>).name;
+      axium = (concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>).name;
     }
     const newAction = {
       ...action,
@@ -164,7 +164,7 @@ export const refreshAction = (action: Action): Action => {
 };
 
 export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
-  const axiumState = concepts[0].state as AxiumState<unknown, unknown>;
+  const axiumState = concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>;
   const cachedSemaphores = axiumState.cachedSemaphores;
   const conceptMap = cachedSemaphores.get(conceptName);
   const special = getSpecialSemaphore(actionType);
@@ -180,7 +180,7 @@ export function getSemaphore(concepts: Concepts, conceptName: string, actionType
 
 // For proper compilation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaphore?: number) => void) => {
+const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphore?: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);
@@ -189,7 +189,7 @@ const forEachConcept = (concepts: Concepts, each: (concept: Concept<any>, semaph
 };
 
 export function createCachedSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
-  const generation = (concepts[0].state as AxiumState<unknown, unknown>).generation;
+  const generation = (concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>).generation;
   const newCachedSemaphores = new Map<string, Map<string, [number, number, number, number]>>();
 
   forEachConcept(concepts, ((concept, ci) => {

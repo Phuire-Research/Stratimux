@@ -9,10 +9,9 @@ import { Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
 import { ChainQualities, ChainState, chainName } from './chain.concept';
-import { selectUnifiedState } from '../../model/selector';
-import { AxiumState } from '../axium/axium.concept';
-import { UnifiedSubject } from '../../model/stagePlanner';
-import { AxiumDeck } from '../../model/axium';
+import { selectMuxifiedState } from '../../model/selector';
+import { AxiumDeck, AxiumState } from '../axium/axium.concept';
+import { MuxifiedSubject } from '../../model/stagePlanner';
 
 export const chainPrinciple: PrincipleFunction<ChainQualities, AxiumDeck> = ({
   observer,
@@ -23,7 +22,7 @@ export const chainPrinciple: PrincipleFunction<ChainQualities, AxiumDeck> = ({
   d_
 }) => {
   const subscription = subscribe((concepts: Concepts) => {
-    const chainState = selectUnifiedState<ChainState>(concepts, conceptSemaphore);
+    const chainState = selectMuxifiedState<ChainState>(concepts, conceptSemaphore);
     if (chainState && chainState.actionQue.length > 0) {
       const newActionQue = [...chainState.actionQue];
       const nextAction = newActionQue.pop() as Action;

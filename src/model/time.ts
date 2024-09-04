@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Time Model File
-This concept unified into the axium, manages how the timer functions interact with a given Axium
+This concept muxified into the axium, manages how the timer functions interact with a given Axium
 $>*/
 /*<#*/
 import { AxiumState } from '../concepts/axium/axium.concept';

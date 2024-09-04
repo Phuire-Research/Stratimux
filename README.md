@@ -1,5 +1,5 @@
 ![Stratimux](https://github.com/Phuire-Research/Stratimux/blob/main/Stratimux.png?raw=true)
-### *The Unified Turing Machine - The Mythical Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
+### *The Muxified Turing Machine - The Mythical Strong Fast Computer in Plain Text, that Solves the "**impossible halting problem**" of Classic Turing Machines, in the Spirit of the Open Internet*
 
 **Features:**
 * Universal Transformer
@@ -40,20 +40,20 @@ When in doubt simplify.
 * [Stage Planner](https://github.com/Phuire-Research/Stratimux/blob/main/StagePlanner.md) - Slices your application into different stages and prevents action overflows. 
 * [Action Controller](https://github.com/Phuire-Research/Stratimux/blob/main/ActionController.md) - Allows methods to be performed asynchronously.
 * [Strategy Data](https://github.com/Phuire-Research/Stratimux/blob/main/StrategyData.md) - Enables the Action Strategy pattern to perform as a "Universal Transformer." 
-* [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Demonstrates "Unification of Concepts," as a method of functional inheritance.
+* [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Demonstrates "Muxification of Concepts," as a method of functional inheritance.
 * [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - A single lock concept that can be within a single process or network of axiums.
 
 ### Want to learn more?
 * [PURF - White Paper](https://github.com/Phuire-Research/PURF) - Safe Recursive Improvement of AI
 * [The Impossible Halting Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/Index.md) - Original Paper for Stratimux
-* [Unified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Unified-Turing-Machine.md) - The governing concept for this entire framework.
+* [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## [Change Log](https://github.com/Phuire-Research/Stratimux/blob/main/CHANGELOG.md) ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### *Consistency Update* v0.1.72
 * Added a new Axium Quality: **axiumRegisterTimeOut**, that accepts an action and specified timeout that will run the axiumTimeOut function then succeed an incoming strategy if present.
   * This likewise fulfills the original purpose of buffer, even in a complex scenario.
 ### v0.1.71 5/16/2024
-* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts.
+* Finally removed the need to add "as Subject<Concepts> | MuxifiedSubject" when creating methods that access state or concepts.
 * Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
 ### v0.1.69 5/15/2024
 * Added priority to axium strategies.
@@ -90,14 +90,14 @@ When in doubt simplify.
         * Same applies for IsT functions
       * Will not be extending this feature to Qualities. As you may already access the new Deck Interfaces via the new *Access* via a method supplied the most recent Concepts.
       * The **Deck** Interface is a collection of actions categorized by you chosen Concept names. (*Pending*)
-    * **Access** - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
+    * **Access** - Is a new concept being muxified into the Axium that can restrict what actions a foreign Axium may have access to.
       * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
       * Create an access function that returns ActionCreators and Selectors
         * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium.
 * **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
 * **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * Origin, Override, Hard Override
-  * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
+  * With these two additional concepts and variants muxified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
   * Hard Override - This dispatch setting is effectively a destructive halt. And will conclude all active strategies currently in que from a given concept. Made for Experts who require a hard shift pending a specific observation and can account for the destructive halt.
     * *Someone cuts you off while driving and the coffee you are drinking flies from the cupholder onto the dash, but didn't crash.*
 
@@ -116,7 +116,7 @@ src/ concepts / uX / qualities / qOfUX.quality.ts
 ```
 
 ### uX.concept.ts
-This paradigm affords for a powerful separation of concerns. And is the key feature that allows the User Interface concept that is currently in the processing of moving out of MVP. That affords for the easy isolation of client and server logic. With even the ease of handling server side rendering based on what concept your Brand is being unified with: server or client.
+This paradigm affords for a powerful separation of concerns. And is the key feature that allows the User Interface concept that is currently in the processing of moving out of MVP. That affords for the easy isolation of client and server logic. With even the ease of handling server side rendering based on what concept your Brand is being muxified with: server or client.
 
 Treat your concepts as libraries and modules. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Axium. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 ```typescript
@@ -163,10 +163,10 @@ The semaphore is the method of quality selection within the Axium. This is to re
 ```typescript
 import {
   createQualityCardWithPayload,
-  UnifiedSubject,
+  MuxifiedSubject,
   createMethodWithState,
   strategySuccess,
-  strategyData_unifyData,
+  strategyData_muxifyData,
   strategyFailed
 } from 'stratimux';
 import { UXState } from '../uX.concept';
@@ -190,7 +190,7 @@ export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPaylo
       // P/NP?
       const even = Math.round(getRandomRange(1, 5)) % 2;
       if (even) {
-        const strategy = strategySuccess(action.strategy, strategyData_unifyData(action.strategy, {
+        const strategy = strategySuccess(action.strategy, strategyData_muxifyData(action.strategy, {
           state
         }));
         return strategy;
@@ -200,7 +200,7 @@ export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPaylo
       }
     }
     return action;
-  }, concepts$ as UnifiedSubject, semaphore as number)
+  }, concepts$ as MuxifiedSubject, semaphore as number)
 });
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
@@ -215,8 +215,8 @@ export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPaylo
 Your concept's "main" function. This will be called after the axium initializes. 
 * observer - Using observer.next(someAction) will directly emit that action into the axium's action stream.
 * _concepts - Is the initial load of concepts when your principle is initialized
-* concepts$- Is the UnifiedSubject that controls the halting quality of Stratimux and informs principles, methods, and any general subscriber of state changes.
-* semaphore - This identifies the placement of your concept in the axium's conceptual set. This is used to determine if your concept is loaded and access state via the selectUnifiedState function.
+* concepts$- Is the MuxifiedSubject that controls the halting quality of Stratimux and informs principles, methods, and any general subscriber of state changes.
+* semaphore - This identifies the placement of your concept in the axium's conceptual set. This is used to determine if your concept is loaded and access state via the selectMuxifiedState function.
 
 ```typescript
 import { Subscriber } from 'rxjs';
@@ -224,12 +224,12 @@ import {
   Action,
   Concepts,
   PrincipleFunction,
-  UnifiedSubject,
+  MuxifiedSubject,
   axiumRegisterStagePlanner,
   axiumSelectOpen,
   getAxiumState,
   primeAction,
-  selectUnifiedState,
+  selectMuxifiedState,
   strategyBegin,
   createStage,
   stageWaitForOpenThenIterate
@@ -240,7 +240,7 @@ import { uXSomeStrategy, uXSomeStrategyTopic } from './strategies/uXSome.strateg
 export const uXPrinciple: PrincipleFunction = (
   _obs: Subscriber<Action>,
   _concepts: Concepts,
-  concepts$: UnifiedSubject,
+  concepts$: MuxifiedSubject,
   semaphore: number
 ) => {
   // There always needs to be atleast one subscriber or plan for the Axium to be active.
@@ -248,7 +248,7 @@ export const uXPrinciple: PrincipleFunction = (
     // This will register this plan to the axium, this allows for the axium to close or remove your concept cleanly.
     stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: uXName, stagePlanner: plan}))),
     createStage((concepts, dispatch) => {
-      const state = selectUnifiedState<UXState>(concepts, semaphore);
+      const state = selectMuxifiedState<UXState>(concepts, semaphore);
       if (state) {
         dispatch(strategyBegin(uXSomeStrategy()), {
           iterateStage: true

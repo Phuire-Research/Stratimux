@@ -20,11 +20,11 @@ test('Axium Test', (done) => {
     count++;
     if (willDispatch) {
       willDispatch = false;
-      const add = axium.deck.counter.e.counterAdd();
-      const subtract = axium.deck.counter.e.counterSubtract();
-      const end = axium.deck.chain.e.chainEnd();
+      const add = axium.deck.d.counter.e.counterAdd();
+      const subtract = axium.deck.d.counter.e.counterSubtract();
+      const end = axium.deck.d.chain.e.chainEnd();
       const prepareChain =
-        axium.deck.chain.e.chainPrepareChain({
+        axium.deck.d.chain.e.chainPrepareChain({
           actions: [
             add,
             add,

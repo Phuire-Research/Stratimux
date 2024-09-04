@@ -8,9 +8,10 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumClearBadStrategyTopicFromBadActionListPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
 export const axiumClearBadStrategyTopicFromBadActionList =
-  createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
+  createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumClearBadStrategyTopicFromBadActionListPayload>({
     type: 'clear Strategy Topic from Axium\'s badAction list',
     reducer: (state, action) => {
       const {topic} = action.payload;

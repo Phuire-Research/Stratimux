@@ -141,6 +141,6 @@ test('Mixed Plan Options Test', (done) => {
       allShouldBeTrue[7] = true;
     })
   ]);
-  planMixedPlanOptions.dispatch(planMixedPlanOptions.deck.experiment.e.experimentPlanOptionsIsReady());
+  planMixedPlanOptions.dispatch(planMixedPlanOptions.deck.d.experiment.e.experimentPlanOptionsIsReady());
 });
 /*#>*/

@@ -6,10 +6,11 @@ of the bad action that was received.
 $>*/
 /*<#*/
 import { AxiumBadActionPayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumState } from '../axium.concept';
 
-export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumBadActionPayload>({
+export const axiumBadAction = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumBadActionPayload>({
   type: 'Axium received a Bad Action',
   reducer: (state, action) => {
     const payload = action.payload.badActions;

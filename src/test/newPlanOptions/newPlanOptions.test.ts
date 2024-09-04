@@ -205,6 +205,6 @@ test('New Plan Options Priority Test', (done) => {
       stagePlanner.conclude();
     })
   ]);
-  planNewStagePriority.dispatch(planNewStagePriority.deck.experiment.e.experimentPlanOptionsIsReady());
+  planNewStagePriority.dispatch(planNewStagePriority.deck.d.experiment.e.experimentPlanOptionsIsReady());
 });
 /*#>*/

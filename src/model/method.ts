@@ -8,7 +8,7 @@ import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
 import { Concepts, MethodCreator } from './concept';
 import { ActionController, createActionController$ } from './actionController';
 import { ActionStrategy } from './actionStrategy';
-import { KeyedSelector, selectUnifiedState } from './selector';
+import { KeyedSelector, selectMuxifiedState } from './selector';
 import { debounceAction, throttleAction } from './actionOperators';
 import { createAction } from './action';
 
@@ -72,7 +72,7 @@ export const createMethodWithState: MethodCreatorBaseWithState =
     const defaultSubject = new Subject<Action<T>>();
     const defaultMethod: Method<T> = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       map(([act, state] : [Action<T>, S]) => {
         const methodAction = methodWithState(act, state);
         if (methodAction.strategy) {
@@ -154,7 +154,7 @@ export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
     const defaultSubject = new Subject<Action<T>>();
     const defaultMethod = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       switchMap(([act, state] : [Action<T>, S]) => createActionController$(act, (controller: ActionController, action: Action<T>) => {
         asyncMethodWithState(controller, action, state);
       })),
@@ -217,7 +217,7 @@ export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
     const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       map(([act, state] : [Action<T>, S]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
@@ -282,7 +282,7 @@ export const createAsyncMethodDebounceWithState: MethodCreatorAsyncDebounceWithS
     const defaultMethod: Method<T> = defaultSubject.pipe(
       debounceAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       switchMap(([act, state] : [Action<T>, S]) => {
         return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithState(controller, action, state);
@@ -347,7 +347,7 @@ export const createMethodThrottleWithState: MethodCreatorBaseThrottleWithState =
     const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       map(([act, state] : [Action<T>, S]) => {
         // Logically Determined axiumConclude
         if (act.semaphore[3] !== 3) {
@@ -412,7 +412,7 @@ export const createAsyncMethodThrottleWithState: MethodCreatorAsyncThrottleWithS
     const defaultMethod: Method<T> = defaultSubject.pipe(
       throttleAction(duration),
       withLatestFrom(concepts$),
-      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectUnifiedState<S>(concepts, semaphore) as S])),
+      map(([act, concepts] : [Action<T>, Concepts]): [Action<T>, S] => ([act, selectMuxifiedState<S>(concepts, semaphore) as S])),
       switchMap(([act, state] : [Action<T>, S]) => {
         return createActionController$(act, (controller: ActionController, action: Action<T>) => {
           asyncMethodWithState(controller, action, state);

@@ -22,7 +22,6 @@ export const generateRandomCountingStrategy = (deck: GenerateRandomCountingStrat
     failureNode: null
   });
   const stepFirst = previousStep;
-  console.log('CHECK', deck.counter.c);
   if (deck.counter.c.counterAdd(firstAction)) {
     numPos++;
   } else {

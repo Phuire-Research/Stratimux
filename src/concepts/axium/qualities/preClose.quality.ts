@@ -6,8 +6,9 @@ $>*/
 import { AxiumState } from '../axium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AxiumPreClosePayload } from '.';
+import { LoadConcepts } from '../../../model/concept';
 
-export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown, unknown>, AxiumPreClosePayload>({
+export const axiumPreClose = createQualityCardWithPayload<AxiumState<unknown, LoadConcepts>, AxiumPreClosePayload>({
   type: 'Prepare Close Axium',
   reducer: (state, action) => ({
     prepareClose: true,

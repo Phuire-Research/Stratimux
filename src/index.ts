@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { createAxium, getAxiumState, Axium, isAxiumOpen, AxiumDeck } from './model/axium';
+export { createAxium, getAxiumState, Axium, isAxiumOpen } from './model/axium';
 export type {
   ActionNode,
   ActionNotes,
@@ -34,7 +34,7 @@ export {
   strategyData_selectFailureCondition,
   strategyData_clearFailureCondition,
   strategyData_select,
-  strategyData_unifyData,
+  strategyData_muxifyData,
   strategyData
 } from './model/actionStrategyData';
 export {
@@ -84,12 +84,12 @@ export {
   createConcept,
   isConceptLoaded,
   areConceptsLoaded,
-  unifyConcepts,
+  muxifyConcepts,
   forEachConcept,
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  getUnifiedName,
+  getMuxifiedName,
   concept
 } from './model/concept';
 export type {
@@ -119,10 +119,10 @@ export {
   selectConcept,
   selectSlice,
   selectPayload,
-  selectUnifiedState,
-  updateUnifiedKeyedSelector,
+  selectMuxifiedState,
+  updateMuxifiedKeyedSelector,
   createConceptKeyedSelector,
-  createUnifiedKeyedSelector,
+  createMuxifiedKeyedSelector,
   createAdvancedKeys,
   select,
 } from './model/selector';
@@ -131,7 +131,7 @@ export type {
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/actionController';
-export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
+export type { dispatchOptions, Staging, MuxifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
 export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';

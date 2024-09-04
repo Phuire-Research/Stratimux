@@ -19,7 +19,7 @@ const createSomeMethodCreator: MethodCreator = () => {
               const newStrategy =
                   strategySuccess(
                     strategy,
-                    strategyData_unifyData(strategy, {some: value})
+                    strategyData_muxifyData(strategy, {some: value})
                   );
               controller.fire(newStrategy);
             } else {

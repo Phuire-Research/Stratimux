@@ -2,7 +2,7 @@
 * Added a new Axium Quality: **axiumRegisterTimeOut**, that accepts an action and specified timeout that will run the axiumTimeOut function then succeed an incoming strategy if present.
   * This likewise fulfills the original purpose of buffer, even in a complex scenario.
 ### v0.1.71 5/16/2024
-* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts.
+* Finally removed the need to add "as Subject<Concepts> | MuxifiedSubject" when creating methods that access state or concepts.
 * Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
 ### v0.1.69 5/15/2024
 * Added priority to axium strategies.
@@ -58,11 +58,11 @@
 * Quick pass updating documentation
 * Synced up createAxium, etc... To properly allow for the axium to log actions incoming in the action stream if set.
 ### **BREAKING Update v0.1.5** 4/02/24
-* Unified the internal concept streams and created a new dedicated stream to inform most recent concepts
+* Muxified the internal concept streams and created a new dedicated stream to inform most recent concepts
   * Note if you are assembling plans within a method, be sure to grab the **concepts$** from *getAxiumState*
 * It is now a requirement you use the **stageWaitForOpenThenIterate(() => action)** helper function in your plans if you are depending on the last strategyTopic property on the axium concept.
 * Added an addition logging property to reveal the internal action stream that can be set when creating your axium. This is separate from the prior logging feature.
-* Method now utilize an internal actionConcept$ stream of type Subject<Concepts>. Method creators that utilize the UnifiedSubject will throw a type error and will need to be updated.
+* Method now utilize an internal actionConcept$ stream of type Subject<Concepts>. Method creators that utilize the MuxifiedSubject will throw a type error and will need to be updated.
 * **PATCH v0.1.51** Removed debugging console.logs
 ### **BREAKING Update v0.1.4** 3/28/24
 * Removed the "on.expected" option from dispatch to reduce inner complexity of your stages

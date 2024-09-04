@@ -5,11 +5,11 @@ $>*/
 /*<#*/
 import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner';
 import { createAsyncMethodWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
@@ -29,7 +29,7 @@ export const experimentRecurseIterateId = createQualityCardWithPayload<Experimen
       const payload = action.payload;
       payload.controlling.shift();
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState>(action.strategy, {id: state.id});
+        const data = strategyData_muxifyData<ExperimentState>(action.strategy, {id: state.id});
         if (payload.controlling.length > 0) {
           const strategy = strategyRecurse(action.strategy, {payload});
           controller.fire(strategy);

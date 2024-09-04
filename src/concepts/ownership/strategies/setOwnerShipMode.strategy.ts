@@ -6,9 +6,9 @@ import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionN
 import { Concept, Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName } from '../ownership.concept';
-import { AxiumState } from '../../axium/axium.concept';
+import { AxiumDeck, AxiumState } from '../../axium/axium.concept';
 import { Deck } from '../../../model/deck';
-import { AxiumDeck, getAxiumState } from '../../../model/axium';
+import { getAxiumState } from '../../../model/axium';
 
 export const ownershipSetOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
 export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck & AxiumDeck>>(

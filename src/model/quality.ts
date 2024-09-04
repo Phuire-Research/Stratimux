@@ -4,7 +4,14 @@ This model allows for qualities to be made at a single point of entry, reducing 
 $>*/
 
 import { Subject, map } from 'rxjs';
-import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, prepareActionCreator, prepareActionWithPayloadCreator } from './action';
+import {
+  Action,
+  ActionCreator,
+  ActionCreatorType,
+  ActionCreatorWithPayload,
+  prepareActionCreator,
+  prepareActionWithPayloadCreator
+} from './action';
 import { strategySuccess } from './actionStrategy';
 import { Concepts, Method, MethodCreator, MethodCreatorStep, Reducer, SpecificReducer, createQuality } from './concept';
 import { ActionType } from './method';
@@ -27,7 +34,7 @@ export type Quality<S extends Record<string, unknown>, T = void> = {
 };
 
 export type Qualities = {
-  [s: string]: Quality<Record<string, unknown>, Record<string, unknown>> | Quality<Record<string, unknown>, undefined>;
+  [s: string | symbol]: Quality<Record<string, unknown>, Record<string, unknown>> | Quality<Record<string, unknown>, undefined>;
   // [s: string]: Quality<Record<string, unknown>>
 };
 

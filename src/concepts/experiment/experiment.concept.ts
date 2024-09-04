@@ -26,7 +26,7 @@ export const createExperimentState = (): ExperimentState => {
 export const createExperimentConcept = <S extends Record<string, unknown>, T = void>(
   state: S,
   qualities?: Record<string, unknown>,
-  principles?: PrincipleFunction<T>[],
+  principles?: PrincipleFunction<any, any, any>[],
   mode?: Mode[]) => {
   return createConcept<S, T>(
     experimentName,

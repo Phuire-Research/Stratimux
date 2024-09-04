@@ -4,10 +4,9 @@ $>*/
 
 import { AxiumQualities } from '../concepts/axium/qualities';
 import { Action, Actions } from './action';
-import { AxiumDeck } from './axium';
-import { AnyConcept, Concept } from './concept';
+import { AnyConcept, Concept, LoadConcepts } from './concept';
 import { Deck } from './deck';
-import { KeyedSelectors } from './selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 
 /*<#*/
 /**
@@ -46,13 +45,13 @@ export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (act
  */
 export type UInterface<Q = void, C = void, S = void> = {
   // Deck
-  d: Deck<C extends void ? AxiumDeck : C>
+  d: Deck<C extends void ? LoadConcepts : C>
   // Entry Actions
   e: Actions<Q>
   // Comparators
   c: Comparators<Q>
   // Keyed Selectors
-  k: KeyedSelectors<S>
+  k: BundledSelectors<S>,
 }
 
 /**
@@ -62,29 +61,29 @@ export type UInterface<Q = void, C = void, S = void> = {
  * Limited by a whitelist provided by some access property supplied to the Axium
  */
 export type OInterface<Q = void, C = void, S = void> = {
-  d: Deck<C extends void ? AxiumDeck : C>
+  d: Deck<C extends void ? LoadConcepts : C>
   e: Actions<Q>
   c: Comparators<Q>
-  k: KeyedSelectors<S>
+  k: BundledSelectors<S>
 }
 
 /**
  * Higher Order Interface
  */
 export type HInterface<Q = void, C = void, S = void> = {
-  d__: Deck<C extends void ? AxiumDeck : C>
+  d__: Deck<C extends void ? LoadConcepts : C>
   e__: Actions<Q>
   c__: Comparators<Q>
-  k__: KeyedSelectors<S>
+  k__: BundledSelectors<S>,
 }
 
 /**
  * Base Interface
  */
 export type BInterface<Q = void, C = void, S = void> = {
-  d_: Deck<C extends void ? AxiumDeck : C>,
+  d_: Deck<C extends void ? LoadConcepts : C>,
   e_: Actions<Q>
   c_: Comparators<Q>
-  k_: KeyedSelectors<S>
+  k_: BundledSelectors<S>,
 }
 /*#>*/
