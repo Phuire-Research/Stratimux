@@ -49,35 +49,9 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.
 
 ## [Change Log](https://github.com/Phuire-Research/Stratimux/blob/main/CHANGELOG.md) ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-### *Consistency Update* v0.1.72
-* Added a new Axium Quality: **axiumRegisterTimeOut**, that accepts an action and specified timeout that will run the axiumTimeOut function then succeed an incoming strategy if present.
-  * This likewise fulfills the original purpose of buffer, even in a complex scenario.
-### v0.1.71 5/16/2024
-* Finally removed the need to add "as Subject<Concepts> | MuxifiedSubject" when creating methods that access state or concepts.
-* Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
-### v0.1.69 5/15/2024
-* Added priority to axium strategies.
-* Improved consistency of logic due the above change.
-* Exported **isAxiumOpen** helper function.
-### Strategy Priority v0.1.68 5/15/2024
-* Added priority to strategies, this priority will be assigned to each step issued by such.
-  * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
-  * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
 
-## Road Map (*Updated*  6/05/24)
-### Beyond v0.2.0
-* Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
-* Planned
-  * Action Graph
-  * Project Scaffolding
-  * *Spoilers*
-### Developer Experience Update v0.2.0
-* (**DONE**) Extended type safety throughout the Axium.
-  * In Qualities you no longer have to use selector methods to access an action's payload and state slots in where needed. 
-    * Example: createQualityCardWithPayload<State, Qualities>({etc...})
-      * reducer: (state, action) => ({ ...state, someProp: action.payload.someProp })
-* (*Progressing*) Removed the need to handle semaphores across the board.
-  * This imposes several breaking changes:
+## DECK Interface
+  * The new Deck Interface imposes several breaking changes:
     * Qualities and Concepts are now passed in as an Record versus an Array.
       * You will now have to name each concept as it exists in your Axium
       * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Progressing*)
@@ -94,6 +68,7 @@ When in doubt simplify.
       * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
       * Create an access function that returns ActionCreators and Selectors
         * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium.
+### Additional 0.2.0 Refinements
 * **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
 * **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
 * Origin, Override, Hard Override
@@ -130,11 +105,21 @@ export type UXState = {
 
 export const uXName = 'uX';
 
+const uXQualities = {
+  uXqOfUXExample
+}
+
 export const createUXState = (): UXState => {
   return {
     //
   };
 };
+
+export type UXDECk = {
+  uX: Concept<UXState, typeof uXQualities>
+}
+
+export type UXPrinciple = PrincipleFunction<typeof uXQualities, AxiumDeck & UXDeck, UXState>
 
 // Pass any arguments needed for your concept
 export const createUXConcept = (
@@ -143,14 +128,13 @@ export const createUXConcept = (
 //  principles?: PrincipleFunction[],
 //  mode?: Mode[]
 ) => {
-  return createConcept(
+  return createConcept<UXState, typeof uXQualities>(
     uXName,
     createUXState(),
+    uXQualities,
     [
-      uXqOfUXQuality
-    ],
-    [
-      uXPrinciple,
+      // Temporary, will be fixed for 0.2.0 release
+      uXPrinciple as unknown as PrincipleFunction<typeof uXQualities>,
     ],
     mode
   );
@@ -179,11 +163,11 @@ export type uXqOfUxField = {
   state: UXState
 };
 
-// [ActionCreator/ActionCreatorWithPayload, ActionType, Quality]
-export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPayload<uXqOfUxField>({
+// uXDeterminedQualities is a generated definition using the companion release of Huirth released alongside 0.2.0. Otherwise use any in the Qualities field
+export const uXqOfUX = createQualityCardWithPayload<uXqOfUxField, uXDeterminedQualities>({
   type: 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
   reducer: (state: UXState) => ({...state}),
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
+  methodCreator: () =>
   // Only if you need to access state, otherwise
   createMethodWithState<UXState>((action, state) => {
     if (action.strategy) {
@@ -200,7 +184,7 @@ export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPaylo
       }
     }
     return action;
-  }, concepts$ as MuxifiedSubject, semaphore as number)
+  })
 });
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
@@ -213,10 +197,13 @@ export const [uXqOfUX, uXqOfUXType, uXqOfUXQuality] = createQualityCardWithPaylo
 
 ### uX.principle.ts
 Your concept's "main" function. This will be called after the axium initializes. 
+*Can decompose the entry Muxified Deck Interface into the follow options*
 * observer - Using observer.next(someAction) will directly emit that action into the axium's action stream.
-* _concepts - Is the initial load of concepts when your principle is initialized
-* concepts$- Is the MuxifiedSubject that controls the halting quality of Stratimux and informs principles, methods, and any general subscriber of state changes.
-* semaphore - This identifies the placement of your concept in the axium's conceptual set. This is used to determine if your concept is loaded and access state via the selectMuxifiedState function.
+* concepts_ - Is the initial load of concepts when your principle is initialized
+* subscribe - Allows for subscription to any changes to concepts.
+* plan - Direct access to the internal planning system of Stratimux. Provides an access to a Muxified Deck Interface.
+* conceptSemaphore - This identifies the placement of your concept in the axium's conceptual set. This is used to determine if your concept is loaded and access state via the selectMuxifiedState function.
+* deck - d_, e_, c_, k_ - See deck interface section for details.
 
 ```typescript
 import { Subscriber } from 'rxjs';
@@ -225,40 +212,32 @@ import {
   Concepts,
   PrincipleFunction,
   MuxifiedSubject,
-  axiumRegisterStagePlanner,
-  axiumSelectOpen,
   getAxiumState,
   primeAction,
-  selectMuxifiedState,
   strategyBegin,
-  createStage,
-  stageWaitForOpenThenIterate
 } from 'stratimux';
 import { UXState, uXName } from './uX.concept';
 import { uXSomeStrategy, uXSomeStrategyTopic } from './strategies/uXSome.strategy';
 
-export const uXPrinciple: PrincipleFunction = (
-  _obs: Subscriber<Action>,
-  _concepts: Concepts,
-  concepts$: MuxifiedSubject,
-  semaphore: number
-) => {
+export const uXPrinciple: UXPrinciple = ({
+  plan,
+}) => {
   // There always needs to be atleast one subscriber or plan for the Axium to be active.
-  const plan = concepts$.plan('uX Plan', [
+  plan('uX Plan', ({stageO, stage, d__, stagePlanner}) => [
     // This will register this plan to the axium, this allows for the axium to close or remove your concept cleanly.
-    stageWaitForOpenThenIterate(() => (axiumRegisterStagePlanner({conceptName: uXName, stagePlanner: plan}))),
-    createStage((concepts, dispatch) => {
-      const state = selectMuxifiedState<UXState>(concepts, semaphore);
+    stageO(() => (d__.axium.e.axiumRegisterStagePlanner({conceptName: uXName, stagePlanner}))),
+    stage(({concepts, dispatch, k}) => {
+      const state = k.state(concepts);
       if (state) {
         dispatch(strategyBegin(uXSomeStrategy()), {
           iterateStage: true
         });
       }
     }, {beat: 30}),
-    createStage((concepts) => {
+    stage((concepts) => {
       const {lastStrategy} = getAxiumState(concepts);
       if (lastStrategy === uXSomeStrategyTopic) {
-        plan.conclude();
+        stagePlanner.conclude();
       }
     }, {beat: 30})
   ]);
@@ -274,12 +253,13 @@ import { ActionStrategy, axiumKick, axiumLog, createActionNode, createStrategy }
 import { uXqOfUX } from '../qualities/qOfUx.quality';
 
 export const uXSomeStrategyTopic = 'uX Some Error Correcting Strategy';
-export const uXSomeStrategy = (): ActionStrategy => {
-  const stepSuccess = createActionNode(axiumLog());
-  const stepFailure = createActionNode(axiumKick(), {
+// Passing in your application's deck removes the burden of having to manage multiple imports. While maintaining type safety even in helper functions such as a strategy creator.
+export const uXSomeStrategy = (deck: AxiumDeck & UXDeck): ActionStrategy => {
+  const stepSuccess = createActionNode(deck.d.axium.e.axiumLog());
+  const stepFailure = createActionNode(deck.d.axium..e.axiumKick(), {
     successNode: stepSuccess,
   });
-  const stepBegin = createActionNode(uXqOfUX(), {
+  const stepBegin = createActionNode(deck.uX.e.uXqOfUXExample(), {
     successNode: stepSuccess,
     failureNode: stepFailure
   });
@@ -303,6 +283,6 @@ import { createUXConcept } from './concepts/uX/uX.concept';
   //  This will log to the console the dialog of each successive ActionStrategy.
   //    And store the entire application context in the axium's dialog.
   // The final boolean will allow the action stream to be logged to console for debugging purposes
-  createAxium(axiumName, [createUXConcept()], {logging: true, storeDialog: true, logActionStream: true});
+  createAxium(axiumName, {uX: createUXConcept()}, {logging: true, storeDialog: true, logActionStream: true});
 })();
 ```
