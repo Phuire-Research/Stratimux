@@ -11,8 +11,12 @@ export type {
   ActionStrategy,
   ActionStrategyParameters,
   ActionStrategyStitch,
-  ActionStrategyCreator,
+  ActionStrategyCreator
 } from './model/actionStrategy';
+export {
+  Deck,
+  Decks,
+} from './model/deck';
 export {
   createStrategy,
   createActionNode,
@@ -89,7 +93,6 @@ export {
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  getMuxifiedName,
   concept
 } from './model/concept';
 export type {
@@ -120,6 +123,7 @@ export {
   selectSlice,
   selectPayload,
   selectMuxifiedState,
+  selectMuxifiedName,
   updateMuxifiedKeyedSelector,
   createConceptKeyedSelector,
   createMuxifiedKeyedSelector,
@@ -139,7 +143,7 @@ export { axiumTimeOut } from './model/time';
 
 //** Concept Exports */
 // Axium
-export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axium.concept';
+export { AxiumState, axiumName, createAxiumConcept, AxiumDeck } from './concepts/axium/axium.concept';
 export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
 export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
 // Models
@@ -192,7 +196,7 @@ export {
   addConceptsToRemovalQueThenBlockTopic
 } from './concepts/axium/strategies/removeConcept.strategy';
 // Counter
-export { CounterState, counterName, createCounterConcept } from './concepts/counter/counter.concept';
+export { CounterState, counterName, createCounterConcept, CounterDeck, CounterQualities } from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';
 // Qualities
 export { counterAdd } from './concepts/counter/qualities/add.quality';
@@ -205,7 +209,7 @@ export {
 } from './concepts/counter/strategies/counting.strategy';
 
 // Chain
-export { ChainState, chainName, createChainConcept } from './concepts/chain/chain.concept';
+export { ChainState, chainName, createChainConcept, ChainQualities } from './concepts/chain/chain.concept';
 // Qualities
 export {
   chainPrepareChain,
@@ -214,7 +218,13 @@ export {
 export { chainEnd } from './concepts/chain/qualities/chainEnd.quality';
 
 // Ownership
-export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
+export {
+  OwnershipState,
+  ownershipName,
+  createOwnershipConcept,
+  OwnershipDeck,
+  OwnershipQualities
+} from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
 export { ownershipSelectInitialized, ownershipSelectLedger } from './concepts/ownership/ownership.selector';
 // Qualities
@@ -240,7 +250,7 @@ export {
   ExperimentState,
   createExperimentState,
   createExperimentConcept,
-  experimentName
+  experimentName,
 } from './concepts/experiment/experiment.concept';
 export {
   experimentCheckInStrategy,

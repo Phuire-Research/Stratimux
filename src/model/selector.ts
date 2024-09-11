@@ -174,10 +174,17 @@ export const createBufferedConceptSelector: CreateBufferedConceptSelector =
     return undefined;
   };
 
+
+export type MuxifiedNameSelector = (concepts: Concepts) => string | undefined;
+export type CreateBufferedMuxifiedNameSelector = (semaphore: number) => MuxifiedNameSelector;
+export const selectMuxifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);
+export const createBufferedMuxifiedNameSelector: CreateBufferedMuxifiedNameSelector = (semaphore) => (concepts) => selectMuxifiedName(concepts, semaphore);
+
 // export type Selectors<S = void, C = void> = {
 export type Selectors<S = void> = {
   create: MuxifiedKeyedSelector<S>,
   state: StateSelector<S>,
+  name: MuxifiedNameSelector
   // concept: ConceptSelector<C>
 }
 
@@ -190,7 +197,8 @@ export const createBufferedSelectorsSet = <S = void>(
   return {
     create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
     // concept: createBufferedConceptSelector<C>(semaphore),
-    state: createBufferedStateSelector<S>(semaphore)
+    state: createBufferedStateSelector<S>(semaphore),
+    name: createBufferedMuxifiedNameSelector(semaphore)
   };
 };
 
@@ -198,7 +206,8 @@ export const createSelectors = <S = void>(
   semaphore: number
 ): Selectors<S> => ({
     create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
-    state: createBufferedStateSelector<S>(semaphore)
+    state: createBufferedStateSelector<S>(semaphore),
+    name: createBufferedMuxifiedNameSelector(semaphore)
   });
 
 export const createDummySelectors = <S = void>(
@@ -206,7 +215,8 @@ export const createDummySelectors = <S = void>(
   return {
     create: createBufferedMuxifiedKeyedSelector<S>(-1),
     // concept: createBufferedConceptSelector<C>(semaphore),
-    state: createBufferedStateSelector<S>(-1)
+    state: createBufferedStateSelector<S>(-1),
+    name: createBufferedMuxifiedNameSelector(-1)
   };
 };
 
