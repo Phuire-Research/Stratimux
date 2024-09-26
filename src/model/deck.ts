@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Deck Mode
 $>*/
 /*<#*/
 import { Actions } from './action';
-import { accessAxium, getAxiumState } from './axium';
+import { accessMuxium, getMuxiumState } from './muxium';
 import { AnyConcept, Concept, Concepts, conceptsToString } from './concept';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
@@ -54,6 +54,6 @@ export type Deck<C> = {
   }
 }
 
-export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getAxiumState(concepts).deck.d as Deck<C>);
+export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getMuxiumState(concepts).deck.d as Deck<C>);
 
 /*#>*/

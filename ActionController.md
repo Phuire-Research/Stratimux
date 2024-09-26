@@ -33,7 +33,7 @@ const createSomeMethodCreator: MethodCreator = () => {
           }
           );
         } else {
-          controller.fire(axiumConclude());
+          controller.fire(muxiumConclude());
         }
       });
     }),

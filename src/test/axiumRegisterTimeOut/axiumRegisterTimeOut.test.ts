@@ -5,15 +5,15 @@ $>*/
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSelectCount } from '../../concepts/counter/counter.selector';
 import { createAction } from '../../model/action';
-import { createAxium } from '../../model/axium';
+import { muxification } from '../../model/muxium';
 import { selectState } from '../../model/selector';
 
-test('Axium Register Time Out', (done) => {
-  const axium = createAxium('timeout defer actions', {counter: createCounterConcept()});
-  axium.plan('timeout add 4 after 10ms', ({stage, stageO, e__, conclude}) => [
-    stageO(() => e__.axiumKick()),
+test('Muxium Register Time Out', (done) => {
+  const muxium = muxification('timeout defer actions', {counter: createCounterConcept()});
+  muxium.plan('timeout add 4 after 10ms', ({stage, stageO, e__, conclude}) => [
+    stageO(() => e__.muxiumKick()),
     stage(({dispatch, d}) => {
-      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -23,7 +23,7 @@ test('Axium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -33,7 +33,7 @@ test('Axium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -43,7 +43,7 @@ test('Axium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Axium\'s timerLedger', { payload: {
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -56,7 +56,7 @@ test('Axium Register Time Out', (done) => {
         expect(counterState?.count).toBe(4);
         setTimeout(() => {
           stagePlanner.conclude();
-          axium.close();
+          muxium.close();
           done();
         }, 10);
       }

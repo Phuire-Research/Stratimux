@@ -4,12 +4,12 @@ $>*/
 /*<#*/
 import { createAction } from '../model/action';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
-import { createAxium, createOrigin, getAxiumState } from '../model/axium';
+import { muxification, createOrigin, getMuxiumState } from '../model/muxium';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { CounterState } from '../concepts/counter/counter.concept';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
+import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { KeyedSelector, createMuxifiedKeyedSelector, selectState, selectMuxifiedState } from '../model/selector';
 
 test('Origin Creation', (done) => {
@@ -27,17 +27,17 @@ test('Test Dispatch Override', (done) => {
     counterAdd,
     counterSetCount
   };
-  const axium = createAxium('Override actions based on Plan and Stage', {experiment: createExperimentConcept({
+  const muxium = muxification('Override actions based on Plan and Stage', {experiment: createExperimentConcept({
     count: 0,
   } as CounterState,
   experimentCounterQualities, [
     ({concepts_, plan}) => {
       const {
         body
-      } = getAxiumState(concepts_);
+      } = getMuxiumState(concepts_);
       const stageName = 'Test Override';
       const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
-        stageO(() => d__.axium.e.axiumKick()),
+        stageO(() => d__.muxium.e.muxiumKick()),
         stage(({dispatch, e, d}) => {
           new Array(10).fill('').forEach(() => body.push(e.counterAdd()));
           body.push(e.counterSetCount({
@@ -52,7 +52,7 @@ test('Test Dispatch Override', (done) => {
         stage(({concepts, dispatch, d, e}) => {
           const count = selectState<CounterState>(concepts, experimentName)?.count;
           let exists = false;
-          getAxiumState(concepts).body.forEach(a => {
+          getMuxiumState(concepts).body.forEach(a => {
             if (a.type === e.counterAdd().type) {
               exists = true;
             }
@@ -68,7 +68,7 @@ test('Test Dispatch Override', (done) => {
               override: true,
             });
           } else {
-            dispatch(d.axium.e.axiumKick(), {
+            dispatch(d.muxium.e.muxiumKick(), {
               iterateStage: true
             });
           }
@@ -84,7 +84,7 @@ test('Test Dispatch Override', (done) => {
     // logging: true,
     // logActionStream: true
   });
-  const sub = axium.subscribe(concepts => {
+  const sub = muxium.subscribe(concepts => {
     const count = selectState<CounterState>(concepts, experimentName)?.count;
     if (count !== undefined) {
       finalCount = count;
@@ -96,7 +96,7 @@ test('Test Dispatch Override', (done) => {
     timer.push(setTimeout(() => {
       // expect(count).toBe();
       sub.unsubscribe();
-      axium.close();
+      muxium.close();
       console.log('Final: ', finalCount, finalDispatchedSet);
       expect(finalCount).toBe(finalDispatchedSet);
       if (finalCount === -1) {
@@ -118,7 +118,7 @@ test('Test Dispatch Override', (done) => {
 //   let finalDispatchedSet = -1;
 //   let finalCount = -1;
 //   let steps = 0;
-//   const axium = createAxium('Hard Override actions based on Plan and Stage', [createExperimentConcept({
+//   const muxium = muxification('Hard Override actions based on Plan and Stage', [createExperimentConcept({
 //     count: 0,
 //   } as CounterState, [
 //     counterAddQuality,
@@ -127,11 +127,11 @@ test('Test Dispatch Override', (done) => {
 //     (obs, cpts, c$, s) => {
 //       const {
 //         body
-//       } = getAxiumState(cpts);
+//       } = getMuxiumState(cpts);
 //       const stageName = 'Test Hard Override';
 //       const plan = c$.plan(stageName, [
 //         stageWaitForOpenThenIterate(() => {
-//           return axiumKick();
+//           return muxiumKick();
 //         }),
 //         createStage((_, dispatch) => {
 //           new Array(10).fill('').forEach(() => body.push(counterAdd()));
@@ -147,7 +147,7 @@ test('Test Dispatch Override', (done) => {
 //         createStage((concepts, dispatch) => {
 //           const count = selectState<CounterState>(concepts, experimentName)?.count;
 //           let exists = false;
-//           getAxiumState(concepts).body.forEach(a => {
+//           getMuxiumState(concepts).body.forEach(a => {
 //             if (a.type === counterAddType) {
 //               exists = true;
 //             }
@@ -163,7 +163,7 @@ test('Test Dispatch Override', (done) => {
 //               hardOverride: true,
 //             });
 //           } else {
-//             dispatch(axiumKick(), {
+//             dispatch(muxiumKick(), {
 //               iterateStage: true
 //             });
 //           }
@@ -179,7 +179,7 @@ test('Test Dispatch Override', (done) => {
 //     // logging: true,
 //     logActionStream: true
 //   });
-//   const sub = axium.subscribe(concepts => {
+//   const sub = muxium.subscribe(concepts => {
 //     const count = selectState<CounterState>(concepts, experimentName)?.count;
 //     if (count !== undefined) {
 //       finalCount = count;
@@ -191,7 +191,7 @@ test('Test Dispatch Override', (done) => {
 //     timer.push(setTimeout(() => {
 //       // expect(count).toBe();
 //       sub.unsubscribe();
-//       axium.close();
+//       muxium.close();
 //       console.log('Final: ', finalCount, finalDispatchedSet);
 //       expect(finalCount).toBe(finalDispatchedSet);
 //       if (finalCount === -1) {

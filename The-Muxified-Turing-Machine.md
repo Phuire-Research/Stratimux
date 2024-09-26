@@ -8,7 +8,7 @@ In addition to these behaviors the Muxified Turing Machine is capable in another
 
 Further because of the configuration of the Muxified Turing Machine, its functionality may also expand or reduce itself depending on its current state. Thus a sufficient mirror of the machine within a Neural Network paradigm. Would be a model that is capable of running continuously and able to modify its composition and size based on its the inputs. And can be networked alongside other Neural Networks that support the same functionality.
 
-As with the spatial ownership paradigm, these Neural Networks would be capable of being aggregated together coherently and allow for specialization in a similar way as the human mind. That one part may have some set of concepts in its axium and the other part a different specialization. While being able to reference one another and able to mutate the state of the other without creating a race condition within either network. This would be a single locking "mutex" within a graph of networked machines.
+As with the spatial ownership paradigm, these Neural Networks would be capable of being aggregated together coherently and allow for specialization in a similar way as the human mind. That one part may have some set of concepts in its muxium and the other part a different specialization. While being able to reference one another and able to mutate the state of the other without creating a race condition within either network. This would be a single locking "mutex" within a graph of networked machines.
 
 The benefit of the Muxified Turing Machine over that of a Neural Network, is that such is written in plain language by way of the a quality's action types in the spirit of the open internet. And the strategies demonstrate what would be traditionally considered to be probabilistic changes in the head, but now mechanical in choice. With the added benefit of throwing in a coin flip if one wants to dispute this definition, or by adding a neural network to some decision. The difficulty of such would be the complexity of managing such a machine. But each step in the machine may also carry some test to its ability to halt. This is to not replace Neural Networks, but to classify machines built using this methodology as aut intelligence or baseline automatic intelligence that can safely be deployed. Written in plain text in the spirit of the open internet. As aut is merely the origin of the letter "A" and originally meant that of ox. Would be a tool between both man and machine that can be refined by way of cooperation and reactively function only when given some input. That we are moving to call such a configuration as "Autonomous Baseline Intelligence."
 
@@ -22,7 +22,7 @@ The paths from here are truly unlimited and to imagine what can accomplished, in
 
 ## Specification of An Muxified Turing Machine
 0. Extends a base Turing Machine or built from the ground up.
-1. Restricts its symbol selection to a set of concepts to be loaded into the axium via their qualities.
+1. Restricts its symbol selection to a set of concepts to be loaded into the muxium via their qualities.
 2. Has a quality of completeness in its ability to halt in a complex state arrangement by way of the loaded concepts and their own completeness towards halting.
 3. Rather than a looping machine, the Muxified Turing Machine is a function that indirectly recalls its functionality by way of a mode function.
 4. Utilizes two tapes where one is a sequence of values modified by a second tape that is represent via a tree/graph structure that has logically determined set of symbols that concludes and is finite.
@@ -34,7 +34,7 @@ The paths from here are truly unlimited and to imagine what can accomplished, in
 * Muxification, Muxified, Muxify - The process of Multiplexing Symmetrical Quantitative and Qualitative Reasoning into a Single Decision.
 * ActionStrategy - Typically represented as a binary tree strategy, is capable of holding all Patterns of computation and is the literal in plain language logical conceptual expression of computation.
 * Action - The messaging protocol whose function is described by its governing quality.
-* Axium - The holder of the set of concepts and their muxified functionality.
+* Muxium - The holder of the set of concepts and their muxified functionality.
 * Method - The strategy calling function via some pattern
 * Concept - The governing abstraction of concepts and their decomposable qualities.
 * State - The literal state of a concept and its described properties

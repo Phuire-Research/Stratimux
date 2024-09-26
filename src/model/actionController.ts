@@ -6,13 +6,14 @@ reached its expiration. Emitting a Strategy Failed if the Action was a Strategy,
 not provided.
 $>*/
 /*<#*/
-import { Action, AnyAction, axiumBadAction, createAction, strategyFailed } from '../index';
+import { Action, AnyAction, muxiumBadAction, createAction, Deck, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+import { ActionDeck } from './concept';
 
 const badAction = (payload: {
   badActions: AnyAction[]
-}) => createAction('Axium received a Bad Action', {
+}) => createAction('Muxium received a Bad Action', {
   payload
 });
 
@@ -20,12 +21,15 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
   expiration: number;
   expired: boolean;
   timer: NodeJS.Timeout | undefined;
-  action: Action<any>;
-  constructor(action: Action<any>) {
+  action: AnyAction;
+  deck: Deck<any>;
+  constructor(act: ActionDeck<any, any>) {
     super();
+    const {action, deck} = act;
     this.expiration = action.expiration;
     this.expired = false;
     this.action = action;
+    this.deck = deck;
     if (this.expiration < Date.now()) {
       if (this.action.strategy) {
         this.fire(strategyFailed(
@@ -33,7 +37,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
           strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
         ));
       } else {
-        this.next([badAction({badActions: [this.action]}), true]);
+        this.next([badAction({badActions: [this.action]}) as unknown as Action<void>, true]);
       }
     } else {
       this.timer = setTimeout(() => {
@@ -44,7 +48,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
             strategyData_appendFailure(this.action.strategy, failureConditions.controllerExpired)
           ), true]);
         } else {
-          this.next([badAction({badActions: [this.action]}), true]);
+          this.next([badAction({badActions: [this.action]}) as unknown as Action<void>, true]);
         }
       }, this.expiration - Date.now());
     }
@@ -53,7 +57,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
    * Next fires once and then completes.
    * In case someone uses next over fire.
    */
-  next(union: [Action<any>, boolean]) {
+  next(union: [Action, boolean]) {
     this.fire(union[0]);
   }
   /**
@@ -75,18 +79,19 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
   }
 }
 
-export const createActionController$ = <T = void>(
-  act: Action<T>,
-  controlling: (controller: ActionController, action: Action<T>) => void
+export const createActionController$ = <T = void, C = void>(
+  act: ActionDeck<T, C>,
+  controlling: (controller: ActionController, action: Action<T>, deck: Deck<C>) => void
 ) => {
   const ctrl = new ActionController(act);
+  const {action, deck} = act;
   // Needs to have timeout so that subscribers have time to attach in case the controller fires synchronously.
   setTimeout(() => {
-    // Logically Determined axiumConclude;
-    if (act.semaphore[3] === 3) {
-      ctrl.fire(act);
+    // Logically Determined muxiumConclude;
+    if (action.semaphore[3] === 3) {
+      ctrl.fire(action);
     } else {
-      controlling(ctrl, act);
+      controlling(ctrl, action, deck);
     }
   }, 0);
   return ctrl;
@@ -102,7 +107,7 @@ export class ActionControllerForEach extends Subject<Action> {
         } else if (action.strategy) {
           this.fire(
             strategyFailed(action.strategy,
-              strategyData_appendFailure(action.strategy, failureConditions.axiumExpired)));
+              strategyData_appendFailure(action.strategy, failureConditions.muxiumExpired)));
         } else {
           this.fire(action);
         }

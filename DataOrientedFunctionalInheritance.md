@@ -49,13 +49,13 @@ export function selectMuxifiedState<T>(concepts: Concepts, semaphore: number): T
   }
 }
 ```
-This directly relays to the functionality within your "Methods" and "Principles." As by default your Reducer is already based its state upon each successive call. What is orienting the state of your concepts is the same universal concept of spacial location that actions use to call their qualities within Stratimux. This "selectMuxifiedState," merely accesses the concept as it is loaded into the Axium. And is handled automatically within the provided helper method functions. Thus the only true place where this would need to be implemented by the developer is the principles themselves, which also are supplied the current location by semaphore in that creation function.
+This directly relays to the functionality within your "Methods" and "Principles." As by default your Reducer is already based its state upon each successive call. What is orienting the state of your concepts is the same universal concept of spacial location that actions use to call their qualities within Stratimux. This "selectMuxifiedState," merely accesses the concept as it is loaded into the Muxium. And is handled automatically within the provided helper method functions. Thus the only true place where this would need to be implemented by the developer is the principles themselves, which also are supplied the current location by semaphore in that creation function.
 
 Therefore this allows for each of your concepts to have their own counter functionality, but this likewise limits the implementation of Muxified Concepts. That these concepts are only functional via their principles due to the guarantee of a supplied concept semaphore. As such, when creating actions or strategies for a "Muxified Concept." Be sure to supply this value to the necessary action creator or action node.
 
-The benefit of this approach. Is that we can determine responsible concepts that only function only via its internal specification, including being responsible for its spatial location within any loaded Axium. Allows for these responsible concepts to be "Muxified" without worry of interacting with "Concepts" that may use some functionality it others would depend upon. Therefore the "Axium" can be seen in current terms as a "Composition of Applications" that have a shared interface that is the "Axium" itself.
+The benefit of this approach. Is that we can determine responsible concepts that only function only via its internal specification, including being responsible for its spatial location within any loaded Muxium. Allows for these responsible concepts to be "Muxified" without worry of interacting with "Concepts" that may use some functionality it others would depend upon. Therefore the "Muxium" can be seen in current terms as a "Composition of Applications" that have a shared interface that is the "Muxium" itself.
 
-If the select function returns undefined. It means that the "Muxified Concept," has been removed from the Axium. Therefore this denotes when a "Principle" should then disengage any active functionality contained. This further allows for Principles to be fully composable "Applications." And in the scope of "Observers," prevents the possibility of a hot observable with no subscribers.
+If the select function returns undefined. It means that the "Muxified Concept," has been removed from the Muxium. Therefore this denotes when a "Principle" should then disengage any active functionality contained. This further allows for Principles to be fully composable "Applications." And in the scope of "Observers," prevents the possibility of a hot observable with no subscribers.
 
 # Routing for Muxified Actions
 The last method of guaranteeing that your muxified concepts can be arranged amongst any number of other muxified concepts, that happen to utilize the same qualities. Is that the action creators must be passed your concept's semaphore passed into your principles/methods. Or if this is being managed from an outside observer, this is still possible via accessing that muxified concept's semaphore. Note that these values are dynamic and are set at run time.
@@ -87,6 +87,6 @@ export function createAction(
   conceptSemaphore?: number
 ): Action;
 
-// To properly work with a muxified concept from outside the axium
+// To properly work with a muxified concept from outside the muxium
 export const getConceptSemaphore = (concepts: Concepts, conceptName: string): number
 ```

@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux and Experiment Concept, generate an ActionStrategy that will iterate the Experiment ID,
-then debounce notify the Axium of its conclusion while appending the ID to its data field.
+then debounce notify the Muxium of its conclusion while appending the ID to its data field.
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';

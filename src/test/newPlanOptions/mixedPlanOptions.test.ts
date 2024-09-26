@@ -1,16 +1,16 @@
 /*<$
-For the asynchronous graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the muxium
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { createAxium } from '../../model/axium';
+import { muxification } from '../../model/muxium';
 import { selectSlice } from '../../model/selector';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
+import { muxiumKick } from '../../concepts/muxium/qualities/kick.quality';
 
 test('Mixed Plan Options Test', (done) => {
-  const planMixedPlanOptions = createAxium('Plan New Stage Priority Test', {
+  const planMixedPlanOptions = muxification('Plan New Stage Priority Test', {
     experiment: createExperimentPlanOptionsConcept()
   });
   const allShouldBeTrue = [false, false, false, false, false, false, false, false];
@@ -18,7 +18,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE One');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -47,7 +47,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Two');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -61,7 +61,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Three');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -75,7 +75,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Four');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -89,7 +89,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Five');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -103,7 +103,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Six');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -117,7 +117,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Seven');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
@@ -131,7 +131,7 @@ test('Mixed Plan Options Test', (done) => {
     stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Eight');
-        dispatch(e.axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }

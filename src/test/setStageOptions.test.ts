@@ -2,31 +2,31 @@
 For the asynchronous graph programming framework Stratimux, generate a test that the setStageOption derivatives.are functioning as intended
 $>*/
 /*<#*/
-import { createAxium, getAxiumState, isAxiumOpen } from '../model/axium';
+import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { createStage } from '../model/stagePlanner';
-import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
-import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
+import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
+import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
+import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
 
-test('Axium setStageSelectors Test', (done) => {
+test('Muxium setStageSelectors Test', (done) => {
   let tally = 0;
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = axium.plan('Counting Strategy Plan using setStageSelectors',
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+  const plan = muxium.plan('Counting Strategy Plan using setStageSelectors',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
-        if (isAxiumOpen(concepts)) {
+        if (isMuxiumOpen(concepts)) {
           const str = countingStrategy(d);
           if (str) {
             dispatch(strategyBegin(str), {
               iterateStage: true,
               setStageSelectors: {
                 stage: 1,
-                selectors: [d.axium.k.lastStrategy]
+                selectors: [d.muxium.k.lastStrategy]
               }
             });
           } else {
@@ -35,33 +35,33 @@ test('Axium setStageSelectors Test', (done) => {
             setTimeout(() => {done();}, 500);
           }
         }
-      }, {selectors: [d__.axium.k.lastStrategy]}),
+      }, {selectors: [d__.muxium.k.lastStrategy]}),
       stage(({concepts, changes}) => {
         tally++;
         if (tally === 1) {
           expect(changes?.length).toBe(0);
         }
-        const axiumState = getAxiumState(concepts);
+        const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
-        if (axiumState.lastStrategy === countingTopic) {
+        if (muxiumState.lastStrategy === countingTopic) {
           expect(counter?.count).toBe(1);
           expect(tally).toBe(2);
           expect(changes?.length).toBe(1);
           setTimeout(() => {done();}, 500);
           plan.conclude();
-          axium.close();
+          muxium.close();
         }
       })
     ]);
 });
 
-test('Axium setStageBeat Test', (done) => {
+test('Muxium setStageBeat Test', (done) => {
   let tally = 0;
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = axium.plan('Counting Strategy Plan using setStageBeat',
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+  const plan = muxium.plan('Counting Strategy Plan using setStageBeat',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
-        if (isAxiumOpen(concepts)) {
+        if (isMuxiumOpen(concepts)) {
           const str = countingStrategy(d);
           if (str) {
             dispatch(strategyBegin(str), {
@@ -77,27 +77,27 @@ test('Axium setStageBeat Test', (done) => {
             setTimeout(() => {done();}, 500);
           }
         }
-      }, {selectors: [d__.axium.k.lastStrategy]}),
+      }, {selectors: [d__.muxium.k.lastStrategy]}),
       stage(({concepts}) => {
-        const axiumState = getAxiumState(concepts);
+        const muxiumState = getMuxiumState(concepts);
         tally++;
         const counter = selectState<CounterState>(concepts, counterName);
-        if (axiumState.lastStrategy === countingTopic) {
+        if (muxiumState.lastStrategy === countingTopic) {
           expect(counter?.count).toBe(1);
           expect(tally).toBe(2);
           setTimeout(() => {done();}, 500);
           plan.conclude();
-          axium.close();
+          muxium.close();
         }
       })
     ]);
 });
 
-test('Axium setStagePriority Test', (done) => {
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+test('Muxium setStagePriority Test', (done) => {
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   let ready = false;
   let tally = 0;
-  const plan = axium.plan('Counting Strategy Plan using setStagePriority',
+  const plan = muxium.plan('Counting Strategy Plan using setStagePriority',
     ({stage, d__}) => [
       stage(({stagePlanner, dispatch, d}) => {
         if (ready) {
@@ -116,7 +116,7 @@ test('Axium setStagePriority Test', (done) => {
             setTimeout(() => {done();}, 500);
           }
         }
-      }, {selectors: [d__.axium.k.lastStrategy]}),
+      }, {selectors: [d__.muxium.k.lastStrategy]}),
       stage(() => {
         expect(tally).toBe(1);
         tally++;
@@ -125,7 +125,7 @@ test('Axium setStagePriority Test', (done) => {
         priority: Infinity
       })
     ]);
-  const planTwo = axium.plan('Counting Strategy Plan using setStagePriority Two',
+  const planTwo = muxium.plan('Counting Strategy Plan using setStagePriority Two',
     ({stage, d__}) => [
       stage(({stagePlanner, dispatch, d}) => {
         if (ready) {
@@ -144,18 +144,18 @@ test('Axium setStagePriority Test', (done) => {
             setTimeout(() => {done();}, 500);
           }
         }
-      }, {selectors: [d__.axium.k.lastStrategy]}),
+      }, {selectors: [d__.muxium.k.lastStrategy]}),
       stage(() => {
         expect(tally).toBe(0);
         tally++;
         setTimeout(() => {done();}, 500);
         planTwo.conclude();
-        axium.close();
+        muxium.close();
       }, {
         priority: 0
       })
     ]);
   ready = true;
-  axium.dispatch(axium.e.axiumKick());
+  muxium.dispatch(muxium.e.muxiumKick());
 });
 /*#>*/

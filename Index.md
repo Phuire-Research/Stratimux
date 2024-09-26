@@ -4,17 +4,17 @@ One of the greatest gaps of understanding in the modern age is whether what we s
 
 This is to find a solution to the age of post truth, where the increase of productivity that Ai represents would magnify this effect. As language that does not support truth, would be logically inconsistent and therefore placed within opinion as it would be untestable. That there can be decisions made that have some backing via sound logic that can be independent from the knowledge we are taught. "Where we can have precise measurements and be bothered when a ruler's mark is slightly off." As all of this is the observation of qualities that are useful to us. And that is the very function of this framework. We organize by concepts, describe their qualities logically by their functionality, and test their implementations via code. And by restricting qualities that [provably terminate](https://en.m.wikipedia.org/wiki/Total_functional_programming), this system likewise solves the halting problem of the classic turing machine while still being turing complete. Further this framework makes mundane the higher orders of logic that are currently obfuscated in the given frame of humanity. Via a direct demonstration of steps and how we can account for decisions between these steps in the process of transforming some data. Or simply how we can prove a point logically in a testable fashion, versus the absolute need of referencing to back up opinion. As that is still just an informed opinion, versus logic.
 
-The inspiration for Stratimux was that of Redux and its origin via the FLUX design pattern of a finite state machine, and is instead designed to act as an abstract graph computer. While maintaining several similarities for the sake of familiarity of that pattern of design for developers. While offering enough of a departure where the traditional store is now referred to as the **Axium**. Where an axium is a set of concepts that are muxified to form a greater conceptualization. Namely that of your application, but in contrast to its inspiration and accomplished by the ActionStrategy design pattern. Which is a blunt demonstration of higher order logic, allows qualities of other concepts to be used/muxified together to perform any transformation. And further enhanced via the spatial ownership paradigm, that relays to a universal concept we take for granted. That all things in space, have a position, and we may respect that position to allow multiple ActionStrategies to be ran concurrently. Without race conditions within any given size network. Noting that despite the utilization of actions there are no string type comparisons beyond the initial creation for the sake of performance. This allows us to actively encouraging to cross the streams of state, or to be specific that of the unifying concepts and their qualities. To create an application that is greater than the sum of its parts due to its composability.
+The inspiration for Stratimux was that of Redux and its origin via the FLUX design pattern of a finite state machine, and is instead designed to act as an abstract graph computer. While maintaining several similarities for the sake of familiarity of that pattern of design for developers. While offering enough of a departure where the traditional store is now referred to as the **Muxium**. Where an muxium is a set of concepts that are muxified to form a greater conceptualization. Namely that of your application, but in contrast to its inspiration and accomplished by the ActionStrategy design pattern. Which is a blunt demonstration of higher order logic, allows qualities of other concepts to be used/muxified together to perform any transformation. And further enhanced via the spatial ownership paradigm, that relays to a universal concept we take for granted. That all things in space, have a position, and we may respect that position to allow multiple ActionStrategies to be ran concurrently. Without race conditions within any given size network. Noting that despite the utilization of actions there are no string type comparisons beyond the initial creation for the sake of performance. This allows us to actively encouraging to cross the streams of state, or to be specific that of the unifying concepts and their qualities. To create an application that is greater than the sum of its parts due to its composability.
 
 ![Ghostbusters - "We'll Cross the Streams" - (HD) - Scenes from the 80s - (1984)](https://github.com/Phuire-Research/Stratimux/blob/main/CrossTheStreams.gif?raw=true)
 
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Created in 2018, this is the governing concept that allows for the Muxified Turing Machine to have a strong halting quality. Likewise the direct analog of higher order logic and universal transformer.
-* [Axium](https://github.com/Phuire-Research/Stratimux/blob/main/Axium.md) - Governing concept that contains the set of concepts that formalizes each axium.
+* [Muxium](https://github.com/Phuire-Research/Stratimux/blob/main/Muxium.md) - Governing concept that contains the set of concepts that formalizes each muxium.
 * [Concept](https://github.com/Phuire-Research/Stratimux/blob/main/Concept.md) - The programming abstraction of a concept that is decomposable to the sum of its parts via: state, qualities, principles, and mode.
 * [Stage Planner](https://github.com/Phuire-Research/Stratimux/blob/main/StagePlanner.md) - Introducing the stage planner paradigm. A specialized helper function to prevent action overflow when dispatching actions in subscriptions.
 * [Action Controller](https://github.com/Phuire-Research/Stratimux/blob/main/ActionController.md) - Allows methods to be performed asynchronously.
-* [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - Streamlines the complex nature of the ActionStrategy as it relates to itself and other axiums. This is what allows Stratimux to be a graph computation paradigm.
+* [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - Streamlines the complex nature of the ActionStrategy as it relates to itself and other muxiums. This is what allows Stratimux to be a graph computation paradigm.
 * [Strategy Data](https://github.com/Phuire-Research/Stratimux/blob/main/StrategyData.md) - Allows for the ActionStrategy pattern to act as a "Universal Transformer." Likewise decorates strategies with the necessary information to inform "ActionNodes," of possible failure conditions.
 * [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Proving the "Muxification of Concepts," as a method of "Functional Inheritance."
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.
@@ -33,7 +33,7 @@ As this pattern of halting is designed to be an analog to the inner workings of 
 
 Likewise the unfortunate truth of a Muxified Turing Machine due to its recursive functionality. Is that it requires the ability to halt to function as a hard requirement. Otherwise the developer will run into unexpected behavior in their applications. This would be due to strategies and/or the supporting framework are halting incomplete and experiencing action overflow. As our general good enough computers and their branch prediction will generate ghost actions and other unexpected behaviors during this condition. Such as the thrashing the applications memory, and the inability to receive some output akin to a unresponsive Neural Network. So by strange effect the solution to solve the halting problem, was a method of programming that went beyond data entry of classic. Utilizing logic over mathematics to create the scope of this framework, to afford for the dynamic functionality of data transformation versus data entry.
 
-Or simply, due to the recursive functionality of Stratimux, that requires the ability to halt by design. Is accomplished via ActionStrategies and their dispatching Plans, that perform higher order logic within the finite state machine that is the Axium. That describes the exact steps to accomplish something. As every ActionStrategy has a conclusion, and can represent any calculation. This is the advent of "Logical Determinism," is the logical ability to disclude calculations and their associated symbols/qualities that do not halt. As ActionStrategies represent a finite selection of symbols organized by a branching sequence that can be tested to be halting complete. And are chosen not by symbol selection, but determined via the positional load of said symbols within this system.
+Or simply, due to the recursive functionality of Stratimux, that requires the ability to halt by design. Is accomplished via ActionStrategies and their dispatching Plans, that perform higher order logic within the finite state machine that is the Muxium. That describes the exact steps to accomplish something. As every ActionStrategy has a conclusion, and can represent any calculation. This is the advent of "Logical Determinism," is the logical ability to disclude calculations and their associated symbols/qualities that do not halt. As ActionStrategies represent a finite selection of symbols organized by a branching sequence that can be tested to be halting complete. And are chosen not by symbol selection, but determined via the positional load of said symbols within this system.
 
 The reality of the halting problem, is that it is illogical when comparing the machine's functionality towards a real life use cases. As an infinite loop, physically requires a constant stream of energy to enable that locked behavior. Further the Stage Planner paradigm shift allows for these loops to halt and be transferred as part of a message to other machines. Thus, not only is the halting problem impossible due to a logical misconception, it likewise has inhibited new paradigm of computers from emerging. That Stratimux now unlocks thanks to a new Function as a Operating System paradigm (FaaOS). The Conceptual Deck, or Cyberdeck if we wish to use Science Fiction as our guide for terminology.
 ### The Testable Proof
@@ -41,16 +41,16 @@ The reality of the halting problem, is that it is illogical when comparing the m
 // ./src/test/ownership.test.ts
 const orderOfTopics: string[] = [];
 let finalRun = true;
-const axium = createAxium('ownershipTest', [
+const muxium = muxification('ownershipTest', [
   createOwnershipConcept(),
   createCounterConcept(),
   createExperimentConcept(createExperimentState(), [checkInStrategyQuality], [experimentActionQuePrinciple])
 ], true, true);
-const plan = axium.plan(
+const plan = muxium.plan(
   'Testing Ownership Staging', [
     (cpts, dispatch) => {
-      const axiumState = cpts[0].state as AxiumState;
-      if (axiumState.lastStrategy === setOwnerShipModeTopic) {
+      const muxiumState = cpts[0].state as MuxiumState;
+      if (muxiumState.lastStrategy === setOwnerShipModeTopic) {
         const ownership = selectState<OwnershipState>(cpts, ownershipName);
         if (ownership) {
           console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
@@ -85,10 +85,10 @@ const plan = axium.plan(
       }
     },
     (cpts, dispatch) => {
-      const axiumState = cpts[0].state as AxiumState;
+      const muxiumState = cpts[0].state as MuxiumState;
       const counter = selectState<Counter>(cpts, counterName);
       if (counter) {
-        console.log('Stage 4', axiumState.lastStrategy, orderOfTopics);
+        console.log('Stage 4', muxiumState.lastStrategy, orderOfTopics);
         if (orderOfTopics.length === 2 && finalRun) {
           finalRun = false;
           // This will be the final test to be triggered by a log action.
@@ -99,26 +99,26 @@ const plan = axium.plan(
           // setTimeout(() => {done();}, 1000);
           plan.conclude();
         } else if (
-          (axiumState.lastStrategy === experimentCountingTopic ||
-          axiumState.lastStrategy === experimentPrimedCountingTopic) &&
+          (muxiumState.lastStrategy === experimentCountingTopic ||
+          muxiumState.lastStrategy === experimentPrimedCountingTopic) &&
           orderOfTopics.length === 0) {
           console.log('Stage 3, If #1 | Count: ', counter.count);
-          orderOfTopics.push(axiumState.lastStrategy);
+          orderOfTopics.push(muxiumState.lastStrategy);
         } else if (
-          (axiumState.lastStrategy === experimentCountingTopic ||
-          axiumState.lastStrategy === experimentPrimedCountingTopic) &&
+          (muxiumState.lastStrategy === experimentCountingTopic ||
+          muxiumState.lastStrategy === experimentPrimedCountingTopic) &&
           orderOfTopics.length === 1) {
-          if (orderOfTopics[0] !== axiumState.lastStrategy) {
+          if (orderOfTopics[0] !== muxiumState.lastStrategy) {
             console.log('Stage 3, If #2 | Count: ', counter.count);
-            orderOfTopics.push(axiumState.lastStrategy);
+            orderOfTopics.push(muxiumState.lastStrategy);
             // Due to the halting behavior of a Muxified Turing Machine, this will trigger before set Count at step 2.
             //  If commented out, set Count will trigger the the "If #3" check.
             //  If commenting out setCount stage, disable the test in the subscription
             //    Then be sure to enabled the final done check in "If #3".
-            //    Then enabling the axiumLog dispatch will allow the test to conclude.
-            //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
+            //    Then enabling the muxiumLog dispatch will allow the test to conclude.
+            //    But disabling the muxiumLog will never trigger the "If #3" check and disallow the test to conclude.
             //      This proves Stratimux as a Muxified Turing Machine and this configuration Halting Complete.
-            dispatch(axiumLog(), {
+            dispatch(muxiumLog(), {
               runOnce: true
             });
           }
@@ -126,11 +126,11 @@ const plan = axium.plan(
       }
     }
   ]);
-const sub = axium.subscribe((concepts: Concepts) => {
+const sub = muxium.subscribe((concepts: Concepts) => {
   const state = selectState<OwnershipState>(concepts, ownershipName);
   if (state) {
-    const _axiumState = concepts[0].state as AxiumState;
-    if (state.initialized && _axiumState.lastStrategy === setOwnerShipModeTopic) {
+    const _muxiumState = concepts[0].state as MuxiumState;
+    if (state.initialized && _muxiumState.lastStrategy === setOwnerShipModeTopic) {
       expect(state.initialized).toBe(true);
     }
     const counter = selectState<Counter>(concepts, counterName);
@@ -138,15 +138,15 @@ const sub = axium.subscribe((concepts: Concepts) => {
     if (counter && counter.count >= 1000) {
       console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
       expect(counter.count).toBe(1000);
-      // Comment out if setCount stage is disabled and instead testing axiumLogs of "If #2" halting interaction.
+      // Comment out if setCount stage is disabled and instead testing muxiumLogs of "If #2" halting interaction.
       setTimeout(() => {done();}, 1000);
       sub.unsubscribe();
-      axium.close();
+      muxium.close();
     }
   }
 });
 ```
-The above demonstrates two solutions. One of the ability to network axiums together unlike the design of flux that would restrict all calculations to a singular source of truth. That is accomplished via the ownership pattern and halts upon multiple concluding strategies that would have some race condition within the network. Instructions left in the comments demonstrate the power of a finite state machine and its ability to return some output that can be logically determined. This is presented in this format to provide a testable back and forth with the developer to inform some intuition as to Stratimux's inner workings.
+The above demonstrates two solutions. One of the ability to network muxiums together unlike the design of flux that would restrict all calculations to a singular source of truth. That is accomplished via the ownership pattern and halts upon multiple concluding strategies that would have some race condition within the network. Instructions left in the comments demonstrate the power of a finite state machine and its ability to return some output that can be logically determined. This is presented in this format to provide a testable back and forth with the developer to inform some intuition as to Stratimux's inner workings.
 
 ### Stratimux = ((**Strat**)~~egy~~) + ((**i**)~~ndividualized~~) + (~~stratum~~(**m**)) + ((**u**)~~nified~~) + (~~reactive~~(**x**))
 Stratimux is the asynchronous graph programming framework release of a new Muxified Turing Machine. The internal structure of this machine directly relays to a form of written intelligence of doing, over that of knowledge retrieval, and data entry. But may be written to facilitate any preexisting paradigm such as that same expert system paradigm of classic. The importance of this machine to the now of 2023, is the functionality of the ActionStrategy pattern as it relays to human and machine intelligence.
@@ -158,22 +158,22 @@ The direct comparison of Stratimux to an LLM, during runtime these actions are o
 ### The anatomy of a Stratimux sentence
 ```
 preposition(/+)decision + body + denoter
-example: Finally + Open Axium + to Notify Subscribers of State changes.
+example: Finally + Open Muxium + to Notify Subscribers of State changes.
 ```
 This allows for a Stratimux Dialog to be constructed in the same formalization of that of a paragraph. Where the strategy topic is the literal topic sentence of a paragraph. And is followed by all steps and possible decision that create a muxified paragraph.
 ```
 TOPIC + SENTENCE + SENTENCE + SENTENCE
 Example: 
-Axium Initialization Strategy. +
-Begin with register Axium Action and Concept Streams. +
+Muxium Initialization Strategy. +
+Begin with register Muxium Action and Concept Streams. +
 Then initialize Principles and set new Subscribers to General Subscribers list. +
-Next set Axium to its current Default Mode Index. +
-Finally Open Axium to Notify Subscribers of State changes.
+Next set Muxium to its current Default Mode Index. +
+Finally Open Muxium to Notify Subscribers of State changes.
 ```
 
 Where the main difference between that of a traditional paragraph and the compositional structure of the Stratimux ActionStrategy. Is that these Stratimux paragraphs are capable of representing different decisions via calculations that inform the final output of that paragraph and its sentences. This can be likened to some high orders of logic via decisions made within the context of an ActionStrategy. Except in contrast to current understanding of higher order logic. It is a direct blunt mapping of these higher order conventions versus some nested obtuse nightmare. But likewise exponentially grows in complexity the longer the ActionStrategy. This is the consequence and relationship of binary/N trees and the exponential quality of their branches quantified. The difference traditionally ignored here, is that we can logical trim branches. And majority of ActionStrategies will be of some sequential flow and short running in their life times.
 
-### Stratimux - Axium Flow Diagram 
+### Stratimux - Muxium Flow Diagram 
 ```
 Action -> Mode -> Method --> Action.Strategy ? Halt : -> Next Action --> Mode
                |                                                      |
@@ -181,14 +181,14 @@ Action -> Mode -> Method --> Action.Strategy ? Halt : -> Next Action --> Mode
                                        |                              |
                     Construct Emission -> Principle -> Action ------->|
                        *Mode Can Block |*> External -> Action ------->|
-                                     Axium/Client/Server
+                                     Muxium/Client/Server
 ```
-To satisfy the requirements of a Muxified Turing Machine, the axium is a composed recursive function that transforms a set of concepts, or a deck of concepts. That can further alter its functionality via its mode, that routes towards the loaded concept qualities based on the dispatched action's semaphore. If the action has an ActionStrategy attached, then that the method emits the next action based on some decision according to the observed state at time of dispatch. While the reducer informs new observations of any new state changes to be supplied back into the concept stream and the subscribers of that change.
+To satisfy the requirements of a Muxified Turing Machine, the muxium is a composed recursive function that transforms a set of concepts, or a deck of concepts. That can further alter its functionality via its mode, that routes towards the loaded concept qualities based on the dispatched action's semaphore. If the action has an ActionStrategy attached, then that the method emits the next action based on some decision according to the observed state at time of dispatch. While the reducer informs new observations of any new state changes to be supplied back into the concept stream and the subscribers of that change.
 
-In addition, principles here act as a containing observer that allows for utilization of preexisting constructs. Which are applications/framework/libraries that cannot yet be decomposed to the sum of their parts and would have to indirectly interact with the action stream. To maintain some relevant functionality within the axium. Likewise we may use principles to wrap outside observations such as an API, or any external process.
+In addition, principles here act as a containing observer that allows for utilization of preexisting constructs. Which are applications/framework/libraries that cannot yet be decomposed to the sum of their parts and would have to indirectly interact with the action stream. To maintain some relevant functionality within the muxium. Likewise we may use principles to wrap outside observations such as an API, or any external process.
 ### Stratimux Dynamic Graph Structure
 ```
-A = Axium Flow Diagram
+A = Muxium Flow Diagram
 -> = A Single recursion of A
 --> = Both possible recursions of A
 
@@ -214,7 +214,7 @@ Each "Concept," that is loaded into this machine defines its own principle that 
 The above would be some Neural Network's universal function made to fit some unknown function via a fourier transform. If we know the function ahead of the time we may set the weights specifically to represent that function. The question that is obfuscated in current understanding is by what mechanism is this Neural Network choosing the next node on the graph to determine its output? As the decision is obfuscated by the weighted sum between each layer of the Neural Network.
 
 ![Neural Network Diagram](https://github.com/Phuire-Research/Stratimux/blob/main/NeuralNetwork.png?raw=true)
-This is the reason for Stratimux's recursive functionality. Is that the life time of an ActionStrategy is the exact point of comparison between that of a set of universal functions on a graph and the weighted sum between each layer in the graph above. But direct and without the need to calculate the others nodes in the network. As the method allows for the next node to be some logical deterministic instruction via its method. But the entire function is the net run time of that action through the axium's mode. As the mode is just a function that relays to composition of functions that satisfy the quality of an action to it's reducer and method dictated by the ActionStrategy. Keep in mind a function is allowed to be composed of functions. Therefore what is obfuscated within networks, is not only the function themselves, but the decisions made between the Neural Networks layers that control the final output by weighted sum per node, based on some input. Except here the mode can be represented as a singular universal function or node, that does not have to rely on the sum of weights to divine a weighted sum to inform its output. Likewise does not need to replicate its total contents per node due to the feed forward nature of "Neural Networks." And is instead direct and in plain text in the spirit of the open internet.
+This is the reason for Stratimux's recursive functionality. Is that the life time of an ActionStrategy is the exact point of comparison between that of a set of universal functions on a graph and the weighted sum between each layer in the graph above. But direct and without the need to calculate the others nodes in the network. As the method allows for the next node to be some logical deterministic instruction via its method. But the entire function is the net run time of that action through the muxium's mode. As the mode is just a function that relays to composition of functions that satisfy the quality of an action to it's reducer and method dictated by the ActionStrategy. Keep in mind a function is allowed to be composed of functions. Therefore what is obfuscated within networks, is not only the function themselves, but the decisions made between the Neural Networks layers that control the final output by weighted sum per node, based on some input. Except here the mode can be represented as a singular universal function or node, that does not have to rely on the sum of weights to divine a weighted sum to inform its output. Likewise does not need to replicate its total contents per node due to the feed forward nature of "Neural Networks." And is instead direct and in plain text in the spirit of the open internet.
 
 This is what allows for Stratimux to act as a comparable mirror to that of a Neural Network, while succeeding it in a directed flow. Except that it is transparent and inherently more efficient via exact instructions. Versus the fundamental issue of probabilistic derivatives that get infinitely close to 100% accuracy that a universal function represents. For a Neural Network to be considered a comparably mirror to a Muxified Turing Machine, would be a network that forgoes nodes not fully utilized within the weighted averaging sum of layers. A form of logical determination within the network itself that can disclude nodes from the weighted sums calculation and allow for asynchronous operations. Would be the creation of some directed path that formalizes the output of the Neural Network based on the input and can provable halt per testable input. But this form of data does not exist and this framework, or rather Muxified Turing Machines would be the path towards creating that data.
 
@@ -224,7 +224,7 @@ We could limit use case like the its inspiration as a state machine to control f
 
 This system would become more atomic over time to better represent the dynamics of language. But during this specific stage, this is a fine starting point towards the decomposition of the complexities of intelligence. As the weighted sum is still massively useful, when there is no direct obvious answer to find some solution to an input. But within this scope would be an entirely different type of Neural Network which does not currently exist. As that would be the generation of novelty over some averaged statistical gradient descent of known data. Would be finding new arrangements of concept and their qualities to find the next **Ah-Ha!**
 
-Since the current Ah-Ha! That Stratimux enables, is not only a means of understanding the internals of a Neural Network, but presents a new Operating System paradigm. As the increased flexibility of having all looping operations be provably terminating recursive functions, one possibility allows for programs to be transferred messages. Since programs are merely the interconnected parts of the loaded conceptual deck, the program only needs to halt and communicate the last state of the machine and transmit its current configuration, to be loaded via some remote axium. This behavior likewise allows for the system to be asynchronous by default, allowing for a mere function to become wholly responsible and just as capable as a traditional operating system.
+Since the current Ah-Ha! That Stratimux enables, is not only a means of understanding the internals of a Neural Network, but presents a new Operating System paradigm. As the increased flexibility of having all looping operations be provably terminating recursive functions, one possibility allows for programs to be transferred messages. Since programs are merely the interconnected parts of the loaded conceptual deck, the program only needs to halt and communicate the last state of the machine and transmit its current configuration, to be loaded via some remote muxium. This behavior likewise allows for the system to be asynchronous by default, allowing for a mere function to become wholly responsible and just as capable as a traditional operating system.
 
 ## One Strong Possibility this Paradigm Shift Enables: ABI (Artificial Baseline Intelligence)
 ![Rick and Morty - Butter Bot](https://github.com/Phuire-Research/Stratimux/blob/main/butterBot.gif?raw=true)

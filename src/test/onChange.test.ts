@@ -3,27 +3,27 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 In addition utilize the onChange detection feature for the MuxifiedSubject is working as intended.
 $>*/
 /*<#*/
-import { createAxium, getAxiumState } from '../model/axium';
+import { muxification, getMuxiumState } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { initializeTopic } from '../concepts/axium/strategies/initialization.strategy';
+import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
+import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
 import { Concepts } from '../model/concept';
 
-test('Axium onChange Test', (done) => {
+test('Muxium onChange Test', (done) => {
   const selectorRouter = {
-    [axiumSelectLastStrategy.keys]: (concepts: Concepts) =>
-      console.log('CHECK: ', selectSlice(concepts, axiumSelectLastStrategy))
+    [muxiumSelectLastStrategy.keys]: (concepts: Concepts) =>
+      console.log('CHECK: ', selectSlice(concepts, muxiumSelectLastStrategy))
   };
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = axium.plan('Counting Strategy Plan with selectors',
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+  const plan = muxium.plan('Counting Strategy Plan with selectors',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
         console.log('What is this Keyed Selector?', d.counter.k.count.select());
-        console.log('WHAT IS THIS', selectSlice(concepts, axiumSelectLastStrategy));
-        if (selectSlice(concepts, axiumSelectLastStrategy) === initializeTopic) {
+        console.log('WHAT IS THIS', selectSlice(concepts, muxiumSelectLastStrategy));
+        if (selectSlice(concepts, muxiumSelectLastStrategy) === initializeTopic) {
           const str = countingStrategy(d);
           if (str) {
             dispatch(strategyBegin(str), {
@@ -35,24 +35,24 @@ test('Axium onChange Test', (done) => {
             setTimeout(() => done(), 50);
           }
         }
-      }, {selectors: [d__.axium.k.lastStrategy]}),
+      }, {selectors: [d__.muxium.k.lastStrategy]}),
       stage(({concepts, dispatch, changes, d, e}) => {
         console.log('Check Changes: ',  changes);
         changes?.forEach(keyed => {
           selectorRouter[keyed.keys] ? selectorRouter[keyed.keys](concepts) : null;
         });
-        const axiumState = getAxiumState(concepts);
+        const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
-        if (axiumState.lastStrategy === countingTopic) {
+        if (muxiumState.lastStrategy === countingTopic) {
           expect(counter?.count).toBe(1);
           // After next improvement
           // expect(d.counter.k.count.select()).toBe(1);
           setTimeout(() => {done();}, 500);
           plan.conclude();
-          axium.close();
+          muxium.close();
         } else {
-          dispatch(e.axiumKick(), {
-            newSelectors: [d.counter.k.count, d.axium.k.lastStrategy],
+          dispatch(e.muxiumKick(), {
+            newSelectors: [d.counter.k.count, d.muxium.k.lastStrategy],
             throttle: 0
           });
         }

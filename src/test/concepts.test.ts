@@ -4,13 +4,13 @@ generate a test to that ensures the functionality of is concept loaded and are c
 $>*/
 /*<#*/
 import { counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { areConceptsLoaded, chainName, createChainConcept, isConceptLoaded } from '../index';
 import { createStage } from '../model/stagePlanner';
 
 test('Concepts exists', (done) => {
-  const axium = createAxium('Mock Axium', {counter: createCounterConcept()});
-  const plan = axium.plan('Check Concepts', ({stage}) => [
+  const muxium = muxification('Mock Muxium', {counter: createCounterConcept()});
+  const plan = muxium.plan('Check Concepts', ({stage}) => [
     stage(({concepts}) => {
       if (isConceptLoaded(concepts, counterName)) {
         expect(true).toBe(true);
@@ -26,18 +26,18 @@ test('Concepts exists', (done) => {
 });
 
 test('Concepts exists', (done) => {
-  const axium = createAxium('Mock Axium', {counter: createCounterConcept(), chain: createChainConcept()});
-  const plan = axium.plan('Check Concepts', ({stage}) => [
+  const muxium = muxification('Mock Muxium', {counter: createCounterConcept(), chain: createChainConcept()});
+  const plan = muxium.plan('Check Concepts', ({stage}) => [
     stage(({concepts}) => {
       if (areConceptsLoaded(concepts, [counterName, chainName])) {
         expect(true).toBe(true);
         plan.conclude();
-        axium.close();
+        muxium.close();
         done();
       } else {
         expect(false).toBe(true);
         plan.conclude();
-        axium.close();
+        muxium.close();
         done();
       }
     }),

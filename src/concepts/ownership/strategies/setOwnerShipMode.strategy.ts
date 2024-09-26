@@ -1,17 +1,17 @@
 /*<$
-For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Axium's mode to Ownership.
+For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Muxium's mode to Ownership.
 $>*/
 /*<#*/
 import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept, Concepts } from '../../../model/concept';
 import { getSemaphore } from '../../../model/action';
 import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName } from '../ownership.concept';
-import { AxiumDeck, AxiumState } from '../../axium/axium.concept';
+import { MuxiumDeck, MuxiumState } from '../../muxium/muxium.concept';
 import { Deck } from '../../../model/deck';
-import { getAxiumState } from '../../../model/axium';
+import { getMuxiumState } from '../../../model/muxium';
 
-export const ownershipSetOwnerShipModeTopic = 'Axium set Mode to Ownership then Initialize Ownership Principle';
-export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck & AxiumDeck>>(
+export const ownershipSetOwnerShipModeTopic = 'Muxium set Mode to Ownership then Initialize Ownership Principle';
+export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck & MuxiumDeck>>(
   deck: T,
   concepts: Concepts,
   modeName: string
@@ -20,11 +20,11 @@ export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck &
     ownershipInitializeOwnership
   } = deck.ownership.e;
   const {
-    axiumSetDefaultModeIndex,
-    axiumSetMode
-  } = deck.axium.e;
+    muxiumSetDefaultModeIndex,
+    muxiumSetMode
+  } = deck.muxium.e;
   let ownershipModeIndex = 2;
-  getAxiumState(concepts).modeNames.forEach((key, i) => {
+  getMuxiumState(concepts).modeNames.forEach((key, i) => {
     if (key === ownershipName) {
       ownershipModeIndex = i;
     }
@@ -35,7 +35,7 @@ export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck &
       preposition: 'Set',
     },
   });
-  const stepTwo = createActionNode(axiumSetDefaultModeIndex({
+  const stepTwo = createActionNode(muxiumSetDefaultModeIndex({
     index: ownershipModeIndex
   }), {
     successNode: stepThree,
@@ -43,7 +43,7 @@ export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck &
       preposition: 'Then'
     },
   });
-  const stepOne = createActionNode(axiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
+  const stepOne = createActionNode(muxiumSetMode({ modeIndex: ownershipModeIndex, modeName }), {
     successNode: stepTwo,
     successNotes: {
       preposition: 'Successfully'

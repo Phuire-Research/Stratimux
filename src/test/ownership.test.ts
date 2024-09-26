@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
 $>*/
 /*<#*/
-import { createAxium, getAxiumState  } from '../model/axium';
+import { muxification, getMuxiumState  } from '../model/muxium';
 import { ConceptDeck, Concepts } from '../model/concept';
 import { selectConcept, selectState } from '../model/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
@@ -17,7 +17,7 @@ import {
   experimentCountingStrategy,
   experimentCountingTopic,
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
-import { axiumLog } from '../concepts/axium/qualities/log.quality';
+import { muxiumLog } from '../concepts/muxium/qualities/log.quality';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { experimentCheckInStrategy } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrincipleCreator } from '../concepts/experiment/experiment.principle';
@@ -32,13 +32,13 @@ test('Ownership Test', (done) => {
     counter: createCounterConcept(),
     experiment: createExperimentConcept(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
   };
-  const axium = createAxium<typeof deck>('ownershipTest', deck, {logging: true, storeDialog: true});
-  const plan = axium.plan(
+  const muxium = muxification<typeof deck>('ownershipTest', deck, {logging: true, storeDialog: true});
+  const plan = muxium.plan(
     'Testing Ownership Staging', ({stage}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
-        const axiumState = getAxiumState(concepts);
-        console.log(axiumState.lastStrategy);
-        if (axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
+        const muxiumState = getMuxiumState(concepts);
+        console.log(muxiumState.lastStrategy);
+        if (muxiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(concepts, ownershipName);
           if (ownership) {
             console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
@@ -83,10 +83,10 @@ test('Ownership Test', (done) => {
         }
       }),
       stage(({concepts, dispatch, e}) => {
-        const axiumState = getAxiumState(concepts);
+        const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         if (counter) {
-          console.log('Stage 4', axiumState.lastStrategy, orderOfTopics, selectConcept(concepts, ownershipName)?.state);
+          console.log('Stage 4', muxiumState.lastStrategy, orderOfTopics, selectConcept(concepts, ownershipName)?.state);
           console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
           if (orderOfTopics.length === 2 && finalRun) {
             finalRun = false;
@@ -98,24 +98,24 @@ test('Ownership Test', (done) => {
             // setTimeout(() => {done();}, 1000);
             plan.conclude();
           } else if (
-            (axiumState.lastStrategy === experimentCountingTopic || axiumState.lastStrategy === additionalCountingStrategyTopic) &&
+            (muxiumState.lastStrategy === experimentCountingTopic || muxiumState.lastStrategy === additionalCountingStrategyTopic) &&
             orderOfTopics.length === 0) {
             console.log('Stage 3, If #1 | Count: ', counter.count);
-            orderOfTopics.push(axiumState.lastStrategy);
+            orderOfTopics.push(muxiumState.lastStrategy);
           } else if (
-            (axiumState.lastStrategy === experimentCountingTopic || axiumState.lastStrategy === additionalCountingStrategyTopic) &&
+            (muxiumState.lastStrategy === experimentCountingTopic || muxiumState.lastStrategy === additionalCountingStrategyTopic) &&
             orderOfTopics.length === 1) {
-            if (orderOfTopics[0] !== axiumState.lastStrategy) {
+            if (orderOfTopics[0] !== muxiumState.lastStrategy) {
               console.log('Stage 3, If #2 | Count: ', counter.count);
-              orderOfTopics.push(axiumState.lastStrategy);
+              orderOfTopics.push(muxiumState.lastStrategy);
               // Due to the halting behavior of a Muxified Turing Machine, this will trigger before set Count at step 2.
               //  If commented out, set Count will trigger the the "If #3" check.
               //  If commenting out setCount stage, disable the test in the subscription
               //    Then be sure to enabled the final done check in "If #3".
-              //    Then enabling the axiumLog dispatch will allow the test to conclude.
-              //    But disabling the axiumLog will never trigger the "If #3" check and disallow the test to conclude.
+              //    Then enabling the muxiumLog dispatch will allow the test to conclude.
+              //    But disabling the muxiumLog will never trigger the "If #3" check and disallow the test to conclude.
               //      This proves Stratimux as a Muxified Turing Machine and this configuration Halting Complete.
-              dispatch(e.axiumLog(), {
+              dispatch(e.muxiumLog(), {
                 runOnce: true
               });
             }
@@ -123,11 +123,11 @@ test('Ownership Test', (done) => {
         }
       })
     ]);
-  const sub = axium.subscribe((concepts: Concepts) => {
+  const sub = muxium.subscribe((concepts: Concepts) => {
     const state = selectState<OwnershipState>(concepts, ownershipName);
     if (state) {
-      const _axiumState = getAxiumState(concepts);
-      if (state.initialized && _axiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
+      const _muxiumState = getMuxiumState(concepts);
+      if (state.initialized && _muxiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
         expect(state.initialized).toBe(true);
       }
       const counter = selectState<CounterState>(concepts, counterName);
@@ -135,10 +135,10 @@ test('Ownership Test', (done) => {
       if (counter && counter.count >= 1000) {
         console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
         expect(counter.count).toBe(1000);
-        // Comment out if setCount stage is disabled and instead testing axiumLogs of "If #2" halting interaction.
+        // Comment out if setCount stage is disabled and instead testing muxiumLogs of "If #2" halting interaction.
         setTimeout(() => {done();}, 1000);
         sub.unsubscribe();
-        axium.close();
+        muxium.close();
       }
     }
   });

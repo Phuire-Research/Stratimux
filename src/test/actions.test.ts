@@ -1,9 +1,9 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, generate a test that ensures qualities are being created with actions.
-And ensure that the semaphore is being set via the Axium for the actions created using said qualities.
+And ensure that the semaphore is being set via the Muxium for the actions created using said qualities.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
 import { createConcept } from '../model/concept';
 import { Actions } from '../model/action';
@@ -56,20 +56,20 @@ test('Quality Actions', (done) => {
     here: 8
   });
   console.log(c.actions);
-  const axium = createAxium('Quality Actions', {
+  const muxium = muxification('Quality Actions', {
     someConcept: c
   });
-  const p = axium.plan('outer plan', ({e__, stage, stageO}) => [
-    stageO(() => e__.axiumKick()),
+  const p = muxium.plan('outer plan', ({e__, stage, stageO}) => [
+    stageO(() => e__.muxiumKick()),
     stage(({e, stagePlanner}) => {
-      const log = e.axiumLog();
+      const log = e.muxiumLog();
       console.log('CHECK LOG', log);
       stagePlanner.conclude();
       done();
     })
   ]);
 
-  axium.subscribe(concepts => concepts);
+  muxium.subscribe(concepts => concepts);
   expect(f(c.actions).type).toBe('Something');
 });
 /*#>*/

@@ -1,10 +1,10 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, generate a test to ensure the Axium's ability to stitch strategies together and likewise
-for the getAxiumState helper function to properly return the current axium state.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure the Muxium's ability to stitch strategies together and likewise
+for the getMuxiumState helper function to properly return the current muxium state.
 $>*/
 /*<#*/
-import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { axium_createStitchNode } from '../concepts/axium/model/stitch.model';
+import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
+import { muxium_createStitchNode } from '../concepts/muxium/model/stitch.model';
 import {
   ActionStrategy,
   ActionStrategyStitch,
@@ -13,17 +13,17 @@ import {
   createStrategy,
   strategyBegin
 } from '../model/actionStrategy';
-import { createAxium, getAxiumState } from '../model/axium';
+import { muxification, getMuxiumState } from '../model/muxium';
 import { selectSlice } from '../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
+import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
 import { createAction } from '../model/action';
 
-test('Axium advanced usage: StrategyStitch', (done) => {
+test('Muxium advanced usage: StrategyStitch', (done) => {
   const yourStrategyStitch: ActionStrategyStitch = () => {
-    const stepStitch = axium_createStitchNode();
-    const stepOne = createActionNode(createAction('logged a message passed to Axium'), {
+    const stepStitch = muxium_createStitchNode();
+    const stepOne = createActionNode(createAction('logged a message passed to Muxium'), {
       successNode: stepStitch,
       failureNode: null
     });
@@ -35,7 +35,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
   };
 
   const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrategy => {
-    const stepFinal = createActionNode(createAction('logged a message passed to Axium'), {
+    const stepFinal = createActionNode(createAction('logged a message passed to Muxium'), {
       successNode: null,
       failureNode: null
     });
@@ -48,7 +48,7 @@ test('Axium advanced usage: StrategyStitch', (done) => {
     stitchEnd.successNode = stepFinal;
     const stitchHead = createActionNodeFromStrategy(stitchStrategy);
 
-    const stepOne = createActionNode(createAction('logged a message passed to Axium'), {
+    const stepOne = createActionNode(createAction('logged a message passed to Muxium'), {
       successNode: stitchHead,
       failureNode: null
     });
@@ -59,19 +59,19 @@ test('Axium advanced usage: StrategyStitch', (done) => {
       initialNode: stepOne
     });
   };
-  createAxium('dummy', {});
+  muxification('dummy', {});
   setTimeout(() => {
-    const axium = createAxium('Test advanced usage', {counter: createCounterConcept()});
+    const muxium = muxification('Test advanced usage', {counter: createCounterConcept()});
     const strategy = yourComposingStrategy(yourStrategyStitch);
-    const plan = axium.plan('Test Stitch', ({e__, stage, stageO}) => [
-      stageO(() => e__.axiumKick()),
+    const plan = muxium.plan('Test Stitch', ({e__, stage, stageO}) => [
+      stageO(() => e__.muxiumKick()),
       stage(({dispatch}) => {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }),
       stage(({concepts}) => {
-        const lastTopic = selectSlice(concepts, axiumSelectLastStrategy);
+        const lastTopic = selectSlice(concepts, muxiumSelectLastStrategy);
         if (lastTopic === strategy.topic) {
           expect(true).toBe(true);
           plan.conclude();
@@ -82,11 +82,11 @@ test('Axium advanced usage: StrategyStitch', (done) => {
   }, 1000);
 });
 
-test('Axium get axium state helper function', (done) => {
-  const axium = createAxium('Test advanced usage', {});
-  const plan = axium.plan('Test getAxiumState', ({stage}) => [
+test('Muxium get muxium state helper function', (done) => {
+  const muxium = muxification('Test advanced usage', {});
+  const plan = muxium.plan('Test getMuxiumState', ({stage}) => [
     stage(({concepts}) => {
-      if (getAxiumState(concepts)) {
+      if (getMuxiumState(concepts)) {
         expect(true).toBe(true);
         plan.conclude();
         done();

@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, define the Interface model file.
 $>*/
 
-import { AxiumQualities } from '../concepts/axium/qualities';
+import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { Action, Actions } from './action';
 import { AnyConcept, Concept, LoadConcepts } from './concept';
 import { Deck } from './deck';
@@ -24,7 +24,7 @@ export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, n
  * This will curry the actionSemaphoreBucket into a function that will supply type validation without the utilization of string comparison.
  * @param actionSemaphoreBucket [number, number, number, number][]
  * @returns True of False if the action's semaphore matches the curried actionSemaphoreBucket
- * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the axium.
+ * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the muxium.
  */
 export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (action) => {
   const semaphore = actionSemaphoreBucket[0];
@@ -58,7 +58,7 @@ export type UInterface<Q = void, C = void, S = void> = {
  * [TODO] - IMPORTANT
  * Exception: Outer Interface
  * Provides access to all Interfaces via concepts
- * Limited by a whitelist provided by some access property supplied to the Axium
+ * Limited by a whitelist provided by some access property supplied to the Muxium
  */
 export type OInterface<Q = void, C = void, S = void> = {
   d: Deck<C extends void ? LoadConcepts : C>

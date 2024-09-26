@@ -7,21 +7,21 @@ But if the beat has not been notified for a period. The first notification will 
 This is a combination of throttle and debounce.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
-import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createStage } from '../model/stagePlanner';
 jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {
   let timerActive = false;
-  const axium = createAxium('axium test stage planner beat', {
+  const muxium = muxification('muxium test stage planner beat', {
     counter: createCounterConcept()
   }, {logging: true, storeDialog: true});
   const beat = 105;
-  const plan = axium.plan('Stage Planner Beat Test', ({stage, stageO, e__}) => [
-    stageO(() => e__.axiumKick()),
+  const plan = muxium.plan('Stage Planner Beat Test', ({stage, stageO, e__}) => [
+    stageO(() => e__.muxiumKick()),
     stage(({concepts, dispatch, e}) => {
       console.log('HIT 1');
       timerActive = true;
@@ -29,8 +29,8 @@ test('Stage Planner Beat Test', (done) => {
         console.log('FIRE');
         timerActive = false;
       }, 1000);
-      if (selectSlice(concepts, axiumSelectOpen)) {
-        dispatch(e.axiumKick(), {
+      if (selectSlice(concepts, muxiumSelectOpen)) {
+        dispatch(e.muxiumKick(), {
           iterateStage: true,
         });
       }
@@ -48,7 +48,7 @@ test('Stage Planner Beat Test', (done) => {
         if (state) {
           expect(state.count).toBe(9);
           setTimeout(() => done(), 1000);
-          dispatch(e.axiumPreClose({exit: false}), {
+          dispatch(e.muxiumPreClose({exit: false}), {
             iterateStage: true
           });
           plan.conclude();

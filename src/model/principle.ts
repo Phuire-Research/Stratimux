@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Principle model file.
-This file allows for user to define Principle Functions, as well as for the axium to initialize those functions
+This file allows for user to define Principle Functions, as well as for the muxium to initialize those functions
 within its recursive run time.
 $>*/
 /*<#*/
@@ -10,7 +10,7 @@ import { Action, Actions } from './action';
 import { Planning } from './stagePlanner';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 import { BInterface, Comparators } from './interface';
-import { AxiumQualities } from '../concepts/axium/qualities';
+import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { Deck, accessDeck } from './deck';
 import { access } from 'fs';
 import { Qualities } from './quality';
@@ -65,7 +65,7 @@ export function registerPrincipleSubscription<T extends Deck<LoadConcepts>>(
   name: string,
   subscription: Subscription
 ) {
-  const primedRegisterSubscriber = deck.axium.e.axiumRegisterSubscriber({ subscription, name });
+  const primedRegisterSubscriber = deck.muxium.e.muxiumRegisterSubscriber({ subscription, name });
   observer.next(primedRegisterSubscriber);
 }
 

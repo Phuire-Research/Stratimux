@@ -59,7 +59,7 @@ export type Concept = {
 * state - Is the state of the concept of properties identified by the programmer to achieve functionality.
 * muxified - A simple list keeping track of what concepts have been muxified to formalize the concept. Assigned via the muxifyConcepts function.
 * qualities - Is a list of qualities that relay to the actions that mechanize the concept throughout your applications.
-* principles - Are observers of state of your application or that of external mechanisms. That emit some action into the axium based upon that observation.
+* principles - Are observers of state of your application or that of external mechanisms. That emit some action into the muxium based upon that observation.
 * mode - A mode is a function and point of recursion of the runtime that the concept may utilize to achieve a specific functionality necessary for that concept. This should rarely be expanded upon.
 * meta - Decorator property, this is for internal use.
 
@@ -79,13 +79,13 @@ export function createPrinciple$(
   conceptSemaphore: number
 ): Observable<Action>;
 ```
-Concept's principle, governs a specific set of instructions that would allow for the functionality of other libraries not designed specifically for this system. Otherwise these act as action emitters of some value being watched off premise or subscribed to within the axium.
+Concept's principle, governs a specific set of instructions that would allow for the functionality of other libraries not designed specifically for this system. Otherwise these act as action emitters of some value being watched off premise or subscribed to within the muxium.
 
-Likewise this contrasts other forms of programming. As the principle allows for the entire scope of the axium to be self sustaining without the interaction from external resources. As the createAxium function in reality is the only necessary line that is required to enable this functionality.
+Likewise this contrasts other forms of programming. As the principle allows for the entire scope of the muxium to be self sustaining without the interaction from external resources. As the muxification function in reality is the only necessary line that is required to enable this functionality.
 
 Therefore when one is designing their own concepts. The principle should be treated in the same capacity as the initialization of other programming approaches. The main difference, is to dispatch actions from the principle either via the stage paradigm or the supplied observer. The use of observer.next() is to pass actions during initialization, but should instead stage when observing state to prevent action overflow.
 
-An additional workflow to can be place to complete responsibility of the principle on its governing concepts. Is a simple enabled property that the principle may be subscribed to. This allows the principle to cancel any internal observations that would be left hot. During the closing functionality of the axium, or the removal of that governing concept.
+An additional workflow to can be place to complete responsibility of the principle on its governing concepts. Is a simple enabled property that the principle may be subscribed to. This allows the principle to cancel any internal observations that would be left hot. During the closing functionality of the muxium, or the removal of that governing concept.
 
 As this functionality lacks the addition of some abstraction to hand hold the user. The principle function must be well designed to honor its namesake. But comes with all batteries included to avoid dependency injection.
 
@@ -102,9 +102,9 @@ export type Mode = ([action, concept, action$, concepts$]: [
   MuxifiedSubject,
 ]) => void;
 ```
-This is similar to the principle function that is lacking some hand holding capacity. And if one is creating new modes to govern the flow of actions within the axium. One should be mindful of the implementation of permissiveMode, blockingMode, and ownershipMode. And should be avoided, for the sake of enhancement, is allowed for the one's own explorations with the concept.
+This is similar to the principle function that is lacking some hand holding capacity. And if one is creating new modes to govern the flow of actions within the muxium. One should be mindful of the implementation of permissiveMode, blockingMode, and ownershipMode. And should be avoided, for the sake of enhancement, is allowed for the one's own explorations with the concept.
 
-Where ownershipMode implements the blockingMode and some defaultMode as its final mode call. But if one were to use some mode that would otherwise replace ownership, but require such. One only needs to set the axium's defaultModeIndex to their newly added Mode. This can be accomplished via accessing axium's mode and state property of modeNames. Where the index of your modeName corresponds to the index that should be set to defaultModeIndex.
+Where ownershipMode implements the blockingMode and some defaultMode as its final mode call. But if one were to use some mode that would otherwise replace ownership, but require such. One only needs to set the muxium's defaultModeIndex to their newly added Mode. This can be accomplished via accessing muxium's mode and state property of modeNames. Where the index of your modeName corresponds to the index that should be set to defaultModeIndex.
 
 Otherwise if you are modifying or extending ownership's functionality and be sure to inform it that no longer responsible for itself. Including setting your own mode that extends ownershipMode and include such as part of your own initialization strategy for your concept. As ownership acts as a guard function prior to running either permissiveMode, blockingMode, or your newly set "defaultMode," or new ownershipMode to be ran that reimplements those functions directly as its own version of finalMode.
 

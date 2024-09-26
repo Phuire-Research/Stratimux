@@ -4,7 +4,7 @@ BeatSelectorChanges count variants for 100 steps.
 $>*/
 /*<#*/
 import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { AxiumDeck } from '../../../concepts/axium/axium.concept';
+import { MuxiumDeck } from '../../../concepts/muxium/muxium.concept';
 import { Deck } from '../../../model/deck';
 import { BeatSelectorChangesDeck } from '../beatSelectorChanges.concept';
 
@@ -12,7 +12,7 @@ function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export const generateRandomCountingStrategy = (deck: Deck<AxiumDeck & BeatSelectorChangesDeck>): [
+export const generateRandomCountingStrategy = (deck: Deck<MuxiumDeck & BeatSelectorChangesDeck>): [
   [number, number, number, number, number, number, number],
   ActionStrategy,
   string

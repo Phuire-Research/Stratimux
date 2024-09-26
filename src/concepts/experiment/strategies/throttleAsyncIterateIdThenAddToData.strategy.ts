@@ -8,7 +8,7 @@ $>*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { Deck } from '../../../model/deck';
-import { AxiumDeck } from '../../axium/axium.concept';
+import { MuxiumDeck } from '../../muxium/muxium.concept';
 import { ExperimentState } from '../experiment.concept';
 import {
   experimentThrottleAsyncIterateIdThenReceiveInMethod
@@ -16,7 +16,7 @@ import {
 
 const qs = {experimentThrottleAsyncIterateIdThenReceiveInMethod};
 type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};
-export type ExperimentThrottleAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck & AxiumDeck>
+export type ExperimentThrottleAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck & MuxiumDeck>
 
 export const experimentThrottleAsyncIterateIdThenAddToDataTopic = 'Throttle Async iterate experiment ID then add to strategy data';
 export function experimentThrottleAsyncIterateIdThenAddToData(

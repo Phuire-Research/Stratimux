@@ -5,7 +5,7 @@ $>*/
 import { createAction } from '../model/action';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 
-test('Axium add Concepts Strategy Test', (done) => {
+test('Muxium add Concepts Strategy Test', (done) => {
   const something = createAction('something');
   expect(something.type).toBe('something');
   const somethingElse = createAction('somethingElse', {payload: {

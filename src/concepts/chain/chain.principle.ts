@@ -8,12 +8,12 @@ import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
 import { Action } from '../../model/action';
 import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
-import { ChainQualities, ChainState, chainName } from './chain.concept';
+import { ChainPrinciple, ChainQualities, ChainState, chainName } from './chain.concept';
 import { selectMuxifiedState } from '../../model/selector';
-import { AxiumDeck, AxiumState } from '../axium/axium.concept';
+import { MuxiumDeck, MuxiumState } from '../muxium/muxium.concept';
 import { MuxifiedSubject } from '../../model/stagePlanner';
 
-export const chainPrinciple: PrincipleFunction<ChainQualities, AxiumDeck> = ({
+export const chainPrinciple: ChainPrinciple = ({
   observer,
   subscribe,
   nextC,

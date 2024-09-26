@@ -2,15 +2,15 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { selectState } from '../model/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
 import { Action } from '../model/action';
-import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
+import { muxiumPreClose } from '../concepts/muxium/qualities/preClose.quality';
 import { createQualityCard } from '../model/quality';
-import { AxiumQualities } from '../concepts/axium/qualities';
-import { AxiumDeck } from '../concepts/axium/axium.concept';
+import { MuxiumQualities } from '../concepts/muxium/qualities';
+import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
 
 type ExperimentState = {
   mock: boolean;
@@ -25,9 +25,9 @@ function experimentMockToTrueReducer(state: ExperimentState, action: Action): Ex
 }
 const experimentMockToTrue = createQualityCard({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
 
-test('Axium Principle Stage', (done) => {
+test('Muxium Principle Stage', (done) => {
   const qualities = {experimentMockToTrue};
-  const experimentPrinciple: PrincipleFunction<typeof qualities, AxiumDeck> = ({plan}) => {
+  const experimentPrinciple: PrincipleFunction<typeof qualities, MuxiumDeck> = ({plan}) => {
     const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude, e__}) => [
       stageO(() => e__.experimentMockToTrue()),
       stage(({concepts, dispatch, d}) => {
@@ -35,7 +35,7 @@ test('Axium Principle Stage', (done) => {
         if (experimentState?.mock) {
           expect(experimentState.mock).toBe(true);
           setTimeout(() => done(), 1000);
-          dispatch(d.axium.e.axiumPreClose({exit: false}), {
+          dispatch(d.muxium.e.muxiumPreClose({exit: false}), {
             iterateStage: true
           });
           planExperiment.conclude();
@@ -44,8 +44,8 @@ test('Axium Principle Stage', (done) => {
       conclude()
     ]);
   };
-  createAxium('axiumStrategyTest', {
-    experiment: createExperimentConcept<ExperimentState, AxiumDeck>(createExperimentState(), qualities, [experimentPrinciple])
+  muxification('muxiumStrategyTest', {
+    experiment: createExperimentConcept<ExperimentState, MuxiumDeck>(createExperimentState(), qualities, [experimentPrinciple])
   }, {logging: true, storeDialog: true});
 });
 /*#>*/

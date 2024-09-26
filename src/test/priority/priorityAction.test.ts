@@ -1,10 +1,10 @@
 /*<$
-For the asynchronous graph programming framework Stratimux generate a test that ensures that the priority aspect of the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that the priority aspect of the muxium
 is managing plan notifications as intended.
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { createAxium, getAxiumState } from '../../model/axium';
+import { muxification, getMuxiumState } from '../../model/muxium';
 import { select, selectPayload, selectState } from '../../model/selector';
 import { StagePlanner, createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
@@ -14,8 +14,8 @@ import { experimentPriorityAddValue } from './qualities/addValue.quality';
 import { handlePriority } from '../../model/priority';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';
-import { AxiumDeck, AxiumState } from '../../concepts/axium/axium.concept';
-import { AxiumQualities } from '../../concepts/axium/qualities';
+import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
+import { MuxiumQualities } from '../../concepts/muxium/qualities';
 
 test('Priority Action Test', (done) => {
   console.log('Priority Test');
@@ -29,24 +29,24 @@ test('Priority Action Test', (done) => {
   };
 
   const experiment = createExperimentPriorityConcept();
-  type ExperimentDeck = AxiumDeck & {
+  type ExperimentDeck = MuxiumDeck & {
     experiment: typeof experiment,
   };
-  const priorityTest = createAxium('Priority Test', {
+  const priorityTest = muxification('Priority Test', {
     experiment
   }, {logging: true, storeDialog: true, logActionStream: true});
 
-  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(({concepts, dispatch, changes, d}) => {
+  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({concepts, dispatch, changes, d}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
     console.log('HIT: ', name, changes);
     if (priorityState?.ready) {
       console.log(`${name} Priority BEGIN`);
-      dispatch(d.axium.e.axiumKick(), {
+      dispatch(d.muxium.e.muxiumKick(), {
         iterateStage: true
       });
     }
   }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number, override?: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
+  const secondStage = (name: string, newValue: number, priority: number, override?: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
     ({concepts, dispatch, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState) {
@@ -60,19 +60,19 @@ test('Priority Action Test', (done) => {
         });
       }
     }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(
+  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState && changes.length > 0) {
         // expect(order).toBe(expectedOrder);
         console.log(`${name} Incoming Value: ${priorityState.value}, expecting: ${expected}`);
         // expect(priorityState.value).toBe(expected);
-        dispatch(d.axium.e.axiumKick(), {
+        dispatch(d.muxium.e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = () => createStage<unknown, ExperimentDeck, AxiumState<AxiumQualities, any>>(({stagePlanner}) => {
+  const concludePlan = () => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({stagePlanner}) => {
     console.log(`${stagePlanner.title} Priority END`);
     stagePlanner.conclude();
     finalize();
@@ -116,17 +116,17 @@ type SetCount = {
 }
 
 test('Priority Action Manual Test', (done) => {
-  const axium = createAxium('Priority Action Manual Axium Extraction', {});
-  const sub = axium.subscribe(concepts => {
+  const muxium = muxification('Priority Action Manual Muxium Extraction', {});
+  const sub = muxium.subscribe(concepts => {
     sub.unsubscribe();
-    axium.close();
+    muxium.close();
     const {
-      axiumKick
-    } = axium.e;
-    const axiumState = getAxiumState(concepts);
+      muxiumKick
+    } = muxium.e;
+    const muxiumState = getMuxiumState(concepts);
 
-    const {body} = axiumState;
-    const kick = axiumKick();
+    const {body} = muxiumState;
+    const kick = muxiumKick();
     body.push(kick);
     // In production do not use the actionCreator via qualities, this is only for testing. Otherwise we would need to prime these semaphores
     const one = counterSetCount.actionCreator({
@@ -141,12 +141,12 @@ test('Priority Action Manual Test', (done) => {
     const four = counterSetCount.actionCreator({
       newCount: 4
     }, {priority: 25});
-    handlePriority(axiumState, one);
+    handlePriority(muxiumState, one);
     expect(body[0].type).toBe(one.type);
     expect(body[1].type).toBe(kick.type);
-    handlePriority(axiumState, two);
-    handlePriority(axiumState, three);
-    handlePriority(axiumState, four);
+    handlePriority(muxiumState, two);
+    handlePriority(muxiumState, three);
+    handlePriority(muxiumState, four);
     expect(selectPayload<SetCount>(body[0]).newCount).toBe(selectPayload<SetCount>(one).newCount);
     expect(selectPayload<SetCount>(body[1]).newCount).toBe(selectPayload<SetCount>(three).newCount);
     expect(selectPayload<SetCount>(body[2]).newCount).toBe(selectPayload<SetCount>(two).newCount);
@@ -157,20 +157,20 @@ test('Priority Action Manual Test', (done) => {
 });
 
 test('Priority Action Close Test', (done) => {
-  const axium = createAxium('Priority Action Manual Axium Extraction', {counter: createCounterConcept()});
-  const sub = axium.subscribe(concepts => {
+  const muxium = muxification('Priority Action Manual Muxium Extraction', {counter: createCounterConcept()});
+  const sub = muxium.subscribe(concepts => {
     sub.unsubscribe();
-    const axiumState = getAxiumState(concepts);
+    const muxiumState = getMuxiumState(concepts);
     const {
-      axiumLog,
-      axiumKick
-    } = axium.e;
+      muxiumLog,
+      muxiumKick
+    } = muxium.e;
 
-    const {head, body} = axiumState;
+    const {head, body} = muxiumState;
     if (head.length === 0) {
-      head.push(axiumLog());
+      head.push(muxiumLog());
     }
-    const kick = axiumKick();
+    const kick = muxiumKick();
     body.push(kick);
     // In production do not use the actionCreator via qualities, this is only for testing. Otherwise we would need to prime these semaphores
     const one = counterSetCount.actionCreator({
@@ -185,26 +185,26 @@ test('Priority Action Close Test', (done) => {
     const four = counterSetCount.actionCreator({
       newCount: 4
     }, {priority: 25});
-    handlePriority(axiumState, one);
+    handlePriority(muxiumState, one);
     expect(body[0].type).toBe(one.type);
     expect(body[1].type).toBe(kick.type);
-    handlePriority(axiumState, two);
-    handlePriority(axiumState, three);
-    handlePriority(axiumState, four);
+    handlePriority(muxiumState, two);
+    handlePriority(muxiumState, three);
+    handlePriority(muxiumState, four);
     expect(selectPayload<SetCount>(body[0]).newCount).toBe(selectPayload<SetCount>(one).newCount);
     expect(selectPayload<SetCount>(body[1]).newCount).toBe(selectPayload<SetCount>(three).newCount);
     expect(selectPayload<SetCount>(body[2]).newCount).toBe(selectPayload<SetCount>(two).newCount);
     expect(selectPayload<SetCount>(body[3]).newCount).toBe(selectPayload<SetCount>(four).newCount);
     expect(body[4].type).toBe(kick.type);
     let dispatched = false;
-    axium.subscribe(cpts => {
+    muxium.subscribe(cpts => {
       if (!dispatched) {
         dispatched = true;
-        const preClose = axium.e.axiumPreClose({
+        const preClose = muxium.e.muxiumPreClose({
           exit: false
         });
         preClose.priority = 100000;
-        axium.dispatch(preClose);
+        muxium.dispatch(preClose);
       }
       expect(selectState<CounterState>(cpts, counterName)?.count).toBe(0);
       if (!dispatched) {

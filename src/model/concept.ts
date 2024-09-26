@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Concept model file.
-This file defines the Concept abstraction that the Axium uses to Transform its functionality.
+This file defines the Concept abstraction that the Muxium uses to Transform its functionality.
 A concept is composed of name, muxified, state, qualities, semaphore, principles, and some meta attributes if necessary.
 $>*/
 /*<#*/
@@ -18,6 +18,7 @@ import {
 import { MuxifiedSubject } from './stagePlanner';
 import { Comparators, createComparator } from './interface';
 import { Qualities, Quality } from './quality';
+import { Deck } from './deck';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer<
@@ -25,10 +26,12 @@ export type Reducer<
   T = void
 > = (state: S, action: Action<T>) => S | null;
 
-export type SpecificReducer<S extends Record<string, unknown>, T = void> = (state: S, action: Action<T>) => Partial<S> | null;
+export type SpecificReducer<S extends Record<string, unknown>, T = void, C = void> =
+  (state: S, action: Action<T>, deck: Deck<C>) => Partial<S> | null;
 
 export type Method<T = void> = Observable<[Action<T>, boolean]>;
 export type Principle = Observable<Action>;
+export type ActionDeck<T = void, C = void> = {action: Action<T>, deck: Deck<C>};
 
 export type Mode = ([action, concept, action$, concepts$]: [
   Action<unknown>,
@@ -37,27 +40,27 @@ export type Mode = ([action, concept, action$, concepts$]: [
   MuxifiedSubject<any, any>,
 ]) => void;
 
-export type MethodCreatorStep<S extends Record<string, unknown>, T = void> = () => MethodCreator<S, T>;
+export type MethodCreatorStep<S extends Record<string, unknown>, T = void, C = void> = () => MethodCreator<S, T, C>;
 
-export type MethodCreator<S extends Record<string, unknown>, T = void> =
-  (concept$: Subject<Concepts>, semaphore: number) => [Method<T>, Subject<Action<T>>];
+export type MethodCreator<S extends Record<string, unknown>, T = void, C = void> =
+  (concept$: Subject<Concepts>, semaphore: number) => [Method<T>, Subject<ActionDeck<T, C>>];
 // export type MethodCreator = (concept$?: MuxifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
-export type Concept<S extends Record<string, unknown>, T = void> = {
+export type Concept<S extends Record<string, unknown>, Q = void> = {
   name: string;
   muxified: string[];
   state: S;
-  actions: Actions<T>;
-  comparators: Comparators<T>;
+  actions: Actions<Q>;
+  comparators: Comparators<Q>;
   keyedSelectors: KeyedSelectors<S>;
   selectors: Selectors<S>;
   qualities: Quality<Record<string, unknown>>[];
-  q: T extends Qualities ?
-    T
+  q: Q extends Qualities ?
+    Q
     :
     Qualities;
   semaphore: number;
-  principles?: PrincipleFunction<T, any, any>[];
+  principles?: PrincipleFunction<Q, any, S>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
@@ -87,15 +90,15 @@ export type ConceptDeck<T> = {
 
 export type ConceptsSubscriber = (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
 
-export function createConcept<S extends Record<string, unknown>, T = void>(
+export function createConcept<S extends Record<string, unknown>, Q = void>(
   name: string,
   state: S,
   _qualities?: Record<string, unknown>,
-  principles?: PrincipleFunction<T, any>[],
+  principles?: PrincipleFunction<Q, any, S>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Concept<S, T> {
+): Concept<S, Q> {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -126,13 +129,13 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
     muxified: [],
     state,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    actions: actions as Actions<T extends void ? any : T>,
+    actions: actions as Actions<Q extends void ? any : Q>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    comparators: comparators as Comparators<T extends void ? any : T>,
+    comparators: comparators as Comparators<Q extends void ? any : Q>,
     keyedSelectors: createDummyKeyedSelectors(state),
     selectors: createDummySelectors(),
     qualities: qualities ? qualities : [],
-    q: (_qualities ? _qualities : {}) as T extends Qualities ? T : Qualities,
+    q: (_qualities ? _qualities : {}) as Q extends Qualities ? Q : Qualities,
     semaphore: -1,
     principles,
     mode,
@@ -140,17 +143,17 @@ export function createConcept<S extends Record<string, unknown>, T = void>(
   };
 }
 
-export function createQuality<S extends Record<string, unknown>, T = void>(
+export function createQuality<S extends Record<string, unknown>, T = void, C = void>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
-  reducer: SpecificReducer<S, T>,
-  methodCreator?: MethodCreatorStep<S, T>,
+  reducer: SpecificReducer<S, T, C>,
+  methodCreator?: MethodCreatorStep<S, T, C>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>,
-): Quality<S, T> {
+): Quality<S, T, C> {
   return {
     actionType,
     actionCreator,
@@ -170,7 +173,7 @@ function filterSimilarQualities(concept: AnyConcept) {
   const newQualities: Quality<Record<string, unknown>>[] = [];
   const newMuxified: string[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const newPrinciples: PrincipleFunction<any>[] = [];
+  const newPrinciples: PrincipleFunction<Qualities, any, Record<string, unknown>>[] = [];
   const newMode: Mode[] = [];
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;

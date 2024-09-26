@@ -9,7 +9,7 @@ $>*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
 import { Concepts, LoadConcepts } from './concept';
-import { AxiumDeck, AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumDeck, MuxiumState } from '../concepts/muxium/muxium.concept';
 import {
   BundledSelectors,
   KeyedSelector,
@@ -18,13 +18,13 @@ import {
   selectSlice,
 } from './selector';
 import { Action, ActionType, Actions, AnyAction, createAction } from './action';
-import { axiumSelectOpen } from '../concepts/axium/axium.selector';
+import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
 import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getAxiumState, isAxiumOpen } from './axium';
+import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState, isMuxiumOpen } from './muxium';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { axiumTimeOut } from './time';
+import { muxiumTimeOut } from './time';
 import { Comparators, HInterface, UInterface } from './interface';
-import { AxiumQualities } from '../concepts/axium/qualities';
+import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { accessDeck } from './deck';
 
 export type Plan<Q = void, C = void, S = void> = {
@@ -121,21 +121,21 @@ export type StageDelimiter = {
 }
 
 /**
- * Used in principle plans that are loaded during axium initialization
+ * Used in principle plans that are loaded during muxium initialization
  */
 export const stageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-  if (isAxiumOpen(concepts)) {
+  if (isMuxiumOpen(concepts)) {
     dispatch(func(), {
       iterateStage: true
     });
   }
-}, { selectors: [axiumSelectOpen] }));
+}, { selectors: [muxiumSelectOpen] }));
 
 export const stageConclude = <Q, C, S>(): Staging<Q, C, S> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
 
 export const stageWaitForOwnershipThenIterate =
   <Q, C, S>(func: () => Action): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-    if (selectSlice(concepts, ownershipSelectInitialized) && getAxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
+    if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
       });
@@ -413,7 +413,7 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     const conclude = () => {
       this.deletePlan(plan.id);
     };
-    axiumTimeOut(this.concepts, () => {
+    muxiumTimeOut(this.concepts, () => {
       this.next(this.concepts);
       return createAction('Conclude');
     }, 0);
@@ -635,7 +635,7 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
   }
 
   protected _dispatch(
-    axiumState: AxiumState<AxiumQualities, AxiumDeck>,
+    muxiumState: MuxiumState<MuxiumQualities, MuxiumDeck>,
     plan: Plan<Q, C, S>,
     action: Action,
     options: dispatchOptions): void {
@@ -647,7 +647,7 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     [stageDelimiter, run] = handleRun(stageDelimiter, plan, action, options);
     this.stageDelimiters.set(plan.id, stageDelimiter);
     if (goodAction && run) {
-      const action$ = axiumState.action$ as Subject<Action>;
+      const action$ = muxiumState.action$ as Subject<Action>;
       if (options?.throttle !== undefined) {
         let previousExpiration = 0;
         for (let i = 0; i < stageDelimiter.prevActions.length; i++) {
@@ -708,9 +708,9 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
           action.origin = createOrigin([plan.title, plan.stage]);
           const settleOrigin = () => {
             if (options.hardOverride) {
-              HandleHardOrigin(axiumState, action);
+              HandleHardOrigin(muxiumState, action);
             } else if (options.override) {
-              HandleOrigin(axiumState, action);
+              HandleOrigin(muxiumState, action);
             } else {
               action$.next(action);
             }
@@ -732,15 +732,15 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
       console.error('DELETED PLAN: ', plan.id);
       const deleted = this.deletePlan(plan.id);
       if (deleted) {
-        axiumState.badPlans.push(plan);
+        muxiumState.badPlans.push(plan);
       }
     }
   }
 
   protected execute(plan: Plan<Q, C, S>, index: number, changes: KeyedSelector[]): void {
-    const axiumState = getAxiumState(this.concepts);
+    const muxiumState = getMuxiumState(this.concepts);
     const dispatcher: Dispatcher = (() => (action: Action, options: dispatchOptions) => {
-      this._dispatch(axiumState, plan, action, options);
+      this._dispatch(muxiumState, plan, action, options);
     }).bind(this)();
     const conclude = () => {
       this.deletePlan(plan.id);
@@ -754,7 +754,7 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
         planId: plan.id,
         conclude: conclude.bind(this)
       },
-      // [TODO WHY? Triggered by ownership test, for some reason the axium was the sole concept available here mid way through test]
+      // [TODO WHY? Triggered by ownership test, for some reason the muxium was the sole concept available here mid way through test]
       d: accessDeck(this.concepts),
       e: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].actions as Actions<any> : {},
       c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},

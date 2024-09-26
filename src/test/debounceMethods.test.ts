@@ -2,8 +2,8 @@
 For the asynchronous graph programming framework Stratimux, generate a tests and demonstrates how debouncing methods perform their functionality.
 $>*/
 /*<#*/
-import { axiumSelectLastStrategy, axiumSelectLastStrategyData } from '../concepts/axium/axium.selector';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
+import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData } from '../concepts/muxium/muxium.selector';
+import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
@@ -26,7 +26,7 @@ import {
   experimentDebounceIterateIdThenAddToDataTopic
 } from '../concepts/experiment/strategies/debounceIterateIdThenAddToData.strategy';
 import { strategyBegin } from '../model/actionStrategy';
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { createStage } from '../model/stagePlanner';
 
@@ -36,8 +36,8 @@ test('Debounce method prevent excess count', (done) => {
   const qualities = {experimentDebounceNextActionNode};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept<typeof initialState, typeof qualities>(createExperimentState(), qualities);
-  const axium = createAxium('Experiment async method creator with State', {counter: createCounterConcept(), experiment});
-  const plan = axium.plan('Experiment debounce add one', ({stage}) => [
+  const muxium = muxification('Experiment async method creator with State', {counter: createCounterConcept(), experiment});
+  const plan = muxium.plan('Experiment debounce add one', ({stage}) => [
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy(d)), {
         iterateStage: true
@@ -70,8 +70,8 @@ test('Async debounce method prevent excess count', (done) => {
   const qualities = {experimentAsyncDebounceNextActionNode};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
-  const axium = createAxium('Experiment async debounce', { counter: createCounterConcept(), experiment});
-  const plan = axium.plan('Experiment async debounce add one', ({stage}) => [
+  const muxium = muxification('Experiment async debounce', { counter: createCounterConcept(), experiment});
+  const plan = muxium.plan('Experiment async debounce add one', ({stage}) => [
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy(d)), {
         iterateStage: true
@@ -98,7 +98,7 @@ test('Async debounce method prevent excess count', (done) => {
     })
   ]);
   setTimeout(() => {
-    const secondPlan = axium.plan('Second experiment async debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan('Second experiment async debounce add one', ({stage}) => [
       stage(({dispatch, d}) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy(d)), {
           iterateStage: true
@@ -121,16 +121,16 @@ test('Async debounce method prevent excess count', (done) => {
           console.log('FINAL Async 2 Debounce HIT 4', counterState);
           expect(counterState.count).toBe(2);
           secondPlan.conclude();
-          axium.close();
+          muxium.close();
           setTimeout(() => {
             done();
           }, 500);
         }
       })
     ]);
-    // Axium must be primed, therefore we kick it back into gear.
+    // Muxium must be primed, therefore we kick it back into gear.
     // Downside of halting quality.
-    axium.dispatch(axium.e.axiumKick());
+    muxium.dispatch(muxium.e.muxiumKick());
   }, 1000);
 });
 
@@ -140,8 +140,8 @@ test('Debounce Method Test with State id comparison', (done) => {
   };
   const initialState = createExperimentState();
   const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
-  const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = axium.plan('Debounce Iterate id with concepts', ({stage}) => [
+  const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
+  const plan = muxium.plan('Debounce Iterate id with concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -153,8 +153,8 @@ test('Debounce Method Test with State id comparison', (done) => {
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
         console.log('Debounce: ', experimentState.id, lastStrategy, data);
         dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(d, experimentState.id)), {
           iterateStage: true
@@ -164,8 +164,8 @@ test('Debounce Method Test with State id comparison', (done) => {
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
         console.log('Debounce: ', experimentState.id, lastStrategy, data);
         dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(d, experimentState.id)), {
           iterateStage: true
@@ -173,12 +173,12 @@ test('Debounce Method Test with State id comparison', (done) => {
       }
     }),
     stage(({concepts}) => {
-      const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+      const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
         const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
           concepts,
-          axiumSelectLastStrategyData
+          muxiumSelectLastStrategyData
         );
         console.log('Debounce: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === experimentDebounceIterateIdThenAddToDataTopic) {
@@ -195,7 +195,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = axium.plan('Second experiment debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan('Second experiment debounce add one', ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         console.log('2 Debounce initial dispatch');
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -208,8 +208,8 @@ test('Debounce Method Test with State id comparison', (done) => {
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
           console.log('2 Debounce: ', experimentState.id, lastStrategy, data);
           dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(d, experimentState.id)), {
             iterateStage: true
@@ -219,8 +219,8 @@ test('Debounce Method Test with State id comparison', (done) => {
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
           console.log('2 Debounce: ', experimentState.id, lastStrategy, data);
           dispatch(strategyBegin(experimentDebounceIterateIdThenAddToData(d, experimentState.id)), {
             iterateStage: true
@@ -230,10 +230,10 @@ test('Debounce Method Test with State id comparison', (done) => {
       stage(({concepts}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
           const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
             concepts,
-            axiumSelectLastStrategyData
+            muxiumSelectLastStrategyData
           );
           console.log('2 Debounce: ', experimentState.id, lastStrategy, data);
           if (lastStrategy === experimentDebounceIterateIdThenAddToDataTopic) {
@@ -243,7 +243,7 @@ test('Debounce Method Test with State id comparison', (done) => {
               expect(data.setId).toBe(5);
               expect(experimentState.id).toBe(6);
               secondPlan.conclude();
-              axium.close();
+              muxium.close();
               done();
             }
           }
@@ -251,7 +251,7 @@ test('Debounce Method Test with State id comparison', (done) => {
       })
     ]);
     // Kick
-    axium.dispatch(axium.e.axiumKick());
+    muxium.dispatch(muxium.e.muxiumKick());
   }, 1000);
 });
 
@@ -259,8 +259,8 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   const qualities = {experimentDebounceAsyncIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
-  const axium = createAxium('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = axium.plan('Debounce Async Iterate id with concepts', ({stage}) => [
+  const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
+  const plan = muxium.plan('Debounce Async Iterate id with concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -272,8 +272,8 @@ test('Debounce Async Method Test with State id comparison', (done) => {
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
         console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
         dispatch(strategyBegin(experimentDebounceAsyncIterateIdThenAddToData(d, experimentState.id)), {
           iterateStage: true
@@ -283,8 +283,8 @@ test('Debounce Async Method Test with State id comparison', (done) => {
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-        const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+        const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+        const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
         console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
         dispatch(strategyBegin(experimentDebounceAsyncIterateIdThenAddToData(d, experimentState.id)), {
           iterateStage: true
@@ -294,10 +294,10 @@ test('Debounce Async Method Test with State id comparison', (done) => {
     stage(({concepts}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
-        const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+        const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
         const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
           concepts,
-          axiumSelectLastStrategyData
+          muxiumSelectLastStrategyData
         );
         console.log('Async Debounce: ', experimentState.id, lastStrategy, data);
         if (lastStrategy === experimentDebounceAsyncIterateIdThenAddToDataTopic) {
@@ -314,7 +314,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = axium.plan('Second experiment async debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan('Second experiment async debounce add one', ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
@@ -328,8 +328,8 @@ test('Debounce Async Method Test with State id comparison', (done) => {
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
           console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
           const strategy = experimentDebounceAsyncIterateIdThenAddToData(d, experimentState.id);
           strategy.topic += 2;
@@ -341,8 +341,8 @@ test('Debounce Async Method Test with State id comparison', (done) => {
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
-          const data = selectSlice<ExperimentState>(concepts, axiumSelectLastStrategyData);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
+          const data = selectSlice<ExperimentState>(concepts, muxiumSelectLastStrategyData);
           console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
           const strategy = experimentDebounceAsyncIterateIdThenAddToData(d, experimentState.id);
           strategy.topic += 2;
@@ -354,10 +354,10 @@ test('Debounce Async Method Test with State id comparison', (done) => {
       stage(({concepts}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
-          const lastStrategy = selectSlice(concepts, axiumSelectLastStrategy);
+          const lastStrategy = selectSlice(concepts, muxiumSelectLastStrategy);
           const data = selectSlice<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(
             concepts,
-            axiumSelectLastStrategyData
+            muxiumSelectLastStrategyData
           );
           console.log('2 Async Debounce: ', experimentState.id, lastStrategy, data);
           console.log('2 Async Debounce: ', experimentDebounceAsyncIterateIdThenAddToDataTopic + 2);
@@ -368,7 +368,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
               expect(data.setId).toBe(5);
               expect(experimentState.id).toBe(6);
               secondPlan.conclude();
-              axium.close();
+              muxium.close();
               done();
             }
           }
@@ -376,7 +376,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
       })
     ]);
     // Kick
-    axium.dispatch(axium.e.axiumKick());
+    muxium.dispatch(muxium.e.muxiumKick());
   }, 1000);
 });
 /*#>*/

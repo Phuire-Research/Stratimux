@@ -4,7 +4,7 @@ in the current strategy to the state's actionQue.
 $>*/
 /*<#*/
 import { strategySuccess } from '../../../model/actionStrategy';
-import { axiumConcludeType } from '../../axium/qualities/conclude.quality';
+import { muxiumConcludeType } from '../../muxium/qualities/conclude.quality';
 import { ExperimentState } from '../experiment.concept';
 import { createQualityCard } from '../../../model/quality';
 
@@ -13,7 +13,7 @@ export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
   reducer: (state, action) => {
     if (action.strategy) {
       const nextAction = strategySuccess(action.strategy);
-      if (nextAction.type !== axiumConcludeType) {
+      if (nextAction.type !== muxiumConcludeType) {
         return {
           actionQue: [... state.actionQue, nextAction]
         };

@@ -15,8 +15,8 @@ export enum failureConditions {
   ownershipExpired = 'ownershipExpired',
   ownershipBlocked = 'ownershipBlocked',
   controllerExpired = 'controllerExpired',
-  axiumExpired = 'axiumExpired',
-  axiumBadGeneration = 'axiumBadGeneration'
+  muxiumExpired = 'muxiumExpired',
+  muxiumBadGeneration = 'muxiumBadGeneration'
 }
 
 export const strategyData_appendFailure = (strategy: ActionStrategy, condition: failureConditions | string): Record<string, unknown> => {

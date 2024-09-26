@@ -2,13 +2,13 @@
 For the asynchronous graph programming framework Stratimux, define the ActionStrategy model file.
 This file is what allows for Stratimux to be provably terminating.
 As each strategy constitutes a finite set of symbols that must reach a conclusion.
-Using this data structure we can constrain the Axium's recursive functionality to the length
+Using this data structure we can constrain the Muxium's recursive functionality to the length
 of the strategies that currently exist within it.
 This file likewise defines a series of consumer functions that accept an ActionStrategy and data parameter; that
 then returns a new ActionStrategy based on the inputs.
 $>*/
 /*<#*/
-import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { muxiumConclude, muxiumConcludeType } from '../concepts/muxium/qualities/conclude.quality';
 import { Action, ActionType, createAction, nullActionType } from './action';
 import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
@@ -17,8 +17,8 @@ import { KeyedSelector } from './selector';
  * ActionNode - Control Structure used by ActionStrategy
  * @param action - Action to be dispatched.
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
- * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
- * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * * If set to null, will default to Muxium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Muxium Conclude Type if left blank or set to null.
  * @param payload - `optional` Will set the payload of the action.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
  * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
@@ -28,8 +28,8 @@ import { KeyedSelector } from './selector';
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
  * @param denoter - `optional` String that denotes the end of the ActionList sentence.
  *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
- * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
- * @Output Via Axium set Mode to Ownership Mode.
+ * @ExampleSentence ${preposition: 'Via'} Muxium set Mode to ${denoter: 'Ownership Mode.'}
+ * @Output Via Muxium set Mode to Ownership Mode.
  */
 export interface ActionNode {
   action?: Action<unknown>;
@@ -51,8 +51,8 @@ export interface ActionNode {
 /**
  * Options list
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
- * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
- * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * * If set to null, will default to Muxium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Muxium Conclude Type if left blank or set to null.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
  * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
  * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
@@ -61,8 +61,8 @@ export interface ActionNode {
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
  * @param denoter - `optional` String that denotes the end of the ActionList sentence.
  *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
- * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
- * @Output Via Axium set Mode to Ownership Mode.
+ * @ExampleSentence ${preposition: 'Via'} Muxium set Mode to ${denoter: 'Ownership Mode.'}
+ * @Output Via Muxium set Mode to Ownership Mode.
  */
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
@@ -273,7 +273,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, un
   if (strategy.currentNode.action !== null) {
     return strategy.currentNode.action;
   } else {
-    return axiumConclude();
+    return muxiumConclude();
   }
 };
 
@@ -347,7 +347,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
     }
     const origin = strategy.currentNode.action?.origin;
     const conclude: ActionNode = {
-      actionType: axiumConcludeType,
+      actionType: muxiumConcludeType,
       successNode: null,
       failureNode: null,
       lastActionNode: strategy.currentNode,
@@ -438,7 +438,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
       return act;
     }
     const conclude: ActionNode = {
-      actionType: axiumConcludeType,
+      actionType: muxiumConcludeType,
       successNode: null,
       failureNode: null,
       lastActionNode: strategy.currentNode,
@@ -536,7 +536,7 @@ export const strategyDecide = (
     return act;
   }
   const conclude: ActionNode = {
-    actionType: axiumConcludeType,
+    actionType: muxiumConcludeType,
     successNode: null,
     failureNode: null,
     lastActionNode: strategy.currentNode,
@@ -595,7 +595,7 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
     }
     return {...newNode.action} as Action;
   } else {
-    return axiumConclude({origin: _strategy.currentNode.action?.origin});
+    return muxiumConclude({origin: _strategy.currentNode.action?.origin});
   }
 };
 

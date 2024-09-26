@@ -13,11 +13,11 @@ import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality'
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { Quality } from '../../../model/quality';
-import { AxiumDeck } from '../../axium/axium.concept';
+import { MuxiumDeck } from '../../muxium/muxium.concept';
 
 const qs = {experimentCheckInStrategy};
 type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};
-export type ExperimentCountingDeck = Deck<OwnershipDeck & CounterDeck & ExperimentDeck & AxiumDeck>
+export type ExperimentCountingDeck = Deck<OwnershipDeck & CounterDeck & ExperimentDeck & MuxiumDeck>
 
 export const experimentCountingTopic = 'Counting Strategy';
 export function experimentCountingStrategy(deck: ExperimentCountingDeck): ActionStrategy {

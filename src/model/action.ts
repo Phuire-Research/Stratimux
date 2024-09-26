@@ -6,18 +6,18 @@ $>*/
 import { AnyConcept, Concept, Concepts, LoadConcepts } from './concept';
 import { ActionStrategy } from './actionStrategy';
 import { KeyedSelector } from './selector';
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 import { Quality } from './quality';
-import { AxiumBadActionPayload, AxiumQualities } from '../concepts/axium/qualities';
+import { MuxiumBadActionPayload, MuxiumQualities } from '../concepts/muxium/qualities';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
 //   Logical determinations such as these will be determined in the future via generation over hand placement.
-const axiumConcludeType: ActionType = 'Conclude';
-const axiumBadActionType: ActionType = 'Axium received a Bad Action';
-const axiumSetBlockingModeType: ActionType = 'set Axium to Blocking Mode';
-const axiumOpenType: ActionType = 'Open Axium';
+const muxiumConcludeType: ActionType = 'Conclude';
+const muxiumBadActionType: ActionType = 'Muxium received a Bad Action';
+const muxiumSetBlockingModeType: ActionType = 'set Muxium to Blocking Mode';
+const muxiumOpenType: ActionType = 'Open Muxium';
 
 export type ActionType = string;
 export type Action<T = void> = {
@@ -30,7 +30,7 @@ export type Action<T = void> = {
     agreement?: number;
     expiration: number;
     priority?: number;
-    axium?: string;
+    muxium?: string;
     origin?: string;
 };
 
@@ -44,7 +44,7 @@ export type AnyAction = {
     agreement?: number;
     expiration: number;
     priority?: number;
-    axium?: string;
+    muxium?: string;
     origin?: string;
 }
 
@@ -76,7 +76,7 @@ export type ActionOptions = {
     agreement?: number;
     expiration?: number;
     priority?: number;
-    axium?: string;
+    muxium?: string;
     origin?: string;
 };
 
@@ -89,7 +89,7 @@ export type ActionWithPayloadOptions<T = void> = {
     agreement?: number;
     expiration?: number;
     priority?: number;
-    axium?: string;
+    muxium?: string;
     origin?: string;
 };
 
@@ -113,35 +113,35 @@ export function primeAction<T>(concepts: Concepts, action: Action<T>): Action<T>
     }
   }
   if (semaphore[2] !== -1 && action.expiration) {
-    let axium;
-    if (action.axium) {
-      axium = action.axium;
+    let muxium;
+    if (action.muxium) {
+      muxium = action.muxium;
     } else {
-      axium = (concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>).name;
+      muxium = (concepts[0].state as MuxiumState<MuxiumQualities, LoadConcepts>).name;
     }
     const newAction = {
       ...action,
       semaphore: semaphore,
-      axium,
+      muxium,
     } as Action<T>;
     if (newAction.strategy) {
       newAction.strategy.currentNode.action = newAction;
     }
     return newAction;
   }
-  const badAction: Action<AxiumBadActionPayload> = {
-    type: axiumBadActionType,
-    payload: createPayload<AxiumBadActionPayload>({badActions: [action]}),
+  const badAction: Action<MuxiumBadActionPayload> = {
+    type: muxiumBadActionType,
+    payload: createPayload<MuxiumBadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
-    semaphore: getSemaphore(concepts, concepts[0].name, axiumBadActionType)
+    semaphore: getSemaphore(concepts, concepts[0].name, muxiumBadActionType)
   };
   if (action.strategy) {
     badAction.strategy = action.strategy;
     badAction.strategy.currentNode.action = badAction as Action<any>;
     if (expired) {
-      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumExpired);
+      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.muxiumExpired);
     } else {
-      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.axiumBadGeneration);
+      badAction.strategy.data = strategyData_appendFailure(badAction.strategy, failureConditions.muxiumBadGeneration);
     }
   }
   return badAction as Action<any>;
@@ -164,8 +164,8 @@ export const refreshAction = (action: Action): Action => {
 };
 
 export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
-  const axiumState = concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>;
-  const cachedSemaphores = axiumState.cachedSemaphores;
+  const muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, LoadConcepts>;
+  const cachedSemaphores = muxiumState.cachedSemaphores;
   const conceptMap = cachedSemaphores.get(conceptName);
   const special = getSpecialSemaphore(actionType);
   if (conceptMap) {
@@ -189,7 +189,7 @@ const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphor
 };
 
 export function createCachedSemaphores(concepts: Concepts): Map<string, Map<string, [number, number, number, number]>> {
-  const generation = (concepts[0].state as AxiumState<AxiumQualities, LoadConcepts>).generation;
+  const generation = (concepts[0].state as MuxiumState<MuxiumQualities, LoadConcepts>).generation;
   const newCachedSemaphores = new Map<string, Map<string, [number, number, number, number]>>();
 
   forEachConcept(concepts, ((concept, ci) => {
@@ -212,19 +212,19 @@ export function createCachedSemaphores(concepts: Concepts): Map<string, Map<stri
  */
 export function getSpecialSemaphore(type: ActionType) {
   switch (type) {
-  case axiumBadActionType: {
+  case muxiumBadActionType: {
     return 1;
   }
   case nullActionType: {
     return 2;
   }
-  case axiumConcludeType: {
+  case muxiumConcludeType: {
     return 3;
   }
-  case axiumSetBlockingModeType: {
+  case muxiumSetBlockingModeType: {
     return 4;
   }
-  // case axiumOpenType: {
+  // case muxiumOpenType: {
   //   return 5;
   // }
   default: {

@@ -1,7 +1,7 @@
 /*<$
 For the asynchronous graph programming framework Stratimux and Experiment Concept,
 generate a single step strategy that will iterate the Experiment state ID,
-then debounce and asynchronously notify the Axium of the strategy's conclusion.
+then debounce and asynchronously notify the Muxium of the strategy's conclusion.
 $>*/
 /*<#*/
 import { ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';

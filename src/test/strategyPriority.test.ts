@@ -3,20 +3,20 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 with priority are working as intended.
 $>*/
 /*<#*/
-import { createAxium, getAxiumState, isAxiumOpen } from '../model/axium';
+import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { createStage } from '../model/stagePlanner';
 import { generateRandomCountingStrategy } from './random/generateCountingStrategy.strategy';
-import { axiumSelectLastStrategy } from '../concepts/axium/axium.selector';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
+import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
+import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { handlePriority } from '../model/priority';
 
-test('Axium Counting Strategy Priority Test', (done) => {
-  const axium = createAxium('axiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const deck = axium.deck;
+test('Muxium Counting Strategy Priority Test', (done) => {
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+  const deck = muxium.deck;
   const concluded = [false, false, false];
   const [count1, strategy1] = generateRandomCountingStrategy(deck.d, 0);
   strategy1.topic += 1;
@@ -26,37 +26,37 @@ test('Axium Counting Strategy Priority Test', (done) => {
   const [count3, strategy3] = generateRandomCountingStrategy(deck.d, 0);
   strategy3.priority = 50;
   strategy1.topic += 3;
-  const plan = axium.plan('Counting Strategy with Priority Plan',
+  const plan = muxium.plan('Counting Strategy with Priority Plan',
     ({stage}) => [
       stage(({concepts, dispatch, d}) => {
-        if (isAxiumOpen(concepts)) {
-          handlePriority(getAxiumState(concepts), strategyBegin(strategy1));
-          handlePriority(getAxiumState(concepts), strategyBegin(strategy2));
-          handlePriority(getAxiumState(concepts), strategyBegin(strategy3));
+        if (isMuxiumOpen(concepts)) {
+          handlePriority(getMuxiumState(concepts), strategyBegin(strategy1));
+          handlePriority(getMuxiumState(concepts), strategyBegin(strategy2));
+          handlePriority(getMuxiumState(concepts), strategyBegin(strategy3));
           console.log('COUNT ONE STRATEGY OUTCOME: ', count1);
           console.log('COUNT TWO STRATEGY OUTCOME: ', count2);
           console.log('COUNT THREE STRATEGY OUTCOME: ', count3);
-          console.log('CHECK 1', d.axium, 'CHECK 2', d.counter, 'CHECK 3', d);
-          dispatch(d.axium.e.axiumKick(), {
+          console.log('CHECK 1', d.muxium, 'CHECK 2', d.counter, 'CHECK 3', d);
+          dispatch(d.muxium.e.muxiumKick(), {
             iterateStage: true
           });
         }
       }),
       stage(({concepts}) => {
-        const axiumState = getAxiumState(concepts);
+        const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
-        // console.log('CHECK COUNT', counter, 'HEAD', axiumState.head, 'BODY', axiumState.body, 'TAIL', axiumState.tail);
-        if (axiumState.lastStrategy === strategy1.topic && !concluded[0]) {
+        // console.log('CHECK COUNT', counter, 'HEAD', muxiumState.head, 'BODY', muxiumState.body, 'TAIL', muxiumState.tail);
+        if (muxiumState.lastStrategy === strategy1.topic && !concluded[0]) {
           console.log('CHECK COUNT ONE', counter?.count, count1);
           concluded[0] = true;
           expect(counter?.count).toBe(count1);
         }
-        if (axiumState.lastStrategy === strategy2.topic && !concluded[1]) {
+        if (muxiumState.lastStrategy === strategy2.topic && !concluded[1]) {
           console.log('CHECK COUNT TWO', counter?.count, count2);
           concluded[1] = true;
           expect(counter?.count).toBe(count1 + count2 + count3);
         }
-        if (axiumState.lastStrategy === strategy3.topic && !concluded[2]) {
+        if (muxiumState.lastStrategy === strategy3.topic && !concluded[2]) {
           console.log('CHECK COUNT THREE', counter?.count, count3);
           concluded[2] = true;
           expect(counter?.count).toBe(count1 + count3);
@@ -65,9 +65,9 @@ test('Axium Counting Strategy Priority Test', (done) => {
           expect(counter?.count).toBe(count1 + count2 + count3);
           setTimeout(() => {done();}, 500);
           plan.conclude();
-          axium.close();
+          muxium.close();
         }
-      }, {selectors: [axiumSelectLastStrategy]})
+      }, {selectors: [muxiumSelectLastStrategy]})
       // })
     ]);
 });

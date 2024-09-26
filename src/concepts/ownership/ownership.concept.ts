@@ -1,8 +1,8 @@
 /*<$
 For the asynchronous graph programming framework Stratimux generate the Ownership Concept,
-that will manage Stratimux's locking functionality if loaded into the Axium.
+that will manage Stratimux's locking functionality if loaded into the Muxium.
 This is accomplished via a ticketing system that will set actions to pending if their associated property is currently owned via strategy
-that is currently performing operations within the Axium.
+that is currently performing operations within the Muxium.
 $>*/
 /*<#*/
 import { Concept, createConcept } from '../../model/concept';
@@ -17,6 +17,8 @@ import { ownershipClearStrategyStubsFromLedgerAndSelf } from './qualities/clearS
 import { ownershipClearPendingActions } from './qualities/clearPendingActions.quality';
 import { ownershipClearPendingActionsOfStrategy } from './qualities/clearPendingActionsOfStrategy.quality';
 import { ownershipResetOwnershipLedger } from './qualities/resetOwnershipLedger.quality';
+import { MuxiumDeck } from '../muxium/muxium.concept';
+import { PrincipleFunction } from '../../model/principle';
 
 export type OwnershipState = {
   initialized: boolean;
@@ -53,6 +55,8 @@ const ownershipQualities = {
 };
 
 export type OwnershipQualities = typeof ownershipQualities;
+
+export type OwnershipPrinciple = PrincipleFunction<OwnershipQualities, OwnershipDeck & MuxiumDeck, OwnershipState>
 
 export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
   return createConcept<OwnershipState, OwnershipQualities>(

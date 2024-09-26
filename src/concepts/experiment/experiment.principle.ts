@@ -8,7 +8,7 @@ import { PrincipleFunction } from '../../model/principle';
 import { StagePlanner, createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 import { selectMuxifiedState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
-import { axiumRegisterStagePlanner } from '../axium/qualities/registerStagePlanner.quality';
+import { muxiumRegisterStagePlanner } from '../muxium/qualities/registerStagePlanner.quality';
 
 export const experimentActionQuePrincipleCreator = <T>() => {
   const experimentActionQuePrinciple: PrincipleFunction<T> = ({
@@ -20,7 +20,7 @@ export const experimentActionQuePrincipleCreator = <T>() => {
     let readyToGo = false;
     const planExperiment: StagePlanner = plan('Experiment Principle Plan', ({d__}) => [
       stageWaitForOpenThenIterate(() =>
-        (d__.axium.e.axiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))
+        (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))
       ),
       createStage(({concepts}) => {
         const experimentState = selectMuxifiedState<ExperimentState>(concepts, conceptSemaphore);

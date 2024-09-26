@@ -6,7 +6,7 @@ $>*/
 import { nullReducer } from '../../../model/quality';
 import { createAsyncMethod } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { axiumConclude } from '../../axium/qualities/conclude.quality';
+import { muxiumConclude } from '../../muxium/qualities/conclude.quality';
 import { createQualityCard } from '../../../model/quality';
 
 export const experimentTimerEmitAction = createQualityCard({
@@ -17,7 +17,7 @@ export const experimentTimerEmitAction = createQualityCard({
       if (action.strategy) {
         controller.fire(strategySuccess(action.strategy));
       } else {
-        controller.fire(axiumConclude());
+        controller.fire(muxiumConclude());
       }
     }, 50);
   })

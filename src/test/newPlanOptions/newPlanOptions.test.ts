@@ -4,14 +4,14 @@ test to ensure that they can change the priority of their stages and again for b
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { createAxium } from '../../model/axium';
+import { muxification } from '../../model/muxium';
 import { createStage } from '../../model/stagePlanner';
 import { KeyedSelector, selectSlice } from '../../model/selector';
 import { planOptionsSelect } from './newPlanOptions.selectors';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 
 test('New Plan Options Selector Test', (done) => {
-  const planNewStageSelectors = createAxium('Plan New Stage Selectors Test', {
+  const planNewStageSelectors = muxification('Plan New Stage Selectors Test', {
     experiment: createExperimentPlanOptionsConcept()
   });
   let count = 0;
@@ -98,7 +98,7 @@ test('New Plan Options Selector Test', (done) => {
 // As if you set the tests to explicitly fail, the third stage will repeat over and over again despite the iterateStage...
 // This is a non-trivial example of an abstraction leaking an implementation detail towards the handling of expect in jest.
 test('New Plan Options Priority Test', (done) => {
-  const planNewStagePriority = createAxium('Plan New Stage Priority Test', {
+  const planNewStagePriority = muxification('Plan New Stage Priority Test', {
     experiment: createExperimentPlanOptionsConcept()
   });
   let count = 0;

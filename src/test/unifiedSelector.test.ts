@@ -5,7 +5,7 @@ That specifically you can utilize the incoming semaphore to create new KeyedSele
 $>*/
 /*<#*/
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import {
   KeyedSelector,
   createConceptKeyedSelector,
@@ -17,10 +17,10 @@ import {
 import { createStage } from '../model/stagePlanner';
 
 test('Muxified Selector Test', (done) => {
-  const axium = createAxium('Selector Test via Counter', {
+  const muxium = muxification('Selector Test via Counter', {
     counter: createCounterConcept()
   }, {logging: true, storeDialog: true});
-  const plan = axium.plan('Plan: Counter Selector', ({stage}) => [
+  const plan = muxium.plan('Plan: Counter Selector', ({stage}) => [
     stage(({concepts}) => {
       console.log('FIRED!!!');
       const concept = createConceptKeyedSelector<CounterState>(counterName, 'count');

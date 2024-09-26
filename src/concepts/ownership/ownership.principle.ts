@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate a principle will manage the ownership's pendingActions based upon the current
 ownershipLedger's contents. Only actions that are first in all lines of their tickets set the the strategy's KeyedSelectors,
-may be dispatched into the Axium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
+may be dispatched into the Muxium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
 $>*/
 /*<#*/
 import { PrincipleFunction } from '../../model/principle';
-import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
+import { OwnershipDeck, OwnershipPrinciple, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
 import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectMuxifiedState } from '../../model/selector';
@@ -14,9 +14,9 @@ import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
-import { accessAxium, getAxiumState } from '../../model/axium';
-import { AxiumBadActionPayload } from '../axium/qualities';
-import { AxiumDeck } from '../axium/axium.concept';
+import { accessMuxium, getMuxiumState } from '../../model/muxium';
+import { MuxiumBadActionPayload } from '../muxium/qualities';
+import { MuxiumDeck } from '../muxium/muxium.concept';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -26,7 +26,7 @@ function denoteExpiredPending(action: Action): Action {
   return action;
 }
 
-export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, OwnershipDeck & AxiumDeck> = ({
+export const ownershipPrinciple: OwnershipPrinciple = ({
   observer,
   plan,
   nextC,
@@ -35,7 +35,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
   let initDispatch = false;
   let finalCheck = true;
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
+    stageO(() => d__.muxium.e.muxiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
     stage(({concepts, d}) => {
       let newConcepts = concepts;
       let ownershipState = selectMuxifiedState<OwnershipState>(newConcepts, conceptSemaphore);
@@ -66,7 +66,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
             nextC(newConcepts);
             observer.next(newAction);
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
-            const payload: AxiumBadActionPayload = {
+            const payload: MuxiumBadActionPayload = {
               badActions: []
             };
             const newPending: Action[] = [];
@@ -78,7 +78,7 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
               }
             }
             if (payload.badActions.length > 0) {
-              newAction = d.axium.e.axiumBadAction(payload) as AnyAction;
+              newAction = d.muxium.e.muxiumBadAction(payload) as AnyAction;
               ownershipState.pendingActions = newPending;
               nextC(newConcepts);
               observer.next(newAction);
@@ -106,16 +106,16 @@ export const ownershipPrinciple: PrincipleFunction<OwnershipQualities, Ownership
 /*<$
 For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a principle that manage clear lines of expired tickets.
 This functionality is chiefly important for Actions that have moved off the current process, but will return after completing
-their strategies in outside Axiums.
+their strategies in outside Muxiums.
 $>*/
 /*<#*/
-export const ownershipExpirationPrinciple: PrincipleFunction<OwnershipQualities, OwnershipDeck & AxiumDeck> = ({
+export const ownershipExpirationPrinciple: OwnershipPrinciple = ({
   plan,
   nextC,
   conceptSemaphore
 }) => {
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => (d__.axium.e.axiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
+    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
     stage(({concepts}) => {
       const ownershipState = selectMuxifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {

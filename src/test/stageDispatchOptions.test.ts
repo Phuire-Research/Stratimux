@@ -2,20 +2,20 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure the stage planner and its options are working as intended.
 $>*/
 /*<#*/
-import { createAxium, getAxiumState } from '../model/axium';
+import { muxification, getMuxiumState } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 
-test('Axium Stage Dispatch Options Test', (done) => {
+test('Muxium Stage Dispatch Options Test', (done) => {
   let runCount = 0;
-  const axium = createAxium('axiumStageDispatchOptionsTest', {counter: createCounterConcept()}, {logging: true});
-  const sub = axium.subscribe((concepts) => {
-    const axiumState = getAxiumState(concepts);
-    if (axiumState.badPlans.length > 0) {
-      const badPlan = axiumState.badPlans[0];
+  const muxium = muxification('muxiumStageDispatchOptionsTest', {counter: createCounterConcept()}, {logging: true});
+  const sub = muxium.subscribe((concepts) => {
+    const muxiumState = getMuxiumState(concepts);
+    if (muxiumState.badPlans.length > 0) {
+      const badPlan = muxiumState.badPlans[0];
       const counter = selectState<CounterState>(concepts, counterName);
-      console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter?.count);
+      console.log('Stage Ran Away, badPlans.length: ', muxiumState.badPlans.length, 'Count: ', counter?.count);
       plan.conclude();
       sub.unsubscribe();
       expect(badPlan.stageFailed).toBe(2);
@@ -23,7 +23,7 @@ test('Axium Stage Dispatch Options Test', (done) => {
       setTimeout(() => {done();}, 500);
     }
   });
-  const plan = axium.plan('Stage DispatchOptions Test',
+  const plan = muxium.plan('Stage DispatchOptions Test',
     ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         const counter = selectState<CounterState>(concepts, counterName);
