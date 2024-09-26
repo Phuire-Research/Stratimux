@@ -11,7 +11,7 @@ import { createQualityCard } from '../../../model/quality';
 export const muxiumStitch = createQualityCard({
   type: 'Muxium Stitch',
   reducer: defaultReducer,
-  methodCreator: () => createMethod((action) => {
+  methodCreator: () => createMethod(({action}) => {
     if (action.strategy) {
       const nextStrategy = strategySuccess(action.strategy);
       if (nextStrategy.strategy) {

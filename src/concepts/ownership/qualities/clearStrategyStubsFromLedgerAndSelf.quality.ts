@@ -37,7 +37,7 @@ export const ownershipClearStrategyStubsFromLedgerAndSelf = createQualityCard<Ow
       ownershipLedger: ownershipLedger
     };
   },
-  methodCreator: () => createMethodDebounce((action) => {
+  methodCreator: () => createMethodDebounce(({action}) => {
     if (action.strategy) {
       action.strategy.stubs = undefined;
       return strategySuccess(action.strategy);

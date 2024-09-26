@@ -37,10 +37,11 @@ export const permissiveMode: Mode = (
     if (action.semaphore[3] !== 4) {
       const deck = muxiumState.deck.d as unknown as Deck<void>;
       if (action.semaphore[2] === muxiumState.generation && action.expiration > Date.now()) {
+        const self = concepts[action.semaphore[0]].qualities[action.semaphore[1]].actionCreator;
         let subject: Subject<ActionDeck>;
         if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
           subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<ActionDeck>;
-          subject.next({action, deck});
+          subject.next({action, deck, self});
         }
         const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
         const state = {...concepts[action.semaphore[0]].state};
@@ -85,6 +86,7 @@ export const blockingMode: Mode = (
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
       const state = {...concepts[action.semaphore[0]].state};
       const deck = muxiumState.deck.d as unknown as Deck<void>;
+      const self = concepts[action.semaphore[0]].qualities[action.semaphore[1]].actionCreator;
       const newState = reduce(state, action, deck);
       if (newState !== null) {
         const newConcepts = {...concepts};
@@ -101,7 +103,7 @@ export const blockingMode: Mode = (
       let subject: Subject<ActionDeck>;
       if (concepts[action.semaphore[0]].qualities[action.semaphore[1]].method) {
         subject = concepts[action.semaphore[0]].qualities[action.semaphore[1]].subject as Subject<ActionDeck>;
-        subject.next({action, deck});
+        subject.next({action, deck, self});
       }
     } else {
       const nextAction = primeAction(concepts, action) as AnyAction;

@@ -200,7 +200,8 @@ export function debounceAction<T, C>(
             };
             subscriber.next({
               action: conclude,
-              deck: value.deck
+              deck: value.deck,
+              self: value.self
             });
           }
         },
@@ -250,7 +251,8 @@ function throttle<T, C>(
         ...value.action,
         ...muxiumConclude()
       } as Action<T>,
-      deck: value.deck
+      deck: value.deck,
+      self: value.self
       });
     };
 

@@ -16,7 +16,7 @@ export const experimentIterateIdThenReceiveInMethod = createQualityCard<Experime
       id: state.id + 1
     };
   },
-  methodCreator: () => createMethodWithState((action, state) => {
+  methodCreator: () => createMethodWithState(({action, state}) => {
     if (action.strategy) {
       const data = strategyData_muxifyData<ExperimentState>(action.strategy, {id: state.id});
       const strategy = strategySuccess(action.strategy, data);

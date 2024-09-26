@@ -11,7 +11,7 @@ import { createQualityCard } from '../../../model/quality';
 export const muxiumLog = createQualityCard({
   type: 'logged a message passed to Muxium',
   reducer: nullReducer,
-  methodCreator: () => createMethod((action) => {
+  methodCreator: () => createMethod(({action}) => {
     console.log('Logging: ', action);
     if (action.strategy) {
       return strategySuccess(action.strategy);

@@ -22,7 +22,7 @@ export const experimentDebounceIterateIdThenReceiveInMethod =
         id: state.id + 1
       };
     },
-    methodCreator: () => createMethodDebounceWithState((action, state) => {
+    methodCreator: () => createMethodDebounceWithState(({action, state}) => {
       const payload = action.payload;
       if (action.strategy) {
         const data = strategyData_muxifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {

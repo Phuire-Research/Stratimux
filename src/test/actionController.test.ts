@@ -29,8 +29,8 @@ test('ActionController Next Test', (done) => {
 });
 
 test('ActionController createActionController$ Test', (done) => {
-  const act = {action: muxiumLog.actionCreator({agreement: 200}), deck: {} as unknown as Deck<void>};
-  const cont = createActionController$(act, (controller, action) => {
+  const act = {action: muxiumLog.actionCreator({agreement: 200}), deck: {} as unknown as Deck<void>, self: muxiumLog.actionCreator};
+  const cont = createActionController$(act, ({controller, action}) => {
     controller.fire(action);
   });
   cont.subscribe(union => {

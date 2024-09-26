@@ -16,7 +16,7 @@ import { LoadConcepts } from '../../../model/concept';
 export const muxiumRegisterTimeOut = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumRegisterTimeOutPayload>({
   type: 'register an Action to Muxium\'s timerLedger',
   reducer: defaultReducer,
-  methodCreator: () => createMethodWithConcepts((action, concepts) => {
+  methodCreator: () => createMethodWithConcepts(({action, concepts}) => {
     const {
       act,
       timeOut

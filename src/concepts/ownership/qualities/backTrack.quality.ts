@@ -11,7 +11,7 @@ import { OwnershipState } from '../ownership.concept';
 export const ownershipBackTrack = createQualityCard({
   type: 'backtracking to previous ActionNode',
   reducer: nullReducer,
-  methodCreator: () => createMethod<OwnershipState>((action) => {
+  methodCreator: () => createMethod<OwnershipState>(({action}) => {
     if (action.strategy) {
       const newAction = strategyBackTrack(action.strategy);
       return newAction;

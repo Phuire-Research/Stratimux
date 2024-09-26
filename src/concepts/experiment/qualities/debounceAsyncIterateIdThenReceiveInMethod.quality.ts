@@ -25,7 +25,7 @@ export const experimentDebounceAsyncIterateIdThenReceiveInMethod =
         id: state.id + 1
       };
     },
-    methodCreator: () => createAsyncMethodDebounceWithState((controller, action, state) => {
+    methodCreator: () => createAsyncMethodDebounceWithState(({controller, action, state}) => {
       setTimeout(() => {
         const payload = action.payload;
         if (action.strategy) {

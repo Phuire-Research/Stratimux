@@ -19,7 +19,7 @@ export const experimentAsyncIterateIdThenReceiveInMethod = createQualityCard<Exp
       id: state.id + 1
     };
   },
-  methodCreator: () => createAsyncMethodWithState((controller, action, state) => {
+  methodCreator: () => createAsyncMethodWithState(({controller, action, state}) => {
     setTimeout(() => {
       if (action.strategy) {
         const data = strategyData_muxifyData<ExperimentState>(action.strategy, {id: state.id});

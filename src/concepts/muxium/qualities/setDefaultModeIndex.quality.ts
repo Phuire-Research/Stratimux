@@ -10,14 +10,15 @@ import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumSetDefaultModeIndexPayload } from '.';
 import { LoadConcepts } from '../../../model/concept';
 
-export const muxiumSetDefaultModeIndex = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModeIndexPayload>({
-  type: 'set Muxium\'s Default Mode Index',
-  reducer: (_, action) => {
-    const payload = action.payload;
-    return {
-      defaultModeIndex: payload.index,
-    };
-  },
-  methodCreator: defaultMethodCreator
-});
+export const muxiumSetDefaultModeIndex =
+  createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModeIndexPayload>({
+    type: 'set Muxium\'s Default Mode Index',
+    reducer: (_, action) => {
+      const payload = action.payload;
+      return {
+        defaultModeIndex: payload.index,
+      };
+    },
+    methodCreator: defaultMethodCreator
+  });
 /*#>*/

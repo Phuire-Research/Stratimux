@@ -17,7 +17,7 @@ export const muxiumSetMode = createQualityCardWithPayload<MuxiumState<unknown, L
       modeIndex: payload.modeIndex,
     };
   },
-  methodCreator: () => createMethod((action) => {
+  methodCreator: () => createMethod(({action}) => {
     const payload = action.payload;
     if (action.strategy) {
       action.strategy.currentNode.successNotes = {

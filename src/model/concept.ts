@@ -5,7 +5,7 @@ A concept is composed of name, muxified, state, qualities, semaphore, principles
 $>*/
 /*<#*/
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
-import { Action, ActionCreatorType, ActionType, Actions } from './action';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import {
   KeyedSelector,
@@ -31,7 +31,11 @@ export type SpecificReducer<S extends Record<string, unknown>, T = void, C = voi
 
 export type Method<T = void> = Observable<[Action<T>, boolean]>;
 export type Principle = Observable<Action>;
-export type ActionDeck<T = void, C = void> = {action: Action<T>, deck: Deck<C>};
+export type Self<T = void, C = void> = T extends void ?
+    ActionCreator
+    :
+    ActionCreatorWithPayload<T extends Record<string, unknown> ? T : Record<string, unknown>>;
+export type ActionDeck<T = void, C = void> = {action: Action<T>, deck: Deck<C>, self: Self<T>};
 
 export type Mode = ([action, concept, action$, concepts$]: [
   Action<unknown>,

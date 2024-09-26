@@ -9,7 +9,7 @@ $>*/
 import { Action, AnyAction, muxiumBadAction, createAction, Deck, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
-import { ActionDeck } from './concept';
+import { ActionDeck, Self } from './concept';
 
 const badAction = (payload: {
   badActions: AnyAction[]
@@ -79,19 +79,23 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
   }
 }
 
+export type ActionControllerParams<T = void, C = void> = {
+controller: ActionController, action: Action<T>, deck: Deck<C>, self: Self<T>
+}
+
 export const createActionController$ = <T = void, C = void>(
   act: ActionDeck<T, C>,
-  controlling: (controller: ActionController, action: Action<T>, deck: Deck<C>) => void
+  controlling: (params: ActionControllerParams<T, C>) => void
 ) => {
   const ctrl = new ActionController(act);
-  const {action, deck} = act;
+  const {action, deck, self} = act;
   // Needs to have timeout so that subscribers have time to attach in case the controller fires synchronously.
   setTimeout(() => {
     // Logically Determined muxiumConclude;
     if (action.semaphore[3] === 3) {
       ctrl.fire(action);
     } else {
-      controlling(ctrl, action, deck);
+      controlling({controller: ctrl, action, deck, self});
     }
   }, 0);
   return ctrl;

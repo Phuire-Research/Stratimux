@@ -22,7 +22,7 @@ export const experimentThrottleAsyncIterateIdThenReceiveInMethod =
         id: state.id + 1
       };
     },
-    methodCreator: () => createAsyncMethodThrottleWithState((controller, action, state) => {
+    methodCreator: () => createAsyncMethodThrottleWithState(({controller, action, state}) => {
       setTimeout(() => {
         const payload = action.payload;
         if (action.strategy) {
