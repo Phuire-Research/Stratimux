@@ -194,12 +194,12 @@ type MethodAsyncWithStateParams<S extends Record<string, unknown>, T = void, C =
 
 type MethodCreatorAsyncWithState = <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithState: (params: MethodAsyncWithStateParams<S, T, C>) => void,
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithState: (params: MethodAsyncWithStateParams<S, T, C>) => void,
-  ) : MethodCreator<S, T, C> => (
+  ) : MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ) : [Method<T>, Subject<ActionDeck<T,C>>] => {
@@ -225,13 +225,13 @@ export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
 type MethodCreatorBaseDebounce = <S extends Record<string, unknown>, T = void, C = void>(
   method: (params: MethodParams<T,C>) => Action<any>,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodDebounce: MethodCreatorBaseDebounce =
   <S extends Record<string, unknown>, T = void, C = void>(
     method: (params: MethodParams<T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -263,13 +263,13 @@ export const createMethodDebounce: MethodCreatorBaseDebounce =
 type MethodCreatorBaseDebounceWithState = <S extends Record<string, unknown>, T = void, C = void>(
   methodWithState: (params: MethodWithStateParams<S, T, C>) => Action<any>,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithState: (params: MethodWithStateParams<S,T,C>) => Action<any>,
     duration: number
-  ) : MethodCreator<S, T, C> => (
+  ) : MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -303,13 +303,13 @@ export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
 type MethodCreatorAsyncDebounce = <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethod: (params: MethodAsyncParams<T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodDebounce: MethodCreatorAsyncDebounce =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethod: (params: MethodAsyncParams<T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -330,13 +330,13 @@ export const createAsyncMethodDebounce: MethodCreatorAsyncDebounce =
 type MethodCreatorAsyncDebounceWithState = <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithState: (params: MethodAsyncWithStateParams<S,T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodDebounceWithState: MethodCreatorAsyncDebounceWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithState: (params: MethodAsyncWithStateParams<S,T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -360,13 +360,13 @@ export const createAsyncMethodDebounceWithState: MethodCreatorAsyncDebounceWithS
 type MethodCreatorBaseThrottle = <S extends Record<string, unknown>, T = void, C = void>(
   method: (params: MethodParams<T,C>) => Action<any>,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodThrottle: MethodCreatorBaseThrottle =
   <S extends Record<string, unknown>, T = void, C = void>(
     method: (params: MethodParams<T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S,T,C> => (
+  ): MethodCreator<S, T, any> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T,C>>] => {
@@ -398,13 +398,13 @@ export const createMethodThrottle: MethodCreatorBaseThrottle =
 type MethodCreatorBaseThrottleWithState = <S extends Record<string, unknown>, T = void, C = void>(
   methodWithState: (params: MethodWithStateParams<S,T,C>) => Action<any>,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodThrottleWithState: MethodCreatorBaseThrottleWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithState: (params: MethodWithStateParams<S,T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -439,13 +439,13 @@ export const createMethodThrottleWithState: MethodCreatorBaseThrottleWithState =
 type MethodCreatorAsyncThrottle = <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethod: (params: MethodAsyncParams<T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodThrottle: MethodCreatorAsyncThrottle =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethod: (params: MethodAsyncParams<T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -466,13 +466,13 @@ export const createAsyncMethodThrottle: MethodCreatorAsyncThrottle =
 type MethodCreatorAsyncThrottleWithState = <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithState: (params: MethodAsyncWithStateParams<S,T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodThrottleWithState: MethodCreatorAsyncThrottleWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithState: (params: MethodAsyncWithStateParams<S,T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -507,14 +507,14 @@ type MethodAsyncWithConceptsParams<T = void, C = void> = {
 type MethodCreatorAsyncWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithConcepts: (params: MethodAsyncWithConceptsParams<T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodWithConcepts: MethodCreatorAsyncWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithConcepts: (
       params: MethodAsyncWithConceptsParams<T, C>
     ) => void,
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -534,13 +534,13 @@ export const createAsyncMethodWithConcepts: MethodCreatorAsyncWithConcepts =
 type MethodCreatorBaseDebounceWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   methodWithConcepts: (params: MethodWithConceptsParams<T,C>) => Action<any>,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodDebounceWithConcepts: MethodCreatorBaseDebounceWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithConcepts: (params: MethodWithConceptsParams<T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -573,7 +573,7 @@ export const createMethodDebounceWithConcepts: MethodCreatorBaseDebounceWithConc
 type MethodCreatorAsyncDebounceWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithConcepts: (params: MethodAsyncWithConceptsParams<T,C>) => void,
   duration: number,
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodDebounceWithConcepts: MethodCreatorAsyncDebounceWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
@@ -581,7 +581,7 @@ export const createAsyncMethodDebounceWithConcepts: MethodCreatorAsyncDebounceWi
       params: MethodAsyncWithConceptsParams<T,C>
     ) => void,
     duration: number,
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -603,13 +603,13 @@ export const createAsyncMethodDebounceWithConcepts: MethodCreatorAsyncDebounceWi
 type MethodCreatorBaseThrottleWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   methodWithConcepts: (params: MethodWithConceptsParams<T,C>) => Action,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createMethodThrottleWithConcepts: MethodCreatorBaseThrottleWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithConcepts: (params: MethodWithConceptsParams<T,C>) => Action,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -642,7 +642,7 @@ export const createMethodThrottleWithConcepts: MethodCreatorBaseThrottleWithConc
 type MethodCreatorAsyncThrottleWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithConcepts: (params: MethodAsyncWithConceptsParams<T,C>) => void,
   duration: number
-) => MethodCreator<S, T, C>;
+) => MethodCreator<S, T, any>;
 
 export const createAsyncMethodThrottleWithConcepts: MethodCreatorAsyncThrottleWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
@@ -650,7 +650,7 @@ export const createAsyncMethodThrottleWithConcepts: MethodCreatorAsyncThrottleWi
       params: MethodAsyncWithConceptsParams<T,C>
     ) => void,
     duration: number
-  ): MethodCreator<S, T, C> => (
+  ): MethodCreator<S, T, any> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {

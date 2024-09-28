@@ -68,38 +68,37 @@ export const defaultMethodCreator = <T = void, C = void>() =>
     return [defaultMethod, defaultSubject];
   };
 
-export function createQualityCard<S extends Record<string, unknown>, C = void>(q: {
+export function createQualityCard<S extends Record<string, unknown>>(q: {
   type: string,
-  reducer: SpecificReducer<S, void, C>,
-  methodCreator?: MethodCreatorStep<S, void, C>,
+  reducer: SpecificReducer<S, void, void>,
+  methodCreator?: MethodCreatorStep<S, void, any>,
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): Quality<S, void, C> {
+}): Quality<S, void, void> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreator = prepareActionCreator(q.type, bucket);
   if (q.methodCreator) {
-    return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+    return createQuality<S, void, any>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
   }
-  return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+  return createQuality<S, void, any>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
 }
 
 export function createQualityCardWithPayload<
   S extends Record<string, unknown>,
   T extends Record<string, unknown>,
-  C = void
 >(q: {
   type: string,
-  reducer: SpecificReducer<S, T, C>,
-  methodCreator?: MethodCreatorStep<S, T, C>,
+  reducer: SpecificReducer<S, T, any>,
+  methodCreator?: MethodCreatorStep<S, T, any>,
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): Quality<S, T, C> {
+}): Quality<S, T, any> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket);
   if (q.methodCreator) {
-    return createQuality<S, T, C>(
+    return createQuality<S, T, any>(
       q.type,
       bucket,
       actionCreatorWithPayload as ActionCreatorType<T>,
@@ -110,7 +109,7 @@ export function createQualityCardWithPayload<
       q.analytics
     );
   }
-  return createQuality<S, T, C>(
+  return createQuality<S, T, any>(
     q.type,
     bucket,
     actionCreatorWithPayload as ActionCreatorType<T>,
