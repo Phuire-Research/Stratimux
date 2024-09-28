@@ -206,7 +206,7 @@ export const muxificationConcept = <Q, C extends LoadConcepts>(
   logging?: boolean,
   logActionStream?: boolean,
   dynamic?: boolean,
-): Concept<MuxiumState<Q, C>, MuxiumQualities> =>  {
+): AnyConcept =>  {
   const state = muxificationState<Q, C>(name, storeDialog, logging, logActionStream);
   if (dynamic) {
     const c = createConcept<MuxiumState<Q, C>, MuxiumQualities>(

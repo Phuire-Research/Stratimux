@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { muxification, getMuxiumState } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
-import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 
 test('Muxium Stage Dispatch Options Test', (done) => {
@@ -23,7 +23,7 @@ test('Muxium Stage Dispatch Options Test', (done) => {
       setTimeout(() => {done();}, 500);
     }
   });
-  const plan = muxium.plan('Stage DispatchOptions Test',
+  const plan = muxium.plan<CounterDeck>('Stage DispatchOptions Test',
     ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         const counter = selectState<CounterState>(concepts, counterName);

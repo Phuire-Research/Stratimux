@@ -22,7 +22,7 @@ import {
   initializationStrategy,
   MuxiumDeck,
 } from '../concepts/muxium/muxium.concept';
-import { Planning } from './stagePlanner';
+import { Planner, Planning, StagePlanner } from './stagePlanner';
 import { muxiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
@@ -238,7 +238,7 @@ export function muxification<C extends LoadConcepts>(
     options?.logging,
     options?.logActionStream,
     options?.dynamic
-  );
+  ) as Concept<MuxiumState<MuxiumQualities, C>, MuxiumQualities>;
   const concepts: Concepts = {
     0: muxiumConcept
   };
@@ -388,7 +388,8 @@ export function muxification<C extends LoadConcepts>(
     dispatch: (action: Action) => {
       action$.next(action);
     },
-    plan: muxiumState.concepts$.outerPlan,
+    plan: <Co>(title: string, planner: Planner<MuxiumQualities, Co & MuxiumDeck, MuxiumState<MuxiumQualities, C>>) => (
+      muxiumState.concepts$.outerPlan(title, planner as unknown as Planner<MuxiumQualities, C, void>)),
     deck,
     e: deck.d.muxium.e
   } as unknown as Muxium<MuxiumQualities, C & MuxiumDeck, MuxiumState<MuxiumQualities, C>>;
@@ -400,7 +401,7 @@ export type Muxium<Q extends Record<string, unknown>, C extends LoadConcepts, S 
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: Action<any>) => void;
-  plan: Planning<Q, C, S>;
+  plan: <Co>(title: string, planner: Planner<MuxiumQualities, Co & MuxiumDeck, MuxiumState<MuxiumQualities, C>>) => StagePlanner;
   deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
   e: Actions<MuxiumQualities>
 }

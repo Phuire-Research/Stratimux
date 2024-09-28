@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData } from '../concepts/muxium/muxium.selector';
 import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
-import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
+import { CounterDeck, CounterQualities, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
   experimentDebounceAsyncIterateIdThenReceiveInMethod
@@ -29,15 +29,20 @@ import { strategyBegin } from '../model/actionStrategy';
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { createStage } from '../model/stagePlanner';
+import { concept, Concept } from '../model/concept';
 
 jest.setTimeout(30000);
 
 test('Debounce method prevent excess count', (done) => {
   const qualities = {experimentDebounceNextActionNode};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(createExperimentState(), qualities);
+  const experiment = createExperimentConcept(createExperimentState(), qualities) as Concept<typeof initialState, typeof qualities>;
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>,
+    experiment: Concept<ExperimentState, typeof qualities>
+  }
   const muxium = muxification('Experiment async method creator with State', {counter: createCounterConcept(), experiment});
-  const plan = muxium.plan('Experiment debounce add one', ({stage}) => [
+  const plan = muxium.plan<DECK>('Experiment debounce add one', ({stage}) => [
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentDebounceAddOneStrategy(d)), {
         iterateStage: true
@@ -67,11 +72,12 @@ test('Debounce method prevent excess count', (done) => {
 });
 
 test('Async debounce method prevent excess count', (done) => {
+  type DECK = {experiment: Concept<typeof initialState, typeof qualities>} & CounterDeck;
   const qualities = {experimentAsyncDebounceNextActionNode};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
+  const experiment = createExperimentConcept(initialState, qualities);
   const muxium = muxification('Experiment async debounce', { counter: createCounterConcept(), experiment});
-  const plan = muxium.plan('Experiment async debounce add one', ({stage}) => [
+  const plan = muxium.plan<DECK>('Experiment async debounce add one', ({stage}) => [
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy(d)), {
         iterateStage: true
@@ -98,7 +104,7 @@ test('Async debounce method prevent excess count', (done) => {
     })
   ]);
   setTimeout(() => {
-    const secondPlan = muxium.plan('Second experiment async debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan<DECK>('Second experiment async debounce add one', ({stage}) => [
       stage(({dispatch, d}) => {
         dispatch(strategyBegin(experimentAsyncDebounceAddOneStrategy(d)), {
           iterateStage: true
@@ -139,9 +145,12 @@ test('Debounce Method Test with State id comparison', (done) => {
     experimentDebounceIterateIdThenReceiveInMethod
   };
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
+  const experiment = createExperimentConcept(initialState, qualities);
+  type DECK = {
+    experiment: Concept<ExperimentState, typeof qualities>
+  }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = muxium.plan('Debounce Iterate id with concepts', ({stage}) => [
+  const plan = muxium.plan<DECK>('Debounce Iterate id with concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -195,7 +204,7 @@ test('Debounce Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = muxium.plan('Second experiment debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan<DECK>('Second experiment debounce add one', ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         console.log('2 Debounce initial dispatch');
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -258,9 +267,12 @@ test('Debounce Method Test with State id comparison', (done) => {
 test('Debounce Async Method Test with State id comparison', (done) => {
   const qualities = {experimentDebounceAsyncIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
+  const experiment = createExperimentConcept(initialState, qualities);
+  type DECK = {
+    experiment: Concept<typeof initialState, typeof qualities>;
+  }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = muxium.plan('Debounce Async Iterate id with concepts', ({stage}) => [
+  const plan = muxium.plan<DECK>('Debounce Async Iterate id with concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -314,7 +326,7 @@ test('Debounce Async Method Test with State id comparison', (done) => {
   ]);
   setTimeout(() => {
     console.log('BEGIN 2ND PLAN');
-    const secondPlan = muxium.plan('Second experiment async debounce add one', ({stage}) => [
+    const secondPlan = muxium.plan<DECK>('Second experiment async debounce add one', ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {

@@ -1,7 +1,7 @@
 import { muxification, getMuxiumState } from '../../model/muxium';
 import { strategyBegin } from '../../model/actionStrategy';
 import { selectState } from '../../model/selector';
-import { CounterState, createCounterConcept, counterName } from '../../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName, CounterDeck } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 
@@ -13,7 +13,7 @@ test('Muxium Counting Strategy Test', (done) => {
   let count = 0;
   const repeat = 10;
   let steps = 0;
-  const plan = muxium.plan('Counting Strategy Stage',
+  const plan = muxium.plan<CounterDeck>('Counting Strategy Stage',
     ({e__}) => [
       stageWaitForOpenThenIterate(() => e__.muxiumKick()),
       createStage(({dispatch, d}) => {

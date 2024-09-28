@@ -6,7 +6,7 @@ $>*/
 import { muxification, getMuxiumState, isMuxiumOpen } from '../../model/muxium';
 import { createStage } from '../../model/stagePlanner';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
-import { beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
+import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
 import { initializeTopic } from '../../concepts/muxium/strategies/initialization.strategy';
 import { strategyBegin } from '../../model/actionStrategy';
 import {
@@ -19,13 +19,15 @@ import {
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
 import { selectSlice, selectState } from '../../model/selector';
+import { Deck } from '../../model/deck';
+import { MuxiumDeck } from '../../concepts/muxium/muxium.concept';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
   const beat = 7000;
   const muxium = muxification('Beat Selector Changes properly defers accumulated changes', {
     beatSelectors: createBeatSelectorChangesConcept()
   });
-  const [tally, strategy, topic] = generateRandomCountingStrategy(muxium.deck.d);
+  const [tally, strategy, topic] = generateRandomCountingStrategy(muxium.deck.d as Deck<MuxiumDeck & BeatSelectorChangesDeck>);
   const plan = muxium.plan('Prolonged Counting Strategy', () => [
     createStage(({concepts, dispatch}) => {
       if (isMuxiumOpen(concepts)) {

@@ -102,7 +102,7 @@ export function createConcept<S extends Record<string, unknown>, Q = void>(
   mode?: Mode[],
   meta?: Record<string,unknown>,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Concept<S, Q> {
+): AnyConcept {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -310,7 +310,7 @@ function muxify<T extends Qualities, K extends Qualities>(
 export function muxifyConcepts<S extends Record<string, unknown>, T extends Qualities>(
   concepts: AnyConcept[],
   emergentConcept: AnyConcept
-): Concept<S, T> {
+): AnyConcept {
   const dummy: Record<string, unknown> = {};
   let newConcept = createConcept<typeof dummy, T>('', dummy);
   forEachConcept(concepts, (concept => {

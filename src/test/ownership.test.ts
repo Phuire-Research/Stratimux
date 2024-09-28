@@ -32,8 +32,8 @@ test('Ownership Test', (done) => {
     counter: createCounterConcept(),
     experiment: createExperimentConcept(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
   };
-  const muxium = muxification<typeof deck>('ownershipTest', deck, {logging: true, storeDialog: true});
-  const plan = muxium.plan(
+  const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true});
+  const plan = muxium.plan<typeof deck>(
     'Testing Ownership Staging', ({stage}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
         const muxiumState = getMuxiumState(concepts);

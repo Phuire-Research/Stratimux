@@ -5,18 +5,24 @@ $>*/
 import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
 import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { createStage } from '../model/stagePlanner';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
+import { Concept } from '../model/concept';
 
 test('Muxium setStageSelectors Test', (done) => {
   let tally = 0;
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = muxium.plan('Counting Strategy Plan using setStageSelectors',
+
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>
+  };
+
+  const plan = muxium.plan<DECK>('Counting Strategy Plan using setStageSelectors',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
         if (isMuxiumOpen(concepts)) {
@@ -58,7 +64,12 @@ test('Muxium setStageSelectors Test', (done) => {
 test('Muxium setStageBeat Test', (done) => {
   let tally = 0;
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = muxium.plan('Counting Strategy Plan using setStageBeat',
+
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>
+  };
+
+  const plan = muxium.plan<DECK>('Counting Strategy Plan using setStageBeat',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
         if (isMuxiumOpen(concepts)) {
@@ -95,9 +106,14 @@ test('Muxium setStageBeat Test', (done) => {
 
 test('Muxium setStagePriority Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>
+  };
+
   let ready = false;
   let tally = 0;
-  const plan = muxium.plan('Counting Strategy Plan using setStagePriority',
+  const plan = muxium.plan<DECK>('Counting Strategy Plan using setStagePriority',
     ({stage, d__}) => [
       stage(({stagePlanner, dispatch, d}) => {
         if (ready) {
@@ -125,7 +141,7 @@ test('Muxium setStagePriority Test', (done) => {
         priority: Infinity
       })
     ]);
-  const planTwo = muxium.plan('Counting Strategy Plan using setStagePriority Two',
+  const planTwo = muxium.plan<DECK>('Counting Strategy Plan using setStagePriority Two',
     ({stage, d__}) => [
       stage(({stagePlanner, dispatch, d}) => {
         if (ready) {

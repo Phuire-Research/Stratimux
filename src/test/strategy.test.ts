@@ -5,13 +5,18 @@ $>*/
 import { muxification, getMuxiumState } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
+import { Concept } from '../model/concept';
 
 test('Muxium Counting Strategy Test', (done) => {
   const cpts = {counter: createCounterConcept()};
   const muxium = muxification('muxiumStrategyTest', cpts, {logging: true, storeDialog: true});
-  const plan = muxium.plan('Counting Strategy Plan',
+
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>;
+  };
+  const plan = muxium.plan<DECK>('Counting Strategy Plan',
     ({stage}) => [
       stage(({stagePlanner, dispatch, d, e}) => {
         console.log('HIT!!!');

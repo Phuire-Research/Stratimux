@@ -10,7 +10,7 @@ $>*/
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
-import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
+import { CounterDeck, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createStage } from '../model/stagePlanner';
 jest.setTimeout(10000);
 
@@ -20,7 +20,7 @@ test('Stage Planner Beat Test', (done) => {
     counter: createCounterConcept()
   }, {logging: true, storeDialog: true});
   const beat = 105;
-  const plan = muxium.plan('Stage Planner Beat Test', ({stage, stageO, e__}) => [
+  const plan = muxium.plan<CounterDeck>('Stage Planner Beat Test', ({stage, stageO, e__}) => [
     stageO(() => e__.muxiumKick()),
     stage(({concepts, dispatch, e}) => {
       console.log('HIT 1');

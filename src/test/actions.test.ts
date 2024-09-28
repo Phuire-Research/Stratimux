@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { muxification } from '../model/muxium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
-import { createConcept } from '../model/concept';
+import { Concept, Concepts, createConcept } from '../model/concept';
 import { Actions } from '../model/action';
 
 test('Quality Actions', (done) => {
@@ -47,7 +47,7 @@ test('Quality Actions', (done) => {
       }));
       expect(e_.something().type).toBe('Something');
     }
-  ]);
+  ]) as Concept<typeof initialState, typeof qs>;
   c.actions.something;
   c.actions.some({
     here: 7

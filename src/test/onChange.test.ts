@@ -6,7 +6,7 @@ $>*/
 import { muxification, getMuxiumState } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
@@ -18,7 +18,8 @@ test('Muxium onChange Test', (done) => {
       console.log('CHECK: ', selectSlice(concepts, muxiumSelectLastStrategy))
   };
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-  const plan = muxium.plan('Counting Strategy Plan with selectors',
+
+  const plan = muxium.plan<CounterDeck>('Counting Strategy Plan with selectors',
     ({stage, d__}) => [
       stage(({stagePlanner, concepts, dispatch, d}) => {
         console.log('What is this Keyed Selector?', d.counter.k.count.select());

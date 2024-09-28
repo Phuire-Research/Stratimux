@@ -6,27 +6,35 @@ $>*/
 import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities, CounterDeck } from '../concepts/counter/counter.concept';
 import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { createStage } from '../model/stagePlanner';
 import { generateRandomCountingStrategy } from './random/generateCountingStrategy.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { handlePriority } from '../model/priority';
+import { Concept } from '../model/concept';
+import { Deck } from '../model/deck';
 
 test('Muxium Counting Strategy Priority Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
+
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>;
+  };
+
   const deck = muxium.deck;
+
   const concluded = [false, false, false];
-  const [count1, strategy1] = generateRandomCountingStrategy(deck.d, 0);
+  const [count1, strategy1] = generateRandomCountingStrategy(deck.d as Deck<CounterDeck>, 0);
   strategy1.topic += 1;
   strategy1.priority = 100;
-  const [count2, strategy2] = generateRandomCountingStrategy(deck.d, 0);
+  const [count2, strategy2] = generateRandomCountingStrategy(deck.d as Deck<CounterDeck>, 0);
   strategy1.topic += 2;
-  const [count3, strategy3] = generateRandomCountingStrategy(deck.d, 0);
+  const [count3, strategy3] = generateRandomCountingStrategy(deck.d as Deck<CounterDeck>, 0);
   strategy3.priority = 50;
   strategy1.topic += 3;
-  const plan = muxium.plan('Counting Strategy with Priority Plan',
+  const plan = muxium.plan<DECK>('Counting Strategy with Priority Plan',
     ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         if (isMuxiumOpen(concepts)) {

@@ -15,14 +15,20 @@ import { strategyBegin } from '../model/actionStrategy';
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
+import { Concept } from '../model/concept';
 
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
   const qualities = {experimentRecurseIterateId};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(createExperimentState(), qualities);
+  const experiment = createExperimentConcept(createExperimentState(), qualities);
+
+  type DECK = {
+    experiment: Concept<typeof initialState, typeof qualities>
+  };
+
   const muxium = muxification('Experiment async method creator with Concepts', {experiment}, {storeDialog: true});
-  const plan = muxium.plan('Experiment debounce add one', ({stage, stageO, e__}) => [
+  const plan = muxium.plan<DECK>('Experiment debounce add one', ({stage, stageO, e__}) => [
     stageO(() => e__.muxiumKick()),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentRecursivelyIterateId(d, [...list])), {

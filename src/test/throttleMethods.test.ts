@@ -26,12 +26,18 @@ import {
 import { strategyBegin } from '../model/actionStrategy';
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
+import { Concept } from '../model/concept';
 
 test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleIterateIdThenReceiveInMethod};
-  const experiment = createExperimentConcept<ExperimentState, typeof qualities>(createExperimentState(), qualities);
+  const experiment = createExperimentConcept(createExperimentState(), qualities);
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = muxium.plan('Throttle Iterate id with Concepts', ({stage, stageO, e__}) => [
+
+  type DECK = {
+    experiment: Concept<ExperimentState, typeof qualities>
+  }
+
+  const plan = muxium.plan<DECK>('Throttle Iterate id with Concepts', ({stage, stageO, e__}) => [
     stageO(() => e__.muxiumKick()),
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
@@ -94,8 +100,13 @@ jest.setTimeout(7000);
 test('Action Throttle Async Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleAsyncIterateIdThenReceiveInMethod};
   const experiment = createExperimentConcept<ExperimentState, typeof qualities>(createExperimentState(), qualities);
+
+  type DECK = {
+    experiment: Concept<ExperimentState, typeof qualities>
+  }
+
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
-  const plan = muxium.plan('Action Throttle Async Iterate id with Concepts', ({stage}) => [
+  const plan = muxium.plan<DECK>('Action Throttle Async Iterate id with Concepts', ({stage}) => [
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {
@@ -148,7 +159,7 @@ test('Action Throttle Async Method Test with Concepts id comparison', (done) => 
     })
   ]);
   setTimeout(() => {
-    const secondPlan = muxium.plan('Action Throttle Async Iterate id with Concepts', ({stage}) => [
+    const secondPlan = muxium.plan<DECK>('Action Throttle Async Iterate id with Concepts', ({stage}) => [
       stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState) {
