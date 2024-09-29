@@ -372,8 +372,12 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
       e__: this.concepts[conceptSemaphore].actions as Actions<any>,
       c__: this.concepts[conceptSemaphore].comparators as Comparators<any>,
       k__: (
-        this.concepts[conceptSemaphore].keyedSelectors
-      ) as unknown as BundledSelectors<any>,
+        {
+          ...this.concepts[conceptSemaphore].keyedSelectors,
+          ...this.concepts[conceptSemaphore].selectors,
+        }
+
+      ) as BundledSelectors<any>,
       stage: createStage,
       stageO: stageWaitForOpenThenIterate,
       conclude: stageConclude
@@ -760,7 +764,10 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
       c: this.concepts[plan.conceptSemaphore] ? this.concepts[plan.conceptSemaphore].comparators as Comparators<any> : {},
       k: (
         this.concepts[plan.conceptSemaphore] ?
-          this.concepts[plan.conceptSemaphore].keyedSelectors
+          {
+            ...this.concepts[plan.conceptSemaphore].selectors,
+            ...this.concepts[plan.conceptSemaphore].keyedSelectors,
+          }
           :
           {}
         ) as unknown as BundledSelectors<any>,

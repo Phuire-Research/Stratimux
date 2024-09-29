@@ -8,6 +8,7 @@ import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
 import {
+  BundledSelectors,
   KeyedSelector,
   KeyedSelectors,
   Selectors,

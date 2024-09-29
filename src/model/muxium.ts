@@ -269,7 +269,6 @@ export function muxification<C extends LoadConcepts>(
       e: deckLoad[key].actions,
       c: deckLoad[key].comparators,
       k: {...deckLoad[key].keyedSelectors, ...createBufferedSelectorsSet(target)},
-      s: {}
     };
     deckLoad[key].semaphore = target;
   });
