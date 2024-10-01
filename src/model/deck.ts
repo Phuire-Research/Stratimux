@@ -54,6 +54,12 @@ export type Deck<C> = {
   }
 }
 
+export type ECK<C> = {
+  e: Actions<C>,
+  c: Comparators<C>,
+  k: BundledSelectors<C>
+}
+
 export const accessDeck = <C>(concepts: Concepts): Deck<C> => (getMuxiumState(concepts).deck.d as Deck<C>);
 
 /*#>*/

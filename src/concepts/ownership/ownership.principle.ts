@@ -14,9 +14,7 @@ import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
-import { accessMuxium, getMuxiumState } from '../../model/muxium';
 import { MuxiumBadActionPayload } from '../muxium/qualities';
-import { MuxiumDeck } from '../muxium/muxium.concept';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -80,12 +78,14 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
             if (payload.badActions.length > 0) {
               newAction = d.muxium.e.muxiumBadAction(payload) as AnyAction;
               ownershipState.pendingActions = newPending;
+              console.error('CHECK OWNERSHIP 1', Object.keys(concepts));
               nextC(newConcepts);
               observer.next(newAction);
             } else if (finalCheck) {
               finalCheck = false;
               setTimeout(() => {
                 finalCheck = true;
+                console.error('CHECK OWNERSHIP 2', Object.keys(concepts));
                 nextC(newConcepts);
               }, 200);
             }

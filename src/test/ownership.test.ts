@@ -35,14 +35,14 @@ test('Ownership Test', (done) => {
   const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true});
   const plan = muxium.plan<typeof deck>(
     'Testing Ownership Staging', ({stage}) => [
-      stage(({stagePlanner, concepts, dispatch, d}) => {
+      stage(({stagePlanner, concepts, dispatch, d, k}) => {
         const muxiumState = getMuxiumState(concepts);
         console.log(muxiumState.lastStrategy);
         if (muxiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
           const ownership = selectState<OwnershipState>(concepts, ownershipName);
           if (ownership) {
             console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
-            console.log('CHECK CONCEPTS', Object.keys(concepts).map(k => concepts[Number(k)].name));
+            console.log('CHECK CONCEPTS', Object.keys(concepts).map(key => concepts[Number(key)].name));
             const counter = selectState<CounterState>(concepts, counterName);
             console.log('Count: ', counter?.count);
             // This will place a counting strategy in the experiment actionQue to be later dispatched.

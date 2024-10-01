@@ -51,9 +51,14 @@ export type MethodCreator<S extends Record<string, unknown>, T = void, C = void>
   (concept$: Subject<Concepts>, semaphore: number) => [Method<T>, Subject<ActionDeck<T, C>>];
 // export type MethodCreator = (concept$?: MuxifiedSubject, semaphore?: number) => [Method, Subject<Action>];
 
+type Muxified = {
+  stateMap: string[];
+  actionMap: string[];
+};
+
 export type Concept<S extends Record<string, unknown>, Q = void> = {
   name: string;
-  muxified: string[];
+  muxifiedRecord: Record<string, Muxified>;
   state: S;
   actions: Actions<Q>;
   comparators: Comparators<Q>;
@@ -131,7 +136,7 @@ export function createConcept<S extends Record<string, unknown>, Q = void>(
   }
   return {
     name,
-    muxified: [],
+    muxifiedRecord: {},
     state,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     actions: actions as Actions<Q extends void ? any : Q>,
@@ -176,7 +181,7 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
  */
 function filterSimilarQualities(concept: AnyConcept) {
   const newQualities: Quality<Record<string, unknown>>[] = [];
-  const newMuxified: string[] = [];
+  const newMuxified: Record<string, Muxified> = {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const newPrinciples: PrincipleFunction<Qualities, any, Record<string, unknown>>[] = [];
   const newMode: Mode[] = [];
@@ -193,19 +198,20 @@ function filterSimilarQualities(concept: AnyConcept) {
     }
   }
   concept.qualities = newQualities;
-  for (let i = 0; i < concept.muxified.length; i++) {
+  const muxifiedKeys = Object.keys(concept.muxifiedRecord);
+  for (let i = 0; i < muxifiedKeys.length; i++) {
     let found = false;
-    for (let j = i + 1; j < concept.muxified.length; j++) {
-      if (concept.muxified[i] === concept.muxified[j]) {
+    for (let j = i + 1; j < muxifiedKeys.length; j++) {
+      if (muxifiedKeys[i] === muxifiedKeys[j]) {
         found = true;
         break;
       }
     }
     if (!found) {
-      newMuxified.push(concept.muxified[i]);
+      newMuxified[muxifiedKeys[i]] = concept.muxifiedRecord[muxifiedKeys[i]];
     }
   }
-  concept.muxified = newMuxified;
+  concept.muxifiedRecord = newMuxified;
   if (concept.principles) {
     for (let i = 0; i < concept.principles.length; i++) {
       let found = false;
@@ -244,12 +250,15 @@ function muxify<T extends Qualities, K extends Qualities>(
   target: Concept<Record<string, unknown>, K> | AnyConcept
 ): Concept<Record<string, unknown>, T & K> {
   if (target.name !== '') {
-    base.muxified.push(target.name);
+    base.muxifiedRecord[target.name] = {
+      actionMap: Object.keys(target.actions),
+      stateMap: Object.keys(target.state)
+    };
   }
-  base.muxified = [
-    ...base.muxified,
-    ...target.muxified
-  ];
+  base.muxifiedRecord = {
+    ...base.muxifiedRecord,
+    ...target.muxifiedRecord
+  };
   base.state = {
     ...base.state,
     ...target.state,
@@ -318,7 +327,13 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
     newConcept = muxify(newConcept, concept);
   }));
   newConcept = muxify(newConcept, emergentConcept);
-  newConcept.muxified = newConcept.muxified.filter(name => name !== emergentConcept.name);
+  const newMuxifiedRecord: Record<string, Muxified> = {};
+  Object.keys(newConcept.muxifiedRecord).forEach(name => {
+    if (name !== emergentConcept.name) {
+      newMuxifiedRecord[name] = newConcept.muxifiedRecord[name];
+    }
+  });
+  newConcept.muxifiedRecord = newMuxifiedRecord;
   newConcept.name = emergentConcept.name;
   if (newConcept.mode) {
     newConcept.mode.forEach((m, i) => {
@@ -404,8 +419,9 @@ const stateToString = (state: Record<string, unknown>): string => {
 export const conceptToString = (concept: AnyConcept): string => {
   let output = '';
   output += `{\nname: ${concept.name},`;
-  if (concept.muxified.length > 0) {
-    output += `\nmuxified: ${concept.muxified},`;
+  const muxifiedKeys = Object.keys(concept.muxifiedRecord);
+  if (muxifiedKeys.length > 0) {
+    output += `\nmuxified: ${muxifiedKeys},`;
   }
   output += `\nqualities: [ ${concept.qualities.toString()}\n],`;
   output += `\nstate: ${stateToString(concept.state)}, `;

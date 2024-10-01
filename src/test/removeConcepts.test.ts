@@ -18,8 +18,8 @@ test('Muxium remove Concepts Strategy Test', (done) => {
   );
   const plan = muxium.plan('Remove Concepts Stage', ({stage, stageO, e__, k__}) => [
     stageO(() => e__.muxiumKick()),
-    stage(({concepts, dispatch, e}) => {
-      console.log('REMOVE');
+    stage(({concepts, dispatch, e, k}) => {
+      console.log('REMOVE', e,k);
       dispatch(
         strategyBegin(
           addConceptsToRemovalQueThenBlockStrategy(e, concepts, {counter: createCounterConcept()})

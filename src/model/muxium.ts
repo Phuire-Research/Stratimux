@@ -26,8 +26,9 @@ import { Planner, Planning, StagePlanner } from './stagePlanner';
 import { muxiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
-import { Deck, Decks } from './deck';
-import { BundledSelectors, createBufferedSelectorsSet, createSelectors, KeyedSelectors, updateKeyedSelectors } from './selector';
+import { Deck, Decks, ECK } from './deck';
+import { BundledSelectors, createSelectors, updateKeyedSelectors } from './selector';
+import { Comparators } from './interface';
 
 // eslint-disable-next-line no-shadow
 export enum MuxiumOrigins {
@@ -221,6 +222,36 @@ export type MuxiumLoad<C extends LoadConcepts> = {
   [K in keyof C] : C[K] extends AnyConcept ? C[K] : AnyConcept
 };
 
+export const demuxifyDeck = (concept: AnyConcept): {name: string, deck: Deck<any>}[] => {
+  const final: {name: string, deck: Deck<any>}[] = [];
+  const keys = Object.keys(concept.muxifiedRecord);
+  keys.forEach(name => {
+    const e: Actions<any> = {};
+    const c: Comparators<any> = {};
+    const k = {...concept.selectors} as BundledSelectors<any>;
+    concept.muxifiedRecord[name].actionMap.forEach(ky => {
+      e[ky] = concept.actions[ky];
+      c[ky] = concept.comparators[ky];
+    });
+    concept.muxifiedRecord[name].stateMap.forEach(ky => {
+      k[ky] = concept.keyedSelectors[ky];
+    });
+    const eck: ECK<any> = {
+      e,
+      c,
+      k
+    };
+    const deck: Deck<any> = {
+    };
+    deck[name] = eck;
+    final.push({
+      name,
+      deck
+    });
+  });
+  return final;
+};
+
 export function muxification<C extends LoadConcepts>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -244,9 +275,10 @@ export function muxification<C extends LoadConcepts>(
   };
   // as Concept<MuxiumState<MuxiumQualities, MuxiumDeck & C>, MuxiumQualities>;
   updateKeyedSelectors(concepts, muxiumConcept.keyedSelectors, 0);
+  muxiumConcept.selectors = createSelectors(0);
   const bundledSelectors = {
     ...muxiumConcept.keyedSelectors,
-    ...createBufferedSelectorsSet(0)
+    ...muxiumConcept.selectors
   } as BundledSelectors<MuxiumState<MuxiumQualities, C>>;
   const baseDeck: Decks<MuxiumQualities, MuxiumState<MuxiumQualities, C>, MuxiumLoad<MuxiumDeck>> = {
     d: { muxium: {
@@ -260,17 +292,20 @@ export function muxification<C extends LoadConcepts>(
     k: bundledSelectors,
   };
   muxiumConcept.semaphore = 0;
-  muxiumConcept.selectors = createSelectors(0);
   Object.keys(deckLoad).forEach((key, i) => {
-    const target = i + 1;
-    concepts[target] = deckLoad[key];
-    updateKeyedSelectors(concepts, deckLoad[key].keyedSelectors, target);
+    const semaphore = i + 1;
+    concepts[semaphore] = deckLoad[key];
+    deckLoad[key].semaphore = semaphore;
+    updateKeyedSelectors(concepts, concepts[semaphore].keyedSelectors, semaphore);
+    concepts[semaphore].selectors = createSelectors(semaphore);
     (baseDeck as any).d[key] = {
-      e: deckLoad[key].actions,
-      c: deckLoad[key].comparators,
-      k: {...deckLoad[key].keyedSelectors, ...createBufferedSelectorsSet(target)},
+      e: concepts[semaphore].actions,
+      c: concepts[semaphore].comparators,
+      k: {...concepts[semaphore].keyedSelectors, ...concepts[semaphore].selectors},
     };
-    deckLoad[key].semaphore = target;
+    demuxifyDeck(concepts[semaphore]).forEach(u => {
+      (baseDeck as any)[u.name] = u.deck;
+    });
   });
 
   const deck = baseDeck as Decks<MuxiumQualities, MuxiumState<MuxiumQualities, C>, MuxiumLoad<C & MuxiumDeck>>;
@@ -280,7 +315,6 @@ export function muxification<C extends LoadConcepts>(
   muxiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     muxiumState.conceptCounter += 1;
-    concept.selectors = createSelectors(semaphore);
     concept.qualities.forEach(quality => {
       if (quality.methodCreator) {
         [quality.method, quality.subject] = quality.methodCreator()(muxiumState.concepts$, semaphore);

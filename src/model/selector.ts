@@ -190,18 +190,6 @@ export type Selectors<S = void> = {
 
 export type BundledSelectors<S = void> = KeyedSelectors<S> & Selectors<S>
 
-// export const createBufferedSelectorsSet = <S extends Record<string, unknown>, C extends Concept<any, any>>(
-export const createBufferedSelectorsSet = <S = void>(
-  semaphore: number
-): Selectors<S>   => {
-  return {
-    create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
-    // concept: createBufferedConceptSelector<C>(semaphore),
-    state: createBufferedStateSelector<S>(semaphore),
-    name: createBufferedMuxifiedNameSelector(semaphore)
-  };
-};
-
 export const createSelectors = <S = void>(
   semaphore: number
 ): Selectors<S> => ({

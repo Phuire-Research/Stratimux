@@ -30,8 +30,8 @@ test('Muxified Names Test', (done) => {
   ],
   createConcept('muxified', {})
   );
-  console.log('CHECK MUXIFIED', muxified.muxified, muxified);
-  expect(muxified.muxified.length).toBe([one, two, three, four, five].length);
+  console.log('CHECK MUXIFIED', muxified.muxifiedRecord, muxified);
+  expect(Object.keys(muxified.muxifiedRecord).length).toBe([one, two, three, four, five].length);
   done();
 });
 /*#>*/
