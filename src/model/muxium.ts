@@ -222,8 +222,8 @@ export type MuxiumLoad<C extends LoadConcepts> = {
   [K in keyof C] : C[K] extends AnyConcept ? C[K] : AnyConcept
 };
 
-export const demuxifyDeck = (concept: AnyConcept): {name: string, deck: Deck<any>}[] => {
-  const final: {name: string, deck: Deck<any>}[] = [];
+export const demuxifyDeck = (concept: AnyConcept): {name: string, eck: ECK<any>}[] => {
+  const final: {name: string, eck: ECK<any>}[] = [];
   const keys = Object.keys(concept.muxifiedRecord);
   keys.forEach(name => {
     const e: Actions<any> = {};
@@ -241,12 +241,9 @@ export const demuxifyDeck = (concept: AnyConcept): {name: string, deck: Deck<any
       c,
       k
     };
-    const deck: Deck<any> = {
-    };
-    deck[name] = eck;
     final.push({
       name,
-      deck
+      eck
     });
   });
   return final;
@@ -304,7 +301,7 @@ export function muxification<C extends LoadConcepts>(
       k: {...concepts[semaphore].keyedSelectors, ...concepts[semaphore].selectors},
     };
     demuxifyDeck(concepts[semaphore]).forEach(u => {
-      (baseDeck as any)[u.name] = u.deck;
+      (baseDeck as any)[u.name] = u.eck;
     });
   });
 

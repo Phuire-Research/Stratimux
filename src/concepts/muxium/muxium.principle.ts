@@ -105,7 +105,7 @@ export const muxiumPrinciple: MuxiumPrinciple = (
             k: {...concept.keyedSelectors, ...concept.selectors}
           };
           demuxifyDeck(concept).forEach(u => {
-            (muxiumState.deck.d as any)[u.name] = u.deck;
+            (muxiumState.deck.d as any)[u.name] = u.eck;
           });
         });
         const newMuxiumState = getMuxiumState(newConcepts);
@@ -177,7 +177,7 @@ export const muxiumPrinciple: MuxiumPrinciple = (
             };
 
             demuxifyDeck(newConcepts[i]).forEach(u => {
-              (newDeck as any)[u.name] = u.deck;
+              (newDeck as any)[u.name] = u.eck;
             });
           }
         });

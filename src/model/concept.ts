@@ -271,6 +271,14 @@ function muxify<T extends Qualities, K extends Qualities>(
     ...base.actions,
     ...target.actions
   };
+  base.comparators = {
+    ...base.comparators,
+    ...target.comparators
+  };
+  base.keyedSelectors = {
+    ...base.keyedSelectors,
+    ...target.keyedSelectors
+  };
   if (target.principles) {
     if (base.principles) {
       const principles = [
