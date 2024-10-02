@@ -301,7 +301,7 @@ export function muxification<C extends LoadConcepts>(
       k: {...concepts[semaphore].keyedSelectors, ...concepts[semaphore].selectors},
     };
     demuxifyDeck(concepts[semaphore]).forEach(u => {
-      (baseDeck as any)[u.name] = u.eck;
+      (baseDeck as any).d[u.name] = u.eck;
     });
   });
 

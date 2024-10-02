@@ -177,7 +177,7 @@ export const muxiumPrinciple: MuxiumPrinciple = (
             };
 
             demuxifyDeck(newConcepts[i]).forEach(u => {
-              (newDeck as any)[u.name] = u.eck;
+              (newDeck as any)[u.name].d = u.eck;
             });
           }
         });
