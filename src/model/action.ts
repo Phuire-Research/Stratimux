@@ -55,7 +55,7 @@ export type ActionCreatorType<T = void> =
 
 export type Actions<T = void> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: T[K] extends Quality<Record<string, unknown>, any> ?
+  [K in keyof T]: T[K] extends Quality<Record<string, unknown>, any, any> ?
     T[K]['actionCreator'] : ActionCreator;
 };
 
