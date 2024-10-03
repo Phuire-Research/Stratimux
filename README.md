@@ -69,7 +69,7 @@ Other typescript projects
 npm i stratimux
 ```
 
-From this template
+From the template template
 ```bash
 npm i --force
 npm run start
