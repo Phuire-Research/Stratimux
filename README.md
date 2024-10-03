@@ -64,9 +64,17 @@ When in doubt simplify.
 * With this release will be reverting back to incremental changes and improvements.
 
 
+Other typescript projects
 ```bash
 npm i stratimux
 ```
+
+From this template
+```bash
+npm i --force
+npm run start
+```
+
 
 ### Project Structure
 ```
@@ -78,7 +86,7 @@ src/ concepts / muX / qualities / qOfMux.quality.ts
      tests / example.test.ts
 ```
 
-### uX.concept.ts
+### muX.concept.ts
 Treat your concepts as libraries, modules, and/or(anor) entire applications. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Muxiums. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 
 ```typescript
@@ -90,7 +98,7 @@ export type MUXState = {
   message: string
 }
 
-export const muXName = 'uX';
+export const muXName = 'muX';
 
 export const createMUXState = (): MUXState => {
   return {
@@ -121,7 +129,7 @@ export const createMuXConcept = () => {
   );
 };
 ```
-### uXqOfUx.quality.ts
+### muuXqOfMux.quality.ts
 This isolates all the parts necessary for your actions to have impact within this system. Types are a qualitative description of the overall quality. As even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are accessing the action creators directly versus the DECK System.
 
 Internally Stratimux uses semaphores as the method of quality routing within the Muxium. This is to reduce the time complexity of each look up. To further increase the speed of execution of your applications, utilize the supplied DECK Interfaces at each point of entry.
@@ -147,7 +155,7 @@ function getRandomRange(min: number, max: number) {
 }
 
 export const muXqOfMux = createQualityCardWithPayload<MUXState, muXOfMuxPayload, MUXDeck>({
-  type: 'muX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
+  type: 'muX allows for easy selection of your qualities, muXqOfMux is your quality, and Type is the distinction',
   reducer: (_, action) => {
     const {message} = action.payload;
     return {
@@ -180,7 +188,7 @@ export const muXqOfMux = createQualityCardWithPayload<MUXState, muXOfMuxPayload,
 // );
 ```
 
-### uX.principle.ts
+### muX.principle.ts
 Your concept's "main" function. This will be called after the muxium initializes. 
 
 ```typescript
@@ -216,7 +224,7 @@ export const muXPrinciple: MUXPrinciple = ({
 };
 ```
 
-### uXSome.strategy.ts
+### muXSome.strategy.ts
 When you are creating your strategies within this system of design. You are optimizing towards success, and majority of your strategies should be taking place within that mind set. Failure is just a chance to get back on track and see the end of some strategy, but likewise you have to account for that failure ahead of time.
 
 This approach to algorithm design is the core strength of Stratimux, but likewise its weakness due to branch prediction. Therefore be mindful if your strategies behave in unexpected ways. The Stage Planner paradigm, especially the beat attribute should be your first go to. As chances are your logic is becoming to complex and you need to tone down when parts of your application are notified changes to state.
@@ -224,7 +232,7 @@ This approach to algorithm design is the core strength of Stratimux, but likewis
 import { ActionStrategy, createActionNode, createStrategy, Deck, MuxiumDeck } from 'stratimux';
 import { MUXDeck } from '../muX.concept';
 
-export const muXSomeStrategyTopic = 'uX Some Error Correcting Strategy';
+export const muXSomeStrategyTopic = 'muX Some Error Correcting Strategy';
 export const muXSomeStrategy = (d: Deck<MuxiumDeck & MUXDeck>): ActionStrategy => {
   const stepSuccess = createActionNode(d.muxium.e.muxiumLog());
   const stepFailure = createActionNode(d.muxium.e.muxiumKick(), {
