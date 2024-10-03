@@ -3,6 +3,7 @@
 
 **Features:**
 * Universal Transformer
+* DECK Interface System
 * ICE - Intelligently Crystallized Executable
 * Function as an Operating System
 * Halting Complete
@@ -17,7 +18,6 @@
 * Plain Text Dialog Output
 * Hot Loading
 * No Dependency Injection
-* DECK Interface System for all entry points.
 
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
@@ -25,15 +25,16 @@
 * [Huirth](https://github.com/Phuire-Research/Huirth) - User Interface MVP and Stratimux Project Sidekick Application, this will be decomposed into an advanced starter template and the concepts that allow for the user interface will be merged into this repository.
 * [Stratimux Assistant](https://chat.openai.com/g/g-Io9NDT4Z0-stratimux-assistant) Work in progress GPT, rough sketch supplied information on this repository and a few articles about the project. Will flesh out more in the future.
 
-### Advice when Encountering Branch Prediction Errors.
+### What is Muxification?
+Muxification is a Multiplex of Quantitative and Qualitative Reasoning. Stratimux represents a Code as Proof of Concept for this new System. Where a Concept in this system is something in the pursuit of being fully measured, rather than nebulous or abstract. That goes a step further than traditional methods, including the ability to demuxify concepts.
+
+### Advice when encountering branch prediction errors.
 The easiest means of detecting if your application is starting to encounter such errors is to enable the dialog and logging options on your Muxium. To avoid running into these branch prediction errors. Attempt to limit your strategy assembly, qualities, and plans to be less than O(n^3). You will find that your functions will suddenly become probabilistic in their ability execution deterministically.
 
 Thankfully, this is the reason for the atomic behavior of your qualities combined with strategies and plans. As you may shrink time complexity into a series of steps. Or better yet, if you are relying on accessing some parameters from your state. Be sure to flattened those data structures into something that can readily be accessed.
 
 When in doubt simplify.
 
-### [Stratimux is a Function as Operating System](https://dev.to/phuire/stratimux-is-a-function-as-operating-system-50ik)
-### [TS Documentation](https://tsdocs.dev/docs/stratimux/0.1.52)
 ### Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Muxium](https://github.com/Phuire-Research/Stratimux/blob/main/Muxium.md) - Governing concept that contains the set of concepts that formalizes each muxium.
@@ -41,41 +42,27 @@ When in doubt simplify.
 * [Stage Planner](https://github.com/Phuire-Research/Stratimux/blob/main/StagePlanner.md) - Slices your application into different stages and prevents action overflows. 
 * [Action Controller](https://github.com/Phuire-Research/Stratimux/blob/main/ActionController.md) - Allows methods to be performed asynchronously.
 * [Strategy Data](https://github.com/Phuire-Research/Stratimux/blob/main/StrategyData.md) - Enables the Action Strategy pattern to perform as a "Universal Transformer." 
-* [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Demonstrates "Muxification of Concepts," as a method of functional inheritance.
+* [Data Oriented Functional Inheritance](https://github.com/Phuire-Research/Stratimux/blob/main/DataOrientedFunctionalInheritance.md) - Demonstrates "Unification of Concepts," as a method of functional inheritance.
 * [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - A single lock concept that can be within a single process or network of muxiums.
 
 ### Want to learn more?
 * [PURF - White Paper](https://github.com/Phuire-Research/PURF) - Safe Recursive Improvement of AI
 * [The Impossible Halting Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/Index.md) - Original Paper for Stratimux
-* [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.
+* [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
-## [Change Log](https://github.com/Phuire-Research/Stratimux/blob/main/CHANGELOG.md) ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge
+### Stratimux 0.2.0 Stealth Roll Out
+* Introduces type safety throughout your muxiums via a new DECK Interface System
+  * e: Entry Action
+  * c: Comparators, uses semaphores to ensure a stringless comparison
+  * k: Constants, allows you to select individual properties, make new selectors, get the entire state, etc...
+* Override + Hard Override - Will wipe out current actions within the Muxiums Action Que System
 
-## DECK Interface
-  * The new Deck Interface imposes several breaking changes:
-    * Qualities and Concepts are now passed in as an Record versus an Array.
-      * You will now have to name each concept as it exists in your Muxium
-      * Qualities will only return a Quality Record versus returning the actionCreator, type, and quality as an array. (*Progressing*)
-      * This enforces that all accessed actions in an Muxium will be primed by default alongside the *Deck Interface*
-    * **Deck Interface**: Add the ability to access primed Actions, KeyedSelectors, and new isTypeValidator helper functions for action comparisons directly in principles, plans, and qualities.
-      * { d: Deck<MuxiumDeck & More>(**DONE**) e: Actions(**DONE**), c: Comparators(**DONE**), k: KeyedSelectors(**DONE**) }
-      * This will be accomplished via a specific type cast of a Actions, KeyedSelectors, and Comparators (via semaphore comparison) properties access directly from Principles, Plans, and Stages, or new **Access** helper that accepts Concepts.
-      * Selectors will be created dynamically, but you may create advanced selectors that will be primed.
-        * However you will need to prime new expert selectors for some deeply nested array/record look up via the same conceptSemaphore.
-        * Same applies for IsT functions
-      * Will not be extending this feature to Qualities. As you may already access the new Deck Interfaces via the new *Access* via a method supplied the most recent Concepts.
-      * The **Deck** Interface is a collection of actions categorized by you chosen Concept names. (*Pending*)
-    * **Access** - Is a new concept being muxified into the Muxium that can restrict what actions a foreign Muxium may have access to.
-      * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Muxium. **Note** that currently your Muxiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Muxium.
-      * Create an access function that returns ActionCreators and Selectors
-        * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Muxium.
-### Additional 0.2.0 Refinements
-* **Dynamic Muxium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the muxification options by setting *dynamic* to true
-* **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
-* Origin, Override, Hard Override
-  * With these two additional concepts and variants muxified into the Muxium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
-  * Hard Override - This dispatch setting is effectively a destructive halt. And will conclude all active strategies currently in que from a given concept. Made for Experts who require a hard shift pending a specific observation and can account for the destructive halt.
-    * *Someone cuts you off while driving and the coffee you are drinking flies from the cupholder onto the dash, but didn't crash.*
+
+### Beyond 0.2.0
+* Originally intended to release a conversion guide, but due to the degree of changes. The focus has shifted back towards Huirth and supplying an easy means of accessing tutorials and a proper conceptual library.
+* With this release will be reverting back to incremental changes and improvements.
+
 
 ```bash
 npm i stratimux
@@ -84,94 +71,90 @@ npm i stratimux
 ### Project Structure
 ```
 src/ index.ts
-src/ concepts / uX / qualities / qOfUX.quality.ts
-     concepts / uX / strategies / uXSome.strategy.ts
-     concepts / uX / uX.concept.ts
-     concepts / uX / uX.principle.ts
-     tests / uX.test.ts
+src/ concepts / muX / qualities / qOfMux.quality.ts
+     concepts / muX / strategies / muXSome.strategy.ts
+     concepts / muX / muX.concept.ts
+     concepts / muX / muX.principle.ts
+     tests / example.test.ts
 ```
 
 ### uX.concept.ts
-This paradigm affords for a powerful separation of concerns. And is the key feature that allows the User Interface concept that is currently in the processing of moving out of MVP. That affords for the easy isolation of client and server logic. With even the ease of handling server side rendering based on what concept your Brand is being muxified with: server or client.
+Treat your concepts as libraries, modules, and/or(anor) entire applications. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Muxiums. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 
-Treat your concepts as libraries and modules. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Muxium. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 ```typescript
-import { Action, Mode, Quality, createConcept, PrincipleFunction } from 'stratimux';
-import { muXqOfUXQuality } from './qualities/qOfMux.quality'
-import { muXPrinciple } from './muX.principle'
+import { Concept, createConcept, MuxiumDeck, PrincipleFunction } from 'stratimux';
+import { muXqOfMux } from './qualities/qOfMux.quality';
+import { muXPrinciple } from './muX.principle';
 
 export type MUXState = {
-  //
+  message: string
 }
 
-export const muXName = 'muX';
-
-const muXQualities = {
-  muXqOfMUXExample
-}
+export const muXName = 'uX';
 
 export const createMUXState = (): MUXState => {
   return {
-    //
+    message: 'Hello World!'
   };
 };
 
-export type MUXDECk = {
-  muX: Concept<MUXState, typeof muXQualities>
-}
+const qualities = {
+  muXqOfMux
+};
 
-export type MUXPrinciple = PrincipleFunction<typeof muXQualities, MuxiumDeck & MUXDeck, MUXState>
+export type MUXDeck = {
+  muX: Concept<MUXState, typeof qualities>;
+};
 
-// Pass any arguments needed for your concept
-export const createUXConcept = (
-//  state: Record<string, unknown>,
-//  qualities?: Quality[],
-//  principles?: PrincipleFunction[],
-//  mode?: Mode[]
-) => {
-  return createConcept<UXState, typeof uXQualities>(
-    uXName,
-    createUXState(),
-    uXQualities,
+export type MUXPrinciple = PrincipleFunction<typeof qualities, MuxiumDeck & MUXDeck, MUXState>;
+
+export const createMuXConcept = () => {
+  return createConcept(
+    muXName,
+    createMUXState(),
+    {
+      muXqOfMux
+    },
     [
-      // Temporary, will be fixed for 0.2.0 release
-      uXPrinciple as unknown as PrincipleFunction<typeof uXQualities>,
+      muXPrinciple,
     ],
-    mode
   );
 };
 ```
-### muXqOfMux.quality.ts
-A quality is a useful aspect of a Concept, that is either intrinsic and/or(anor) extrinsic.
-* Intrinsic changes to your concepts are handled by a new Specific Reducer that precisely informs specifics points of observation in your application.
-* Extrinsic utilization of your qualities are mainly used to handle higher order planning routines via the setting of a defaultMethod. You may also expand this methods to handle what would traditionally treated as side effects, but are merely a step in this new Function as an Operating System Paradigm.
+### uXqOfUx.quality.ts
+This isolates all the parts necessary for your actions to have impact within this system. Types are a qualitative description of the overall quality. As even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are accessing the action creators directly versus the DECK System.
 
+Internally Stratimux uses semaphores as the method of quality routing within the Muxium. This is to reduce the time complexity of each look up. To further increase the speed of execution of your applications, utilize the supplied DECK Interfaces at each point of entry.
 ```typescript
 import {
-  createQualityCardWithPayload,
-  MuxifiedSubject,
   createMethodWithState,
   strategySuccess,
-  strategyData_muxifyData,
-  strategyFailed
+  strategyFailed,
+  createQualityCardWithPayload,
+  strategyData_muxifyData
 } from 'stratimux';
-import { MUXState } from '../uX.concept';
+import { MUXDeck, MUXState, } from '../muX.concept';
+
+type muXOfMuxPayload = {
+  message: string
+}
+export type uXqOfUxField = {
+  state: MUXState
+};
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export type muXqOfUxField = {
-  state: MUXState
-};
-
-// uXDeterminedQualities is a generated definition using the companion release of Huirth released alongside 0.2.0. Otherwise use any in the Qualities field
-export const muXqOfUX = createQualityCardWithPayload<muXqOfUxField, muXDeterminedQualities>({
-  type: 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
-  reducer: (state: MUXState) => ({...state}),
-  methodCreator: () =>
-  // Only if you need to access state, otherwise use any other method
-  createMethodWithState<UXState>((action, state) => {
+export const muXqOfMux = createQualityCardWithPayload<MUXState, muXOfMuxPayload, MUXDeck>({
+  type: 'muX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
+  reducer: (_, action) => {
+    const {message} = action.payload;
+    return {
+      message
+    };
+  },
+  methodCreator: () => createMethodWithState(({action, state}) => {
     if (action.strategy) {
       // P/NP?
       const even = Math.round(getRandomRange(1, 5)) % 2;
@@ -191,57 +174,44 @@ export const muXqOfUX = createQualityCardWithPayload<muXqOfUxField, muXDetermine
 /* Below are the default functions available for your quality */
 // export const qOfUXQuality = createQuality(
 //   qOfUXType,
-//   defaultReducer(Informs)/nullReducer(Doesn't Inform),
-// The method is optional and is an advanced behavior enabling the quality to be used in an ActionStrategy
+//   defaultReducer,
+// The method is optional and is an advanced behavior
 //   defaultMethodCreator
 // );
 ```
 
 ### uX.principle.ts
 Your concept's "main" function. This will be called after the muxium initializes. 
-*Can decompose the entry Muxified Deck Interface into the follow options*
-* observer - Using observer.next(someAction) will directly emit that action into the muxium's action stream.
-* concepts_ - Is the initial load of concepts when your principle is initialized
-* subscribe - Allows for subscription to any changes to concepts.
-* plan - Direct access to the internal planning system of Stratimux. Provides an access to a Muxified Deck Interface.
-* conceptSemaphore - This identifies the placement of your concept in the muxium's conceptual set. This is used to determine if your concept is loaded and access state via the selectMuxifiedState function.
-* deck - d_, e_, c_, k_ - See deck interface section for details.
 
 ```typescript
-import { Subscriber } from 'rxjs';
 import {
-  Action,
-  Concepts,
-  PrincipleFunction,
-  MuxifiedSubject,
   getMuxiumState,
-  primeAction,
-  strategyBegin,
+  strategyBegin
 } from 'stratimux';
-import { UXState, uXName } from './uX.concept';
-import { uXSomeStrategy, uXSomeStrategyTopic } from './strategies/uXSome.strategy';
+import { muXName, MUXPrinciple } from './muX.concept';
+import { muXSomeStrategy, muXSomeStrategyTopic } from './strategies/muXSome.strategy';
 
-export const uXPrinciple: UXPrinciple = ({
-  plan,
+export const muXPrinciple: MUXPrinciple = ({
+  plan
 }) => {
   // There always needs to be atleast one subscriber or plan for the Muxium to be active.
-  plan('uX Plan', ({stageO, stage, d__, stagePlanner}) => [
+  const muxPlan = plan('muX Plan', ({stageO, stage, d__}) => [
     // This will register this plan to the muxium, this allows for the muxium to close or remove your concept cleanly.
-    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: uXName, stagePlanner}))),
-    stage(({concepts, dispatch, k}) => {
+    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan}))),
+    stage(({concepts, dispatch, k, d}) => {
       const state = k.state(concepts);
       if (state) {
-        dispatch(strategyBegin(uXSomeStrategy()), {
+        dispatch(strategyBegin(muXSomeStrategy(d)), {
           iterateStage: true
         });
       }
     }, {beat: 30}),
-    stage((concepts) => {
+    stage(({concepts, stagePlanner}) => {
       const {lastStrategy} = getMuxiumState(concepts);
-      if (lastStrategy === uXSomeStrategyTopic) {
+      if (lastStrategy === muXSomeStrategyTopic) {
         stagePlanner.conclude();
       }
-    }, {beat: 30})
+    })
   ]);
 };
 ```
@@ -251,22 +221,23 @@ When you are creating your strategies within this system of design. You are opti
 
 This approach to algorithm design is the core strength of Stratimux, but likewise its weakness due to branch prediction. Therefore be mindful if your strategies behave in unexpected ways. The Stage Planner paradigm, especially the beat attribute should be your first go to. As chances are your logic is becoming to complex and you need to tone down when parts of your application are notified changes to state.
 ```typescript
-import { ActionStrategy, muxiumKick, muxiumLog, createActionNode, createStrategy } from 'stratimux';
-import { uXqOfUX } from '../qualities/qOfUx.quality';
+import { ActionStrategy, createActionNode, createStrategy, Deck, MuxiumDeck } from 'stratimux';
+import { MUXDeck } from '../muX.concept';
 
-export const uXSomeStrategyTopic = 'uX Some Error Correcting Strategy';
-// Passing in your application's deck removes the burden of having to manage multiple imports. While maintaining type safety even in helper functions such as a strategy creator.
-export const uXSomeStrategy = (deck: MuxiumDeck & UXDeck): ActionStrategy => {
-  const stepSuccess = createActionNode(deck.d.muxium.e.muxiumLog());
-  const stepFailure = createActionNode(deck.d.muxium..e.muxiumKick(), {
+export const muXSomeStrategyTopic = 'uX Some Error Correcting Strategy';
+export const muXSomeStrategy = (d: Deck<MuxiumDeck & MUXDeck>): ActionStrategy => {
+  const stepSuccess = createActionNode(d.muxium.e.muxiumLog());
+  const stepFailure = createActionNode(d.muxium.e.muxiumKick(), {
     successNode: stepSuccess,
   });
-  const stepBegin = createActionNode(deck.uX.e.uXqOfUXExample(), {
+  const stepBegin = createActionNode(d.muX.e.muXqOfMux({
+    message: 'Muxification Hello World'
+  }), {
     successNode: stepSuccess,
     failureNode: stepFailure
   });
   return createStrategy({
-    topic: uXSomeStrategyTopic,
+    topic: muXSomeStrategyTopic,
     initialNode: stepBegin
   });
 };
@@ -276,15 +247,13 @@ export const uXSomeStrategy = (deck: MuxiumDeck & UXDeck): ActionStrategy => {
 Notice that beyond creating the muxium, there is no need for additional input. As the muxium is a recursive function. Your concepts are initialized internally via the principle that you have assigned to your concept. Note that you may still subscribe, stage, and dispatch actions into an muxium.
 ```typescript
 import { muxification } from 'stratimux';
-import { createUXConcept } from './concepts/uX/uX.concept';
+import { createMuXConcept } from './concepts/muX/muX.concept';
 
 (() => {
-  const muxiumName = 'Name of your muxium';
-  // First boolean sets logging to true.
-  // Second set store dialog to true.
-  //  This will log to the console the dialog of each successive ActionStrategy.
-  //    And store the entire application context in the muxium's dialog.
-  // The final boolean will allow the action stream to be logged to console for debugging purposes
-  muxification(muxiumName, {uX: createUXConcept()}, {logging: true, storeDialog: true, logActionStream: true});
+  const muxiumName = 'Your Muxium';
+  // Sets logging to true and store dialog to true
+  //  This will log to the console the dialog of each successive ActionStrategy
+  //  And store the entire application context in the muxium's dialog.
+  muxification(muxiumName, {muX: createMuXConcept()}, {logging: true, storeDialog: true});
 })();
 ```
