@@ -1,67 +1,114 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Concept model file.
-This file defines the Concept abstraction that the Axium uses to Transform its functionality.
-A concept is composed of name, unified, state, qualities, semaphore, principles, and some meta attributes if necessary.
+This file defines the Concept abstraction that the Muxium uses to Transform its functionality.
+A concept is composed of name, muxified, state, qualities, semaphore, principles, and some meta attributes if necessary.
 $>*/
 /*<#*/
-import { Observable, Subject } from 'rxjs';
-import { Action, ActionType } from './action';
+import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType, Actions } from './action';
 import { PrincipleFunction } from '../model/principle';
-import { strategySuccess } from './actionStrategy';
-import { map } from 'rxjs';
-import { KeyedSelector } from './selector';
-import { axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
-import { UnifiedSubject } from './stagePlanner';
+import {
+  BundledSelectors,
+  KeyedSelector,
+  KeyedSelectors,
+  Selectors,
+  createDummyKeyedSelectors,
+  createDummySelectors,
+  createMuxifiedKeyedSelector
+} from './selector';
+import { MuxifiedSubject } from './stagePlanner';
+import { Comparators, createComparator } from './interface';
+import { Qualities, Quality } from './quality';
+import { Deck } from './deck';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Reducer = (state: any, action: Action) => any;
+export type Reducer<
+  S extends Record<string, unknown>,
+  T = void
+> = (state: S, action: Action<T>) => S | null;
 
-export type Method = Observable<[Action, boolean]>;
+export type SpecificReducer<S extends Record<string, unknown>, T = void, C = void> =
+  (state: S, action: Action<T>, deck: Deck<C>) => Partial<S> | null;
+
+export type Method<T = void> = Observable<[Action<T>, boolean]>;
 export type Principle = Observable<Action>;
+export type Self<T = void, C = void> = T extends void ?
+    ActionCreator
+    :
+    ActionCreatorWithPayload<T extends Record<string, unknown> ? T : Record<string, unknown>>;
+export type ActionDeck<T = void, C = void> = {action: Action<T>, deck: Deck<C>, self: Self<T>};
 
 export type Mode = ([action, concept, action$, concepts$]: [
-  Action,
+  Action<unknown>,
   Concepts,
   Subject<Action>,
-  UnifiedSubject,
+  MuxifiedSubject<any, any>,
 ]) => void;
 
-export type MethodCreator = (concept$: Subject<Concepts>, semaphore: number) => [Method, Subject<Action>];
-// export type MethodCreator = (concept$?: UnifiedSubject, semaphore?: number) => [Method, Subject<Action>];
+export type MethodCreatorStep<S extends Record<string, unknown>, T = void, C = void> = () => MethodCreator<S, T, C>;
 
-export type Quality = {
-  actionType: ActionType;
-  reducer: Reducer;
-  toString: () => string;
-  methodCreator?: MethodCreator;
-  method?: Method;
-  subject?: Subject<Action>;
-  keyedSelectors?: KeyedSelector[];
-  meta?: Record<string,unknown>;
-  analytics?: Record<string,unknown>;
+export type MethodCreator<S extends Record<string, unknown>, T = void, C = void> =
+  (concept$: Subject<Concepts>, semaphore: number) => [Method<T>, Subject<ActionDeck<T, C>>];
+// export type MethodCreator = (concept$?: MuxifiedSubject, semaphore?: number) => [Method, Subject<Action>];
+
+type Muxified = {
+  stateMap: string[];
+  actionMap: string[];
 };
 
-export type Concept = {
+export type Concept<S extends Record<string, unknown>, Q = void> = {
   name: string;
-  unified: string[];
-  state: Record<string, unknown>;
-  qualities: Quality[];
+  muxifiedRecord: Record<string, Muxified>;
+  state: S;
+  actions: Actions<Q>;
+  comparators: Comparators<Q>;
+  keyedSelectors: KeyedSelectors<S>;
+  selectors: Selectors<S>;
+  qualities: Quality<Record<string, unknown>>[];
+  q: Q extends Qualities ?
+    Q
+    :
+    Qualities;
   semaphore: number;
-  principles?: PrincipleFunction[];
+  principles?: PrincipleFunction<Q, any, S>[];
   mode?: Mode[];
   meta?: Record<string,unknown>;
 };
 
-export type Concepts = Record<number, Concept>;
+// export type AnyConcept = Concept<Record<string, unknown>, any> | Concept<Record<string, unknown>, void>;
+export type AnyConcept =
+  Concept<Record<string, unknown>, Qualities>
+  |
+  // Concept<Record<string, unknown>, void>
+  // |
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Concept<any, any>;
 
-export function createConcept(
+export type Concepts = Record<number, AnyConcept>;
+export type LoadConcepts = Record<string, AnyConcept>;
+
+export type ConceptDeck<T> = {
+  [K in keyof T]:
+    T[K] extends Concept<Record<string, unknown>, void> ?
+      Concept<Record<string, unknown>, void>
+      :
+      T[K] extends Concept<Record<string, unknown>, Qualities> ?
+      Concept<Record<string, unknown>, T[K]['q']>
+      :
+      Concept<Record<string, unknown>, any>
+};
+
+export type ConceptsSubscriber = (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
+
+export function createConcept<S extends Record<string, unknown>, Q = void>(
   name: string,
-  state: Record<string, unknown>,
-  qualities?: Quality[],
-  principles?: PrincipleFunction[],
+  state: S,
+  _qualities?: Record<string, unknown>,
+  principles?: PrincipleFunction<Q, any, S>[],
   mode?: Mode[],
-  meta?: Record<string,unknown>
-): Concept {
+  meta?: Record<string,unknown>,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): AnyConcept {
   if (mode) {
     mode.forEach((m, i) => {
       m.toString = () => `MODE: ${name} ${i}`;
@@ -72,11 +119,33 @@ export function createConcept(
       p.toString = () => `PRINCIPLE: ${name} ${i}`;
     });
   }
+  const actions: Record<string, unknown> = {};
+  const comparators: Comparators<any> = {};
+  const qualities: Quality<Record<string, unknown>>[] = [];
+  if (_qualities) {
+    Object.keys(_qualities).forEach(q => {
+      try {
+        actions[q] = (_qualities[q] as Quality<any>).actionCreator;
+        comparators[q] = createComparator((_qualities[q] as Quality<any>).actionSemaphoreBucket);
+        qualities.push(_qualities[q] as Quality<Record<string, unknown>>);
+      } catch (error) {
+        console.error('ERROR @: ', q, _qualities[q]);
+        // console.warn('Check: ', _qualities);
+      }
+    });
+  }
   return {
     name,
-    unified: [],
+    muxifiedRecord: {},
     state,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    actions: actions as Actions<Q extends void ? any : Q>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    comparators: comparators as Comparators<Q extends void ? any : Q>,
+    keyedSelectors: createDummyKeyedSelectors(state),
+    selectors: createDummySelectors(),
     qualities: qualities ? qualities : [],
+    q: (_qualities ? _qualities : {}) as Q extends Qualities ? Q : Qualities,
     semaphore: -1,
     principles,
     mode,
@@ -84,14 +153,37 @@ export function createConcept(
   };
 }
 
+export function createQuality<S extends Record<string, unknown>, T = void, C = void>(
+  actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][],
+  actionCreator: ActionCreatorType<T>,
+  reducer: SpecificReducer<S, T, C>,
+  methodCreator?: MethodCreatorStep<S, T, C>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyedSelectors?: KeyedSelector[],
+  meta?: Record<string,unknown>,
+  analytics?: Record<string,unknown>,
+): Quality<S, T, C> {
+  return {
+    actionType,
+    actionCreator,
+    actionSemaphoreBucket,
+    reducer,
+    methodCreator,
+    keyedSelectors,
+    meta,
+    analytics
+  };
+}
 /**
  * This will remove any duplicate qualities, principles, and modes.
  * Note that for now the check for mode and principle are based on concept name and loaded index;
  */
-function filterSimilarQualities(concept: Concept) {
-  const newQualities: Quality[] = [];
-  const newUnified: string[] = [];
-  const newPrinciples: PrincipleFunction[] = [];
+function filterSimilarQualities(concept: AnyConcept) {
+  const newQualities: Quality<Record<string, unknown>>[] = [];
+  const newMuxified: Record<string, Muxified> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const newPrinciples: PrincipleFunction<Qualities, any, Record<string, unknown>>[] = [];
   const newMode: Mode[] = [];
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;
@@ -106,19 +198,20 @@ function filterSimilarQualities(concept: Concept) {
     }
   }
   concept.qualities = newQualities;
-  for (let i = 0; i < concept.unified.length; i++) {
+  const muxifiedKeys = Object.keys(concept.muxifiedRecord);
+  for (let i = 0; i < muxifiedKeys.length; i++) {
     let found = false;
-    for (let j = i + 1; j < concept.unified.length; j++) {
-      if (concept.unified[i] === concept.unified[j]) {
+    for (let j = i + 1; j < muxifiedKeys.length; j++) {
+      if (muxifiedKeys[i] === muxifiedKeys[j]) {
         found = true;
         break;
       }
     }
     if (!found) {
-      newUnified.push(concept.unified[i]);
+      newMuxified[muxifiedKeys[i]] = concept.muxifiedRecord[muxifiedKeys[i]];
     }
   }
-  concept.unified = newUnified;
+  concept.muxifiedRecord = newMuxified;
   if (concept.principles) {
     for (let i = 0; i < concept.principles.length; i++) {
       let found = false;
@@ -152,14 +245,20 @@ function filterSimilarQualities(concept: Concept) {
   return concept;
 }
 
-function unify(base: Concept, target: Concept): Concept {
+function muxify<T extends Qualities, K extends Qualities>(
+  base: Concept<Record<string, unknown>, T>,
+  target: Concept<Record<string, unknown>, K> | AnyConcept
+): Concept<Record<string, unknown>, T & K> {
   if (target.name !== '') {
-    base.unified.push(target.name);
+    base.muxifiedRecord[target.name] = {
+      actionMap: Object.keys(target.actions),
+      stateMap: Object.keys(target.state)
+    };
   }
-  base.unified = [
-    ...base.unified,
-    ...target.unified
-  ];
+  base.muxifiedRecord = {
+    ...base.muxifiedRecord,
+    ...target.muxifiedRecord
+  };
   base.state = {
     ...base.state,
     ...target.state,
@@ -168,16 +267,32 @@ function unify(base: Concept, target: Concept): Concept {
     ...base.qualities,
     ...target.qualities,
   ];
+  base.actions = {
+    ...base.actions,
+    ...target.actions
+  };
+  base.comparators = {
+    ...base.comparators,
+    ...target.comparators
+  };
+  base.keyedSelectors = {
+    ...base.keyedSelectors,
+    ...target.keyedSelectors
+  };
   if (target.principles) {
     if (base.principles) {
-      base.principles = [
+      const principles = [
         ...base.principles,
         ...target.principles
-      ];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any;
+      base.principles = principles;
     } else {
-      base.principles = [
+      const principles = [
         ...target.principles
-      ];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any;
+      base.principles = principles;
     }
   }
   if (target.mode) {
@@ -204,22 +319,29 @@ function unify(base: Concept, target: Concept): Concept {
       };
     }
   }
-  return base;
+  return base as Concept<Record<string, unknown>, T & K>;
 }
 /**
- * This will unify concepts while prioritizing qualities later in the provided concepts list via recomposition.
- *  Then finally unify the emergent concept with final priority.
+ * This will muxify concepts while prioritizing qualities later in the provided concepts list via recomposition.
+ *  Then finally muxify the emergent concept with final priority.
  */
-export function unifyConcepts(
-  concepts: Concept[],
-  emergentConcept: Concept
-): Concept {
-  let newConcept = createConcept('', {});
+export function muxifyConcepts<S extends Record<string, unknown>, T extends Qualities>(
+  concepts: AnyConcept[],
+  emergentConcept: AnyConcept
+): AnyConcept {
+  const dummy: Record<string, unknown> = {};
+  let newConcept = createConcept<typeof dummy, T>('', dummy);
   forEachConcept(concepts, (concept => {
-    newConcept = unify(newConcept, concept);
+    newConcept = muxify(newConcept, concept);
   }));
-  newConcept = unify(newConcept, emergentConcept);
-  newConcept.unified = newConcept.unified.filter(name => name !== emergentConcept.name);
+  newConcept = muxify(newConcept, emergentConcept);
+  const newMuxifiedRecord: Record<string, Muxified> = {};
+  Object.keys(newConcept.muxifiedRecord).forEach(name => {
+    if (name !== emergentConcept.name) {
+      newMuxifiedRecord[name] = newConcept.muxifiedRecord[name];
+    }
+  });
+  newConcept.muxifiedRecord = newMuxifiedRecord;
   newConcept.name = emergentConcept.name;
   if (newConcept.mode) {
     newConcept.mode.forEach((m, i) => {
@@ -231,10 +353,10 @@ export function unifyConcepts(
       p.toString = () => `PRINCIPLE: ${newConcept.name} ${i}`;
     });
   }
-  return filterSimilarQualities(newConcept);
+  return filterSimilarQualities(newConcept as AnyConcept) as Concept<S, T>;
 }
 
-export const getUnifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);
+export const getMuxifiedName = (concepts: Concepts, semaphore: number): string | undefined => (concepts[semaphore]?.name);
 
 // Will return -1 if not found
 export const getConceptSemaphore = (concepts: Concepts, conceptName: string): number => {
@@ -245,53 +367,6 @@ export const getConceptSemaphore = (concepts: Concepts, conceptName: string): nu
     }
   });
   return -1;
-};
-
-export function createQuality(
-  actionType: ActionType,
-  reducer: Reducer,
-  methodCreator?: MethodCreator,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyedSelectors?: KeyedSelector[],
-  meta?: Record<string,unknown>,
-  analytics?: Record<string,unknown>,
-): Quality {
-  return {
-    actionType,
-    reducer,
-    methodCreator,
-    keyedSelectors,
-    meta,
-    analytics
-  };
-}
-
-export function defaultReducer(state: unknown, _: Action) {
-  return state;
-}
-defaultReducer.toString = () => ('Default Reducer');
-
-export function nullReducer(_: unknown, __: Action) {
-  return null;
-}
-nullReducer.toString = () => ('Null Reducer');
-
-export const defaultMethodCreator: MethodCreator = () : [Method, Subject<Action>] =>  {
-  const defaultSubject = new Subject<Action>();
-  const defaultMethod: Method = defaultSubject.pipe(
-    map((action: Action) => {
-      if (action.strategy) {
-        return [strategySuccess(action.strategy), false];
-      }
-      return [{
-        ...action,
-        type: axiumConcludeType
-      }, false];
-    }),
-  );
-
-  defaultMethod.toString = () => ('Default Method');
-  return [defaultMethod, defaultSubject];
 };
 
 export const isConceptLoaded = (concepts: Concepts, conceptName: string): boolean => {
@@ -325,7 +400,7 @@ export const areConceptsLoaded = (concepts: Concepts, conceptNames: string[]): b
   return allExists;
 };
 
-export const forEachConcept = (concepts: Concepts, each: (concept: Concept, semaphore: number) => void) => {
+export const forEachConcept = (concepts: Concepts, each: (concept: AnyConcept, semaphore: number) => void) => {
   const conceptKeys = Object.keys(concepts);
   for (const i of conceptKeys) {
     const index = Number(i);
@@ -349,11 +424,12 @@ const stateToString = (state: Record<string, unknown>): string => {
   return final;
 };
 
-export const conceptToString = (concept: Concept): string => {
+export const conceptToString = (concept: AnyConcept): string => {
   let output = '';
   output += `{\nname: ${concept.name},`;
-  if (concept.unified.length > 0) {
-    output += `\nunified: ${concept.unified},`;
+  const muxifiedKeys = Object.keys(concept.muxifiedRecord);
+  if (muxifiedKeys.length > 0) {
+    output += `\nmuxified: ${muxifiedKeys},`;
   }
   output += `\nqualities: [ ${concept.qualities.toString()}\n],`;
   output += `\nstate: ${stateToString(concept.state)}, `;
@@ -379,7 +455,7 @@ export const conceptsToString = (concepts: Concepts): string => {
   return '[\n' + conceptStringArray.join(',\n');
 };
 
-export const qualityToString = (quality: Quality) => () => {
+export const qualityToString = (quality: Quality<Record<string, unknown>>) => () => {
   const actionType = quality.actionType;
   const r = quality.reducer.toString();
   const reducer = r === 'Default Reducer' ? r : 'Reducer';
@@ -389,10 +465,7 @@ export const qualityToString = (quality: Quality) => () => {
 
 export const concept = {
   create: createConcept,
-  unify: unifyConcepts,
-  createQuality,
-  defaultReducer,
-  defaultMethodCreator,
+  muxify: muxifyConcepts,
   isLoaded: isConceptLoaded,
   areLoaded: areConceptsLoaded,
   forEach: forEachConcept,

@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 utilizing the provided BeatSelectorChanges concept
 $>*/
 /*<#*/
-import { createAxium, getAxiumState, isAxiumOpen } from '../../model/axium';
+import { muxification, getMuxiumState, isMuxiumOpen } from '../../model/muxium';
 import { createStage } from '../../model/stagePlanner';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
-import { beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
-import { initializeTopic } from '../../concepts/axium/strategies/initialization.strategy';
+import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
+import { initializeTopic } from '../../concepts/muxium/strategies/initialization.strategy';
 import { strategyBegin } from '../../model/actionStrategy';
 import {
   beatSelectorChangesSelectCountFive,
@@ -19,23 +19,25 @@ import {
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
 import { selectSlice, selectState } from '../../model/selector';
+import { Deck } from '../../model/deck';
+import { MuxiumDeck } from '../../concepts/muxium/muxium.concept';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
   const beat = 7000;
-  const [tally, strategy, topic] = generateRandomCountingStrategy();
-  const axium = createAxium('Beat Selector Changes properly defers accumulated changes', [
-    createBeatSelectorChangesConcept()
-  ]);
-  const plan = axium.plan('Prolonged Counting Strategy', [
-    createStage((concepts, dispatch) => {
-      if (isAxiumOpen(concepts)) {
+  const muxium = muxification('Beat Selector Changes properly defers accumulated changes', {
+    beatSelectors: createBeatSelectorChangesConcept()
+  });
+  const [tally, strategy, topic] = generateRandomCountingStrategy(muxium.deck.d as Deck<MuxiumDeck & BeatSelectorChangesDeck>);
+  const plan = muxium.plan('Prolonged Counting Strategy', () => [
+    createStage(({concepts, dispatch}) => {
+      if (isMuxiumOpen(concepts)) {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }
     }),
-    createStage((concepts, _, changes) => {
-      if (getAxiumState(concepts).lastStrategy === topic) {
+    createStage(({concepts, changes}) => {
+      if (getMuxiumState(concepts).lastStrategy === topic) {
         expect(selectSlice(concepts, beatSelectorChangesSelectCountOne)).toBe(tally[0]);
         expect(selectSlice(concepts, beatSelectorChangesSelectCountTwo)).toBe(tally[1]);
         expect(selectSlice(concepts, beatSelectorChangesSelectCountThree)).toBe(tally[2]);
@@ -46,7 +48,7 @@ test('Deferred Beat Selector Changes Test', (done) => {
         expect(changes?.length).toBe(tally.length);
         setTimeout(() => {
           plan.conclude();
-          axium.close();
+          muxium.close();
           done();
         }, 500);
       }

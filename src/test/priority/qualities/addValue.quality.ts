@@ -4,34 +4,25 @@ the incoming action's payload
 $>*/
 /*<#*/
 import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
 import { ExperimentPriorityState } from '../priority.concept';
-
-export const experimentPriorityAddValueType = 'experimentPriority Add value';
 
 export type ExperimentPriorityAddValuePayload = {
   newValue: number
 };
 
-export const experimentPriorityAddValue =
-  act.prepareActionWithPayloadCreator<ExperimentPriorityAddValuePayload>(experimentPriorityAddValueType);
-
-function experimentPriorityAddValueReducer(state: ExperimentPriorityState, action: Action): ExperimentPriorityState {
-  const { newValue } = select.payLoad<ExperimentPriorityAddValuePayload>(action);
-  if (newValue) {
+export const experimentPriorityAddValue = quality.createWithPayload<ExperimentPriorityState, ExperimentPriorityAddValuePayload>({
+  type: 'experimentPriority Add value',
+  reducer: (state, action) => {
+    const { newValue } = action.payload;
+    if (newValue) {
+      return {
+        value: newValue + state.value
+      };
+    }
     return {
-      ...state,
-      value: newValue + state.value
     };
-  }
-  return {
-    ...state,
-  };
-}
-
-export const experimentPriorityAddValueQuality = concept.createQuality(
-  experimentPriorityAddValueType,
-  experimentPriorityAddValueReducer,
-);
+  },
+});
 /*#>*/

@@ -2,23 +2,14 @@
 For the asynchronous graph programming framework Stratimux and based on the Experiment Concept, generate a quality that will set a ready property to true
 $>*/
 /*<#*/
-import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { Action } from '../../../model/action';
+import { quality } from '../../../model/quality';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
-export const experimentPlanOptionsIsReadyType = 'experimentPlanOptions is ready';
-
-export const experimentPlanOptionsIsReady = act.prepareActionCreator(experimentPlanOptionsIsReadyType);
-
-function experimentPlanOptionsIsReadyReducer(state: ExperimentPlanOptionsState, action: Action): ExperimentPlanOptionsState {
-  return {
-    ...state,
+export const experimentPlanOptionsIsReady = quality.create<ExperimentPlanOptionsState>({
+  type: 'experimentPlanOptions is ready',
+  reducer: () => ({
     ready: true
-  };
-}
-
-export const experimentPlanOptionsIsReadyQuality = concept.createQuality(
-  experimentPlanOptionsIsReadyType,
-  experimentPlanOptionsIsReadyReducer,
-);
+  }),
+});
 /*#>*/

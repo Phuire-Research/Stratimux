@@ -3,19 +3,15 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 recent. Then dispatch the most recent's next action via the supplied action strategy.
 $>*/
 /*<#*/
-import { nullReducer } from '../../../model/concept';
+import { nullReducer } from '../../../model/quality';
 import { createMethodDebounce } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentDebounceNextActionNode,
-  experimentDebounceNextActionNodeType,
-  experimentDebounceNextActionNodeQuality
-] = createQualitySet({
+export const experimentDebounceNextActionNode = createQualityCard({
   type: 'Experiment will debounce incoming actions within set duration',
   reducer: nullReducer,
-  methodCreator: () => createMethodDebounce((action) => {
+  methodCreator: () => createMethodDebounce(({action}) => {
     if (action.strategy) {
       return strategySuccess(action.strategy);
     } else {

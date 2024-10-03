@@ -1,13 +1,13 @@
 ### *Consistency Update* v0.1.72
-* Added a new Axium Quality: **axiumRegisterTimeOut**, that accepts an action and specified timeout that will run the axiumTimeOut function then succeed an incoming strategy if present.
+* Added a new Muxium Quality: **muxiumRegisterTimeOut**, that accepts an action and specified timeout that will run the muxiumTimeOut function then succeed an incoming strategy if present.
   * This likewise fulfills the original purpose of buffer, even in a complex scenario.
 ### v0.1.71 5/16/2024
-* Finally removed the need to add "as Subject<Concepts> | UnifiedSubject" when creating methods that access state or concepts.
+* Finally removed the need to add "as Subject<Concepts> | MuxifiedSubject" when creating methods that access state or concepts.
 * Added then **removed** a new Buffer Method Creator Series. See branch Stash-Buffer for details.
 ### v0.1.69 5/15/2024
-* Added priority to axium strategies.
+* Added priority to muxium strategies.
 * Improved consistency of logic due the above change.
-* Exported **isAxiumOpen** helper function.
+* Exported **isMuxiumOpen** helper function.
 ### Strategy Priority v0.1.68 5/15/2024
 * Added priority to strategies, this priority will be assigned to each step issued by such.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
@@ -17,7 +17,7 @@
   * Note pure action creators will not provide an option for payload
 * Cascaded priority to ActionStrategies to allow for planning priority ahead of time.
 * Updated the PrincipleFunction documentation to have the semaphore parameter to now be conceptSemaphore. This allows for an easy drop in into the options parameter.
-* Made createAxium utilize the same **options** design pattern.
+* Made muxification utilize the same **options** design pattern.
 ### v0.1.65 5/13/2024
 * Removed one more level of deepness from DotPath(6 levels now), projects should now compile without the excessively deep error.
 ### v0.1.64 5/13/2024
@@ -29,14 +29,14 @@
 ### **BREAKING** Strong Fast Lock Step v0.1.62 5/08/2024
 * Devised a means to ensure a lock step execution of incoming actions
   * Due to each stage being ran once regardless of their selector being changed, some plans may receive the wrong value if not determining if that stage has been ran for the first time. See priority.test.ts for the example: if (changes.length > 0) {//}
-  * This also impacted the *axiumWaitForOpenThenIterate* helper function, but now works as intended via no longer checking for the latest lastStrategy change.
+  * This also impacted the *muxiumWaitForOpenThenIterate* helper function, but now works as intended via no longer checking for the latest lastStrategy change.
   * [*Note* Removed CI checks for 14.x and 16.x due to updating dependencies.](https://github.com/Phuire-Research/Stratimux/pull/213/commits/6b93c57fa2dab8869f1508970c44a8300ef444be)
 ### Strong Fast Time v0.1.61
-* Created the new *axiumTimeOut* helper function
-  * This will add a specified action to the axium tail property after some specified time.
+* Created the new *muxiumTimeOut* helper function
+  * This will add a specified action to the muxium tail property after some specified time.
   * This is used internally to handle the majority of asynchronous interactions
 ### Strong Fast **BREAKING** v0.1.59 5/06/24
-* Removed the setTimeout trick in favor of a new tail property added to the axium concept, this paves the way for this pattern to be completely responsible for its own implementation.
+* Removed the setTimeout trick in favor of a new tail property added to the muxium concept, this paves the way for this pattern to be completely responsible for its own implementation.
   * **BREAKING** Method Subjects are now a tuple of [action: Action, async: Boolean]. This allows for the old setTimeout trick to be used in case the action stream isn't kicked into gear.
     * This change is only breaking if you have implemented your own custom methods, please see src/model/method.ts for reference.
 * Ensured that plans that conclude with an active beat, will have their timers removed.
@@ -51,22 +51,22 @@
 ### v0.1.55 4/24/24
 * Changed ActionNodeOptions to allow for successNode and failureNode to be left absent. Continued effort towards decreasing boilerplate.
 * Refined original paper.
-* Properly exporting the new ActionCreator and ActionCreatorWithPayload for specific createQualitySetX creator functions
+* Properly exporting the new ActionCreator and ActionCreatorWithPayload for specific createQualityCardX creator functions
 ### v0.1.53 4/23/24
-* Added createQualitySet and createQualitySetWithPayload to reduce some boilerplate.
+* Added createQualityCard and createQualityCardWithPayload to reduce some boilerplate.
 ### v0.1.52 Patch 4/03/24
 * Quick pass updating documentation
-* Synced up createAxium, etc... To properly allow for the axium to log actions incoming in the action stream if set.
+* Synced up muxification, etc... To properly allow for the muxium to log actions incoming in the action stream if set.
 ### **BREAKING Update v0.1.5** 4/02/24
-* Unified the internal concept streams and created a new dedicated stream to inform most recent concepts
-  * Note if you are assembling plans within a method, be sure to grab the **concepts$** from *getAxiumState*
-* It is now a requirement you use the **stageWaitForOpenThenIterate(() => action)** helper function in your plans if you are depending on the last strategyTopic property on the axium concept.
-* Added an addition logging property to reveal the internal action stream that can be set when creating your axium. This is separate from the prior logging feature.
-* Method now utilize an internal actionConcept$ stream of type Subject<Concepts>. Method creators that utilize the UnifiedSubject will throw a type error and will need to be updated.
+* Muxified the internal concept streams and created a new dedicated stream to inform most recent concepts
+  * Note if you are assembling plans within a method, be sure to grab the **concepts$** from *getMuxiumState*
+* It is now a requirement you use the **stageWaitForOpenThenIterate(() => action)** helper function in your plans if you are depending on the last strategyTopic property on the muxium concept.
+* Added an addition logging property to reveal the internal action stream that can be set when creating your muxium. This is separate from the prior logging feature.
+* Method now utilize an internal actionConcept$ stream of type Subject<Concepts>. Method creators that utilize the MuxifiedSubject will throw a type error and will need to be updated.
 * **PATCH v0.1.51** Removed debugging console.logs
 ### **BREAKING Update v0.1.4** 3/28/24
 * Removed the "on.expected" option from dispatch to reduce inner complexity of your stages
-* Renamed **axium.stage** to **axium.plan** to be in line with industry terminology
+* Renamed **muxium.stage** to **muxium.plan** to be in line with industry terminology
   * The new plan set up requires a staging entity or the return from the new createStage helper function
     * This new entity enables you to change the priority in which your stages are informed per state change
   * You may now assign each stage its own separate beat versus the entire plan
@@ -75,7 +75,7 @@
 * Added nullReducer to disallow excessive observations from being triggered
 * First pass updating StagePlanner documentation
 ### 3/05/24
-* Minor DX release, properly exporting Axium type for inclusion in other frameworks.
+* Minor DX release, properly exporting Muxium type for inclusion in other frameworks.
 ### 12/14/23
 * Set Stage can now properly be set to 0.
 ### 11/29/23

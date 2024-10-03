@@ -63,25 +63,23 @@ When in doubt simplify.
 * Added priority to strategies, this priority will be assigned to each step issued by such.
   * With this change you may now have strategies jump all lines upon creation, ensuring some change prior to other action's taking effect.
   * Unless a ActionNode or incoming Action created by createActionNode has its own priority, then that takes precedents. But does not effect the Strategy's overall priority.
-
-## Road Map (*Updated*  6/20/24)
-### Beyond v0.2.0
+## Road Map
+### Beyond v0.1.~8
 * Will be focusing on parallel development of Stratimux and Huirth in order to create developer tools and scaffolding.
 * Planned
   * Action Graph
   * Project Scaffolding
   * *Spoilers*
-### Developer Experience Decks Interface v0.2.0
-This release will be provided alongside a migration guide due to breaking changes. Afterwards will resume incremental updates and apologize for taking time necessary to ensure the internal type safety. Soon.
-* DECKS Interface - No longer need to import actions, selectors, or prime semaphores.
-  * [X] d - Entry point supplied to all points of observation, allows for the selection of each deck currently loaded into the Axium. Providing access to their e, c, k, s properties.
-  * [X] e - Entry point for the current point of observation, providing access to all loaded actions for such.
-  * [X] c - Entry point for new semaphore comparator functions. Since we no longer have to handle semaphores directly this provides a means of stringless comparisons to see if two actions are of the same type.
-  * [X] k - Entry point for generated KeyedSelectors. Internal changes attaches a new select function that can be used to access the KeyedSelectors value directly.
-  * [ ] s - Entry point for base selectors that are primed with their associated semaphores. The current can of worms being iron sided. Just need to find the time to ensure that these generated functions return with the right type definitions. The designated primed Keyed Selector Creator, and designated state/concept with type definitions associated. Otherwise the DECK interface is ready for release, just pending testing in Huirth.
-* [X] **Dynamic Axium** - Made the add and remove functionality an opt in by default to improve security. Enabled via the createAxium options by setting *dynamic* to true
-* [X] **strategyDetermine(action: Action, options)** Helper function that will return an action with a strategy attached. This is to reduce the amount of boilerplate when handling actions in methods. As we are forcing all actions returned by the method to have a strategy attached to ensure halting.
-* [ ] Origin, Override, Hard Override
+### Developer Experience Update v0.1.~8
+* The Goal with the update is to remove the need for semaphores across the board.
+* There are two breaking changes planned:
+  * Add the ability to access primed Actions and KeyedSelectors directly in principles, plans, and qualities.
+    * This will be accomplished via a specific type cast of a Actions and KeyedSelectors properties access directly from PrincipleFunction, or new **Access** helper function.
+  * Access - Is a new concept being unified into the Axium that can restrict what actions a foreign Axium may have access to.
+    * This is being implemented with Authentication in mind, since the only true vulnerability is the ability to load and unload concepts on an Axium. **Note** that currently your Axiums are only accessible within scope when implementing the advanced project template via Huirth. With this change will create the option to have varying degrees of access that is defined at the time of creation per Axium.
+    * Create an access function that returns ActionCreators and Selectors
+      * These bundles will also feature a toJSON functionality so that they be hydrated on a Foreign Axium. 
+* Origin, Override, Hard Override
   * With these two additional concepts and variant unified into the Axium. These create the ability to enforce the sole existence of a single action from some plan. In higher levels of complexity due to priority there is a possibility of an Action intended to be dispatched a single time for some observation, may repeat between observations and still be qued. Pure Actions such as counterAdd are not impacted by this possibility. Thus this feature is truly for the Experts who may run into this issue and can be avoided via the beat parameter, but even within some complex set up...
   * Hard Override - This dispatch setting is effectively a destructive halt. And will conclude all active strategies currently in que from a given concept. Made for Experts who require a hard shift pending a specific observation and can account for the destructive halt.
     * *Someone cuts you off while driving and the coffee you are drinking flies from the cupholder onto the dash, but didn't crash.*

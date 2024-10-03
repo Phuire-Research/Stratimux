@@ -3,35 +3,28 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 the incoming action's payload
 $>*/
 /*<#*/
-import { Action, act } from '../../../model/action';
-import { concept } from '../../../model/concept';
+import { ExperimentState } from '../../../concepts/experiment/experiment.concept';
+import { Action } from '../../../model/action';
+import { quality } from '../../../model/quality';
 import { select } from '../../../model/selector';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
-
-export const experimentPlanOptionsAddValueType = 'experimentPlanOptions Add value';
 
 export type ExperimentPlanOptionsAddValuePayload = {
   newValue: number
 };
 
 export const experimentPlanOptionsAddValue =
-  act.prepareActionWithPayloadCreator<ExperimentPlanOptionsAddValuePayload>(experimentPlanOptionsAddValueType);
-
-function experimentPlanOptionsAddValueReducer(state: ExperimentPlanOptionsState, action: Action): ExperimentPlanOptionsState {
-  const { newValue } = select.payLoad<ExperimentPlanOptionsAddValuePayload>(action);
-  if (newValue) {
-    return {
-      ...state,
-      value: newValue + state.value
-    };
-  }
-  return {
-    ...state,
-  };
-}
-
-export const experimentPlanOptionsAddValueQuality = concept.createQuality(
-  experimentPlanOptionsAddValueType,
-  experimentPlanOptionsAddValueReducer,
-);
+  quality.createWithPayload<ExperimentPlanOptionsState, ExperimentPlanOptionsAddValuePayload>({
+    type: 'experimentPlanOptions Add value',
+    reducer: (state, action) => {
+      const { newValue } = action.payload;
+      if (newValue) {
+        return {
+          value: newValue + state.value
+        };
+      }
+      return {
+      };
+    },
+  });
 /*#>*/

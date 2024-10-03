@@ -1,10 +1,10 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, generate a test that ensures that unified concepts inherit their unified names as intended.
+For the asynchronous graph programming framework Stratimux, generate a test that ensures that muxified concepts inherit their muxified names as intended.
 $>*/
 /*<#*/
-import { createConcept, unifyConcepts } from '../model/concept';
+import { createConcept, muxifyConcepts } from '../model/concept';
 
-test('Unified Names Test', (done) => {
+test('Muxified Names Test', (done) => {
   const one = createConcept(
     'one',
     {},
@@ -25,13 +25,13 @@ test('Unified Names Test', (done) => {
     'five',
     {},
   );
-  const unified = unifyConcepts([
+  const muxified = muxifyConcepts([
     one, two, two, three, four, five, five
   ],
-  createConcept('unified', {})
+  createConcept('muxified', {})
   );
-  console.log('CHECK UNIFIED', unified.unified, unified);
-  expect(unified.unified.length).toBe([one, two, three, four, five].length);
+  console.log('CHECK MUXIFIED', muxified.muxifiedRecord, muxified);
+  expect(Object.keys(muxified.muxifiedRecord).length).toBe([one, two, three, four, five].length);
   done();
 });
 /*#>*/

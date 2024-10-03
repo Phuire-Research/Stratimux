@@ -2,13 +2,13 @@
 For the asynchronous graph programming framework Stratimux, define the ActionStrategy model file.
 This file is what allows for Stratimux to be provably terminating.
 As each strategy constitutes a finite set of symbols that must reach a conclusion.
-Using this data structure we can constrain the Axium's recursive functionality to the length
+Using this data structure we can constrain the Muxium's recursive functionality to the length
 of the strategies that currently exist within it.
 This file likewise defines a series of consumer functions that accept an ActionStrategy and data parameter; that
 then returns a new ActionStrategy based on the inputs.
 $>*/
 /*<#*/
-import { axiumConclude, axiumConcludeType } from '../concepts/axium/qualities/conclude.quality';
+import { muxiumConclude, muxiumConcludeType } from '../concepts/muxium/qualities/conclude.quality';
 import { Action, ActionType, createAction, nullActionType } from './action';
 import { OwnershipTicketStub } from './ownership';
 import { KeyedSelector } from './selector';
@@ -17,22 +17,22 @@ import { KeyedSelector } from './selector';
  * ActionNode - Control Structure used by ActionStrategy
  * @param action - Action to be dispatched.
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
- * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
- * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * * If set to null, will default to Muxium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Muxium Conclude Type if left blank or set to null.
  * @param payload - `optional` Will set the payload of the action.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
- * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
  * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
  * @param denoter - `optional` String that denotes the end of the ActionList sentence.
  *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
- * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
- * @Output Via Axium set Mode to Ownership Mode.
+ * @ExampleSentence ${preposition: 'Via'} Muxium set Mode to ${denoter: 'Ownership Mode.'}
+ * @Output Via Muxium set Mode to Ownership Mode.
  */
 export interface ActionNode {
-  action?: Action;
+  action?: Action<unknown>;
   actionType: ActionType;
   payload?: Record<string, unknown>;
   conceptSemaphore?: number;
@@ -51,18 +51,18 @@ export interface ActionNode {
 /**
  * Options list
  * @param successNode - Upon ActionStrategy.success() the Strategy will update itself to this node.
- * * If set to null, will default to Axium Conclude Type on ActionStrategy.success().
- * @param failureNode - `optional` ActionStrategy.failed() will fire Axium Conclude Type if left blank or set to null.
+ * * If set to null, will default to Muxium Conclude Type on ActionStrategy.success().
+ * @param failureNode - `optional` ActionStrategy.failed() will fire Muxium Conclude Type if left blank or set to null.
  * @param semaphore - `optional` This will prime the action to avoid look up at run time. Best practice use getSemaphore().
- * @param conceptSemaphore - `optional` Used for Unified Qualities. Must be specified via that principle's passed semaphore value.
+ * @param conceptSemaphore - `optional` Used for Muxified Qualities. Must be specified via that principle's passed semaphore value.
  * @param priority - `optional` Will allow the action to be placed in the body que accordingly.
  * @param agreement - `optional` Is time in milliseconds of the actions intended lifetime.
  * @param decisionNodes - `optional` The third or more option, may override success or failure in your workflows.
  * @param preposition - `optional` String that prefixes the ActionType when added to the Strategy's ActionList.
  * @param denoter - `optional` String that denotes the end of the ActionList sentence.
  *                               If placed dynamically, allows for the explicit appending of information at the end of the sentence
- * @ExampleSentence ${preposition: 'Via'} Axium set Mode to ${denoter: 'Ownership Mode.'}
- * @Output Via Axium set Mode to Ownership Mode.
+ * @ExampleSentence ${preposition: 'Via'} Muxium set Mode to ${denoter: 'Ownership Mode.'}
+ * @Output Via Muxium set Mode to Ownership Mode.
  */
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
@@ -95,7 +95,7 @@ export type ActionStrategyCreator = (...arg0: unknown[]) => ActionStrategy;
  * @param options successNode and failureNodes are always required. If using decisionNodes, set both to null.
  * @returns ActionNode
  */
-export function createActionNode(action: Action, options?: ActionNodeOptions): ActionNode {
+export function createActionNode(action: Action<any>, options?: ActionNodeOptions): ActionNode {
   if (options) {
     return {
       actionType: action.type,
@@ -273,7 +273,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, un
   if (strategy.currentNode.action !== null) {
     return strategy.currentNode.action;
   } else {
-    return axiumConclude();
+    return muxiumConclude();
   }
 };
 
@@ -285,7 +285,7 @@ export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, un
  */
 export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string, unknown>) => {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode?.successNotes,
@@ -293,6 +293,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
   );
   if (strategy.currentNode.successNode !== null) {
     const nextNode = strategy.currentNode.successNode;
+    const origin = strategy.currentNode.action?.origin;
     let priority;
     if (nextNode.priority) {
       priority = nextNode.priority;
@@ -307,7 +308,8 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
         agreement: nextNode.agreement,
         semaphore: nextNode.semaphore,
         conceptSemaphore: nextNode.conceptSemaphore,
-        priority
+        priority,
+        origin
       }
     );
     nextNode.action = nextAction;
@@ -338,16 +340,22 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
 
       nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-      return strategyBegin(nextStrategy);
+
+      const act = strategyBegin(nextStrategy);
+      act.origin = strategy.currentNode.action?.origin;
+      return act;
     }
+    const origin = strategy.currentNode.action?.origin;
     const conclude: ActionNode = {
-      actionType: axiumConcludeType,
+      actionType: muxiumConcludeType,
       successNode: null,
       failureNode: null,
       lastActionNode: strategy.currentNode,
       priority: strategy.priority
     };
-    conclude.action = createAction(conclude.actionType);
+    conclude.action = createAction(conclude.actionType, {
+      origin
+    });
     conclude.action.priority = strategy.priority;
     conclude.action.strategy = {
       ...strategy,
@@ -366,7 +374,7 @@ export const strategySuccess = (_strategy: ActionStrategy, data?: Record<string,
  */
 export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, unknown>) {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode.failureNotes,
@@ -376,6 +384,7 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
     strategy.currentNode.failureNode !== null
   ) {
     const nextNode = strategy.currentNode.failureNode;
+    const origin = strategy.currentNode.action?.origin;
     let priority;
     if (nextNode.priority) {
       priority = nextNode.priority;
@@ -390,7 +399,8 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
         agreement: nextNode.agreement,
         semaphore: nextNode.semaphore,
         conceptSemaphore: nextNode.conceptSemaphore,
-        priority
+        priority,
+        origin
       }
     );
     nextNode.action = nextAction;
@@ -423,10 +433,12 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
 
       nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-      return strategyBegin(nextStrategy);
+      const act = strategyBegin(nextStrategy);
+      act.origin = strategy.currentNode.action?.origin;
+      return act;
     }
     const conclude: ActionNode = {
-      actionType: axiumConcludeType,
+      actionType: muxiumConcludeType,
       successNode: null,
       failureNode: null,
       lastActionNode: strategy.currentNode,
@@ -457,7 +469,7 @@ export const strategyDecide = (
   data?: Record<string, unknown>,
 ) => {
   const strategy = {..._strategy};
-  let nextAction: Action;
+  let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
     strategy.currentNode.decisionNotes,
@@ -470,6 +482,7 @@ export const strategyDecide = (
       decisionNodes[decideKey] !== null
     ) {
       const nextNode = decisionNodes[decideKey];
+      const origin = strategy.currentNode.action?.origin;
       let priority;
       if (nextNode.priority) {
         priority = nextNode.priority;
@@ -484,7 +497,8 @@ export const strategyDecide = (
           agreement: nextNode.agreement,
           semaphore: nextNode.semaphore,
           conceptSemaphore: nextNode.conceptSemaphore,
-          priority
+          priority,
+          origin
         }
       );
       nextNode.action = nextAction;
@@ -516,16 +530,20 @@ export const strategyDecide = (
     ];
     nextStrategy.stubs = strategy.stubs;
     nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-    return strategyBegin(nextStrategy);
+
+    const act = strategyBegin(nextStrategy);
+    act.origin = strategy.currentNode.action?.origin;
+    return act;
   }
   const conclude: ActionNode = {
-    actionType: axiumConcludeType,
+    actionType: muxiumConcludeType,
     successNode: null,
     failureNode: null,
     lastActionNode: strategy.currentNode,
     priority: strategy.priority
   };
-  conclude.action = createAction(conclude.actionType);
+  const origin = strategy.currentNode.action?.origin;
+  conclude.action = createAction(conclude.actionType, {origin});
   conclude.action.priority = strategy.priority;
   conclude.action.strategy = {
     ...strategy,
@@ -575,10 +593,25 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
       ];
       strategy.step = strategy.step ? strategy.step + 1 : 1;
     }
-    return newNode.action as Action;
+    return {...newNode.action} as Action;
   } else {
-    return axiumConclude();
+    return muxiumConclude({origin: _strategy.currentNode.action?.origin});
   }
+};
+
+export const strategyDetermine = <T extends Record<string, unknown>>(
+  action: Action,
+  options: {
+    topic?: string,
+    priority?: number,
+    data?: T
+  }): Action => {
+  return strategyBegin(createStrategy({
+    topic: options.topic ? options.topic : 'STRATEGY DETERMINED',
+    initialNode: createActionNode(action),
+    priority: options.priority,
+    data: options.data
+  }));
 };
 
 /**
@@ -593,7 +626,7 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
  * @returns Action
  */
 export const strategyRecurse =
-  (_strategy: ActionStrategy, control: {payload?: Record<string, unknown>, data?: Record<string, unknown>}): Action => {
+  (_strategy: ActionStrategy, control: {payload?: Record<string, unknown>, data?: Record<string, unknown>}): Action<unknown> => {
     const strategy = {
       ..._strategy
     };
@@ -602,7 +635,7 @@ export const strategyRecurse =
     };
     const action = {
       ...currentNode.action
-    } as Action;
+    } as Action<any>;
     action.payload = control.payload ? control.payload : (_strategy.currentNode.action as Action).payload;
     currentNode.payload = control.payload ? control.payload : _strategy.currentNode.payload;
     currentNode.lastActionNode = _strategy.currentNode;
@@ -630,6 +663,7 @@ export const strategy = ({
   success: strategySuccess,
   failed: strategyFailed,
   decide: strategyDecide,
+  determine: strategyDetermine,
   punt: strategyPunt,
   sequence: strategySequence,
   backTrack: strategyBackTrack,

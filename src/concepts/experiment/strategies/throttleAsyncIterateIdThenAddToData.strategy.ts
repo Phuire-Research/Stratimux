@@ -6,15 +6,26 @@ to the strategy's data field.
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { Concept } from '../../../model/concept';
+import { Deck } from '../../../model/deck';
+import { MuxiumDeck } from '../../muxium/muxium.concept';
+import { ExperimentState } from '../experiment.concept';
 import {
   experimentThrottleAsyncIterateIdThenReceiveInMethod
 } from '../qualities/throttleAsyncIterateIdThenReceiveInMethod.quality';
 
+const qs = {experimentThrottleAsyncIterateIdThenReceiveInMethod};
+type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};
+export type ExperimentThrottleAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck & MuxiumDeck>
+
 export const experimentThrottleAsyncIterateIdThenAddToDataTopic = 'Throttle Async iterate experiment ID then add to strategy data';
-export function experimentThrottleAsyncIterateIdThenAddToData(setId: number): ActionStrategy {
+export function experimentThrottleAsyncIterateIdThenAddToData(
+  deck: ExperimentThrottleAsyncIterateIdThenAddToDataDeck,
+  setId: number
+): ActionStrategy {
   return createStrategy({
     topic: experimentThrottleAsyncIterateIdThenAddToDataTopic,
-    initialNode: createActionNode(experimentThrottleAsyncIterateIdThenReceiveInMethod({setId}))
+    initialNode: createActionNode(deck.experiment.e.experimentThrottleAsyncIterateIdThenReceiveInMethod({setId}))
   });
 }
 /*#>*/

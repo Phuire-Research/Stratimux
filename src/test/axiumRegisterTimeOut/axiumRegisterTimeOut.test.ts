@@ -2,71 +2,66 @@
 For the asynchronous graph programming framework Stratimux, generate a tests and demonstrates how register timeout quality functions.
 $>*/
 /*<#*/
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
-import { axiumRegisterTimeOut } from '../../concepts/axium/qualities/registerTimeOut.quality';
-import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
+import { CounterDeck, CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSelectCount } from '../../concepts/counter/counter.selector';
-import { counterAdd } from '../../concepts/counter/qualities/add.quality';
-import { createAxium } from '../../model/axium';
+import { createAction } from '../../model/action';
+import { muxification } from '../../model/muxium';
 import { selectState } from '../../model/selector';
-import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 
-test('Axium Register Time Out', (done) => {
-  const axium = createAxium('timeout defer actions', [createCounterConcept()]);
-  const plan = axium.plan('timeout add 4 after 10ms', [
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((_, dispatch) => {
-      dispatch(axiumRegisterTimeOut({
-        act: counterAdd(),
+test('Muxium Register Time Out', (done) => {
+  const muxium = muxification('timeout defer actions', {counter: createCounterConcept()});
+  muxium.plan<CounterDeck>('timeout add 4 after 10ms', ({stage, stageO, e__, conclude}) => [
+    stageO(() => e__.muxiumKick()),
+    stage(({dispatch, d}) => {
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+        act: d.counter.e.counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
-        act: counterAdd(),
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+        act: d.counter.e.counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
-        act: counterAdd(),
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+        act: d.counter.e.counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
-    createStage((concepts, dispatch) => {
+    stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(axiumRegisterTimeOut({
-        act: counterAdd(),
+      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+        act: d.counter.e.counterAdd(),
         timeOut: 50
-      }), {
+      }}), {
         iterateStage: true,
       });
     }),
-    createStage((concepts, _dispatch, changes) => {
+    stage(({concepts, changes, stagePlanner}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       if (changes.length > 0) {
         expect(counterState?.count).toBe(4);
         setTimeout(() => {
-          plan.conclude();
-          axium.close();
+          stagePlanner.conclude();
+          muxium.close();
           done();
         }, 10);
       }
     }, {selectors: [counterSelectCount], beat: 200}),
-    createStage(() => {
-      plan.conclude();
-    })
+    conclude()
   ]);
 });
 

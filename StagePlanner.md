@@ -1,8 +1,8 @@
 ## Stage Planner
 ### Abstract
-This is derived from the newly created UnifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Unified Turing Machine was created to be halting complete. The UnifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no throttle option. That plan will conclude and be added to the axium's badPlans property.
+This is derived from the newly created MuxifiedSubject to handle the main point of vulnerability that a recursive machine carries. As the main point of dispatching new actions in the system would traditionally be informed via the subscription to listen to state changes. This Design Pattern allows one to safely dispatch in a tightly patterned subscription. This design pattern watches each stage for the potential of a runaway configuration which would normally prevent this machine from halting. But since the Muxified Turing Machine was created to be halting complete. The MuxifiedSubject internally watches each stage of your application independently and the actions that it dispatches via the supplied dispatch function. If a similar action is dispatched in rapid Succession denoted by its type and no throttle option. That plan will conclude and be added to the muxium's badPlans property.
 
-Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Unified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
+Once attached to the badPlan property, it would be possible to reinitialize said stage via your concept's principle utilizing the stage's title. But places that burden of responsibility on the developer. As the scope of a Muxified Turing Machine is to be designed to specification and halt appropriately. We accept failure as likewise the ability to halt.
 
 *"You stage a plan and a plan has multiple stages."*
 
@@ -17,7 +17,7 @@ export type Plan = {
   stageFailed: number;
 }
 ```
-* title - Title of your plan, used to determine your plan within badPlans stored on the axium if they fail.
+* title - Title of your plan, used to determine your plan within badPlans stored on the muxium if they fail.
 * stage - This is your stage index, starting at 0.
 * stages - Is an array of function that will be called upon each notification depending on the current stage index.
 * stageFailed - Is a fail safe mechanism to prevent action overflow due to branch prediction errors.
@@ -58,7 +58,7 @@ export type dispatchOptions = {
 This utilizes Stratimux's KeyedSelectors to control when a stage would run as a built in form of change detection. Noting that once a stage is incremented or set, it will always run the first time. But may not receive the specific changes that the selector is actively looking for. The strength of this approach allows us to move beyond ECS into a system that is reactive and atomic that likewise allows for Stratimux to function as a FaaOS(Function as a Operating System).
 
 #### Stage Priority
-Of the the main issues with utilizing a single point of observation, is that some plans you might devise should take precedence over others. For example the Axium's own close principle has the highest priority of all observations and will force a shutdown of the entire Axium upon observation. We have likewise provided the set and new stage options for the priority value to allow some intelligence to be at play, keeping in mind Stratimux is designed to act as a form of logical embodiment for this generation's probabilistic AI.
+Of the the main issues with utilizing a single point of observation, is that some plans you might devise should take precedence over others. For example the Muxium's own close principle has the highest priority of all observations and will force a shutdown of the entire Muxium upon observation. We have likewise provided the set and new stage options for the priority value to allow some intelligence to be at play, keeping in mind Stratimux is designed to act as a form of logical embodiment for this generation's probabilistic AI.
 
 #### Stage Beat
 The beat value each stage may have, is a new concept similar to the throttle and debounce found in reactive programming. Except here the first observation will run, and any subsequent observations will be delayed until just have the beat value expires. This ensures a constant stream of observations, while allowing for gaps of time that will instantly resume once the observation becomes relevant again, aggregating all changes that occurred between beats. Think Frames Per Second (FPS).
@@ -95,28 +95,28 @@ export const createStage = (stage: Stage, selector?: KeyedSelector[], priority?:
   };
 };
 
-export class UnifiedSubject extends Subject<Concepts> {
+export class MuxifiedSubject extends Subject<Concepts> {
   plan(title: string, stages: PartialStaging[]): StagePlanner {}
 }
 ```
 * Dispatcher - This is the supplied dispatch function that is made available each stage.
 * Staging - A functional interface that informs input and output of each stage in your plan.
   * **concepts** - The most recent concepts
-  * **dispatch** - Use to dispatch new actions and strategies into your axium
+  * **dispatch** - Use to dispatch new actions and strategies into your muxium
   * **changes** - Informs which properties of the supplied KeyedSelectors for the current stage have changed.
 * createStage - Helper function that guides assembly of a Staging entity
-* UnifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the createAxium function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
+* MuxifiedSubject - This is a specialized subject for utilized within Stratimux to allow for this stage planner paradigm. This is made available via the muxification function and likewise within your principles via the concept$ property. Note that your plan will be an array of Staging entities created manually or via the createStage function.
 
 ## Example
 ```typescript
 let runCount = 0;
-const axium = createAxium('axiumStageDispatchOptionsTest', [createCounterConcept()], true);
-const sub = axium.subscribe((concepts) => {
-  const axiumState = concepts[0].state as AxiumState;
-  if (axiumState.badPlans.length > 0) {
-    const badPlan = axiumState.badPlans[0];
+const muxium = muxification('muxiumStageDispatchOptionsTest', [createCounterConcept()], true);
+const sub = muxium.subscribe((concepts) => {
+  const muxiumState = concepts[0].state as MuxiumState;
+  if (muxiumState.badPlans.length > 0) {
+    const badPlan = muxiumState.badPlans[0];
     const counter = selectState<CounterState>(concepts, counterName);
-    console.log('Stage Ran Away, badPlans.length: ', axiumState.badPlans.length, 'Count: ', counter?.count);
+    console.log('Stage Ran Away, badPlans.length: ', muxiumState.badPlans.length, 'Count: ', counter?.count);
     plan.conclude();
     sub.unsubscribe();
     expect(badPlan.stageFailed).toBe(2);
@@ -124,7 +124,7 @@ const sub = axium.subscribe((concepts) => {
     setTimeout(() => {done();}, 500);
   }
 });
-const plan = axium.plan('Stage DispatchOptions Test',
+const plan = muxium.plan('Stage DispatchOptions Test',
   [
     createStage((concepts, dispatch) => {
       const counter = selectState<CounterState>(concepts, counterName);
@@ -179,18 +179,18 @@ To save on potential memory bloat we are only keeping track of the most recent v
 Lastly, in an action overflow state, sequentially the overflow will call the same dispatch before calling the next dispatch even if within the same stage. Pay attention to the example above and the final console.log() output.
 
 ## Stage Planner within your Principle
-Stratimux is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for axium's open property to begin the stage of your concepts.
+Stratimux is designed to be ran primarily through its loaded concepts and their associated principles. To prevent unexpected behaviors in your own principles. Please utilize the supplied KeyedSelector for muxium's open property to begin the stage of your concepts.
 ```typescript
 const plan = concept$.plan('Principle Stage Example', [
   createStage((concepts, dispatch) => {
-    // If axium is currently open
-    if (select.slice(concepts, axiumSelectOpen)) {
+    // If muxium is currently open
+    if (select.slice(concepts, muxiumSelectOpen)) {
       dispatch(someAction(), {
         iterateStage: true,
       });
     }
-  // Plan will only run if the open property on the main axium concept has changed.
-  }, [axiumSelectOpen]),
+  // Plan will only run if the open property on the main muxium concept has changed.
+  }, [muxiumSelectOpen]),
   createStage((concepts, dispatch) => {
     // Your principle's run time logic.
   })
@@ -204,7 +204,7 @@ If you require a high priority observation, but want the action ques to deplete 
 ```typescript
 // Will have high observation priority, but no action priority.
 createStage((_, dispatch) => {
-  const action = axiumKick();
+  const action = muxiumKick();
   action.priority = 0;
   dispatch(action, {
     iterateStage: true
@@ -213,7 +213,7 @@ createStage((_, dispatch) => {
 
 // No observation priority, but high action priority.
 createStage((_, dispatch) => {
-  const action = axiumKick();
+  const action = muxiumKick();
   action.priority = 100;
   dispatch(action, {
     iterateStage: true

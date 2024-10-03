@@ -15,8 +15,8 @@ export enum failureConditions {
   ownershipExpired = 'ownershipExpired',
   ownershipBlocked = 'ownershipBlocked',
   controllerExpired = 'controllerExpired',
-  axiumExpired = 'axiumExpired',
-  axiumBadGeneration = 'axiumBadGeneration'
+  muxiumExpired = 'muxiumExpired',
+  muxiumBadGeneration = 'muxiumBadGeneration'
 }
 
 export const strategyData_appendFailure = (strategy: ActionStrategy, condition: failureConditions | string): Record<string, unknown> => {
@@ -68,7 +68,7 @@ export const strategyData_select = <T>(strategy: ActionStrategy): T | undefined 
   }
 };
 
-export const strategyData_unifyData =
+export const strategyData_muxifyData =
   <T extends Record<string, unknown>>(strategy: ActionStrategy, data: Record<string,unknown> | T): Record<string,unknown> => {
     if (strategy.data) {
       return {
@@ -85,6 +85,6 @@ export const strategyData = ({
   selectFailureCondition: strategyData_selectFailureCondition,
   clearFailureCondition: strategyData_clearFailureCondition,
   select: strategyData_select,
-  unifyData: strategyData_unifyData,
+  unifyData: strategyData_muxifyData,
 });
 /*#>*/

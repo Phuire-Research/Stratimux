@@ -1,37 +1,37 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, generate a test to ensure that the axium can properly remove concepts from its current load.
+For the asynchronous graph programming framework Stratimux, generate a test to ensure that the muxium can properly remove concepts from its current load.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { muxification, getMuxiumState } from '../model/muxium';
 import { strategyBegin } from '../model/actionStrategy';
 import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import {
   addConceptsToRemovalQueThenBlockStrategy,
   removeConceptsViaQueThenUnblockTopic
-} from '../concepts/axium/strategies/removeConcept.strategy';
-import { AxiumState } from '../concepts/axium/axium.concept';
+} from '../concepts/muxium/strategies/removeConcept.strategy';
 import { forEachConcept } from '../model/concept';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumKick } from '../concepts/axium/qualities/kick.quality';
 
-test('Axium remove Concepts Strategy Test', (done) => {
-  const axium = createAxium('axiumRemoveConceptsTest', [createCounterConcept()], { logging: true, storeDialog: true });
-  const plan = axium.plan('Remove Concepts Stage',[
-    stageWaitForOpenThenIterate(() => axiumKick()),
-    createStage((concepts, dispatch) => {
-      console.log('REMOVE');
+test('Muxium remove Concepts Strategy Test', (done) => {
+  const muxium = muxification('muxiumRemoveConceptsTest',
+    { counter: createCounterConcept() },
+    { logging: true, storeDialog: true, dynamic: true }
+  );
+  const plan = muxium.plan('Remove Concepts Stage', ({stage, stageO, e__, k__}) => [
+    stageO(() => e__.muxiumKick()),
+    stage(({concepts, dispatch, e, k}) => {
+      console.log('REMOVE', e,k);
       dispatch(
         strategyBegin(
-          addConceptsToRemovalQueThenBlockStrategy(concepts,[createCounterConcept()])
+          addConceptsToRemovalQueThenBlockStrategy(e, concepts, {counter: createCounterConcept()})
         ), {
           iterateStage: true
         }
       );
     }),
-    createStage((concepts) => {
-      const axiumState = concepts[0].state as AxiumState;
-      console.log('VERIFY', axiumState.lastStrategy);
-      if (axiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
+    stage(({concepts, d}) => {
+      const muxiumState = getMuxiumState(concepts);
+      console.log('VERIFY', muxiumState.lastStrategy, '\n', removeConceptsViaQueThenUnblockTopic);
+      if (muxiumState.lastStrategy === removeConceptsViaQueThenUnblockTopic) {
         let exists = false;
         forEachConcept(concepts, (concept => {
           if (concept.name === counterName) {
@@ -39,11 +39,12 @@ test('Axium remove Concepts Strategy Test', (done) => {
           }
         }));
         expect(exists).toBe(false);
+        expect(Object.keys(d).length).toBe(1);
         setTimeout(() => {done();}, 500);
         plan.conclude();
-        axium.close();
+        muxium.close();
       }
-    })
+    }, { selectors: [k__.lastStrategy] })
   ]);
 });
 /*#>*/

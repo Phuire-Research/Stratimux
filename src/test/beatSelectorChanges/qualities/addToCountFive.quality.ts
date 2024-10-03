@@ -3,19 +3,14 @@ For the asynchronous graph programming framework Stratimux and BeatSelectorChang
 generate a quality that will increment the state's countFive by one.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { BeatSelectorChangesState } from '../beatSelectorChanges.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  beatSelectorChangesAddToCountFive,
-  beatSelectorChangesAddToCountFiveType,
-  beatSelectorChangesAddToCountFiveQuality
-] = createQualitySet({
+export const beatSelectorChangesAddToCountFive = createQualityCard({
   type: 'BeatSelectorChanges AddToCountFive',
   reducer: (state: BeatSelectorChangesState) => {
     return {
-      ...state,
       countFive: state.countFive + 1
     };
   },

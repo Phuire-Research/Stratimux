@@ -4,37 +4,28 @@ Then debounce the quality of actions within a range. To dispatch the most recent
 That will finally unify the state id and setId from the payload into the most recent strategies data field.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
 import { createMethodDebounceWithState } from '../../../model/method';
-import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
-import { Subject } from 'rxjs';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 
-export const [
-  experimentDebounceIterateIdThenReceiveInMethod,
-  experimentDebounceIterateIdThenReceiveInMethodType,
-  experimentDebounceIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentDebounceIterateIdThenReceiveInMethodPayload>({
-  type: 'Experiment debounce iterate ID then receive in Method via State',
-  reducer: (state: ExperimentState) => {
-    return {
-      ...state,
-      id: state.id + 1
-    };
-  },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createMethodDebounceWithState<ExperimentState>((action, state) => {
-      const payload = selectPayload<ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action);
+export const experimentDebounceIterateIdThenReceiveInMethod =
+  createQualityCardWithPayload<ExperimentState, ExperimentDebounceIterateIdThenReceiveInMethodPayload>({
+    type: 'Experiment debounce iterate ID then receive in Method via State',
+    reducer: (state: ExperimentState) => {
+      return {
+        id: state.id + 1
+      };
+    },
+    methodCreator: () => createMethodDebounceWithState(({action, state}) => {
+      const payload = action.payload;
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
+        const data = strategyData_muxifyData<ExperimentState & ExperimentDebounceIterateIdThenReceiveInMethodPayload>(action.strategy, {
           id: state.id,
           setId: payload.setId
         });
@@ -42,6 +33,6 @@ export const [
         return strategy;
       }
       return action;
-    }, concepts$ as UnifiedSubject, semaphore as number, 500)
-});
+    }, 500)
+  });
 /*#>*/

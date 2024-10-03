@@ -9,25 +9,27 @@ a bad action that signifies that the associated action was invalidated.
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { Action } from '../../model/action';
+import { Action, AnyAction } from '../../model/action';
 import { Concepts } from '../../model/concept';
 import { Mode } from '../../model/concept';
-import { permissiveMode, blockingMode } from '../axium/axium.mode';
+import { permissiveMode, blockingMode } from '../muxium/muxium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
-import { UnifiedSubject } from '../../model/stagePlanner';
-import { axiumAppendActionListToDialog } from '../axium/qualities/appendActionListToDialog.quality';
-import { AxiumState } from '../axium/axium.concept';
+import { MuxifiedSubject } from '../../model/stagePlanner';
+import { muxiumAppendActionListToDialog } from '../muxium/qualities/appendActionListToDialog.quality';
+import { MuxiumState } from '../muxium/muxium.concept';
 import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { getMuxiumState } from '../../model/muxium';
 
 export const ownershipMode: Mode = (
-  [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, UnifiedSubject]
+  [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, MuxifiedSubject]
 ) => {
   let action = _action;
   let concepts = _concepts;
   const conceptsSize = Object.keys(concepts).length;
   let finalMode: Mode = permissiveMode;
-  const axiumState = concepts[0].state as AxiumState;
+  const muxiumState = getMuxiumState(concepts);
+  const deck = muxiumState.deck;
   // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
@@ -35,12 +37,12 @@ export const ownershipMode: Mode = (
     // This assumes that ownership will be treated as the new default mode.
     finalMode = (concepts[0].mode as Mode[])[1];
   }
-  // Logical Determination: axiumConcludeType
+  // Logical Determination: muxiumConcludeType
   // If generation is set to -1, then the action is not primed.
   //  Therefore we pass straight to finalMode which will recall this Mode after priming the action.
   //  This guarantees that action beyond this function will have a semaphore not set to [0, 0, -1, 0]
   if (conceptsSize > 1) {
-    if (action.semaphore[3] !== 3 && action.semaphore[3] !== 1 && action.semaphore[2] !== axiumState.generation) {
+    if (action.semaphore[3] !== 3 && action.semaphore[3] !== 1 && action.semaphore[2] !== muxiumState.generation) {
     // Check In Logic
       const shouldBlock = ownershipShouldBlock(concepts, action);
       if (shouldBlock) {
@@ -48,15 +50,15 @@ export const ownershipMode: Mode = (
           const strategy = action.strategy;
           if (action.strategy.currentNode.failureNode === null) {
           // This assumes that the Strategy does not account for the Block
-            let nextAction = strategyFailed(
+            let nextAction: AnyAction = strategyFailed(
               strategy,
               strategyData_appendFailure(strategy, failureConditions.ownershipBlocked)
             );
-            // Logical Determination: axiumConcludeType
+            // Logical Determination: muxiumConcludeType
             // eslint-disable-next-line max-depth
             if (nextAction.semaphore[3] === 3) {
               concepts = clearStubs(concepts, nextAction.strategy as ActionStrategy);
-              nextAction = axiumAppendActionListToDialog({
+              nextAction = deck.d.muxium.e.muxiumAppendActionListToDialog({
                 actionList: action.strategy.actionList,
                 strategyTopic: action.strategy.topic,
                 strategyData: action.strategy.data
@@ -86,11 +88,11 @@ export const ownershipMode: Mode = (
       // Free to Run
         finalMode([action, concepts, action$, concepts$]);
       }
-    // Logical Determination: axiumConcludeType
+    // Logical Determination: muxiumConcludeType
     } else if (action.semaphore[3] !== 3 && action.semaphore[1] !== 1) {
       finalMode([action, concepts, action$, concepts$]);
 
-    // Logical Determination: axiumConcludeType, axiumBadActionType
+    // Logical Determination: muxiumConcludeType, muxiumBadActionType
     } else if (action.strategy?.stubs && (action.semaphore[3] === 3 || action.semaphore[3] === 1)) {
       concepts = clearStubs(concepts, action.strategy);
       concepts$.next(concepts);

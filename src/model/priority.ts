@@ -1,9 +1,9 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Priority Model File
-This unified concept further enhances the ability to control the halting nature of an Axium
+This muxified concept further enhances the ability to control the halting nature of an Muxium
 $>*/
 /*<#*/
-import { AxiumState } from '../concepts/axium/axium.concept';
+import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { Action } from './action';
 
 // Is only called if action has priority
@@ -40,8 +40,8 @@ const emptyBucket = (body: Action[], bucket: Action[]) => {
   }
 };
 
-export const handlePriority = (axiumState: AxiumState, action: Action) => {
-  const body = axiumState.body;
+export const handlePriority = (muxiumState: MuxiumState<any, any>, action: Action<unknown>) => {
+  const body = muxiumState.body;
   if (body[0] && body[0].priority !== undefined) {
     const bucket: Action[] = [];
     fillBucket(body, bucket, action);

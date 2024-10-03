@@ -3,14 +3,14 @@ For the asynchronous graph programming framework Stratimux generate an Experimen
 accumulated for stage that has a beat and selectors
 $>*/
 /*<#*/
-import { beatSelectorChangesAddToCountOneQuality } from './qualities/addToCountOne.quality';
-import { createConcept } from '../../model/concept';
-import { beatSelectorChangesAddToCountTwoQuality } from './qualities/addToCountTwo.quality';
-import { beatSelectorChangesAddToCountThreeQuality } from './qualities/addToCountThree.quality';
-import { beatSelectorChangesAddToCountFourQuality } from './qualities/addToCountFour.quality';
-import { beatSelectorChangesAddToCountFiveQuality } from './qualities/addToCountFive.quality';
-import { beatSelectorChangesAddToCountSixQuality } from './qualities/addToCountSix.quality';
-import { beatSelectorChangesAddToCountSevenQuality } from './qualities/addToCountSeven.quality';
+import { beatSelectorChangesAddToCountOne} from './qualities/addToCountOne.quality';
+import { Concept, createConcept } from '../../model/concept';
+import { beatSelectorChangesAddToCountTwo} from './qualities/addToCountTwo.quality';
+import { beatSelectorChangesAddToCountThree} from './qualities/addToCountThree.quality';
+import { beatSelectorChangesAddToCountFour} from './qualities/addToCountFour.quality';
+import { beatSelectorChangesAddToCountFive} from './qualities/addToCountFive.quality';
+import { beatSelectorChangesAddToCountSix} from './qualities/addToCountSix.quality';
+import { beatSelectorChangesAddToCountSeven } from './qualities/addToCountSeven.quality';
 
 export type BeatSelectorChangesState = {
     countOne: number
@@ -34,19 +34,27 @@ const initialBeatSelectorChangesState: BeatSelectorChangesState = {
   countSeven: 0,
 };
 
+const beatSelectorChangesQualities = {
+  beatSelectorChangesAddToCountOne,
+  beatSelectorChangesAddToCountTwo,
+  beatSelectorChangesAddToCountThree,
+  beatSelectorChangesAddToCountFour,
+  beatSelectorChangesAddToCountFive,
+  beatSelectorChangesAddToCountSix,
+  beatSelectorChangesAddToCountSeven,
+};
+
+export type BeatSelectorChangesQualities = typeof beatSelectorChangesQualities;
+
+export type BeatSelectorChangesDeck = {
+  beatSelectors: Concept<BeatSelectorChangesState, BeatSelectorChangesQualities>;
+}
+
 export const createBeatSelectorChangesConcept = () => {
-  return createConcept(
+  return createConcept<BeatSelectorChangesState, BeatSelectorChangesQualities>(
     beatSelectorChangesName,
     initialBeatSelectorChangesState,
-    [
-      beatSelectorChangesAddToCountOneQuality,
-      beatSelectorChangesAddToCountTwoQuality,
-      beatSelectorChangesAddToCountThreeQuality,
-      beatSelectorChangesAddToCountFourQuality,
-      beatSelectorChangesAddToCountFiveQuality,
-      beatSelectorChangesAddToCountSixQuality,
-      beatSelectorChangesAddToCountSevenQuality,
-    ]
+    beatSelectorChangesQualities
   );
 };
 /*#>*/

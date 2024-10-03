@@ -3,8 +3,8 @@ For the asynchronous graph programming framework Stratimux,
 generate a test to that selectSlice is capable of performing shallow and deep state selections.
 $>*/
 /*<#*/
-import { Concepts, createConcept } from '../model/concept';
-import { KeyedSelector, assembleDynamicSelection, createUnifiedKeyedSelector, selectSlice } from '../model/selector';
+import { Concept, Concepts, createConcept } from '../model/concept';
+import { KeyedSelector, assembleDynamicSelection, createMuxifiedKeyedSelector, selectSlice } from '../model/selector';
 
 export type BaseDataSet = {
   prompt: string,
@@ -38,14 +38,14 @@ test('userInterfaceBindingsToString', (done) => {
     simulated
   );
   const concepts: Concepts = {
-    1: experiment
+    1: experiment as Concept<any>
   };
   const entry = generateBaseDataSetEntry();
-  const selector = createUnifiedKeyedSelector<typeof simulated>(
+  const selector = createMuxifiedKeyedSelector<typeof simulated>(
     concepts, 1,
     assembleDynamicSelection(['trainingData', 0, 'dataSet', 0, 'prompt'])
   );
-  const shallow = createUnifiedKeyedSelector<typeof simulated>(concepts, 1, 'shallow');
+  const shallow = createMuxifiedKeyedSelector<typeof simulated>(concepts, 1, 'shallow');
 
   console.log('CHECK SHALLOW', shallow);
   if (selector && shallow) {

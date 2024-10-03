@@ -1,7 +1,7 @@
 import { createExperimentConcept } from '../../concepts/experiment/experiment.concept';
-import { experimentPlanOptionsAddValueQuality } from './qualities/addValue.quality';
-import { experimentPlanOptionsIsReadyQuality } from './qualities/isReady.quality';
-import { experimentToggleAllSevenQuality } from './qualities/toggleAllSeven.quality';
+import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
+import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
+import { experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
 
 export type ExperimentPlanOptionsState = {
   value: number;
@@ -27,12 +27,16 @@ export const createExperimentPlanOptionsState = (): ExperimentPlanOptionsState =
   seven: false
 });
 
-export const createExperimentPlanOptionsConcept = () => createExperimentConcept(
+const experimentPlanOptionsQualities = {
+  experimentToggleAllSeven,
+  experimentPlanOptionsAddValue,
+  experimentPlanOptionsIsReady
+};
+
+export type ExperimentPlanOptionsQualities = typeof experimentPlanOptionsQualities;
+
+export const createExperimentPlanOptionsConcept = () => createExperimentConcept<ExperimentPlanOptionsState, ExperimentPlanOptionsQualities>(
   createExperimentPlanOptionsState(),
-  [
-    experimentToggleAllSevenQuality,
-    experimentPlanOptionsAddValueQuality,
-    experimentPlanOptionsIsReadyQuality
-  ],
+  experimentPlanOptionsQualities,
   []
 );

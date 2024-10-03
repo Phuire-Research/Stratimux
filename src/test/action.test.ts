@@ -3,17 +3,18 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { createAction } from '../model/action';
-import { counterAdd, counterAddType } from '../concepts/counter/qualities/add.quality';
+import { counterAdd } from '../concepts/counter/qualities/add.quality';
 
-test('Axium add Concepts Strategy Test', (done) => {
+test('Muxium add Concepts Strategy Test', (done) => {
   const something = createAction('something');
   expect(something.type).toBe('something');
   const somethingElse = createAction('somethingElse', {payload: {
     name: 'somethingElse'
   }});
   expect(somethingElse.payload?.name).toBe('somethingElse');
-  const add = counterAdd();
-  expect(add.type).toBe(counterAddType);
+  // Testing purposes only, access action creators via the Deck Interface in production.
+  const add = counterAdd.actionCreator();
+  expect(add.type).toBe('Counter Add');
   console.log(add.type);
   done();
 });

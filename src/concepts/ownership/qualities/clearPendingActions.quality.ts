@@ -3,17 +3,13 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 generate a quality that will clear the current pending actions list on state.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipClearPendingActions,
-  ownershipClearPendingActionsType,
-  ownershipClearPendingActionsQuality
-] = createQualitySet({
+export const ownershipClearPendingActions = createQualityCard<OwnershipState>({
   type: 'clear Ownership\'s Pending Actions',
-  reducer: (state: OwnershipState): OwnershipState => ({...state, pendingActions: []}),
+  reducer: () => ({pendingActions: []}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

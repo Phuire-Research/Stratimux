@@ -1,17 +1,16 @@
 /*<$
-For the asynchronous graph programming framework Stratimux generate a test that ensures that the priority aspect of the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that the priority aspect of the muxium
 is managing plan notifications as intended.
 $>*/
 /*<#*/
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
+import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
+import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { createAxium } from '../../model/axium';
+import { muxification } from '../../model/muxium';
 import { select } from '../../model/selector';
-import { StagePlanner, createStage } from '../../model/stagePlanner';
+import { createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
-import { experimentPriorityIsReady } from './qualities/isReady.quality';
-import { experimentPriorityAddValue } from './qualities/addValue.quality';
 
 test('Priority Test', (done) => {
   console.log('Priority Test');
@@ -23,76 +22,82 @@ test('Priority Test', (done) => {
       concluded++;
     }
   };
+  const deck = {
+    experiment: createExperimentPriorityConcept()
+  };
+  type ExperimentDeck = MuxiumDeck & {
+    experiment: typeof deck.experiment
+  };
+  const priorityTest = muxification('Priority Test', deck, {logging: true, storeDialog: true, logActionStream: true});
 
-  const priorityTest = createAxium('Priority Test', [
-    createExperimentPriorityConcept()
-  ], {logging: true, storeDialog: true, logActionStream: true});
-
-  const firstStage = (name: string, priority: number) => createStage((concepts, dispatch, changes) => {
-    const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
-    console.log('HIT: ', name, changes);
-    if (priorityState?.ready) {
-      console.log(`${name} Priority BEGIN`);
-      dispatch(axiumKick(), {
-        iterateStage: true
-      });
-    }
-  }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number) => createStage((concepts, dispatch) => {
-    const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
-    if (priorityState) {
-      console.log(`${name} Priority Base Value: `, priorityState.value);
-      dispatch(experimentPriorityAddValue({newValue}), {
-        iterateStage: true
-      });
-    }
-  }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage((concepts, dispatch, changes) => {
-    const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
-    if (priorityState && changes.length > 0) {
-      // expect(order).toBe(expectedOrder);
-      console.log(`${name} Incoming Value: ${priorityState.value}, expecting: ${expected}`);
-      // expect(priorityState.value).toBe(expected);
-      dispatch(axiumKick(), {
-        iterateStage: true
-      });
-    }
-  }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = (name: string, func: () => StagePlanner) => createStage(() => {
-    console.log(`${name} Priority END`);
-    func().conclude();
+  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+    ({concepts, dispatch, changes, d}) => {
+      const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
+      console.log('HIT: ', name, changes);
+      if (priorityState?.ready) {
+        console.log(`${name} Priority BEGIN`);
+        dispatch(d.muxium.e.muxiumKick(), {
+          iterateStage: true
+        });
+      }
+    }, {selectors: [experimentPriorityReadySelector], priority});
+  const secondStage = (name: string, newValue: number, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+    ({concepts, dispatch, d}) => {
+      const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
+      if (priorityState) {
+        console.log(`${name} Priority Base Value: `, priorityState.value);
+        dispatch(d.experiment.e.experimentPriorityAddValue({newValue}), {
+          iterateStage: true
+        });
+      }
+    }, {priority});
+  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+    ({concepts, dispatch, changes, d}) => {
+      const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
+      if (priorityState && changes.length > 0) {
+        // expect(order).toBe(expectedOrder);
+        console.log(`${name} Incoming Value: ${priorityState.value}, expecting: ${expected}`);
+        // expect(priorityState.value).toBe(expected);
+        dispatch(d.muxium.e.muxiumKick(), {
+          iterateStage: true
+        });
+      }
+    }, {selectors: [experimentPriorityValueSelector], priority});
+  const concludePlan = () => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({stagePlanner}) => {
+    console.log(`${stagePlanner.title} Priority END`);
+    stagePlanner.conclude();
     finalize();
   });
 
   const LOW = 'Low';
   const LOW_PRIORITY = 1;
-  const low = priorityTest.plan(
-    'Low Priority Plan', [
+  priorityTest.plan(
+    'Low Priority Plan', () => [
       firstStage(LOW, LOW_PRIORITY),
       secondStage(LOW, 1, LOW_PRIORITY),
       thirdStage(LOW, 111, LOW_PRIORITY),
-      concludePlan(LOW, () => low),
+      concludePlan(),
     ]);
   const HIGH = 'High';
   const HIGH_PRIORITY = 100;
-  const high = priorityTest.plan(
-    'High Priority Plan', [
+  priorityTest.plan(
+    'High Priority Plan', () => [
       firstStage(HIGH, HIGH_PRIORITY),
       secondStage(HIGH, 100, HIGH_PRIORITY),
       thirdStage(HIGH, 100, HIGH_PRIORITY),
-      concludePlan(HIGH, () => high),
+      concludePlan(),
     ]);
   const MID = 'Mid';
   const MID_PRIORITY = 50;
-  const mid = priorityTest.plan(
-    'Mid Priority Plan', [
+  priorityTest.plan(
+    'Mid Priority Plan', () => [
       firstStage(MID, MID_PRIORITY),
       secondStage(MID, 10, MID_PRIORITY),
       thirdStage(MID, 110, MID_PRIORITY),
-      concludePlan(MID, () => mid),
+      concludePlan(),
     ]);
   setTimeout(() => {
-    priorityTest.dispatch(experimentPriorityIsReady());
+    priorityTest.dispatch(priorityTest.deck.d.experiment.e.experimentPriorityIsReady());
   }, 1000);
   priorityTest.subscribe(val => console.log('CHECK STATE: ', select.state(val, experimentName))); });
 /*#>*/

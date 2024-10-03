@@ -2,18 +2,14 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a quality that hard resets the current ownership ledger.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/concept';
+import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { createOwnershipLedger } from '../../../model/ownership';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  ownershipResetOwnershipLedger,
-  ownershipResetOwnershipLedgerType,
-  ownershipResetOwnershipLedgerQuality
-] = createQualitySet({
+export const ownershipResetOwnershipLedger = createQualityCard<OwnershipState>({
   type: 'reset Ownership Ledger',
-  reducer: (state: OwnershipState): OwnershipState => ({...state, ownershipLedger: createOwnershipLedger()}),
+  reducer: (state) => ({...state, ownershipLedger: createOwnershipLedger()}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

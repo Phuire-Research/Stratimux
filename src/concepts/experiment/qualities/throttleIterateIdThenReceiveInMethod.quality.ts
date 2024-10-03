@@ -5,35 +5,32 @@ $>*/
 /*<#*/
 import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner';
 import { createMethodThrottleWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 
-export const [
-  experimentThrottleIterateIdThenReceiveInMethod,
-  experimentThrottleIterateIdThenReceiveInMethodType,
-  experimentThrottleIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
-  type: 'Experiment throttle iterate ID then receive in Method via State',
-  reducer: (state: ExperimentState) => {
-    return {
-      ...state,
-      id: state.id + 1
-    };
-  },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createMethodThrottleWithState<ExperimentState>((action, state) => {
-      const payload = selectPayload<ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action);
+type Data = ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload;
+
+export const experimentThrottleIterateIdThenReceiveInMethod =
+  createQualityCardWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
+    type: 'Experiment throttle iterate ID then receive in Method via State',
+    reducer: (state) => {
+      return {
+        id: state.id + 1
+      };
+    },
+    methodCreator: () => createMethodThrottleWithState(({action, state}) => {
+      const payload = action.payload;
       if (action.strategy) {
-        const data = strategyData_unifyData<ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload>(action.strategy, {
+        const data = strategyData_muxifyData<Data>(action.strategy, {
           id: state.id,
           setId: payload.setId
         });
@@ -41,6 +38,6 @@ export const [
         return strategy;
       }
       return action;
-    }, concepts$ as UnifiedSubject, semaphore as number, 500)
-});
+    }, 500)
+  });
 /*#>*/

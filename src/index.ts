@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { createAxium, getAxiumState, Axium, isAxiumOpen } from './model/axium';
+export { muxification, getMuxiumState, Muxium, isMuxiumOpen } from './model/muxium';
 export type {
   ActionNode,
   ActionNotes,
@@ -11,8 +11,12 @@ export type {
   ActionStrategy,
   ActionStrategyParameters,
   ActionStrategyStitch,
-  ActionStrategyCreator,
+  ActionStrategyCreator
 } from './model/actionStrategy';
+export {
+  Deck,
+  Decks,
+} from './model/deck';
 export {
   createStrategy,
   createActionNode,
@@ -21,6 +25,7 @@ export {
   strategySuccess,
   strategyFailed,
   strategyDecide,
+  strategyDetermine,
   strategyPunt,
   strategySequence,
   strategyBackTrack,
@@ -33,7 +38,7 @@ export {
   strategyData_selectFailureCondition,
   strategyData_clearFailureCondition,
   strategyData_select,
-  strategyData_unifyData,
+  strategyData_muxifyData,
   strategyData
 } from './model/actionStrategyData';
 export {
@@ -63,6 +68,7 @@ export {
 } from './model/actionOperators';
 export type {
   Action,
+  AnyAction,
   ActionType,
   ActionCreator,
   ActionCreatorWithPayload,
@@ -80,33 +86,37 @@ export {
 } from './model/action';
 export {
   createConcept,
-  createQuality,
-  nullReducer,
-  defaultReducer,
-  defaultMethodCreator,
   isConceptLoaded,
   areConceptsLoaded,
-  unifyConcepts,
+  muxifyConcepts,
   forEachConcept,
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  getUnifiedName,
   concept
 } from './model/concept';
 export type {
   Concept,
   Concepts,
-  Quality,
   Reducer,
   Method,
   Principle,
   Mode,
   MethodCreator,
+  MethodCreatorStep,
+  AnyConcept,
+  ConceptDeck,
+  SpecificReducer
 } from './model/concept';
 export {
-  createQualitySet,
-  createQualitySetWithPayload
+  createQualityCard,
+  createQualityCardWithPayload,
+  defaultReducer,
+  nullReducer,
+  defaultMethodCreator,
+  Quality,
+  quality,
+  Qualities
 } from './model/quality';
 export type { KeyedSelector } from './model/selector';
 export {
@@ -114,10 +124,11 @@ export {
   selectConcept,
   selectSlice,
   selectPayload,
-  selectUnifiedState,
-  updateUnifiedKeyedSelector,
+  selectMuxifiedState,
+  selectMuxifiedName,
+  updateMuxifiedKeyedSelector,
   createConceptKeyedSelector,
-  createUnifiedKeyedSelector,
+  createMuxifiedKeyedSelector,
   createAdvancedKeys,
   select,
 } from './model/selector';
@@ -126,129 +137,114 @@ export type {
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/actionController';
-export type { dispatchOptions, Staging, UnifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
+export type { dispatchOptions, Staging, MuxifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
 export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
-export { axiumTimeOut } from './model/time';
+export { muxiumTimeOut } from './model/time';
 
 //** Concept Exports */
-// Axium
-export { AxiumState, axiumName, createAxiumConcept } from './concepts/axium/axium.concept';
-export { blockingMode, permissiveMode } from './concepts/axium/axium.mode';
-export { axiumSelectOpen, axiumSelectLastStrategy, axiumSelectBadActions, axiumSelectBadPlans } from './concepts/axium/axium.selector';
+// Muxium
+export { MuxiumState, muxiumName, muxificationConcept, MuxiumDeck } from './concepts/muxium/muxium.concept';
+export { blockingMode, permissiveMode } from './concepts/muxium/muxium.mode';
+export { muxiumSelectOpen, muxiumSelectLastStrategy, muxiumSelectBadActions, muxiumSelectBadPlans } from './concepts/muxium/muxium.selector';
 // Models
 export {
-  AxiumGatherNode,
-  AxiumGatherStrategy,
-  axium_createGatherNode,
-  axium_createGatherStrategy
-} from './concepts/axium/model/gather.model';
+  MuxiumGatherNode,
+  MuxiumGatherStrategy,
+  muxium_createGatherNode,
+  muxium_createGatherStrategy
+} from './concepts/muxium/model/gather.model';
 export {
-  axium_createStitchNode
-} from './concepts/axium/model/stitch.model';
+  muxium_createStitchNode
+} from './concepts/muxium/model/stitch.model';
 // Qualities
-export { axiumKick, axiumKickType } from './concepts/axium/qualities/kick.quality';
-export { axiumConclude, axiumConcludeType } from './concepts/axium/qualities/conclude.quality';
-export { axiumOpen, axiumOpenType } from './concepts/axium/qualities/open.quality';
-export { axiumLog, axiumLogType } from './concepts/axium/qualities/log.quality';
-export { axiumStitch, axiumStitchType } from './concepts/axium/qualities/stitch.quality';
-export { axiumPreClose, axiumPreCloseType, AxiumPreClosePayload } from './concepts/axium/qualities/preClose.quality';
-export { axiumBadAction, axiumBadActionType } from './concepts/axium/qualities/badAction.quality';
-export { axiumSetMode, axiumSetModeType, AxiumSetModePayload } from './concepts/axium/qualities/setMode.quality';
+export { muxiumKick } from './concepts/muxium/qualities/kick.quality';
+export { muxiumConclude, muxiumConcludeType } from './concepts/muxium/qualities/conclude.quality';
+export { muxiumOpen } from './concepts/muxium/qualities/open.quality';
+export { muxiumLog } from './concepts/muxium/qualities/log.quality';
+export { muxiumStitch } from './concepts/muxium/qualities/stitch.quality';
+export { muxiumPreClose } from './concepts/muxium/qualities/preClose.quality';
+export { muxiumBadAction } from './concepts/muxium/qualities/badAction.quality';
+export { muxiumSetMode } from './concepts/muxium/qualities/setMode.quality';
 export {
-  axiumSetDefaultModeIndex,
-  axiumSetDefaultModeIndexType,
-  AxiumSetDefaultModeIndexPayload
-} from './concepts/axium/qualities/setDefaultModeIndex.quality';
+  muxiumSetDefaultModeIndex,
+} from './concepts/muxium/qualities/setDefaultModeIndex.quality';
 export {
-  axiumRegisterSubscriber,
-  AxiumRegisterSubscriberPayload,
-  axiumRegisterSubscriberType
-} from './concepts/axium/qualities/registerSubscription.quality';
+  muxiumRegisterSubscriber,
+} from './concepts/muxium/qualities/registerSubscription.quality';
 export {
-  axiumRegisterStagePlanner,
-  AxiumRegisterStagePlannerPayload,
-  axiumRegisterStagePlannerType
-} from './concepts/axium/qualities/registerStagePlanner.quality';
+  muxiumRegisterStagePlanner,
+} from './concepts/muxium/qualities/registerStagePlanner.quality';
 export {
-  axiumClearDialog,
-  axiumClearDialogType
-} from './concepts/axium/qualities/clearDialog.quality';
+  muxiumClearDialog,
+} from './concepts/muxium/qualities/clearDialog.quality';
 export {
-  axiumSetDefaultMode,
-  axiumSetDefaultModeType,
-  AxiumSetDefaultModePayload
-} from './concepts/axium/qualities/setDefaultMode.quality';
+  muxiumSetDefaultMode,
+} from './concepts/muxium/qualities/setDefaultMode.quality';
 export {
-  axiumSetBlockingMode,
-  axiumSetBlockingModeType,
-  AxiumSetBlockingModePayload
-} from './concepts/axium/qualities/setBlockingMode.quality';
+  muxiumSetBlockingMode,
+} from './concepts/muxium/qualities/setBlockingMode.quality';
 export {
-  axiumRegisterTimeOut,
-  AxiumRegisterTimeOutPayload,
-  axiumRegisterTimeOutType
-} from './concepts/axium/qualities/registerTimeOut.quality';
+  muxiumRegisterTimeOut,
+} from './concepts/muxium/qualities/registerTimeOut.quality';
 // Strategies
 export {
   addConceptsToAddQueThenBlockStrategy,
   addConceptsToAddQueThenBlockTopic
-} from './concepts/axium/strategies/addConcept.strategy';
+} from './concepts/muxium/strategies/addConcept.strategy';
 export {
   addConceptsToRemovalQueThenBlockStrategy,
   addConceptsToRemovalQueThenBlockTopic
-} from './concepts/axium/strategies/removeConcept.strategy';
+} from './concepts/muxium/strategies/removeConcept.strategy';
 // Counter
-export { CounterState, counterName, createCounterConcept } from './concepts/counter/counter.concept';
+export { CounterState, counterName, createCounterConcept, CounterDeck, CounterQualities } from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';
 // Qualities
-export { counterAdd, counterAddType } from './concepts/counter/qualities/add.quality';
-export { counterSubtract, counterSubtractType } from './concepts/counter/qualities/subtract.quality';
-export { counterSetCount, counterSetCountType, CounterSetCountPayload } from './concepts/counter/qualities/setCount.quality';
+export { counterAdd } from './concepts/counter/qualities/add.quality';
+export { counterSubtract } from './concepts/counter/qualities/subtract.quality';
+export { counterSetCount, CounterSetCountPayload } from './concepts/counter/qualities/setCount.quality';
 // Strategies
 export {
   countingStrategy,
   countingTopic,
-  primedCountingStrategy,
-  primedCountingTopic
 } from './concepts/counter/strategies/counting.strategy';
 
 // Chain
-export { ChainState, chainName, createChainConcept } from './concepts/chain/chain.concept';
+export { ChainState, chainName, createChainConcept, ChainQualities } from './concepts/chain/chain.concept';
 // Qualities
 export {
   chainPrepareChain,
-  chainPrepareChainType,
   ChainPrepareChainPayload,
-  chainPrepareChainQuality
 } from './concepts/chain/qualities/prepareChain.quality';
-export {chainEnd, chainEndType} from './concepts/chain/qualities/chainEnd.quality';
+export { chainEnd } from './concepts/chain/qualities/chainEnd.quality';
 
 // Ownership
-export { OwnershipState, ownershipName, createOwnershipConcept } from './concepts/ownership/ownership.concept';
+export {
+  OwnershipState,
+  ownershipName,
+  createOwnershipConcept,
+  OwnershipDeck,
+  OwnershipQualities
+} from './concepts/ownership/ownership.concept';
 export { ownershipMode } from './concepts/ownership/ownership.mode';
 export { ownershipSelectInitialized, ownershipSelectLedger } from './concepts/ownership/ownership.selector';
 // Qualities
-export { ownershipBackTrack, ownershipBackTrackType } from './concepts/ownership/qualities/backTrack.quality';
+export { ownershipBackTrack } from './concepts/ownership/qualities/backTrack.quality';
 export {
   ownershipClearPayloadStubs,
   OwnershipClearPayloadStubsPayload,
-  ownershipClearPayloadStubsType
 } from './concepts/ownership/qualities/clearPayloadStubs.quality';
-export { ownershipClearPendingActions, ownershipClearPendingActionsType } from './concepts/ownership/qualities/clearPendingActions.quality';
+export { ownershipClearPendingActions } from './concepts/ownership/qualities/clearPendingActions.quality';
 export {
   ownershipClearPendingActionsOfStrategy,
   OwnershipClearPendingActionsOfStrategyPayload,
-  ownershipClearPendingActionsOfStrategyType
 } from './concepts/ownership/qualities/clearPendingActionsOfStrategy.quality';
 export {
   ownershipClearStrategyStubsFromLedgerAndSelf,
-  ownershipClearStrategyStubsFromLedgerAndSelfType
 } from './concepts/ownership/qualities/clearStrategyStubsFromLedgerAndSelf.quality';
 export {
   ownershipResetOwnershipLedger,
-  ownershipResetOwnershipLedgerType
 } from './concepts/ownership/qualities/resetOwnershipLedger.quality';
 
 // Experiment
@@ -256,18 +252,37 @@ export {
   ExperimentState,
   createExperimentState,
   createExperimentConcept,
-  experimentName
+  experimentName,
 } from './concepts/experiment/experiment.concept';
 export {
-  experimentCheckInStrategyQuality,
   experimentCheckInStrategy,
-  experimentCheckInStrategyType
 } from './concepts/experiment/qualities/checkInStrategy.quality';
 export {
   experimentCountingStrategy,
   experimentCountingTopic,
-  experimentPrimedCountingStrategy,
-  experimentPrimedCountingTopic
 } from './concepts/experiment/strategies/experimentCounting.strategy';
-export {experimentActionQuePrinciple} from './concepts/experiment/experiment.principle';
+export {experimentActionQuePrincipleCreator} from './concepts/experiment/experiment.principle';
+
+// Muxium Qualities Index Dump
+export type {
+  AppendActionListToDialogPayload,
+  MuxiumAppendConceptsToAddQuePayload,
+  MuxiumAppendConceptsToRemoveQuePayload,
+  MuxiumBadActionPayload,
+  MuxiumClearBadActionTypeFromBadActionListPayload,
+  MuxiumClearBadPlanFromBadPlanListPayload,
+  MuxiumClearBadStrategyTopicFromBadActionListPayload,
+  MuxiumClosePayload,
+  MuxiumInitializePrinciplesPayload,
+  MuxiumPreClosePayload,
+  MuxiumQualities,
+  MuxiumRegisterStagePlannerPayload,
+  MuxiumRegisterSubscriberPayload,
+  MuxiumRegisterTimeOutPayload,
+  MuxiumSetBlockingModePayload,
+  MuxiumSetDefaultModeIndexPayload,
+  MuxiumSetDefaultModePayload,
+  MuxiumSetModePayload,
+  OpenPayload
+} from './concepts/muxium/qualities';
 /*#>*/

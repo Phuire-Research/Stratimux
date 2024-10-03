@@ -1,28 +1,34 @@
 /*<$
 For the asynchronous graph programming framework Stratimux generate the Ownership Concept,
-that will manage Stratimux's locking functionality if loaded into the Axium.
+that will manage Stratimux's locking functionality if loaded into the Muxium.
 This is accomplished via a ticketing system that will set actions to pending if their associated property is currently owned via strategy
-that is currently performing operations within the Axium.
+that is currently performing operations within the Muxium.
 $>*/
 /*<#*/
-import { createConcept } from '../../model/concept';
+import { Concept, createConcept } from '../../model/concept';
 import { Action } from '../../model/action';
 import { ownershipMode } from './ownership.mode';
-import { ownershipInitializeOwnershipQuality } from './qualities/initializeOwnership.quality';
+import { ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
-import { ownershipBackTrackQuality } from './qualities/backTrack.quality';
-import { ownershipClearPayloadStubsQuality } from './qualities/clearPayloadStubs.quality';
-import { ownershipClearStrategyStubsFromLedgerAndSelfQuality } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
-import { ownershipClearPendingActionsQuality } from './qualities/clearPendingActions.quality';
-import { ownershipClearPendingActionsOfStrategyQuality } from './qualities/clearPendingActionsOfStrategy.quality';
-import { ownershipResetOwnershipLedgerQuality } from './qualities/resetOwnershipLedger.quality';
+import { ownershipBackTrack } from './qualities/backTrack.quality';
+import { ownershipClearPayloadStubs } from './qualities/clearPayloadStubs.quality';
+import { ownershipClearStrategyStubsFromLedgerAndSelf } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
+import { ownershipClearPendingActions } from './qualities/clearPendingActions.quality';
+import { ownershipClearPendingActionsOfStrategy } from './qualities/clearPendingActionsOfStrategy.quality';
+import { ownershipResetOwnershipLedger } from './qualities/resetOwnershipLedger.quality';
+import { MuxiumDeck } from '../muxium/muxium.concept';
+import { PrincipleFunction } from '../../model/principle';
 
 export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
   pendingActions: Action[],
   isResponsibleForMode: boolean;
+}
+
+export type OwnershipDeck = {
+  ownership: Concept<OwnershipState, OwnershipQualities>,
 }
 
 export const ownershipName = 'ownership';
@@ -38,19 +44,25 @@ const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState =>
   };
 };
 
+const ownershipQualities = {
+  ownershipInitializeOwnership,
+  ownershipBackTrack,
+  ownershipClearPayloadStubs,
+  ownershipClearStrategyStubsFromLedgerAndSelf,
+  ownershipClearPendingActions,
+  ownershipClearPendingActionsOfStrategy,
+  ownershipResetOwnershipLedger
+};
+
+export type OwnershipQualities = typeof ownershipQualities;
+
+export type OwnershipPrinciple = PrincipleFunction<OwnershipQualities, OwnershipDeck & MuxiumDeck, OwnershipState>
+
 export const createOwnershipConcept = (isResponsibleForMode?: boolean) => {
-  return createConcept(
+  return createConcept<OwnershipState, OwnershipQualities>(
     ownershipName,
     createOwnershipState(isResponsibleForMode ? isResponsibleForMode : true),
-    [
-      ownershipInitializeOwnershipQuality,
-      ownershipBackTrackQuality,
-      ownershipClearPayloadStubsQuality,
-      ownershipClearStrategyStubsFromLedgerAndSelfQuality,
-      ownershipClearPendingActionsQuality,
-      ownershipClearPendingActionsOfStrategyQuality,
-      ownershipResetOwnershipLedgerQuality
-    ],
+    ownershipQualities,
     [
       ownershipPrinciple,
       ownershipExpirationPrinciple

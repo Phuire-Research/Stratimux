@@ -5,13 +5,23 @@ to true. This is accomplished via a timer emit action quality. That will then fi
 $>*/
 /*<#*/
 import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { Concept } from '../../../model/concept';
+import { Deck } from '../../../model/deck';
+import { ExperimentState } from '../experiment.concept';
 import { experimentMockToTrue } from '../qualities/mockToTrue.quality';
 import { experimentTimerEmitAction } from '../qualities/timerEmitAction.quality';
 
+const qs = {
+  experimentMockToTrue,
+  experimentTimerEmitAction
+};
+type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};
+export type ExperimentTimedMockToTrueDeck = Deck<ExperimentDeck>
+
 export const experimentTimedMockToTrueTopic = 'This will use a async method to eventually set mock to True';
-export function experimentTimedMockToTrue(): ActionStrategy {
-  const stepTwo = createActionNode(experimentMockToTrue());
-  const stepOne = createActionNode(experimentTimerEmitAction(), {
+export function experimentTimedMockToTrue(deck: ExperimentTimedMockToTrueDeck): ActionStrategy {
+  const stepTwo = createActionNode(deck.experiment.e.experimentMockToTrue());
+  const stepOne = createActionNode(deck.experiment.e.experimentTimerEmitAction(), {
     successNode: stepTwo,
   });
 

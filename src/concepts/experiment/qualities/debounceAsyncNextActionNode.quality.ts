@@ -3,19 +3,15 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 in the ongoing strategy.
 $>*/
 /*<#*/
-import { defaultReducer } from '../../../model/concept';
+import { defaultReducer } from '../../../model/quality';
 import { createAsyncMethodDebounce } from '../../../model/method';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { createQualitySet } from '../../../model/quality';
+import { createQualityCard } from '../../../model/quality';
 
-export const [
-  experimentAsyncDebounceNextActionNode,
-  experimentAsyncDebounceNextActionNodeType,
-  experimentAsyncDebounceNextActionNodeQuality
-] = createQualitySet({
+export const experimentAsyncDebounceNextActionNode = createQualityCard({
   type: 'Experiment will debounce incoming actions within set duration asynchronously',
   reducer: defaultReducer,
-  methodCreator: () => createAsyncMethodDebounce((controller, action) => {
+  methodCreator: () => createAsyncMethodDebounce(({controller, action}) => {
     setTimeout(() => {
       if (action.strategy) {
         controller.fire(strategySuccess(action.strategy));

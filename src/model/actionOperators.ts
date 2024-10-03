@@ -21,7 +21,8 @@ import {
   timer
 } from 'rxjs';
 import { Action } from './action';
-import { axiumConclude } from '../concepts/axium/qualities/conclude.quality';
+import { muxiumConclude } from '../concepts/muxium/qualities/conclude.quality';
+import { ActionDeck } from './concept';
 
 function hasLift(source: any): source is { lift: InstanceType<typeof Observable>['lift'] } {
   return typeof source?.lift === 'function';
@@ -149,14 +150,16 @@ function createOperatorSubscriber<T>(
 }
 
 /**
- * This will prevent all actions for the specified duration, but will still emit actions as axiumConclude
+ * This will prevent all actions for the specified duration, but will still emit actions as muxiumConclude
  *  Thus this needs to be taken into account in the Method using debounceAction if implemented directly.
  *   But will be handled automatically in actionControllers and associated debounce createMethods.
  */
-export function debounceAction(dueTime: number, scheduler: SchedulerLike = asyncScheduler): MonoTypeOperatorFunction<Action> {
+export function debounceAction<T, C>(
+  dueTime: number, scheduler: SchedulerLike = asyncScheduler
+): MonoTypeOperatorFunction<ActionDeck<T, C>> {
   return operate((source, subscriber) => {
     let activeTask: Subscription | null = null;
-    let lastValue: Action | null = null;
+    let lastValue: ActionDeck<T, C> | null = null;
     let lastTime: number | null = null;
 
     const emit = () => {
@@ -183,7 +186,7 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
     source.subscribe(
       createOperatorSubscriber(
         subscriber,
-        (value: Action) => {
+        (value: ActionDeck<T, C>) => {
           lastValue = value;
           lastTime = scheduler.now();
           if (!activeTask) {
@@ -191,13 +194,15 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
             subscriber.add(activeTask);
           } else {
             // All this code just to place this code block.
-            const conclude = {
+            const conclude: Action<any> = {
               ...value,
-              ...axiumConclude(),
+              ...muxiumConclude(),
             };
-            subscriber.next(
-              conclude
-            );
+            subscriber.next({
+              action: conclude,
+              deck: value.deck,
+              self: value.self
+            });
           }
         },
         () => {
@@ -213,15 +218,17 @@ export function debounceAction(dueTime: number, scheduler: SchedulerLike = async
   });
 }
 
-function throttle(durationSelector: (value: Action) => ObservableInput<any>, config?: ThrottleConfig): MonoTypeOperatorFunction<Action> {
+function throttle<T, C>(
+  durationSelector: (value: ActionDeck<T, C>) => ObservableInput<any>, config?: ThrottleConfig
+): MonoTypeOperatorFunction<ActionDeck<T, C>> {
   return operate((source, subscriber) => {
     const { leading = true, trailing = false } = config ?? {};
     let hasValue = false;
-    let sendValue: Action | null = null;
+    let sendValue: ActionDeck<T, C> | null = null;
     let throttled: Subscription | null = null;
     let isComplete = false;
 
-    const endThrottling = (value: Action) => {
+    const endThrottling = (value: ActionDeck<T, C>) => {
       throttled?.unsubscribe();
       throttled = null;
       if (trailing) {
@@ -237,12 +244,15 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
       isComplete && subscriber.complete();
     };
 
-    const startThrottle = (value: Action) =>
+    const startThrottle = (value: ActionDeck<T, C>) =>
       (throttled = innerFrom(durationSelector(value)).subscribe(createOperatorSubscriber(subscriber, endThrottling, cleanupThrottling)));
-    const passConclude = (value: Action) => {
-      subscriber.next({
-        ...value,
-        ...axiumConclude()
+    const passConclude = (value: ActionDeck<T, C>) => {
+      subscriber.next({ action: {
+        ...value.action,
+        ...muxiumConclude()
+      } as Action<T>,
+      deck: value.deck,
+      self: value.self
       });
     };
 
@@ -273,16 +283,16 @@ function throttle(durationSelector: (value: Action) => ObservableInput<any>, con
   });
 }
 /**
- * This will permit the first action, then filter actions for the specified duration, but will still emit actions as axiumConclude
+ * This will permit the first action, then filter actions for the specified duration, but will still emit actions as muxiumConclude
  *  Thus this needs to be taken into account in the Method using throttleAction if implemented directly.
  *   But will be handled automatically in actionControllers and associated debounce createMethods.
  */
-export function throttleAction(
+export function throttleAction<T, C>(
   duration: number,
   scheduler: SchedulerLike = asyncScheduler,
   config?: ThrottleConfig
-): MonoTypeOperatorFunction<Action> {
+): MonoTypeOperatorFunction<ActionDeck<T, C>> {
   const duration$ = timer(duration, scheduler);
-  return throttle(() => duration$, config);
+  return throttle<T, C>(() => duration$, config);
 }
 /*#>*/

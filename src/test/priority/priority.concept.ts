@@ -1,6 +1,6 @@
 import { createExperimentConcept } from '../../concepts/experiment/experiment.concept';
-import { experimentPriorityIsReadyQuality } from './qualities/isReady.quality';
-import { experimentPriorityAddValueQuality } from './qualities/addValue.quality';
+import { experimentPriorityIsReady } from './qualities/isReady.quality';
+import { experimentPriorityAddValue } from './qualities/addValue.quality';
 
 export type ExperimentPriorityState = {
   value: number;
@@ -9,11 +9,15 @@ export type ExperimentPriorityState = {
 
 export const createExperimentPriorityState = (): ExperimentPriorityState => ({value: 0, ready: false});
 
-export const createExperimentPriorityConcept = () => createExperimentConcept(
+const experimentPriorityQualities = {
+  experimentPriorityIsReady,
+  experimentPriorityAddValue
+};
+
+export type ExperimentPriorityQualities = typeof experimentPriorityQualities;
+
+export const createExperimentPriorityConcept = () => createExperimentConcept<ExperimentPriorityState, ExperimentPriorityQualities>(
   createExperimentPriorityState(),
-  [
-    experimentPriorityIsReadyQuality,
-    experimentPriorityAddValueQuality
-  ],
+  experimentPriorityQualities,
   []
 );

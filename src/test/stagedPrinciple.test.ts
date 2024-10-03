@@ -2,15 +2,15 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
 $>*/
 /*<#*/
-import { createAxium } from '../model/axium';
+import { muxification } from '../model/muxium';
 import { selectState } from '../model/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
-import { Action, ActionType, prepareActionCreator } from '../model/action';
-import { Subscriber } from 'rxjs';
-import { Concepts, createQuality } from '../model/concept';
-import { UnifiedSubject, createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { axiumPreClose } from '../concepts/axium/qualities/preClose.quality';
+import { Action } from '../model/action';
+import { muxiumPreClose } from '../concepts/muxium/qualities/preClose.quality';
+import { createQualityCard } from '../model/quality';
+import { MuxiumQualities } from '../concepts/muxium/qualities';
+import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
 
 type ExperimentState = {
   mock: boolean;
@@ -18,38 +18,34 @@ type ExperimentState = {
 
 const createExperimentState = (): ExperimentState => ({ mock: false });
 
-const experimentMockToTrueType: ActionType = 'Experiment set mock to True';
-const experimentMockToTrue = prepareActionCreator(experimentMockToTrueType);
 function experimentMockToTrueReducer(state: ExperimentState, action: Action): ExperimentState {
   return {
-    ...state,
     mock: true
   };
 }
-const experimentMockToTrueQuality = createQuality(experimentMockToTrueType, experimentMockToTrueReducer);
+const experimentMockToTrue = createQualityCard({type: 'Experiment set mock to True', reducer: experimentMockToTrueReducer});
 
-test('Axium Principle Stage', (done) => {
-  const experimentPrinciple: PrincipleFunction = (_: Subscriber<Action>, __: Concepts, concept$: UnifiedSubject) => {
-    const plan = concept$.plan('Experiment Principle', [
-      stageWaitForOpenThenIterate(() => experimentMockToTrue()),
-      createStage((concepts, dispatch) => {
+test('Muxium Principle Stage', (done) => {
+  const qualities = {experimentMockToTrue};
+  const experimentPrinciple: PrincipleFunction<typeof qualities, MuxiumDeck> = ({plan}) => {
+    const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude, e__}) => [
+      stageO(() => e__.experimentMockToTrue()),
+      stage(({concepts, dispatch, d}) => {
         const experimentState = selectState<ExperimentState>(concepts, experimentName);
         if (experimentState?.mock) {
           expect(experimentState.mock).toBe(true);
           setTimeout(() => done(), 1000);
-          dispatch(axiumPreClose({exit: false}), {
+          dispatch(d.muxium.e.muxiumPreClose({exit: false}), {
             iterateStage: true
           });
-          plan.conclude();
+          planExperiment.conclude();
         }
       }),
-      createStage(() => {
-        //
-      })
+      conclude()
     ]);
   };
-  createAxium('axiumStrategyTest', [
-    createExperimentConcept(createExperimentState(), [experimentMockToTrueQuality], [experimentPrinciple])
-  ], {logging: true, storeDialog: true});
+  muxification('muxiumStrategyTest', {
+    experiment: createExperimentConcept<ExperimentState, MuxiumDeck>(createExperimentState(), qualities, [experimentPrinciple])
+  }, {logging: true, storeDialog: true});
 });
 /*#>*/

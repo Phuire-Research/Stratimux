@@ -1,30 +1,29 @@
 /*<$
-For the asynchronous graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the axium
+For the asynchronous graph programming framework Stratimux generate a test that ensures that each possible plan options functions alongside in the muxium
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { createAxium } from '../../model/axium';
-import { createStage } from '../../model/stagePlanner';
+import { muxification } from '../../model/muxium';
 import { selectSlice } from '../../model/selector';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
+import { muxiumKick } from '../../concepts/muxium/qualities/kick.quality';
 
 test('Mixed Plan Options Test', (done) => {
-  const planMixedPlanOptions = createAxium('Plan New Stage Priority Test', [
-    createExperimentPlanOptionsConcept()
-  ]);
+  const planMixedPlanOptions = muxification('Plan New Stage Priority Test', {
+    experiment: createExperimentPlanOptionsConcept()
+  });
   const allShouldBeTrue = [false, false, false, false, false, false, false, false];
-  const planOne = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE One');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, { priority: 100, selectors: [experimentPlanOptionsReadySelector] }),
-    createStage(() => {
+    stage(({stagePlanner}) => {
       allShouldBeTrue[0] = true;
       setTimeout(() => {
         let trueCount = 0;
@@ -41,107 +40,107 @@ test('Mixed Plan Options Test', (done) => {
         }, 50);
         done();
       }, 200);
-      planOne.conclude();
+      stagePlanner.conclude();
     })
   ]);
-  const planTwo = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Two');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, { priority: 100 }),
-    createStage(() => {
+    stage(({stagePlanner}) => {
       allShouldBeTrue[1] = true;
-      planTwo.conclude();
+      stagePlanner.conclude();
     })
   ]);
-  const planThree = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Three');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, { selectors: [experimentPlanOptionsReadySelector] }),
-    createStage(() => {
-      planThree.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[2] = true;
     })
   ]);
-  const planFour = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Four');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }),
-    createStage(() => {
-      planFour.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[3] = true;
     })
   ]);
-  const planFive = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Five');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, {priority: 1, selectors: [experimentPlanOptionsReadySelector], beat: 1}),
-    createStage(() => {
-      planFive.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[4] = true;
     })
   ]);
-  const planSix = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Six');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, {priority: 1, beat: 1}),
-    createStage(() => {
-      planSix.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[5] = true;
     })
   ]);
-  const planSeven = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Seven');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, {selectors: [experimentPlanOptionsReadySelector], beat: 1}),
-    createStage(() => {
-      planSeven.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[6] = true;
     })
   ]);
-  const planEight = planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', [
-    createStage((concepts, dispatch) => {
+  planMixedPlanOptions.plan('Ensure that mixed plan options allow for each plan to be informed', ({stage}) => [
+    stage(({concepts, dispatch, e}) => {
       if (selectSlice(concepts, experimentPlanOptionsReadySelector)) {
         console.log('FIRE Eight');
-        dispatch(axiumKick(), {
+        dispatch(e.muxiumKick(), {
           iterateStage: true
         });
       }
     }, {beat: 1}),
-    createStage(() => {
-      planEight.conclude();
+    stage(({stagePlanner}) => {
+      stagePlanner.conclude();
       allShouldBeTrue[7] = true;
     })
   ]);
-  planMixedPlanOptions.dispatch(experimentPlanOptionsIsReady());
+  planMixedPlanOptions.dispatch(planMixedPlanOptions.deck.d.experiment.e.experimentPlanOptionsIsReady());
 });
 /*#>*/

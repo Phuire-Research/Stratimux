@@ -5,36 +5,31 @@ $>*/
 /*<#*/
 import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { UnifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner';
 import { createAsyncMethodDebounceWithState } from '../../../model/method';
 import { selectPayload } from '../../../model/selector';
 import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_unifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/actionStrategyData';
 import { Subject } from 'rxjs';
-import { createQualitySetWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
 
-export const [
-  experimentDebounceAsyncIterateIdThenReceiveInMethod,
-  experimentDebounceAsyncIterateIdThenReceiveInMethodType,
-  experimentDebounceAsyncIterateIdThenReceiveInMethodQuality
-] = createQualitySetWithPayload<ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>({
-  type: 'Debounce Experiment asynchronously iterate ID then receive in Method via State',
-  reducer: (state: ExperimentState) => {
-    return {
-      ...state,
-      id: state.id + 1
-    };
-  },
-  methodCreator: (concepts$?: Subject<Concepts>, semaphore?: number) =>
-    createAsyncMethodDebounceWithState<ExperimentState>((controller, action, state) => {
+export const experimentDebounceAsyncIterateIdThenReceiveInMethod =
+  createQualityCardWithPayload<ExperimentState, ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>({
+    type: 'Debounce Experiment asynchronously iterate ID then receive in Method via State',
+    reducer: (state: ExperimentState) => {
+      return {
+        id: state.id + 1
+      };
+    },
+    methodCreator: () => createAsyncMethodDebounceWithState(({controller, action, state}) => {
       setTimeout(() => {
-        const payload = selectPayload<ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(action);
+        const payload = action.payload;
         if (action.strategy) {
-          const data = strategyData_unifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
+          const data = strategyData_muxifyData<ExperimentState & ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>(
             action.strategy,
             {
               id: state.id,
@@ -46,6 +41,6 @@ export const [
         }
         controller.fire(action);
       }, 50);
-    }, concepts$ as UnifiedSubject, semaphore as number, 500)
-});
+    }, 500)
+  });
 /*#>*/

@@ -1,24 +1,23 @@
-import { createAxium, getAxiumState } from '../../model/axium';
+import { muxification, getMuxiumState } from '../../model/muxium';
 import { strategyBegin } from '../../model/actionStrategy';
 import { selectState } from '../../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName } from '../../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, counterName, CounterDeck } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
-import { axiumKick } from '../../concepts/axium/qualities/kick.quality';
 import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 
-test('Axium Counting Strategy Test', (done) => {
-  const axium = createAxium('axiumStrategyTest', [createCounterConcept()], {logging: true, storeDialog: true});
+test('Muxium Counting Strategy Test', (done) => {
+  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   let strategyTopic = 'SOME STRATEGY TOPIC';
   let expectedOutput = 0;
   let totalExpected = 0;
   let count = 0;
   const repeat = 10;
   let steps = 0;
-  const plan = axium.plan('Counting Strategy Stage',
-    [
-      stageWaitForOpenThenIterate(() => axiumKick()),
-      createStage((_, dispatch) => {
-        const [shouldBe, strategy] = generateRandomCountingStrategy(count);
+  const plan = muxium.plan<CounterDeck>('Counting Strategy Stage',
+    ({e__}) => [
+      stageWaitForOpenThenIterate(() => e__.muxiumKick()),
+      createStage(({dispatch, d}) => {
+        const [shouldBe, strategy] = generateRandomCountingStrategy(d, count);
         strategyTopic = strategy.topic;
         expectedOutput = shouldBe;
         totalExpected += expectedOutput;
@@ -28,12 +27,12 @@ test('Axium Counting Strategy Test', (done) => {
           throttle: 1
         });
       }),
-      createStage((concepts, dispatch) => {
-        const axiumState = getAxiumState(concepts);
+      createStage(({concepts, dispatch, e}) => {
+        const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
-        console.log('HIT, AX', axiumState.lastStrategy);
-        if (axiumState.lastStrategy === strategyTopic && counter) {
-          console.log('Count: ', counter?.count, 'Topic: ', axiumState.lastStrategy, 'Steps: ', steps, 'Repeating for: ',  repeat);
+        console.log('HIT, AX', muxiumState.lastStrategy);
+        if (muxiumState.lastStrategy === strategyTopic && counter) {
+          console.log('Count: ', counter?.count, 'Topic: ', muxiumState.lastStrategy, 'Steps: ', steps, 'Repeating for: ',  repeat);
           console.log('Expected: ', expectedOutput);
           console.log('Steps and Repeat', steps, repeat);
           expect(counter.count).toBe(totalExpected);
@@ -41,7 +40,7 @@ test('Axium Counting Strategy Test', (done) => {
             steps++;
             count = counter.count;
             console.log('KICK');
-            dispatch(axiumKick(), {
+            dispatch(e.muxiumKick(), {
               setStage: 1,
               throttle: 1
             });
@@ -50,10 +49,10 @@ test('Axium Counting Strategy Test', (done) => {
             expect(counter.count).toBe(totalExpected);
             plan.conclude();
             setTimeout(() => {done();}, 500);
-            axium.close();
+            muxium.close();
           }
         }
       })
     ]);
-  axium.subscribe(concepts => console.log(getAxiumState(concepts).lastStrategy));
+  muxium.subscribe(concepts => console.log(getMuxiumState(concepts).lastStrategy));
 });
