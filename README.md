@@ -3,8 +3,8 @@
 
 **Features:**
 * Universal Transformer
-* Autonomous Baseline Intelligence (ABI)
-* Function as a Operating System
+* ICE - Intelligently Crystallized Executable
+* Function as an Operating System
 * Halting Complete
 * Concept Libraries
 * Action Oriented
@@ -17,6 +17,7 @@
 * Plain Text Dialog Output
 * Hot Loading
 * No Dependency Injection
+* DECK Interface System for all entry points.
 
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
@@ -96,30 +97,30 @@ This paradigm affords for a powerful separation of concerns. And is the key feat
 Treat your concepts as libraries and modules. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Muxium. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 ```typescript
 import { Action, Mode, Quality, createConcept, PrincipleFunction } from 'stratimux';
-import { uXqOfUXQuality } from './qualities/qOfUx.quality'
-import { uXPrinciple } from './uX.principle'
+import { muXqOfUXQuality } from './qualities/qOfMux.quality'
+import { muXPrinciple } from './muX.principle'
 
-export type UXState = {
+export type MUXState = {
   //
 }
 
-export const uXName = 'uX';
+export const muXName = 'muX';
 
-const uXQualities = {
-  uXqOfUXExample
+const muXQualities = {
+  muXqOfMUXExample
 }
 
-export const createUXState = (): UXState => {
+export const createMUXState = (): MUXState => {
   return {
     //
   };
 };
 
-export type UXDECk = {
-  uX: Concept<UXState, typeof uXQualities>
+export type MUXDECk = {
+  muX: Concept<MUXState, typeof muXQualities>
 }
 
-export type UXPrinciple = PrincipleFunction<typeof uXQualities, MuxiumDeck & UXDeck, UXState>
+export type MUXPrinciple = PrincipleFunction<typeof muXQualities, MuxiumDeck & MUXDeck, MUXState>
 
 // Pass any arguments needed for your concept
 export const createUXConcept = (
@@ -140,10 +141,11 @@ export const createUXConcept = (
   );
 };
 ```
-### uXqOfUx.quality.ts
-This isolates all the parts necessary for your actions to have impact within this system. Be mindful of your types, as even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are not setting the semaphore ahead of time.
+### muXqOfMux.quality.ts
+A quality is a useful aspect of a Concept, that is either intrinsic and/or(anor) extrinsic.
+* Intrinsic changes to your concepts are handled by a new Specific Reducer that precisely informs specifics points of observation in your application.
+* Extrinsic utilization of your qualities are mainly used to handle higher order planning routines via the setting of a defaultMethod. You may also expand this methods to handle what would traditionally treated as side effects, but are merely a step in this new Function as an Operating System Paradigm.
 
-The semaphore is the method of quality selection within the Muxium. This is to reduce the time complexity of each look up. And if you applications are purely static with no planned dynamic changes to the Muxium's conceptual load. This values can be hard coded ahead of time. This is one of the planned features for [Huirth](https://github.com/Phuire-Research/Huirth). In addition to other scaffolding improvements, AI assistance, and more.
 ```typescript
 import {
   createQualityCardWithPayload,
@@ -153,22 +155,22 @@ import {
   strategyData_muxifyData,
   strategyFailed
 } from 'stratimux';
-import { UXState } from '../uX.concept';
+import { MUXState } from '../uX.concept';
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export type uXqOfUxField = {
-  state: UXState
+export type muXqOfUxField = {
+  state: MUXState
 };
 
 // uXDeterminedQualities is a generated definition using the companion release of Huirth released alongside 0.2.0. Otherwise use any in the Qualities field
-export const uXqOfUX = createQualityCardWithPayload<uXqOfUxField, uXDeterminedQualities>({
+export const muXqOfUX = createQualityCardWithPayload<muXqOfUxField, muXDeterminedQualities>({
   type: 'uX allows for easy selection of your qualities, qOfUX is your quality, and Type is the distinction',
-  reducer: (state: UXState) => ({...state}),
+  reducer: (state: MUXState) => ({...state}),
   methodCreator: () =>
-  // Only if you need to access state, otherwise
+  // Only if you need to access state, otherwise use any other method
   createMethodWithState<UXState>((action, state) => {
     if (action.strategy) {
       // P/NP?

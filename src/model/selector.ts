@@ -259,9 +259,11 @@ export const updateAtomicSelects = <S = void>(
   const kss: KeyedSelector<any>[] = [];
   Object.keys(partialState).forEach(key => {
     const selector = ((selectors as any)[key] as KeyedSelector<any>);
-    const val = selectSlice(concepts, selector);
-    selector.select = () => val;
-    kss.push(selector);
+    if (selector) {
+      const val = selectSlice(concepts, selector);
+      selector.select = () => val;
+      kss.push(selector);
+    }
   });
   return kss;
 };

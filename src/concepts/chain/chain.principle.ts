@@ -22,11 +22,6 @@ export const chainPrinciple: ChainPrinciple = ({
   d_,
   plan
 }) => {
-  plan('', ({stageO, stage}) => [
-    stage(({d, k}) => {
-      console.log('CHECK THIS', d, k);
-    })
-  ]);
   const subscription = subscribe((concepts: Concepts) => {
     const chainState = selectMuxifiedState<ChainState>(concepts, conceptSemaphore);
     if (chainState && chainState.actionQue.length > 0) {

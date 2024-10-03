@@ -16,7 +16,7 @@ export const counterMultiply = createQualityCardWithPayload<CounterState, Counte
   type: 'Counter Multiply',
   reducer: (state: CounterState, {payload}) => {
     const {by} = payload;
-    console.log(state.count, 'by', by);
+    // console.log(state.count, 'by', by);
     return {
       count: state.count * by
     };
