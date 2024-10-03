@@ -64,9 +64,17 @@ When in doubt simplify.
 * With this release will be reverting back to incremental changes and improvements.
 
 
+Other typescript projects
 ```bash
 npm i stratimux
 ```
+
+From this template
+```bash
+npm i --force
+npm run start
+```
+
 
 ### Project Structure
 ```
