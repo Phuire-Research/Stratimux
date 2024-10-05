@@ -129,7 +129,7 @@ export const createMuXConcept = () => {
   );
 };
 ```
-### muuXqOfMux.quality.ts
+### muXqOfMux.quality.ts
 This isolates all the parts necessary for your actions to have impact within this system. Types are a qualitative description of the overall quality. As even though they are not explicitly used within this system. They likewise better inform training data, and likewise act as unique identifiers if you are accessing the action creators directly versus the DECK System.
 
 Internally Stratimux uses semaphores as the method of quality routing within the Muxium. This is to reduce the time complexity of each look up. To further increase the speed of execution of your applications, utilize the supplied DECK Interfaces at each point of entry.
