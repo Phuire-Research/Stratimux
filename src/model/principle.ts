@@ -6,7 +6,7 @@ $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept';
-import { Action, Actions } from './action';
+import { Action, Actions } from './action/action.type';
 import { Planning } from './stagePlanner';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
 import { BInterface, Comparators } from './interface';

@@ -3,10 +3,11 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 from the Muxium's concepts state property.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { AnyConcept, Concepts } from '../../../model/concept';
-import { Actions } from '../../../model/action';
-import { MuxiumAppendConceptsToRemoveQuePayload, MuxiumQualities } from '../qualities';
+import { Actions } from '../../../model/action/action.type';
+import { MuxiumQualities } from '../qualities';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
 
 export const addConceptsToRemovalQueThenBlockTopic = 'Add Concepts to removal Que then set Muxium Mode to Blocking';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

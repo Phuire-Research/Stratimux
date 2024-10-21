@@ -9,8 +9,6 @@ import { CounterState, createCounterConcept, counterName  } from '../concepts/co
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
-import { createStage } from '../model/stagePlanner';
-import { MuxiumQualities } from '../concepts/muxium/qualities';
 
 test('Muxium Selector Test', (done) => {
   const counter = createCounterConcept();

@@ -7,18 +7,14 @@ $>*/
 
 import { Subject, map } from 'rxjs';
 import {
-  Action,
-  ActionCreator,
-  ActionCreatorType,
-  ActionCreatorWithPayload,
   prepareActionCreator,
   prepareActionWithPayloadCreator
-} from './action';
-import { strategySuccess } from './actionStrategy';
+} from './action/action';
 import { ActionDeck, Concepts, Method, MethodCreatorStep, SpecificReducer, createQuality } from './concept';
-import { ActionType } from './action';
 import { KeyedSelector } from './selector';
 import { muxiumConcludeType } from '../concepts/muxium/qualities/conclude.quality';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType } from './action/action.type';
+import { strategySuccess } from './action/strategy/actionStrategyConsumers';
 
 export type Quality<S extends Record<string, unknown>, T = void, C = void> = {
   actionType: ActionType;

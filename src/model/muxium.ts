@@ -13,22 +13,32 @@ import {
   Subscription,
   Observer,
 } from 'rxjs';
-import { Action, Actions, createAction, createCachedSemaphores } from './action';
-import { strategyBegin } from './actionStrategy';
-import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts, Mode, forEachConcept, qualityToString } from './concept';
+import {
+  AnyConcept,
+  Concept,
+  Concepts,
+  LoadConcepts,
+  Mode,
+  forEachConcept,
+  qualityToString
+} from './concept';
 import {
   muxificationConcept,
   MuxiumState,
   initializationStrategy,
   MuxiumDeck,
 } from '../concepts/muxium/muxium.concept';
-import { Planner, Planning, StagePlanner } from './stagePlanner';
+import { Planner, StagePlanner } from './stagePlanner';
 import { muxiumTimeOut } from './time';
 import { handlePriority, isPriorityValid } from './priority';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { Deck, Decks, ECK } from './deck';
 import { BundledSelectors, createSelectors, updateKeyedSelectors } from './selector';
 import { Comparators } from './interface';
+import { createAction } from './action/action';
+import { Action, Actions } from './action/action.type';
+import { createCachedSemaphores } from './action/actionSemaphore';
+import { strategyBegin } from './action/strategy/actionStrategyConsumers';
 
 // eslint-disable-next-line no-shadow
 export enum MuxiumOrigins {

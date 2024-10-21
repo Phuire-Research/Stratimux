@@ -30,7 +30,6 @@ import { muxiumStitch } from './qualities/stitch.quality';
 import { muxiumRegisterTimeOut } from './qualities/registerTimeOut.quality';
 import { Subject, Subscription } from 'rxjs';
 import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts } from '../../model/concept';
-import { Action, AnyAction } from '../../model/action';
 import { muxiumPrinciple } from './muxium.principle';
 import { muxiumClosePrinciple } from './muxium.close.principle';
 import { blockingMode, permissiveMode } from './muxium.mode';
@@ -41,6 +40,7 @@ import { MuxiumQualities } from './qualities';
 import { Deck, Decks } from '../../model/deck';
 import { MuxiumLoad } from '../../model/muxium';
 import { PrincipleFunction } from '../../model/principle';
+import { Action, AnyAction } from '../../model/action/action.type';
 
 export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {

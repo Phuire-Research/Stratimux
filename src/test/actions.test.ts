@@ -6,7 +6,7 @@ $>*/
 import { muxification } from '../model/muxium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
 import { Concept, Concepts, createConcept } from '../model/concept';
-import { Actions } from '../model/action';
+import { Actions } from '../model/action/action.type';
 
 test('Quality Actions', (done) => {
   const something = createQualityCard({

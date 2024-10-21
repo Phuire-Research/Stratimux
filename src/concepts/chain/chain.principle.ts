@@ -4,14 +4,11 @@ generate a principle that observes the chain's actionQue and dispatches
 those actions in order upon each state notification.
 $>*/
 /*<#*/
-import { Subscriber } from 'rxjs';
 import { Concepts } from '../../model/concept';
-import { Action } from '../../model/action';
-import { PrincipleFunction, registerPrincipleSubscription } from '../../model/principle';
+import { registerPrincipleSubscription } from '../../model/principle';
 import { ChainPrinciple, ChainQualities, ChainState, chainName } from './chain.concept';
 import { selectMuxifiedState } from '../../model/selector';
-import { MuxiumDeck, MuxiumState } from '../muxium/muxium.concept';
-import { MuxifiedSubject } from '../../model/stagePlanner';
+import { Action } from '../../model/action/action.type';
 
 export const chainPrinciple: ChainPrinciple = ({
   observer,

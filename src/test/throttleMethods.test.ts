@@ -3,8 +3,6 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 $>*/
 /*<#*/
 import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData } from '../concepts/muxium/muxium.selector';
-import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
-import { muxiumLog } from '../concepts/muxium/qualities/log.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
   experimentThrottleAsyncIterateIdThenReceiveInMethod
@@ -23,10 +21,10 @@ import {
   experimentThrottleIterateIdThenAddToDataTopic
 } from '../concepts/experiment/strategies/throttleIterateIdThenAddToData.strategy';
 
-import { strategyBegin } from '../model/actionStrategy';
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { Concept } from '../model/concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Action Throttle Method Test with Concepts id comparison', (done) => {
   const qualities = {experimentThrottleIterateIdThenReceiveInMethod};

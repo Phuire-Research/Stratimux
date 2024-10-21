@@ -4,10 +4,10 @@ asynchronously dispatch the next action in the incoming strategy, then throttle 
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { createAsyncMethodThrottleWithState } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { createAsyncMethodThrottleWithState } from '../../../model/method/methodAsyncThrottle';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;

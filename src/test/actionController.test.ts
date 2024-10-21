@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the ActionController model is working as intended.
 $>*/
 /*<#*/
-import { ActionController, createActionController$ } from '../model/actionController';
 import { muxiumLog } from '../concepts/muxium/qualities/log.quality';
 import { muxiumBadAction } from '../concepts/muxium/qualities/badAction.quality';
 import { Deck } from '../model/deck';
 import { ActionDeck } from '../model/concept';
+import { ActionController, createActionController$ } from '../model/action/actionController';
 
 test('ActionController Expired Test', (done) => {
   // Using actionCreators directly from Qualities is reserved only for testing, in production use Deck Interface

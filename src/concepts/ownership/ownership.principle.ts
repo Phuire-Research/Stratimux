@@ -8,13 +8,14 @@ $>*/
 import { PrincipleFunction } from '../../model/principle';
 import { OwnershipDeck, OwnershipPrinciple, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
 import { selectMuxifiedState } from '../../model/selector';
-import { strategyBegin } from '../../model/actionStrategy';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner';
-import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
 import { MuxiumBadActionPayload } from '../muxium/qualities';
+import { Action, AnyAction } from '../../model/action/action.type';
+import { areSemaphoresEqual } from '../../model/action/actionSemaphore';
+import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {

@@ -5,7 +5,8 @@ then throttle the next action to be asynchronously dispatched from the quality's
 to the strategy's data field.
 $>*/
 /*<#*/
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
 import { Concept } from '../../../model/concept';
 import { Deck } from '../../../model/deck';
 import { MuxiumDeck } from '../../muxium/muxium.concept';

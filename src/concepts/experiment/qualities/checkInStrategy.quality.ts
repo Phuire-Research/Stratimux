@@ -3,10 +3,10 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 in the current strategy to the state's actionQue.
 $>*/
 /*<#*/
-import { strategySuccess } from '../../../model/actionStrategy';
 import { muxiumConcludeType } from '../../muxium/qualities/conclude.quality';
 import { ExperimentState } from '../experiment.concept';
 import { createQualityCard } from '../../../model/quality';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
   type: 'Experiment check in Action',

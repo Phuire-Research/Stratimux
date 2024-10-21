@@ -4,9 +4,10 @@ generate a strategy that will initialize the muxium of its base functionality.
 Within the Stratimux paradigm. Principles act as the start up script, or main function.
 $>*/
 /*<#*/
-import { createStrategy, ActionNode, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
+import { Actions } from '../../../model/action/action.type';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
 import { Concepts } from '../../../model/concept';
-import { Actions } from '../../../model/action';
 import { MuxiumQualities } from '../qualities';
 
 export const initializeTopic = 'Muxium Initialization Strategy';

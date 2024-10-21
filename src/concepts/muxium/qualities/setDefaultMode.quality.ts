@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { Subscriber } from 'rxjs';
 import { forEachConcept, LoadConcepts } from '../../../model/concept';
-import { Action } from '../../../model/action';
+import { Action } from '../../../model/action/action.type';
 import { MuxiumState } from '../muxium.concept';
 import { defaultMethodSubscription, getMuxiumState } from '../../../model/muxium';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';

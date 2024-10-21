@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 $>*/
 /*<#*/
 import { muxification, getMuxiumState } from '../model/muxium';
-import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { Concept } from '../model/concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium Counting Strategy Test', (done) => {
   const cpts = {counter: createCounterConcept()};

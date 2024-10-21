@@ -2,12 +2,12 @@
 For the asynchronous graph programming framework Stratimux, define the Deck Model File
 $>*/
 /*<#*/
-import { Actions } from './action';
 import { accessMuxium, getMuxiumState } from './muxium';
 import { AnyConcept, Concept, Concepts, conceptsToString } from './concept';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
+import { Actions } from './action/action.type';
 
 export type Decks<BaseQ, BaseS, Extended> = {
   d: Deck<Extended>;

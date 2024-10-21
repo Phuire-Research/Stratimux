@@ -24,10 +24,10 @@ import {
   timedMockToTrueWithState,
   experimentTimedMockToTrueWithStateTopic
 } from '../concepts/experiment/strategies/timedMockToTrueWithState.strategy';
-import { strategyBegin } from '../model/actionStrategy';
 import { muxification } from '../model/muxium';
 import { selectSlice, selectState } from '../model/selector';
 import { Concept } from '../model/concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Async Method Test', (done) => {
   const qualities = {experimentTimerEmitAction, experimentMockToTrue};

@@ -6,7 +6,8 @@ unify the the ID the method has received onto the strategy's state field. Then f
 strategy's conclusion.
 $>*/
 /*<#*/
-import { ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
 import { Concept } from '../../../model/concept';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';

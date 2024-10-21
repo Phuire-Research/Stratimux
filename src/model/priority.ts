@@ -4,7 +4,7 @@ This muxified concept further enhances the ability to control the halting nature
 $>*/
 /*<#*/
 import { MuxiumState } from '../concepts/muxium/muxium.concept';
-import { Action } from './action';
+import { Action } from './action/action.type';
 
 // Is only called if action has priority
 const fillBucket = (body: Action[], bucket: Action[], action: Action, _added = false) => {

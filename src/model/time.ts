@@ -4,10 +4,10 @@ This concept muxified into the muxium, manages how the timer functions interact 
 $>*/
 /*<#*/
 import { MuxiumState } from '../concepts/muxium/muxium.concept';
-import { Action, createAction } from './action';
 import { getMuxiumState, tailWhip } from './muxium';
 import { Concepts } from './concept';
 import { handlePriority, isPriorityValid } from './priority';
+import { Action } from './action/action.type';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleTimedRun = (muxiumState: MuxiumState<any, any>, func: (() => Action)[], timed: number) => {

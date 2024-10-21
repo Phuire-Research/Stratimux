@@ -6,7 +6,7 @@ that is currently performing operations within the Muxium.
 $>*/
 /*<#*/
 import { Concept, createConcept } from '../../model/concept';
-import { Action } from '../../model/action';
+import { Action } from '../../model/action/action.type';
 import { ownershipMode } from './ownership.mode';
 import { ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';

@@ -6,11 +6,11 @@ $>*/
 import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
 import { MuxifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodWithState } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { Subject } from 'rxjs';
 import { createQualityCard } from '../../../model/quality';
+import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const experimentAsyncIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
   type: 'Experiment asynchronously iterate ID then receive in Method via State',

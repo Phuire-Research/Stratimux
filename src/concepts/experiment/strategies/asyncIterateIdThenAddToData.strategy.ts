@@ -3,7 +3,8 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 async iterate id that will later notify the Muxium of its conclusion.
 $>*/
 /*<#*/
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
 import { Concept } from '../../../model/concept';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';

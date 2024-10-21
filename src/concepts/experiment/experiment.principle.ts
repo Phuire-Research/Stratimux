@@ -8,7 +8,6 @@ import { PrincipleFunction } from '../../model/principle';
 import { StagePlanner, createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
 import { selectMuxifiedState } from '../../model/selector';
 import { ExperimentState, experimentName } from './experiment.concept';
-import { muxiumRegisterStagePlanner } from '../muxium/qualities/registerStagePlanner.quality';
 
 export const experimentActionQuePrincipleCreator = <T>() => {
   const experimentActionQuePrinciple: PrincipleFunction<T> = ({

@@ -4,9 +4,9 @@ This function allows for Strategy Stitches to be composed of only one action nod
 While calling the muxium's stitch quality to silently move to the next node assigned to the end of that stitch.
 $>*/
 /*<#*/
-import { createAction } from '../../../model/action';
-import { ActionNodeOptions, createActionNode } from '../../../model/actionStrategy';
-import { muxiumStitch } from '../qualities/stitch.quality';
+import { createAction } from '../../../model/action/action';
+import { createActionNode } from '../../../model/action/strategy/actionStrategy';
+import { ActionNodeOptions } from '../../../model/action/strategy/actionStrategy.type';
 
 /**
  * Must be used within an ActionStrategyStitch with only one ActionNode provided.

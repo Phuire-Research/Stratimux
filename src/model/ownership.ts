@@ -4,14 +4,14 @@ This file will dictate functionality used within the Ownership Concept to engage
 $>*/
 /*<#*/
 /* eslint-disable max-depth */
-import { Action, areSemaphoresEqual } from '../model/action';
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concepts } from './concept';
 import { selectState } from './selector';
-import { ActionNode, ActionStrategy } from './actionStrategy';
-import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { randomUUID } from 'crypto';
 import { getMuxiumState } from './muxium';
+import { Action } from './action/action.type';
+import { ActionNode, ActionStrategy } from './action/strategy/actionStrategy.type';
+import { areSemaphoresEqual } from './action/actionSemaphore';
 
 export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 

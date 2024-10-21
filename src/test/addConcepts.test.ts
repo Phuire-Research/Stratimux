@@ -3,7 +3,6 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 $>*/
 /*<#*/
 import { muxification, getMuxiumState } from '../model/muxium';
-import { strategyBegin } from '../model/actionStrategy';
 import { select, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { addConceptsToAddQueThenBlockStrategy } from '../concepts/muxium/strategies/addConcept.strategy';
@@ -12,6 +11,7 @@ import { forEachConcept } from '../model/concept';
 import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
 import { Deck } from '../model/deck';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium add Concepts Strategy Test', (done) => {
   const muxium = muxification('muxiumAddConceptTest', {}, {logging: true, storeDialog: true, dynamic: true});

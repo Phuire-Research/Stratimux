@@ -11,10 +11,8 @@ import {
   createConceptKeyedSelector,
   createMuxifiedKeyedSelector,
   select,
-  selectSlice,
   updateMuxifiedKeyedSelector
 } from '../model/selector';
-import { createStage } from '../model/stagePlanner';
 
 test('Muxified Selector Test', (done) => {
   const muxium = muxification('Selector Test via Counter', {

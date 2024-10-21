@@ -20,9 +20,9 @@ import {
   asyncScheduler,
   timer
 } from 'rxjs';
-import { Action } from './action';
-import { muxiumConclude } from '../concepts/muxium/qualities/conclude.quality';
-import { ActionDeck } from './concept';
+import { Action } from './action.type';
+import { muxiumConclude } from '../../concepts/muxium/qualities/conclude.quality';
+import { ActionDeck } from '../concept';
 
 function hasLift(source: any): source is { lift: InstanceType<typeof Observable>['lift'] } {
   return typeof source?.lift === 'function';

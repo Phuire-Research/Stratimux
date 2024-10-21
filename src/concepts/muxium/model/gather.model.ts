@@ -5,9 +5,10 @@ Note this should be limited to actions that provably do not require error correc
 Otherwise you would want to use a Strategy Stitch instead.
 $>*/
 /*<#*/
-import { Action, AnyAction, createAction } from '../../../model/action';
-import { ActionNode, ActionNodeOptions, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { muxiumLog } from '../qualities/log.quality';
+import { ActionNode, ActionNodeOptions } from '../../../model/action/strategy/actionStrategy.type';
+import { Action, AnyAction } from '../../../model/action/action.type';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { createAction } from '../../../model/action/action';
 
 export type MuxiumGatherNode = {
   actions: Action[],

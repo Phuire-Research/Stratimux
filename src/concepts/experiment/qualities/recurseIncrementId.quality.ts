@@ -3,15 +3,12 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 limited via a control variable that is an arbitrary string array that is shifted until depleted.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { MuxifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodWithState } from '../../../model/method';
-import { selectPayload } from '../../../model/selector';
-import { strategyRecurse, strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
-import { Subject } from 'rxjs';
+import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
+import { strategyRecurse } from '../../../model/action/strategy/actionStrategyConsumersAdvanced';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentRecurseIterateId = {
   controlling: string[]

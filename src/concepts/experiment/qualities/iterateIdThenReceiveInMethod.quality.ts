@@ -4,10 +4,10 @@ set the id supplied to the method into the strategy's data field.
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { createMethodWithState } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
+import { createMethodWithState } from '../../../model/method/method';
+import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { createQualityCard } from '../../../model/quality';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const experimentIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
   type: 'Experiment iterate ID then receive in Method via State',

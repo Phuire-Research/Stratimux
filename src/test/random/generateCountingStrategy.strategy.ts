@@ -1,6 +1,7 @@
-import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../model/actionStrategy';
 import { Deck } from '../../model/deck';
 import { CounterDeck } from '../../concepts/counter/counter.concept';
+import { ActionNode, ActionStrategy } from '../../model/action/strategy/actionStrategy.type';
+import { createActionNode, createStrategy } from '../../model/action/strategy/actionStrategy';
 
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;

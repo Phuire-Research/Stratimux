@@ -3,15 +3,11 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 Then debounce the action via the qualities method that will then unify the state's id into the strategy's data.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { MuxifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodDebounceWithState } from '../../../model/method';
-import { selectPayload } from '../../../model/selector';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
-import { Subject } from 'rxjs';
+import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { createAsyncMethodDebounceWithState } from '../../../model/method/methodAsyncDebounce';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload = {
   setId: number;

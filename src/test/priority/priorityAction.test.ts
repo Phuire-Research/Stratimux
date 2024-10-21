@@ -6,11 +6,9 @@ $>*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
 import { muxification, getMuxiumState } from '../../model/muxium';
 import { select, selectPayload, selectState } from '../../model/selector';
-import { StagePlanner, createStage } from '../../model/stagePlanner';
+import { createStage } from '../../model/stagePlanner';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
-import { experimentPriorityIsReady } from './qualities/isReady.quality';
-import { experimentPriorityAddValue } from './qualities/addValue.quality';
 import { handlePriority } from '../../model/priority';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';

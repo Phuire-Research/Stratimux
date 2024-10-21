@@ -4,13 +4,13 @@ In addition utilize the onChange detection feature for the MuxifiedSubject is wo
 $>*/
 /*<#*/
 import { muxification, getMuxiumState } from '../model/muxium';
-import { strategyBegin } from '../model/actionStrategy';
 import { selectSlice, selectState } from '../model/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
 import { Concepts } from '../model/concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium onChange Test', (done) => {
   const selectorRouter = {

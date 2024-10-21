@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 in the ongoing strategy.
 $>*/
 /*<#*/
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
+import { createAsyncMethodDebounce } from '../../../model/method/methodAsyncDebounce';
 import { defaultReducer } from '../../../model/quality';
-import { createAsyncMethodDebounce } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
 import { createQualityCard } from '../../../model/quality';
 
 export const experimentAsyncDebounceNextActionNode = createQualityCard({

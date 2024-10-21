@@ -3,13 +3,12 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { muxification, getMuxiumState } from '../../model/muxium';
-import { createStage } from '../../model/stagePlanner';
+import { muxification } from '../../model/muxium';
 import { selectSlice } from '../../model/selector';
-import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
-import { muxiumKick } from '../../concepts/muxium/qualities/kick.quality';
 import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
+
 jest.setTimeout(30000);
+
 test('prioritized plans with selectors Test', (done) => {
   const planPrioritizedSelectors = muxification('Plan New Stage Priority Test', {
     experiment: createExperimentPlanOptionsConcept()

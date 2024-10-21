@@ -3,10 +3,10 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 $>*/
 /*<#*/
 import { nullReducer } from '../../../model/quality';
-import { strategyBackTrack } from '../../../model/actionStrategy';
-import { createMethod } from '../../../model/method';
+import { createMethod } from '../../../model/method/method';
 import { createQualityCard } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
+import { strategyBackTrack } from '../../../model/action/strategy/actionStrategyConsumersAdvanced';
 
 export const ownershipBackTrack = createQualityCard({
   type: 'backtracking to previous ActionNode',

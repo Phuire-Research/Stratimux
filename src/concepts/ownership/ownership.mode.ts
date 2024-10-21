@@ -9,17 +9,16 @@ a bad action that signifies that the associated action was invalidated.
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { Action, AnyAction } from '../../model/action';
+import { Action, AnyAction } from '../../model/action/action.type';
 import { Concepts } from '../../model/concept';
 import { Mode } from '../../model/concept';
 import { permissiveMode, blockingMode } from '../muxium/muxium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
-import { ActionStrategy, strategyFailed } from '../../model/actionStrategy';
 import { MuxifiedSubject } from '../../model/stagePlanner';
-import { muxiumAppendActionListToDialog } from '../muxium/qualities/appendActionListToDialog.quality';
-import { MuxiumState } from '../muxium/muxium.concept';
-import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
 import { getMuxiumState } from '../../model/muxium';
+import { strategyFailed } from '../../model/action/strategy/actionStrategyConsumers';
+import { ActionStrategy } from '../../model/action/strategy/actionStrategy.type';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, MuxifiedSubject]

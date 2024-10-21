@@ -4,17 +4,20 @@ with priority are working as intended.
 $>*/
 /*<#*/
 import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
-import { strategyBegin } from '../model/actionStrategy';
 import { selectState } from '../model/selector';
-import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities, CounterDeck } from '../concepts/counter/counter.concept';
-import { MuxiumState } from '../concepts/muxium/muxium.concept';
-import { createStage } from '../model/stagePlanner';
+import {
+  CounterState,
+  createCounterConcept,
+  counterName,
+  CounterQualities,
+  CounterDeck
+} from '../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './random/generateCountingStrategy.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
-import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { handlePriority } from '../model/priority';
 import { Concept } from '../model/concept';
 import { Deck } from '../model/deck';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium Counting Strategy Priority Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});

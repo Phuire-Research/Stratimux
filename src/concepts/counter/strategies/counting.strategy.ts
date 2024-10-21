@@ -4,10 +4,11 @@ generate an ActionStrategy that will perform a series of counter actions that wi
 ultimately just increment the count by one.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
 import { Concept } from '../../../model/concept';
 import { CounterDeck, CounterQualities, CounterState } from '../counter.concept';
 import { Deck } from '../../../model/deck';
+import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 
 export const countingTopic = 'Counting Strategy';
 export function countingStrategy<T extends Deck<CounterDeck>>(deck: Partial<T>): ActionStrategy | undefined {

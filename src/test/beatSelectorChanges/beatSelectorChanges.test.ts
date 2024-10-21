@@ -7,8 +7,6 @@ import { muxification, getMuxiumState, isMuxiumOpen } from '../../model/muxium';
 import { createStage } from '../../model/stagePlanner';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
 import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
-import { initializeTopic } from '../../concepts/muxium/strategies/initialization.strategy';
-import { strategyBegin } from '../../model/actionStrategy';
 import {
   beatSelectorChangesSelectCountFive,
   beatSelectorChangesSelectCountFour,
@@ -18,9 +16,10 @@ import {
   beatSelectorChangesSelectCountThree,
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
-import { selectSlice, selectState } from '../../model/selector';
+import { selectSlice } from '../../model/selector';
 import { Deck } from '../../model/deck';
 import { MuxiumDeck } from '../../concepts/muxium/muxium.concept';
+import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
   const beat = 7000;

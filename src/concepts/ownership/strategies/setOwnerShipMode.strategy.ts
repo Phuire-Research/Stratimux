@@ -2,13 +2,13 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a strategy that will set the Muxium's mode to Ownership.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, Concepts } from '../../../model/concept';
-import { getSemaphore } from '../../../model/action';
-import { OwnershipDeck, OwnershipQualities, OwnershipState, ownershipName } from '../ownership.concept';
-import { MuxiumDeck, MuxiumState } from '../../muxium/muxium.concept';
+import { Concepts } from '../../../model/concept';
+import { OwnershipDeck, ownershipName } from '../ownership.concept';
+import { MuxiumDeck } from '../../muxium/muxium.concept';
 import { Deck } from '../../../model/deck';
 import { getMuxiumState } from '../../../model/muxium';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 
 export const ownershipSetOwnerShipModeTopic = 'Muxium set Mode to Ownership then Initialize Ownership Principle';
 export function ownershipSetOwnershipModeStrategy<T extends Deck<OwnershipDeck & MuxiumDeck>>(

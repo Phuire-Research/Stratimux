@@ -3,9 +3,8 @@ For the asynchronous graph programming framework Stratimux and Chain Concept,
 generate a quality will add actions into the Chain's actionQue state property.
 $>*/
 /*<#*/
-import { Action, AnyAction } from '../../../model/action';
+import { AnyAction } from '../../../model/action/action.type';
 import { createQualityCardWithPayload } from '../../../model/quality';
-import { selectPayload } from '../../../model/selector';
 import { ChainState } from '../chain.concept';
 
 export type ChainPrepareChainPayload = {

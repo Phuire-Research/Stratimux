@@ -4,7 +4,7 @@ generate a test to that selectSlice is capable of performing shallow and deep st
 $>*/
 /*<#*/
 import { Concept, Concepts, createConcept } from '../model/concept';
-import { KeyedSelector, assembleDynamicSelection, createMuxifiedKeyedSelector, selectSlice } from '../model/selector';
+import { assembleDynamicSelection, createMuxifiedKeyedSelector, selectSlice } from '../model/selector';
 
 export type BaseDataSet = {
   prompt: string,

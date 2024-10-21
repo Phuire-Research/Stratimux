@@ -6,7 +6,6 @@ $>*/
 import { counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { muxification } from '../model/muxium';
 import { areConceptsLoaded, chainName, createChainConcept, isConceptLoaded } from '../index';
-import { createStage } from '../model/stagePlanner';
 
 test('Concepts exists', (done) => {
   const muxium = muxification('Mock Muxium', {counter: createCounterConcept()});

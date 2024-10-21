@@ -3,11 +3,10 @@ For the asynchronous graph programming framework Stratimux generate the Muxium Q
 $>*/
 /*<#*/
 import { Subscription } from 'rxjs';
-import { Actions, AnyAction } from '../../../model/action';
 import { Quality } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { AnyConcept, Concepts } from '../../../model/concept';
-import { ActionType } from '../../../model/action';
+import { ActionType, AnyAction } from '../../../model/action/action.type';
 
 export type OpenPayload = {
   open: boolean

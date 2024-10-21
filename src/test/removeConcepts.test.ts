@@ -3,13 +3,13 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { muxification, getMuxiumState } from '../model/muxium';
-import { strategyBegin } from '../model/actionStrategy';
 import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import {
   addConceptsToRemovalQueThenBlockStrategy,
   removeConceptsViaQueThenUnblockTopic
 } from '../concepts/muxium/strategies/removeConcept.strategy';
 import { forEachConcept } from '../model/concept';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium remove Concepts Strategy Test', (done) => {
   const muxium = muxification('muxiumRemoveConceptsTest',

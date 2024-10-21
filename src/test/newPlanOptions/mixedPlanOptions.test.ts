@@ -5,9 +5,7 @@ $>*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
 import { muxification } from '../../model/muxium';
 import { selectSlice } from '../../model/selector';
-import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
-import { muxiumKick } from '../../concepts/muxium/qualities/kick.quality';
 
 test('Mixed Plan Options Test', (done) => {
   const planMixedPlanOptions = muxification('Plan New Stage Priority Test', {

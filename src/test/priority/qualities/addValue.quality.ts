@@ -3,9 +3,7 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 the incoming action's payload
 $>*/
 /*<#*/
-import { Action, act } from '../../../model/action';
 import { quality } from '../../../model/quality';
-import { select } from '../../../model/selector';
 import { ExperimentPriorityState } from '../priority.concept';
 
 export type ExperimentPriorityAddValuePayload = {

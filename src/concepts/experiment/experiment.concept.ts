@@ -4,7 +4,7 @@ different configurations of Stratimux to be provably terminating.
 $>*/
 /*<#*/
 import { Mode, createConcept } from '../../model/concept';
-import { Action } from '../../model/action';
+import { Action } from '../../model/action/action.type';
 import { PrincipleFunction } from '../../model/principle';
 
 export type ExperimentState = {

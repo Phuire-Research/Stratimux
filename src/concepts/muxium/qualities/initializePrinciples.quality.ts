@@ -6,13 +6,13 @@ $>*/
 import { Subject, Subscriber } from 'rxjs';
 import { forEachConcept, LoadConcepts  } from '../../../model/concept';
 import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
-import { Action, Actions, } from '../../../model/action';
 import { MuxiumState, muxiumName } from '../muxium.concept';
 import { Planning, MuxifiedSubject } from '../../../model/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
-import { BundledSelectors, Selectors } from '../../../model/selector';
+import { BundledSelectors } from '../../../model/selector';
+import { Action, Actions } from '../../../model/action/action.type';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({

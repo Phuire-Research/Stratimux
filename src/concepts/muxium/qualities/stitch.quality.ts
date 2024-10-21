@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept,
 generate a quality that will silently start the next step in the strategy graph.
 $>*/
 /*<#*/
-import { strategySuccess } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 import { defaultReducer } from '../../../model/quality';
-import { createMethod } from '../../../model/method';
+import { createMethod } from '../../../model/method/method';
 import { createQualityCard } from '../../../model/quality';
 
 export const muxiumStitch = createQualityCard({
