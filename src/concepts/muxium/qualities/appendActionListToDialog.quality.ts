@@ -6,7 +6,7 @@ $>*/
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { AppendActionListToDialogPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept';
 
 export const muxiumAppendActionListToDialog =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, AppendActionListToDialogPayload>({

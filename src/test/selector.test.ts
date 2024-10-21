@@ -2,9 +2,9 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the base selector consumer functions are working as intended.
 $>*/
 /*<#*/
-import { muxification  } from '../model/muxium';
-import { Concept, Concepts } from '../model/concept';
-import { select, selectPayload, selectSlice, selectState } from '../model/selector';
+import { muxification  } from '../model/muxium/muxium';
+import { Concept, Concepts } from '../model/concept/concept';
+import { select, selectPayload, selectSlice, selectState } from '../model/selectors/selector';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';

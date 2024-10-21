@@ -21,9 +21,9 @@ import {
   experimentThrottleIterateIdThenAddToDataTopic
 } from '../concepts/experiment/strategies/throttleIterateIdThenAddToData.strategy';
 
-import { muxification } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
-import { Concept } from '../model/concept';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selectors/selector';
+import { Concept } from '../model/concept/concept';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Action Throttle Method Test with Concepts id comparison', (done) => {

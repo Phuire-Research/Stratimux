@@ -7,10 +7,10 @@ $>*/
 import { Subscription } from 'rxjs';
 import { defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
-import { selectPayload } from '../../../model/selector';
+import { selectPayload } from '../../../model/selectors/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumRegisterSubscriberPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept';
 
 export const muxiumRegisterSubscriber = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumRegisterSubscriberPayload>({
   type: 'register Subscriber to Muxium\'s General Subscriber list',

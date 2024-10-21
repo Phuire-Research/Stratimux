@@ -1,5 +1,5 @@
-import { createConcept, muxifyConcepts } from '../model/concept';
-import { demuxifyDeck, muxification } from '../model/muxium';
+import { createConcept, muxifyConcepts } from '../model/concept/concept';
+import { demuxifyDeck, muxification } from '../model/muxium/muxium';
 import { createQualityCard, defaultReducer } from '../model/quality';
 
 test('Concepts exists', (done) => {

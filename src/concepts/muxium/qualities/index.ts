@@ -5,7 +5,7 @@ $>*/
 import { Subscription } from 'rxjs';
 import { Quality } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
-import { AnyConcept, Concepts } from '../../../model/concept';
+import { AnyConcept, Concepts } from '../../../model/concept/concept';
 import { ActionType, AnyAction } from '../../../model/action/action.type';
 
 export type OpenPayload = {

@@ -5,8 +5,8 @@ in sequence upon each observation of state.
 $>*/
 /*<#*/
 import { PrincipleFunction } from '../../model/principle';
-import { StagePlanner, createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
-import { selectMuxifiedState } from '../../model/selector';
+import { selectMuxifiedState } from '../../model/selectors/selector';
+import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
 import { ExperimentState, experimentName } from './experiment.concept';
 
 export const experimentActionQuePrincipleCreator = <T>() => {
@@ -17,11 +17,11 @@ export const experimentActionQuePrincipleCreator = <T>() => {
     conceptSemaphore
   }) => {
     let readyToGo = false;
-    const planExperiment: StagePlanner = plan('Experiment Principle Plan', ({d__}) => [
-      stageWaitForOpenThenIterate(() =>
+    const planExperiment: StagePlanner = plan('Experiment Principle Plan', ({d__, stage, stageO}) => [
+      stageO(() =>
         (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))
       ),
-      createStage(({concepts}) => {
+      stage(({concepts}) => {
         const experimentState = selectMuxifiedState<ExperimentState>(concepts, conceptSemaphore);
         if (experimentState && experimentState.actionQue.length > 0) {
           if (!readyToGo) {

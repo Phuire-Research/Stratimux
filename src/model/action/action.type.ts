@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Action Ty
 This file defines the types used for Stratimux Actions
 $>*/
 /*<#*/
-import { KeyedSelector } from '../selector';
+import { KeyedSelector } from '../selectors/selector';
 import { Quality } from '../quality';
 import { ActionStrategy } from './strategy/actionStrategy.type';
 

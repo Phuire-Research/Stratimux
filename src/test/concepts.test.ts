@@ -4,7 +4,7 @@ generate a test to that ensures the functionality of is concept loaded and are c
 $>*/
 /*<#*/
 import { counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { muxification } from '../model/muxium';
+import { muxification } from '../model/muxium/muxium';
 import { areConceptsLoaded, chainName, createChainConcept, isConceptLoaded } from '../index';
 
 test('Concepts exists', (done) => {

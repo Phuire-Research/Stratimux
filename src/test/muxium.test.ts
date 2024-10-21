@@ -5,8 +5,8 @@ $>*/
 /*<#*/
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { muxium_createStitchNode } from '../concepts/muxium/model/stitch.model';
-import { muxification, getMuxiumState } from '../model/muxium';
-import { selectSlice } from '../model/selector';
+import { muxification, getMuxiumState } from '../model/muxium/muxium';
+import { selectSlice } from '../model/selectors/selector';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
 import { createAction } from '../model/action/action';
 import { ActionStrategy, ActionStrategyStitch } from '../model/action/strategy/actionStrategy.type';

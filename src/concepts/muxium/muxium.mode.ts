@@ -3,13 +3,13 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { ActionDeck, Concepts, Mode } from '../../model/concept';
+import { ActionDeck, Concepts, Mode } from '../../model/concept/concept';
 import { primeAction } from '../../model/action/action';
 import { MuxiumState } from './muxium.concept';
-import { MuxifiedSubject } from '../../model/stagePlanner';
-import { getMuxiumState } from '../../model/muxium';
+import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
+import { getMuxiumState } from '../../model/muxium/muxium';
 import { MuxiumBadActionPayload } from './qualities';
-import { updateAtomicSelects } from '../../model/selector';
+import { updateAtomicSelects } from '../../model/selectors/selector';
 import { Deck } from '../../model/deck';
 import { Action, AnyAction } from '../../model/action/action.type';
 

@@ -5,8 +5,8 @@ within their own defined qualities.
 $>*/
 /*<#*/
 import { Subject, map, withLatestFrom } from 'rxjs';
-import { ActionDeck, Concepts, Method, MethodCreator } from '../concept';
-import { selectMuxifiedState } from '../selector';
+import { ActionDeck, Concepts, Method, MethodCreator } from '../concept/concept';
+import { selectMuxifiedState } from '../selectors/selector';
 import { createAction } from '../action/action';
 import { Action } from '../action/action.type';
 import {

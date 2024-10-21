@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux, generate a test that ensures that ActionStrategies are working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState } from '../model/muxium';
-import { selectState } from '../model/selector';
+import { muxification, getMuxiumState } from '../model/muxium/muxium';
+import { selectState } from '../model/selectors/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { Concept } from '../model/concept';
+import { Concept } from '../model/concept/concept';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium Counting Strategy Test', (done) => {

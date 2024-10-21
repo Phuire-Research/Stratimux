@@ -4,9 +4,8 @@ is managing plan notifications as intended.
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { muxification, getMuxiumState } from '../../model/muxium';
-import { select, selectPayload, selectState } from '../../model/selector';
-import { createStage } from '../../model/stagePlanner';
+import { muxification, getMuxiumState } from '../../model/muxium/muxium';
+import { select, selectPayload, selectState } from '../../model/selectors/selector';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
 import { handlePriority } from '../../model/priority';
@@ -14,6 +13,7 @@ import { CounterState, counterName, createCounterConcept } from '../../concepts/
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';
 import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
+import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
 
 test('Priority Action Test', (done) => {
   console.log('Priority Test');

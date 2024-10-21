@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 And ensure that the semaphore is being set via the Muxium for the actions created using said qualities.
 $>*/
 /*<#*/
-import { muxification } from '../model/muxium';
+import { muxification } from '../model/muxium/muxium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
-import { Concept, Concepts, createConcept } from '../model/concept';
+import { Concept, Concepts, createConcept } from '../model/concept/concept';
 import { Actions } from '../model/action/action.type';
 
 test('Quality Actions', (done) => {

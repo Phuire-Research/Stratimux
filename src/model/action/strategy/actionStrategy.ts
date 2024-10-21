@@ -10,7 +10,7 @@ import { muxiumConclude, muxiumConcludeType } from '../../../concepts/muxium/qua
 import { createAction } from '../action';
 import { Action, ActionType, nullActionType } from '../action.type';
 import { OwnershipTicketStub } from '../../ownership';
-import { KeyedSelector } from '../../selector';
+import { KeyedSelector } from '../../selectors/selector';
 import { ActionNode, ActionNodeOptions, ActionStrategy, ActionStrategyParameters } from './actionStrategy.type';
 
 /**

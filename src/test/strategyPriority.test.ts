@@ -3,8 +3,8 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 with priority are working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium';
-import { selectState } from '../model/selector';
+import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium/muxium';
+import { selectState } from '../model/selectors/selector';
 import {
   CounterState,
   createCounterConcept,
@@ -15,7 +15,7 @@ import {
 import { generateRandomCountingStrategy } from './random/generateCountingStrategy.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { handlePriority } from '../model/priority';
-import { Concept } from '../model/concept';
+import { Concept } from '../model/concept/concept';
 import { Deck } from '../model/deck';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 

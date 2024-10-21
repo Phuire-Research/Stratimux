@@ -5,19 +5,19 @@ A concept is composed of name, muxified, state, qualities, semaphore, principles
 $>*/
 /*<#*/
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
-import { PrincipleFunction } from '../model/principle';
+import { PrincipleFunction } from '../principle';
 import {
   KeyedSelector,
   KeyedSelectors,
   Selectors,
   createDummyKeyedSelectors,
   createDummySelectors,
-} from './selector';
-import { MuxifiedSubject } from './stagePlanner';
-import { Comparators, createComparator } from './interface';
-import { Qualities, Quality } from './quality';
-import { Deck } from './deck';
-import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, Actions, ActionType } from './action/action.type';
+} from '../selectors/selector';
+import { MuxifiedSubject } from '../stagePlanner/stagePlanner';
+import { Comparators, createComparator } from '../interface';
+import { Qualities, Quality } from '../quality';
+import { Deck } from '../deck';
+import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, Actions, ActionType } from '../action/action.type';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Reducer<

@@ -5,12 +5,11 @@ ownershipLedger's contents. Only actions that are first in all lines of their ti
 may be dispatched into the Muxium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
 $>*/
 /*<#*/
-import { PrincipleFunction } from '../../model/principle';
-import { OwnershipDeck, OwnershipPrinciple, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
+import { OwnershipPrinciple, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { selectMuxifiedState } from '../../model/selector';
+import { selectMuxifiedState } from '../../model/selectors/selector';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
-import { StagePlanner } from '../../model/stagePlanner';
+import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
 import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
 import { MuxiumBadActionPayload } from '../muxium/qualities';
 import { Action, AnyAction } from '../../model/action/action.type';

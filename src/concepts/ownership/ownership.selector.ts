@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, generate a series of KeyedSelectors for the ownership state.
 $>*/
 /*<#*/
-import { KeyedSelector, createConceptKeyedSelector } from '../../model/selector';
+import { KeyedSelector, createConceptKeyedSelector } from '../../model/selectors/selector';
 import { OwnershipState } from './ownership.concept';
 
 export const ownershipSelectLedger: KeyedSelector = createConceptKeyedSelector<OwnershipState>('ownership', 'ownershipLedger');

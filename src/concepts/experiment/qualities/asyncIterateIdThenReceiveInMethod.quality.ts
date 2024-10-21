@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 Then its method will asynchronously unify the state's id value onto the strategy.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
+import { Concepts } from '../../../model/concept/concept';
 import { ExperimentState } from '../experiment.concept';
-import { MuxifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner/stagePlanner';
 import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
 import { Subject } from 'rxjs';
 import { createQualityCard } from '../../../model/quality';

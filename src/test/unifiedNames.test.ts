@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test that ensures that muxified concepts inherit their muxified names as intended.
 $>*/
 /*<#*/
-import { createConcept, muxifyConcepts } from '../model/concept';
+import { createConcept, muxifyConcepts } from '../model/concept/concept';
 
 test('Muxified Names Test', (done) => {
   const one = createConcept(

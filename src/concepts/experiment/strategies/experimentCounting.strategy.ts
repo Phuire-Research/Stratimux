@@ -4,7 +4,7 @@ generate a strategy that will take ownership of the Counter's count state proper
 Then proceed to increment and decrement the count over a sequence that in total only increments to count by one.
 $>*/
 /*<#*/
-import { Concept, } from '../../../model/concept';
+import { Concept, } from '../../../model/concept/concept';
 import { CounterDeck, } from '../../counter/counter.concept';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { OwnershipDeck } from '../../ownership/ownership.concept';

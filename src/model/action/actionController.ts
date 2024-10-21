@@ -9,7 +9,7 @@ $>*/
 import { Action, AnyAction, createAction, Deck, strategyFailed } from '../../index';
 import { Subject } from 'rxjs';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
-import { ActionDeck, Self } from '../concept';
+import { ActionDeck, Self } from '../concept/concept';
 
 const badAction = (payload: {
   badActions: AnyAction[]

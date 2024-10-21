@@ -5,14 +5,14 @@ That specifically you can utilize the incoming semaphore to create new KeyedSele
 $>*/
 /*<#*/
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { muxification } from '../model/muxium';
+import { muxification } from '../model/muxium/muxium';
 import {
   KeyedSelector,
   createConceptKeyedSelector,
   createMuxifiedKeyedSelector,
   select,
   updateMuxifiedKeyedSelector
-} from '../model/selector';
+} from '../model/selectors/selector';
 
 test('Muxified Selector Test', (done) => {
   const muxium = muxification('Selector Test via Counter', {

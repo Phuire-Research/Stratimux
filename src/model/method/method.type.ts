@@ -5,10 +5,10 @@ $>*/
 /*<#*/
 import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
 import { ActionStrategy } from '../action/strategy/actionStrategy.type';
-import { KeyedSelector } from '../selector';
+import { KeyedSelector } from '../selectors/selector';
 import { Deck } from '../deck';
 import { ActionCreator, ActionCreatorWithPayload } from '../action/action.type';
-import { Concepts, MethodCreator } from '../concept';
+import { Concepts, MethodCreator } from '../concept/concept';
 import { ActionController } from '../action/actionController';
 
 type ActionType = string;

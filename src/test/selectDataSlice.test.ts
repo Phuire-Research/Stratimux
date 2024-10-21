@@ -3,8 +3,8 @@ For the asynchronous graph programming framework Stratimux,
 generate a test to that selectSlice is capable of performing shallow and deep state selections.
 $>*/
 /*<#*/
-import { Concept, Concepts, createConcept } from '../model/concept';
-import { assembleDynamicSelection, createMuxifiedKeyedSelector, selectSlice } from '../model/selector';
+import { Concept, Concepts, createConcept } from '../model/concept/concept';
+import { assembleDynamicSelection, createMuxifiedKeyedSelector, selectSlice } from '../model/selectors/selector';
 
 export type BaseDataSet = {
   prompt: string,

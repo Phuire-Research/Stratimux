@@ -10,9 +10,9 @@ import {
   experimentRecursivelyIterateId,
   experimentRecursivelyIterateIdTopic
 } from '../concepts/experiment/strategies/recursivelyIterateId.strategy';
-import { muxification } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
-import { Concept } from '../model/concept';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selectors/selector';
+import { Concept } from '../model/concept/concept';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Asynchronous recursion', (done) => {

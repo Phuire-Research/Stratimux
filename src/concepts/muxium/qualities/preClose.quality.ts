@@ -6,7 +6,7 @@ $>*/
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumPreClosePayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept';
 
 export const muxiumPreClose = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumPreClosePayload>({
   type: 'Prepare Close Muxium',

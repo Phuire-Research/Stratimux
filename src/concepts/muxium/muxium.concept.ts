@@ -29,18 +29,19 @@ import { muxiumPreClose } from './qualities/preClose.quality';
 import { muxiumStitch } from './qualities/stitch.quality';
 import { muxiumRegisterTimeOut } from './qualities/registerTimeOut.quality';
 import { Subject, Subscription } from 'rxjs';
-import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts } from '../../model/concept';
+import { AnyConcept, Concept, ConceptDeck, Concepts, LoadConcepts } from '../../model/concept/concept';
 import { muxiumPrinciple } from './muxium.principle';
 import { muxiumClosePrinciple } from './muxium.close.principle';
 import { blockingMode, permissiveMode } from './muxium.mode';
 export { initializationStrategy } from './strategies/initialization.strategy';
-import { createConcept } from '../../model/concept';
-import { NamedStagePlanner, Plan, MuxifiedSubject } from '../../model/stagePlanner';
+import { createConcept } from '../../model/concept/concept';
+import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
 import { MuxiumQualities } from './qualities';
 import { Deck, Decks } from '../../model/deck';
-import { MuxiumLoad } from '../../model/muxium';
+import { MuxiumLoad } from '../../model/muxium/muxium';
 import { PrincipleFunction } from '../../model/principle';
 import { Action, AnyAction } from '../../model/action/action.type';
+import { NamedStagePlanner, Plan } from '../../model/stagePlanner/stagePlanner.type';
 
 export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {

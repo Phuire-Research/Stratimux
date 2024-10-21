@@ -7,11 +7,11 @@ But if the beat has not been notified for a period. The first notification will 
 This is a combination of throttle and debounce.
 $>*/
 /*<#*/
-import { muxification } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selectors/selector';
 import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
 import { CounterDeck, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createStage } from '../model/stagePlanner';
+import { createStage } from '../model/stagePlanner/stagePlannerHelpers';
 jest.setTimeout(10000);
 
 test('Stage Planner Beat Test', (done) => {

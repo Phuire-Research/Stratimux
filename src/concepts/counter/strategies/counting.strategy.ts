@@ -4,7 +4,7 @@ generate an ActionStrategy that will perform a series of counter actions that wi
 ultimately just increment the count by one.
 $>*/
 /*<#*/
-import { Concept } from '../../../model/concept';
+import { Concept } from '../../../model/concept/concept';
 import { CounterDeck, CounterQualities, CounterState } from '../counter.concept';
 import { Deck } from '../../../model/deck';
 import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';

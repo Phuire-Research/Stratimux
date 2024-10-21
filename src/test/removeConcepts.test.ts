@@ -2,13 +2,13 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that the muxium can properly remove concepts from its current load.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState } from '../model/muxium';
+import { muxification, getMuxiumState } from '../model/muxium/muxium';
 import { createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import {
   addConceptsToRemovalQueThenBlockStrategy,
   removeConceptsViaQueThenUnblockTopic
 } from '../concepts/muxium/strategies/removeConcept.strategy';
-import { forEachConcept } from '../model/concept';
+import { forEachConcept } from '../model/concept/concept';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium remove Concepts Strategy Test', (done) => {

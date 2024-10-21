@@ -6,7 +6,7 @@ $>*/
 /*<#*/
 
 import { map, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { ActionDeck, Concepts, MethodCreator } from '../concept';
+import { ActionDeck, Concepts, MethodCreator } from '../concept/concept';
 import {
   Method,
   MethodAsyncParams,
@@ -18,7 +18,7 @@ import {
 } from './method.type';
 import { debounceAction } from '../action/actionOperators';
 import { createActionController$ } from '../action/actionController';
-import { selectMuxifiedState } from '../selector';
+import { selectMuxifiedState } from '../selectors/selector';
 
 export const createAsyncMethodDebounce: MethodCreatorAsyncDebounce =
   <S extends Record<string, unknown>, T = void, C = void>(

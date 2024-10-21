@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Action mo
 This file dictates the functionality of Actions within Stratimux.
 $>*/
 /*<#*/
-import { Concepts, LoadConcepts } from '../concept';
+import { Concepts, LoadConcepts } from '../concept/concept';
 import { MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
 import { MuxiumBadActionPayload, MuxiumQualities } from '../../concepts/muxium/qualities';

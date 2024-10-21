@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept,
 generate an ActionStrategy that will add new concepts into the Muxium's conceptual set.
 $>*/
 /*<#*/
-import { AnyConcept, Concepts } from '../../../model/concept';
+import { AnyConcept, Concepts } from '../../../model/concept/concept';
 import { Actions } from '../../../model/action/action.type';
 import { MuxiumQualities } from '../qualities';
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';

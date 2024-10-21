@@ -8,258 +8,35 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { Concepts } from './concept';
-import { MuxiumDeck, MuxiumState } from '../concepts/muxium/muxium.concept';
+import { Concepts } from '../concept/concept';
+import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import {
   BundledSelectors,
   KeyedSelector,
   createConceptKeyedSelector,
   select,
   selectSlice,
-} from './selector';
-import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
-import { ownershipSelectInitialized } from '../concepts/ownership/ownership.selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState, isMuxiumOpen } from './muxium';
-import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { muxiumTimeOut } from './time';
-import { Comparators, HInterface, UInterface } from './interface';
-import { MuxiumQualities } from '../concepts/muxium/qualities';
-import { accessDeck } from './deck';
-import { Action, Actions, ActionType, AnyAction } from './action/action.type';
-import { createAction } from './action/action';
-
-export type Plan<Q = void, C = void, S = void> = {
-  id: number;
-  space: number;
-  conceptSemaphore: number;
-  conceptName: string;
-  title: string;
-  stages: Staging<Q, C, S>[],
-  stage: number;
-  stageFailed: number;
-  beat: number;
-  offBeat: number;
-  timer: NodeJS.Timeout[];
-  changeAggregator: Record<string, KeyedSelector>;
-}
-
-export type Stage<Q, C, S> = (params: StageParams<Q, C, S>) => void;
-
-export type StageParams<Q = void, C = void, S = void> = {
-  concepts: Concepts,
-  dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
-  changes: KeyedSelector[],
-  stagePlanner: StagePlanner
-} & UInterface<Q, C, S>
-
-export type Planning<Q = void, C = void, S = void> = (title: string, planner: Planner<Q, C, S>) => StagePlanner;
-
-export type Planner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
-  stage: typeof createStage<Q, C, S>
-  stageO: typeof stageWaitForOpenThenIterate,
-  conclude: typeof stageConclude
-}) => PartialStaging<Q, C, S>[];
-
-export type Staging<Q = void, C = void, S = void> = {
-  stage: Stage<Q, C, S>;
-  selectors: KeyedSelector[];
-  firstRun: boolean;
-  priority?: number
-  beat?: number,
-};
-
-export type PartialStaging<Q = void, C = void, S = void> = {
-  stage: Stage<Q, C, S>;
-  selectors?: KeyedSelector[];
-  priority?: number
-  beat?: number,
-};
-
-export type StagePlanner = {
-  title: string;
-  planId: number;
-  conclude: () => void;
-}
-
-export type NamedStagePlanner = {
-  name: string;
-  title: string;
-  planId: number;
-  conclude: () => void;
-}
-
-export type dispatchOptions = {
-  override?: boolean;
-  hardOverride?: boolean;
-  runOnce?: boolean;
-  throttle?: number;
-  iterateStage?: boolean;
-  setStage?: number;
-  setStageSelectors?: {
-    stage: number,
-    selectors: KeyedSelector[]
-  };
-  setStagePriority?: {
-    stage: number,
-    priority: number
-  };
-  setStageBeat?: {
-    stage: number,
-    beat: number
-  };
-  newSelectors?: KeyedSelector[];
-  newPriority?: number;
-  newBeat?: number;
-}
-
-export type Dispatcher = (action: Action, options: dispatchOptions) => void;
-
-export type StageDelimiter = {
-  stage: number,
-  prevActions: ActionType[],
-  unionExpiration: number[];
-  runOnceMap: Map<string, boolean>
-}
-
-/**
- * Used in principle plans that are loaded during muxium initialization
- */
-export const stageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-  if (isMuxiumOpen(concepts)) {
-    dispatch(func(), {
-      iterateStage: true
-    });
-  }
-}, { selectors: [muxiumSelectOpen] }));
-
-export const stageConclude = <Q, C, S>(): Staging<Q, C, S> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
-
-export const stageWaitForOwnershipThenIterate =
-  <Q, C, S>(func: () => Action): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-    if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
-      dispatch(func(), {
-        iterateStage: true
-      });
-    }
-  }, { selectors: [ownershipSelectInitialized] }));
-/**
- * <Qualities, Concepts> Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
- * @param stage - (concepts, dispatch) => {}
- * @param selectors - Array of observed dependencies to execute your stage
- * @param priority - Adding this property will change the order in which your plan is notified on each state change
- * @param beat - Will fire once, then if informed again within your supplied beat, will fire after such time
- * @returns stage: Stage, selectors: KeyedSelector[], priority?: number, beat?: number
- */
-export const createStage = <Q = void, C = void, S = void>(
-  stage: Stage<Q, C, S>,
-  options?: { selectors?: KeyedSelector<any>[], priority?: number, beat?: number}
-): Staging<Q, C, S> => {
-  if (options) {
-    return {
-      stage,
-      selectors: options.selectors ? options.selectors : [],
-      firstRun: true,
-      priority: options.priority,
-      beat: options.beat
-    };
-  } else {
-    return {
-      stage,
-      firstRun: true,
-      selectors: []
-    };
-  }
-};
-
-// Token to denote ALL, using a selector that utilizes this token should return undefined
-const ALL = '*4||*';
-const ALL_KEYS = '*4||*.*4||*';
-
-const handleRun =
-  <Q, C, S>(stageDelimiter: StageDelimiter, plan: Plan<Q, C, S>, action: Action, options?: dispatchOptions)
-    : [StageDelimiter, boolean] => {
-    if (options?.runOnce) {
-      const stageRunner = stageDelimiter.runOnceMap.get(action.type + plan.stage);
-      if (stageRunner === undefined) {
-        stageDelimiter.runOnceMap.set(action.type + plan.stage, true);
-        return [
-          stageDelimiter, true
-        ];
-      } else {
-        stageDelimiter.runOnceMap.set(action.type + plan.stage, false);
-        return [
-          stageDelimiter, false
-        ];
-      }
-    }
-    return [
-      stageDelimiter,
-      true
-    ];
-  };
-
-const handleStageDelimiter =
-  <Q, C, S>(plan: Plan<Q, C, S>, action: Action, delimiter?: StageDelimiter, options?: dispatchOptions): [StageDelimiter, boolean] => {
-    let stageDelimiter = delimiter;
-    let goodAction = true;
-    if (stageDelimiter &&
-        stageDelimiter.prevActions.includes(action.type) &&
-        options?.throttle === undefined) {
-      if (plan.stage !== stageDelimiter?.stage) {
-        stageDelimiter = {
-          stage: plan.stage,
-          prevActions: [action.type],
-          unionExpiration: [action.expiration],
-          runOnceMap: new Map()
-        };
-      } else {
-        goodAction = false;
-      }
-    } else if (stageDelimiter) {
-      if (stageDelimiter.prevActions.length > 4) {
-        stageDelimiter = {
-          stage: plan.stage,
-          prevActions: [
-            stageDelimiter.prevActions[1],
-            stageDelimiter.prevActions[2],
-            stageDelimiter.prevActions[3],
-            stageDelimiter.prevActions[4],
-            action.type
-          ],
-          unionExpiration: [
-            stageDelimiter.unionExpiration[1],
-            stageDelimiter.unionExpiration[2],
-            stageDelimiter.unionExpiration[3],
-            stageDelimiter.unionExpiration[4],
-            action.expiration
-          ],
-          runOnceMap: new Map()
-        };
-      } else {
-        stageDelimiter = {
-          stage: plan.stage,
-          prevActions: [...stageDelimiter.prevActions, action.type],
-          unionExpiration: [...stageDelimiter.unionExpiration, action.expiration],
-          runOnceMap: new Map()
-        };
-      }
-    } else {
-      stageDelimiter = {
-        stage: plan.stage,
-        prevActions: [action.type],
-        unionExpiration: [action.expiration],
-        runOnceMap: new Map()
-      };
-    }
-    return [
-      stageDelimiter,
-      goodAction
-    ];
-  };
+} from '../selectors/selector';
+import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
+import { ownershipSelectInitialized } from '../../concepts/ownership/ownership.selector';
+import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState, isMuxiumOpen } from '../muxium/muxium';
+import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strategies/setOwnerShipMode.strategy';
+import { muxiumTimeOut } from '../time';
+import { Comparators, HInterface, UInterface } from '../interface';
+import { MuxiumQualities } from '../../concepts/muxium/qualities';
+import { accessDeck } from '../deck';
+import { Action, Actions, ActionType, AnyAction } from '../action/action.type';
+import { createAction } from '../action/action';
+import { Dispatcher, dispatchOptions, Plan, Planner, Planning, StageDelimiter, StagePlanner, Staging } from './stagePlanner.type';
+import { createStage, handleRun, handleStageDelimiter, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
 
 const Inner = 0;
 const Base = 1;
 const Outer = 2;
+
+// Token to denote ALL, using a selector that utilizes this token should return undefined
+const ALL = '*4||*';
+const ALL_KEYS = '*4||*.*4||*';
 
 export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
   private planId = -1;

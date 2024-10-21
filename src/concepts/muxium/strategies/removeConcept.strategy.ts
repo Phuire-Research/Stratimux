@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 from the Muxium's concepts state property.
 $>*/
 /*<#*/
-import { AnyConcept, Concepts } from '../../../model/concept';
+import { AnyConcept, Concepts } from '../../../model/concept/concept';
 import { Actions } from '../../../model/action/action.type';
 import { MuxiumQualities } from '../qualities';
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';

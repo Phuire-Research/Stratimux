@@ -5,7 +5,7 @@ This is accomplished via a ticketing system that will set actions to pending if 
 that is currently performing operations within the Muxium.
 $>*/
 /*<#*/
-import { Concept, createConcept } from '../../model/concept';
+import { Concept, createConcept } from '../../model/concept/concept';
 import { Action } from '../../model/action/action.type';
 import { ownershipMode } from './ownership.mode';
 import { ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';

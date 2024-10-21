@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
-import { Concept } from '../../../model/concept';
+import { Concept } from '../../../model/concept/concept';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceIterateIdThenReceiveInMethod } from '../qualities/debounceIterateIdThenReceiveInMethod.quality';

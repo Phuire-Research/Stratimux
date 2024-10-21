@@ -10,8 +10,8 @@ import {
   prepareActionCreator,
   prepareActionWithPayloadCreator
 } from './action/action';
-import { ActionDeck, Concepts, Method, MethodCreatorStep, SpecificReducer, createQuality } from './concept';
-import { KeyedSelector } from './selector';
+import { ActionDeck, Concepts, Method, MethodCreatorStep, SpecificReducer, createQuality } from './concept/concept';
+import { KeyedSelector } from './selectors/selector';
 import { muxiumConcludeType } from '../concepts/muxium/qualities/conclude.quality';
 import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType } from './action/action.type';
 import { strategySuccess } from './action/strategy/actionStrategyConsumers';

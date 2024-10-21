@@ -5,10 +5,10 @@ This will also exit the current process.
 $>*/
 /*<#*/
 import { MuxiumState } from '../muxium.concept';
-import { selectPayload } from '../../../model/selector';
+import { selectPayload } from '../../../model/selectors/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumClosePayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept';
 
 export const muxiumClose = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClosePayload>({
   type: 'Close Muxium',

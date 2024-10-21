@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux, define the Selector 
 This file will contain a series of selectors that can be used to engage with different parts of the Muxium Conceptual Set.
 $>*/
 /*<#*/
-import { Action } from './action/action.type';
-import { AnyConcept, Concept, Concepts } from './concept';
-import { DotPath } from './dotPath';
+import { Action } from '../action/action.type';
+import { AnyConcept, Concept, Concepts } from '../concept/concept';
+import { DotPath } from '../dotPath';
 
 /**
  * Will have such be a list of state keys separated by spaces until someone yells at me to change this.

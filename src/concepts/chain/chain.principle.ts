@@ -4,10 +4,10 @@ generate a principle that observes the chain's actionQue and dispatches
 those actions in order upon each state notification.
 $>*/
 /*<#*/
-import { Concepts } from '../../model/concept';
+import { Concepts } from '../../model/concept/concept';
 import { registerPrincipleSubscription } from '../../model/principle';
 import { ChainPrinciple, ChainQualities, ChainState, chainName } from './chain.concept';
-import { selectMuxifiedState } from '../../model/selector';
+import { selectMuxifiedState } from '../../model/selectors/selector';
 import { Action } from '../../model/action/action.type';
 
 export const chainPrinciple: ChainPrinciple = ({

@@ -4,7 +4,7 @@ accumulated for stage that has a beat and selectors
 $>*/
 /*<#*/
 import { beatSelectorChangesAddToCountOne} from './qualities/addToCountOne.quality';
-import { Concept, createConcept } from '../../model/concept';
+import { Concept, createConcept } from '../../model/concept/concept';
 import { beatSelectorChangesAddToCountTwo} from './qualities/addToCountTwo.quality';
 import { beatSelectorChangesAddToCountThree} from './qualities/addToCountThree.quality';
 import { beatSelectorChangesAddToCountFour} from './qualities/addToCountFour.quality';

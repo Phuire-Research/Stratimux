@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { muxification, getMuxiumState, Muxium, isMuxiumOpen } from './model/muxium';
+export { muxification, getMuxiumState, Muxium, isMuxiumOpen } from './model/muxium/muxium';
 export type {
   ActionNode,
   ActionNotes,
@@ -116,7 +116,7 @@ export {
   conceptsToString,
   getConceptSemaphore,
   concept
-} from './model/concept';
+} from './model/concept/concept';
 export type {
   Concept,
   Concepts,
@@ -129,7 +129,7 @@ export type {
   AnyConcept,
   ConceptDeck,
   SpecificReducer
-} from './model/concept';
+} from './model/concept/concept';
 export {
   createQualityCard,
   createQualityCardWithPayload,
@@ -140,7 +140,7 @@ export {
   quality,
   Qualities
 } from './model/quality';
-export type { KeyedSelector } from './model/selector';
+export type { KeyedSelector } from './model/selectors/selector';
 export {
   selectState,
   selectConcept,
@@ -153,14 +153,15 @@ export {
   createMuxifiedKeyedSelector,
   createAdvancedKeys,
   select,
-} from './model/selector';
+} from './model/selectors/selector';
 export type {
   DotPath
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/action/actionController';
-export type { dispatchOptions, Staging, MuxifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
-export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
+export type { dispatchOptions, Staging, StagePlanner, NamedStagePlanner } from './model/stagePlanner/stagePlanner.type';
+export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner/stagePlannerHelpers';
+export { MuxifiedSubject } from './model/stagePlanner/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
 export { muxiumTimeOut } from './model/time';

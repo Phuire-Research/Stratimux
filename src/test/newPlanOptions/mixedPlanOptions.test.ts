@@ -3,8 +3,8 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { muxification } from '../../model/muxium';
-import { selectSlice } from '../../model/selector';
+import { muxification } from '../../model/muxium/muxium';
+import { selectSlice } from '../../model/selectors/selector';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 
 test('Mixed Plan Options Test', (done) => {

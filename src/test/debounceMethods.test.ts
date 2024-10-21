@@ -25,9 +25,9 @@ import {
   experimentDebounceIterateIdThenAddToData,
   experimentDebounceIterateIdThenAddToDataTopic
 } from '../concepts/experiment/strategies/debounceIterateIdThenAddToData.strategy';
-import { muxification } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
-import { Concept } from '../model/concept';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selectors/selector';
+import { Concept } from '../model/concept/concept';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 jest.setTimeout(30000);

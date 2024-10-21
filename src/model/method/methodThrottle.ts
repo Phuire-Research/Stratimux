@@ -6,7 +6,7 @@ $>*/
 /*<#*/
 import { map, Subject, withLatestFrom } from 'rxjs';
 import { Action } from '../action/action.type';
-import { ActionDeck, Concepts, MethodCreator } from '../concept';
+import { ActionDeck, Concepts, MethodCreator } from '../concept/concept';
 import {
   Method,
   MethodCreatorBaseThrottle,
@@ -18,7 +18,7 @@ import {
 } from './method.type';
 import { throttleAction } from '../action/actionOperators';
 import { createAction } from '../action/action';
-import { selectMuxifiedState } from '../selector';
+import { selectMuxifiedState } from '../selectors/selector';
 
 const muxiumConclude = () => {
   return createAction('Conclude');

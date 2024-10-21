@@ -7,7 +7,7 @@ import { strategySuccess } from '../../../model/action/strategy/actionStrategyCo
 import { createMethod } from '../../../model/method/method';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumSetModePayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept';
 
 export const muxiumSetMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetModePayload>({
   type: 'set Muxium Mode',

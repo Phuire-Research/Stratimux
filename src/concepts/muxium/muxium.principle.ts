@@ -4,17 +4,17 @@ generate a principle that will allow for the modification of the Muxium's loaded
 $>*/
 /*<#*/
 import { Observable, Subscriber, catchError } from 'rxjs';
-import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept';
+import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept/concept';
 import { createPrinciple$ } from '../../model/principle';
 import { MuxiumDeck, muxiumName, MuxiumPrinciple } from './muxium.concept';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './muxium.mode';
-import { MuxiumLoad, blockingMethodSubscription, demuxifyDeck, getMuxiumState } from '../../model/muxium';
+import { MuxiumLoad, blockingMethodSubscription, demuxifyDeck, getMuxiumState } from '../../model/muxium/muxium';
 import { muxiumSelectAddConceptQue, muxiumSelectRemoveConceptQue } from './muxium.selector';
 import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
-import { BundledSelectors, createSelectors, updateKeyedSelectors } from '../../model/selector';
+import { BundledSelectors, createSelectors, updateKeyedSelectors } from '../../model/selectors/selector';
 import { Action, Actions } from '../../model/action/action.type';
 import { createCachedSemaphores } from '../../model/action/actionSemaphore';
 import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
