@@ -7,27 +7,33 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import { Subject } from 'rxjs';
 import { Concepts } from '../concept/concept';
-import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import {
-  BundledSelectors,
   KeyedSelector,
-  createConceptKeyedSelector,
-  select,
-  selectSlice,
 } from '../selectors/selector';
-import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
-import { ownershipSelectInitialized } from '../../concepts/ownership/ownership.selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState, isMuxiumOpen } from '../muxium/muxium';
-import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { muxiumTimeOut } from '../time';
-import { Comparators, HInterface, UInterface } from '../interface';
-import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { accessDeck } from '../deck';
-import { Action, Actions, ActionType, AnyAction } from '../action/action.type';
-import { createAction } from '../action/action';
+import { HInterface, UInterface } from '../interface';
+import { Action, ActionType } from '../action/action.type';
 import { createStage, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
+
+export type MappedSelectors = Map<string, {selector: KeyedSelector, ids: number[]}>;
+export type CurrentPlans = Map<number, Plan<any, any, any>>;
+
+export type MuxifiedSubjectProperties = {
+  planId: number;
+  currentPlans: Map<number, Plan<any, any, any>>;
+  stageDelimiters: Map<number, StageDelimiter>;
+  concepts: Concepts;
+  // Assemble front of line
+  priorityQue: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[];
+  priorityExists: Map<string, boolean>;
+  frequencyMap: Map<string, number>;
+  mappedSelectors: Map<string, {selector: KeyedSelector, ids: number[]}>;
+  // Assemble back of line, exempts priority que members
+  ques: {
+    priorityQue: {planID: number, priority: number, stage: number, selectors: KeyedSelector[]}[],
+    generalQue: number[],
+  }[];
+}
 
 export type Plan<Q = void, C = void, S = void> = {
   id: number;

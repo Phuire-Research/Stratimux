@@ -18,6 +18,7 @@ import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strateg
 import { Action, AnyAction } from '../action/action.type';
 import { dispatchOptions, Plan, Stage, StageDelimiter, Staging } from './stagePlanner.type';
 
+export const createPriorityKey = (planId: number, stage: number) => `${planId}${stage}`;
 /**
  * Used in principle plans that are loaded during muxium initialization
  */
