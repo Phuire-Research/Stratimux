@@ -3,9 +3,9 @@ For the asynchronous graph programming framework Stratimux, define the Interface
 $>*/
 
 import { Action, Actions } from './action/action.type';
-import { LoadConcepts } from './concept/concept';
+import { LoadConcepts } from './concept/concept.type';
 import { Deck } from './deck';
-import { BundledSelectors, KeyedSelectors, Selectors } from './selectors/selector';
+import { BundledSelectors } from './selector/selector.type';
 
 /*<#*/
 /**

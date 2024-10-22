@@ -22,7 +22,7 @@ import {
 } from 'rxjs';
 import { Action } from './action.type';
 import { muxiumConclude } from '../../concepts/muxium/qualities/conclude.quality';
-import { ActionDeck } from '../concept/concept';
+import { ActionDeck } from '../concept/concept.type';
 
 function hasLift(source: any): source is { lift: InstanceType<typeof Observable>['lift'] } {
   return typeof source?.lift === 'function';

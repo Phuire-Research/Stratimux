@@ -5,10 +5,10 @@ $>*/
 /*<#*/
 /* eslint-disable max-depth */
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
-import { Concepts } from './concept/concept';
-import { selectState } from './selectors/selector';
+import { Concepts } from './concept/concept.type';
+import { selectState } from './selector/selector';
 import { randomUUID } from 'crypto';
-import { getMuxiumState } from './muxium/muxium';
+import { getMuxiumState } from './muxium/muxiumHelpers';
 import { Action } from './action/action.type';
 import { ActionNode, ActionStrategy } from './action/strategy/actionStrategy.type';
 import { areSemaphoresEqual } from './action/actionSemaphore';

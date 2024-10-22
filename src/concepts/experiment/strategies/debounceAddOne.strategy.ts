@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
-import { Concept } from '../../../model/concept/concept';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { CounterDeck } from '../../counter/counter.concept';
 import { ExperimentState } from '../experiment.concept';

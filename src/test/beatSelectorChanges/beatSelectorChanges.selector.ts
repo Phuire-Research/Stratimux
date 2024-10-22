@@ -3,7 +3,8 @@ For the asynchronous graph programming framework Stratimux and BeatSelectorChang
 generate a KeyedSelector for the BeatSelectorChanges's count variants state properties.
 $>*/
 /*<#*/
-import { KeyedSelector, createConceptKeyedSelector } from '../../model/selectors/selector';
+import { createConceptKeyedSelector } from '../../model/selector/selector';
+import { KeyedSelector } from '../../model/selector/selector.type';
 import { BeatSelectorChangesState } from './beatSelectorChanges.concept';
 
 export const beatSelectorChangesSelectCountOne: KeyedSelector =

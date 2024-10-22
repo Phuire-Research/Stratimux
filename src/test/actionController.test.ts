@@ -5,7 +5,7 @@ $>*/
 import { muxiumLog } from '../concepts/muxium/qualities/log.quality';
 import { muxiumBadAction } from '../concepts/muxium/qualities/badAction.quality';
 import { Deck } from '../model/deck';
-import { ActionDeck } from '../model/concept/concept';
+import { ActionDeck } from '../model/concept/concept.type';
 import { ActionController, createActionController$ } from '../model/action/actionController';
 
 test('ActionController Expired Test', (done) => {

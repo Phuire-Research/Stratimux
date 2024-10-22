@@ -25,8 +25,8 @@ import {
   experimentTimedMockToTrueWithStateTopic
 } from '../concepts/experiment/strategies/timedMockToTrueWithState.strategy';
 import { muxification } from '../model/muxium/muxium';
-import { selectSlice, selectState } from '../model/selectors/selector';
-import { Concept } from '../model/concept/concept';
+import { selectSlice, selectState } from '../model/selector/selector';
+import { Concept } from '../model/concept/concept.type';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Async Method Test', (done) => {

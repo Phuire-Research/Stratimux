@@ -4,22 +4,26 @@ generate a principle that will allow for the modification of the Muxium's loaded
 $>*/
 /*<#*/
 import { Observable, Subscriber, catchError } from 'rxjs';
-import { AnyConcept, Concepts, Mode, forEachConcept, qualityToString } from '../../model/concept/concept';
+import { AnyConcept, Concepts, Mode } from '../../model/concept/concept.type';
+import { forEachConcept, qualityToString } from '../../model/concept/conceptHelpers';
 import { createPrinciple$ } from '../../model/principle';
 import { MuxiumDeck, muxiumName, MuxiumPrinciple } from './muxium.concept';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './muxium.mode';
-import { MuxiumLoad, blockingMethodSubscription, demuxifyDeck, getMuxiumState } from '../../model/muxium/muxium';
 import { muxiumSelectAddConceptQue, muxiumSelectRemoveConceptQue } from './muxium.selector';
-import { Deck } from '../../model/deck';
+import { Deck, demuxifyDeck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
-import { BundledSelectors, createSelectors, updateKeyedSelectors } from '../../model/selectors/selector';
+import { createSelectors, updateKeyedSelectors } from '../../model/selector/selectorAdvanced';
+import { BundledSelectors } from '../../model/selector/selector.type';
 import { Action, Actions } from '../../model/action/action.type';
 import { createCachedSemaphores } from '../../model/action/actionSemaphore';
 import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 import { createActionNode } from '../../model/action/strategy/actionStrategy';
 import { strata } from '../../model/action/strategy';
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
+import { blockingMethodSubscription } from '../../model/method/methodSubscription';
+import { MuxiumLoad } from '../../model/muxium/muxium.type';
 
 export const muxiumPrinciple: MuxiumPrinciple = (
   {

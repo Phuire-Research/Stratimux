@@ -7,7 +7,7 @@ import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { experimentName } from '../../concepts/experiment/experiment.concept';
 import { muxification } from '../../model/muxium/muxium';
-import { select } from '../../model/selectors/selector';
+import { select } from '../../model/selector/';
 import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';

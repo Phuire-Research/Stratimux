@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
-import { Concept } from '../../../model/concept/concept';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { experimentAsyncIterateIdThenReceiveInMethod } from '../qualities/asyncIterateIdThenReceiveInMethod.quality';

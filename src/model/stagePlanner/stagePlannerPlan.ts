@@ -7,22 +7,16 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import { Concepts } from '../concept/concept';
-import {
-  BundledSelectors,
-  KeyedSelector,
-} from '../selectors/selector';
+import { Concepts } from '../concept/concept.type';
+import { BundledSelectors, KeyedSelector } from '../selector/selector.type';
 import { muxiumTimeOut } from '../time';
 import { Comparators } from '../interface';
 import { accessDeck } from '../deck';
 import { Actions } from '../action/action.type';
 import { createAction } from '../action/action';
-import { CurrentPlans, MappedSelectors, MuxifiedSubjectProperties, Plan, Planner, StagePlanner, Staging } from './stagePlanner.type';
+import { MuxifiedSubjectProperties, Plan, Planner, StagePlanner, Staging } from './stagePlanner.type';
 import { createStage, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
-import {
-  handleAddSelector,
-  handleRemoveSelector
-} from './stagePlannerHandlers';
+import { handleAddSelector, handleRemoveSelector } from './stagePlannerHandlers';
 import { manageQues } from './stagePlannerQues';
 import { execute } from './stagePlannerEntropy';
 

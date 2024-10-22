@@ -5,10 +5,11 @@ the Muxium operates in a synchronous behavior to quickly modify the Muxium's con
 $>*/
 /*<#*/
 import { Subscriber } from 'rxjs';
-import { forEachConcept, LoadConcepts } from '../../../model/concept/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
+import { forEachConcept } from '../../../model/concept/conceptHelpers';
 import { Action } from '../../../model/action/action.type';
 import { MuxiumState } from '../muxium.concept';
-import { blockingMethodSubscription } from '../../../model/muxium/muxium';
+import { blockingMethodSubscription } from '../../../model/method/methodSubscription';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumSetBlockingModePayload } from '.';
 

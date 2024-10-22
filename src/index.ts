@@ -3,7 +3,9 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { muxification, getMuxiumState, Muxium, isMuxiumOpen } from './model/muxium/muxium';
+export { muxification } from './model/muxium/muxium';
+export { getMuxiumState, isMuxiumOpen } from './model/muxium/muxiumHelpers';
+export { Muxium } from './model/muxium/muxium.type';
 export type {
   ActionNode,
   ActionNotes,
@@ -107,16 +109,22 @@ export {
   act
 } from './model/action';
 export {
+  concept
+} from './model/concept/';
+export {
   createConcept,
+} from './model/concept/concept';
+export {
   isConceptLoaded,
   areConceptsLoaded,
-  muxifyConcepts,
   forEachConcept,
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  concept
-} from './model/concept/concept';
+} from './model/concept/conceptHelpers';
+export {
+  muxifyConcepts,
+} from './model/concept/conceptAdvanced';
 export type {
   Concept,
   Concepts,
@@ -129,7 +137,7 @@ export type {
   AnyConcept,
   ConceptDeck,
   SpecificReducer
-} from './model/concept/concept';
+} from './model/concept/concept.type';
 export {
   createQualityCard,
   createQualityCardWithPayload,
@@ -140,7 +148,7 @@ export {
   quality,
   Qualities
 } from './model/quality';
-export type { KeyedSelector } from './model/selectors/selector';
+export type { KeyedSelector } from './model/selector/selector.type';
 export {
   selectState,
   selectConcept,
@@ -148,12 +156,14 @@ export {
   selectPayload,
   selectMuxifiedState,
   selectMuxifiedName,
-  updateMuxifiedKeyedSelector,
   createConceptKeyedSelector,
   createMuxifiedKeyedSelector,
   createAdvancedKeys,
-  select,
-} from './model/selectors/selector';
+} from './model/selector/selector';
+export {
+  updateMuxifiedKeyedSelector,
+} from './model/selector/selectorAdvanced';
+export { select } from './model/selector';
 export type {
   DotPath
 } from './model/dotPath';

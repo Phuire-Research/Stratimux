@@ -8,7 +8,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumSetDefaultModeIndexPayload } from '.';
-import { LoadConcepts } from '../../../model/concept/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumSetDefaultModeIndex =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModeIndexPayload>({

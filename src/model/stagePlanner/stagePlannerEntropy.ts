@@ -9,11 +9,8 @@ $>*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
 import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
-import {
-  BundledSelectors,
-  KeyedSelector,
-} from '../selectors/selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxium';
+import { BundledSelectors, KeyedSelector } from '../selector/selector.type';
+import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxiumHelpers';
 import { Comparators } from '../interface';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { accessDeck } from '../deck';

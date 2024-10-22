@@ -10,13 +10,13 @@ $>*/
 /*<#*/
 import { Subject } from 'rxjs';
 import { Action, AnyAction } from '../../model/action/action.type';
-import { Concepts } from '../../model/concept/concept';
-import { Mode } from '../../model/concept/concept';
+import { Concepts } from '../../model/concept/concept.type';
+import { Mode } from '../../model/concept/concept.type';
 import { permissiveMode, blockingMode } from '../muxium/muxium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
 import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
-import { getMuxiumState } from '../../model/muxium/muxium';
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { strategyFailed } from '../../model/action/strategy/actionStrategyConsumers';
 import { ActionStrategy } from '../../model/action/strategy/actionStrategy.type';
 

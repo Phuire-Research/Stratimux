@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
 import { muxification } from '../../model/muxium/muxium';
-import { selectSlice } from '../../model/selectors/selector';
+import { selectSlice } from '../../model/selector/selector';
 import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
 
 jest.setTimeout(30000);

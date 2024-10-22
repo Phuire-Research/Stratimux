@@ -8,21 +8,12 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { Concepts } from '../concept/concept';
+import { Concepts } from '../concept/concept.type';
 import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
-import {
-  BundledSelectors,
-  KeyedSelector,
-  createConceptKeyedSelector,
-  select,
-} from '../selectors/selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxium';
-import { Comparators } from '../interface';
+import { KeyedSelector } from '../selector/selector.type';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { accessDeck } from '../deck';
-import { Action, Actions } from '../action/action.type';
-import { Dispatcher, dispatchOptions, MuxifiedSubjectProperties, Plan, Planner, Planning, StagePlanner } from './stagePlanner.type';
-import { handleRun, handleStageDelimiter } from './stagePlannerHelpers';
+import { Action } from '../action/action.type';
+import { dispatchOptions, MuxifiedSubjectProperties, Plan, Planner, Planning, StagePlanner } from './stagePlanner.type';
 import {
   addSelector, handleAddSelector, handleNewStageOptions, handleRemoveSelector, handleSetStageOptions, removeSelector
 } from './stagePlannerHandlers';
@@ -34,10 +25,6 @@ import { handleChange } from './stagePlannerHandleChange';
 const Inner = 0;
 const Base = 1;
 const Outer = 2;
-
-// Token to denote ALL, using a selector that utilizes this token should return undefined
-const ALL = '*4||*';
-const ALL_KEYS = '*4||*.*4||*';
 
 export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
   private properties: MuxifiedSubjectProperties;
@@ -59,14 +46,21 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
   }
 
   protected createPriorityKey = (planId: number, stage: number) => `${planId}${stage}`;
+
   protected handleAddSelector = (selectors: KeyedSelector[], id: number) => handleAddSelector(this.properties, selectors, id);
+
   protected handleNewStageOptions = (plan: Plan<Q, C, S>, options: dispatchOptions, next: number): boolean =>
     handleNewStageOptions(this.properties, plan, options, next);
+
   protected handleSetStageOptions = (plan: Plan<Q, C, S>, options: dispatchOptions) =>
     handleSetStageOptions(plan, options);
+
   protected addSelector = (selector: KeyedSelector, id: number) => addSelector(this.properties, selector, id);
+
   protected handleRemoveSelector = (selectors: KeyedSelector[], id: number) => handleRemoveSelector(this.properties, selectors, id);
+
   protected removeSelector = (selector: KeyedSelector, id: number) => removeSelector(this.properties, selector, id);
+
   protected createPlan = (
     title: string,
     planner: Planner<Q, C, S>,
@@ -76,12 +70,20 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
   protected initPlan = (plan: Plan<Q, C, S>): StagePlanner => initPlan(this.properties, plan, this.next.bind(this));
 
   innerPlan: Planning<Q, C, S> = (title: string, planner: Planner<Q, C, S>) => this.initPlan(this.createPlan(title, planner, Inner, 0));
+
   outerPlan: Planning<Q, C, S> = (title: string, planner: Planner<Q, C, S>) => this.initPlan(this.createPlan(title, planner, Outer, 0));
-  plan = (conceptSemaphore: number): Planning<Q, C, S> => (title: string, planner: Planner<Q, C, S>): StagePlanner => this.initPlan(this.createPlan(title, planner, Base, conceptSemaphore));
+
+  plan = (conceptSemaphore: number): Planning<Q, C, S> =>
+    (title: string, planner: Planner<Q, C, S>): StagePlanner => this.initPlan(this.createPlan(title, planner, Base, conceptSemaphore));
+
   protected deletePlan = (planId: number) => deletePlan(this.properties, planId);
+
   protected updateFrequencyMap = () => updateFrequencyMap(this.properties);
+
   protected assemblePriorityQue = () => assemblePriorityQue(this.properties);
+
   protected assembleGeneralQues = () => assembleGeneralQues(this.properties);
+
   protected manageQues = () => manageQues(this.properties);
 
   protected _dispatch = (
@@ -89,10 +91,14 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     plan: Plan<Q, C, S>,
     action: Action,
     options: dispatchOptions) => _dispatch(this.properties, muxiumState, plan, action, options);
+
   protected execute = (plan: Plan<Q, C, S>, index: number, changes: KeyedSelector[]) =>
+
     execute(this.properties, plan, index, changes);
   protected nextPlans = () => nextPlans(this.properties);
+
   protected nextPlan = (plan: Plan<Q, C, S>, changes: KeyedSelector[]) => nextPlan(this.properties, plan, changes);
+
   protected nextSubs() {
     const {observers} = this;
     const len = observers.length;
@@ -106,8 +112,10 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     };
     nextSub(0);
   }
+
   protected handleChange = (concepts: Concepts, blocking = false, keyedSelectors?: KeyedSelector<any>[]) =>
     handleChange(this.properties, concepts, blocking, keyedSelectors);
+
   next(concepts: Concepts, keyedSelectors?: KeyedSelector<any>[]) {
     if (!this.closed) {
       if (keyedSelectors && keyedSelectors.length !== 0) {
@@ -120,9 +128,11 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
       this.nextSubs();
     }
   }
+
   init(concepts: Concepts) {
     this.properties.concepts = concepts;
   }
+
   nextBlocking(concepts: Concepts, keyedSelectors?: KeyedSelector<any>[]) {
     if (!this.closed) {
       if (keyedSelectors && keyedSelectors.length !== 0) {
@@ -133,4 +143,5 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     }
   }
 }
+
 /*#>*/

@@ -6,7 +6,8 @@ $>*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
 import { muxification } from '../../model/muxium/muxium';
 import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
-import { KeyedSelector, selectSlice } from '../../model/selectors/selector';
+import { KeyedSelector } from '../../model/selector/selector.type';
+import { selectSlice } from '../../model/selector/selector';
 import { planOptionsSelect } from './newPlanOptions.selectors';
 import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
 

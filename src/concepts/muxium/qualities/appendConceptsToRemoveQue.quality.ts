@@ -6,7 +6,7 @@ $>*/
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumAppendConceptsToRemoveQuePayload } from '.';
-import { LoadConcepts } from '../../../model/concept/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumAppendConceptsToRemoveQue =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumAppendConceptsToRemoveQuePayload>({

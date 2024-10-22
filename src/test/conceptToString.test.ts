@@ -4,7 +4,7 @@ $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
-import { conceptsToString } from '../model/concept/concept';
+import { conceptsToString } from '../model/concept/conceptHelpers';
 
 test('Muxium Counting Strategy Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});

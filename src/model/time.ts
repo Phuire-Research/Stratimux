@@ -4,8 +4,8 @@ This concept muxified into the muxium, manages how the timer functions interact 
 $>*/
 /*<#*/
 import { MuxiumState } from '../concepts/muxium/muxium.concept';
-import { getMuxiumState, tailWhip } from './muxium/muxium';
-import { Concepts } from './concept/concept';
+import { getMuxiumState, tailWhip } from './muxium/muxiumHelpers';
+import { Concepts } from './concept/concept.type';
 import { handlePriority, isPriorityValid } from './priority';
 import { Action } from './action/action.type';
 

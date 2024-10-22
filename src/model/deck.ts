@@ -2,11 +2,11 @@
 For the asynchronous graph programming framework Stratimux, define the Deck Model File
 $>*/
 /*<#*/
-import { accessMuxium, getMuxiumState } from './muxium/muxium';
-import { AnyConcept, Concept, Concepts, conceptsToString } from './concept/concept';
+import { getMuxiumState } from './muxium/muxiumHelpers';
+import { AnyConcept, Concept, Concepts } from './concept/concept.type';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
-import { BundledSelectors, KeyedSelectors, Selectors } from './selectors/selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { Actions } from './action/action.type';
 
 export type Decks<BaseQ, BaseS, Extended> = {
@@ -73,4 +73,30 @@ export const accessECK = <C>(concept: AnyConcept) => {
   };
 };
 
+export const demuxifyDeck = (concept: AnyConcept): {name: string, eck: ECK<any>}[] => {
+  const final: {name: string, eck: ECK<any>}[] = [];
+  const keys = Object.keys(concept.muxifiedRecord);
+  keys.forEach(name => {
+    const e: Actions<any> = {};
+    const c: Comparators<any> = {};
+    const k = {...concept.selectors} as BundledSelectors<any>;
+    concept.muxifiedRecord[name].actionMap.forEach(ky => {
+      e[ky] = concept.actions[ky];
+      c[ky] = concept.comparators[ky];
+    });
+    concept.muxifiedRecord[name].stateMap.forEach(ky => {
+      k[ky] = concept.keyedSelectors[ky];
+    });
+    const eck: ECK<any> = {
+      e,
+      c,
+      k
+    };
+    final.push({
+      name,
+      eck
+    });
+  });
+  return final;
+};
 /*#>*/

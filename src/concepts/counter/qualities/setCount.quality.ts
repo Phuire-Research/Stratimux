@@ -7,7 +7,7 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
-import { selectPayload } from '../../../model/selectors/selector';
+import { selectPayload } from '../../../model/selector/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type CounterSetCountPayload = {

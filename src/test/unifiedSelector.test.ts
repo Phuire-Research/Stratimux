@@ -6,13 +6,9 @@ $>*/
 /*<#*/
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { muxification } from '../model/muxium/muxium';
-import {
-  KeyedSelector,
-  createConceptKeyedSelector,
-  createMuxifiedKeyedSelector,
-  select,
-  updateMuxifiedKeyedSelector
-} from '../model/selectors/selector';
+import { select } from '../model/selector';
+
+import { KeyedSelector } from '../model/selector/selector.type';
 
 test('Muxified Selector Test', (done) => {
   const muxium = muxification('Selector Test via Counter', {
@@ -21,9 +17,9 @@ test('Muxified Selector Test', (done) => {
   const plan = muxium.plan('Plan: Counter Selector', ({stage}) => [
     stage(({concepts}) => {
       console.log('FIRED!!!');
-      const concept = createConceptKeyedSelector<CounterState>(counterName, 'count');
-      const updated = updateMuxifiedKeyedSelector(concepts, 1, concept) as KeyedSelector;
-      const muxified = createMuxifiedKeyedSelector<CounterState>(concepts, 1, 'count') as KeyedSelector;
+      const concept = select.createConceptKeyedSelector<CounterState>(counterName, 'count');
+      const updated = select.updateMuxifiedKeyedSelector(concepts, 1, concept) as KeyedSelector;
+      const muxified = select.createMuxifiedKeyedSelector<CounterState>(concepts, 1, 'count') as KeyedSelector;
       console.log('CHECK SELECTORS', concept, updated, muxified);
       expect(select.slice(concepts, updated)).toBe(0);
       expect(select.slice(concepts, concept)).toBe(0);

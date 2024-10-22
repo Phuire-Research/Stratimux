@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
-import { selectState } from '../model/selectors/selector';
+import { selectState } from '../model/selector/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
 import { Action } from '../model/action/action.type';

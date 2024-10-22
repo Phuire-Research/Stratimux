@@ -5,9 +5,9 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept/concept';
+import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept/concept.type';
 import { Action, Actions } from './action/action.type';
-import { BundledSelectors, KeyedSelectors, Selectors } from './selectors/selector';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { BInterface, Comparators } from './interface';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { Deck, accessDeck } from './deck';

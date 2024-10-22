@@ -1,5 +1,5 @@
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { select } from '../../model/selectors/selector';
+import { select } from '../../model/selector/';
 import { ExperimentPlanOptionsState } from './newPlanOptions.concept';
 
 const experimentSelectOne = select.createConceptKeyedSelector<ExperimentPlanOptionsState>(experimentName, 'one');

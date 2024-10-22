@@ -3,17 +3,18 @@ For the asynchronous graph programming framework Stratimux, generate a test that
 In addition utilize the onChange detection feature for the MuxifiedSubject is working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState } from '../model/muxium/muxium';
-import { selectSlice, selectState } from '../model/selectors/selector';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selector/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { initializeTopic } from '../concepts/muxium/strategies/initialization.strategy';
-import { Concepts } from '../model/concept/concept';
+import { Concepts } from '../model/concept/concept.type';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
+import { getMuxiumState } from '../model/muxium/muxiumHelpers';
 
 test('Muxium onChange Test', (done) => {
-  const selectorRouter = {
+  const selectorRouter: Record<string, any> = {
     [muxiumSelectLastStrategy.keys]: (concepts: Concepts) =>
       console.log('CHECK: ', selectSlice(concepts, muxiumSelectLastStrategy))
   };

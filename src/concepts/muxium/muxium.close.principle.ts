@@ -1,13 +1,10 @@
 /*<$
 For the asynchronous graph programming framework Stratimux and Muxium Concept, generate a principle that will manage the Muxium's close process.
 $>*/
-import { PrincipleFunction } from '../../model/principle';
-import { selectMuxifiedState } from '../../model/selectors/selector';
+import { selectMuxifiedState } from '../../model/selector/selector';
 import { MuxiumPrinciple, MuxiumState } from './muxium.concept';
-import { muxiumClose } from './qualities/close.quality';
 import { muxiumSelectPrepareClose } from './muxium.selector';
-import { MuxiumQualities } from './qualities';
-import { LoadConcepts } from '../../model/concept/concept';
+import { LoadConcepts } from '../../model/concept/concept.type';
 /*<#*/
 export const muxiumClosePrinciple: MuxiumPrinciple = (
   {

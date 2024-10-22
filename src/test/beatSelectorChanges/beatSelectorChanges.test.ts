@@ -3,7 +3,8 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 utilizing the provided BeatSelectorChanges concept
 $>*/
 /*<#*/
-import { muxification, getMuxiumState, isMuxiumOpen } from '../../model/muxium/muxium';
+import { muxification } from '../../model/muxium/muxium';
+import { getMuxiumState, isMuxiumOpen } from '../../model/muxium/muxiumHelpers';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
 import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
 import {
@@ -15,7 +16,7 @@ import {
   beatSelectorChangesSelectCountThree,
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
-import { selectSlice } from '../../model/selectors/selector';
+import { selectSlice } from '../../model/selector/selector';
 import { Deck } from '../../model/deck';
 import { MuxiumDeck } from '../../concepts/muxium/muxium.concept';
 import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';

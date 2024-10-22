@@ -3,7 +3,8 @@ For the asynchronous graph programming framework Stratimux and a Experiment Plan
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { KeyedSelector, createConceptKeyedSelector } from '../../model/selectors/selector';
+import { createConceptKeyedSelector } from '../../model/selector/selector';
+import { KeyedSelector } from '../../model/selector/selector.type';
 import { ExperimentPlanOptionsState } from './newPlanOptions.concept';
 
 export const experimentPlanOptionsReadySelector: KeyedSelector =

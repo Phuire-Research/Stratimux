@@ -4,7 +4,7 @@ generate a quality clear pending actions of the provided ActionStrategy topic.
 $>*/
 /*<#*/
 import { OwnershipState } from '../ownership.concept';
-import { selectPayload } from '../../../model/selectors/selector';
+import { selectPayload } from '../../../model/selector/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { ActionStrategyTopic } from '../../../model/action/strategy/actionStrategy.type';
 import { Action } from '../../../model/action/action.type';

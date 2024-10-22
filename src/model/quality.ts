@@ -10,11 +10,12 @@ import {
   prepareActionCreator,
   prepareActionWithPayloadCreator
 } from './action/action';
-import { ActionDeck, Concepts, Method, MethodCreatorStep, SpecificReducer, createQuality } from './concept/concept';
-import { KeyedSelector } from './selectors/selector';
+import { KeyedSelector } from './selector/selector.type';
 import { muxiumConcludeType } from '../concepts/muxium/qualities/conclude.quality';
 import { Action, ActionCreator, ActionCreatorType, ActionCreatorWithPayload, ActionType } from './action/action.type';
 import { strategySuccess } from './action/strategy/actionStrategyConsumers';
+import { ActionDeck, Concepts, MethodCreatorStep, SpecificReducer } from './concept/concept.type';
+import { Method } from './method/method.type';
 
 export type Quality<S extends Record<string, unknown>, T = void, C = void> = {
   actionType: ActionType;
@@ -36,6 +37,29 @@ export type Qualities = {
   Quality<Record<string, unknown>, undefined>;
   // [s: string]: Quality<Record<string, unknown>>
 };
+
+export function createQuality<S extends Record<string, unknown>, T = void, C = void>(
+  actionType: ActionType,
+  actionSemaphoreBucket: [number, number, number, number][],
+  actionCreator: ActionCreatorType<T>,
+  reducer: SpecificReducer<S, T, C>,
+  methodCreator?: MethodCreatorStep<S, T, C>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyedSelectors?: KeyedSelector[],
+  meta?: Record<string,unknown>,
+  analytics?: Record<string,unknown>,
+): Quality<S, T, C> {
+  return {
+    actionType,
+    actionCreator,
+    actionSemaphoreBucket,
+    reducer,
+    methodCreator,
+    keyedSelectors,
+    meta,
+    analytics
+  };
+}
 
 export function defaultReducer<S extends Record<string, unknown>>(state: S, _: Action<any>): S {
   return state;

@@ -3,12 +3,12 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { muxification  } from '../model/muxium/muxium';
-import { Concept, Concepts } from '../model/concept/concept';
-import { select, selectPayload, selectSlice, selectState } from '../model/selectors/selector';
+import { Concept, Concepts } from '../model/concept/concept.type';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
+import { select } from '../model/selector';
 
 test('Muxium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -16,7 +16,7 @@ test('Muxium Selector Test', (done) => {
   counterState.count = 10;
   const muxium = muxification('muxiumSelectorTest', {counter}, {logging: true, storeDialog: true});
   const sub = muxium.subscribe((concepts: Concepts) => {
-    const state = selectState<CounterState>(concepts, counterName);
+    const state = select.state<CounterState>(concepts, counterName);
     console.log('CHECK COUNT', state?.count);
     expect(state?.count).toBe(10);
     done();
@@ -30,7 +30,7 @@ test('Muxium Selector State Slice Test', (done) => {
   counterState.count = 10;
   const muxium = muxification('muxiumSelectorStateSlicedTest', {counter}, {logging: true, storeDialog: true});
   muxium.subscribe((concepts: Concepts) => {
-    const count = selectSlice<number>(concepts, counterSelectCount);
+    const count = select.slice<number>(concepts, counterSelectCount);
     expect(count).toBe(10);
     setTimeout(() => {done();}, 500);
   });
@@ -39,7 +39,7 @@ test('Muxium Selector State Slice Test', (done) => {
 test('Muxium Selector Payload Test', (done) => {
   // For testing purposes only, access actionCreators via the Deck Interface in production.
   const setCount = counterSetCount.actionCreator({newCount: 10 });
-  const payload = selectPayload<CounterSetCountPayload>(setCount);
+  const payload = select.payload<CounterSetCountPayload>(setCount);
   expect(payload.newCount).toBe(10);
   done();
 });

@@ -7,13 +7,11 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import {
-  KeyedSelector,
-  selectSlice,
-} from '../selectors/selector';
+import { KeyedSelector } from '../selector/selector.type';
+import { selectSlice } from '../selector/selector';
 import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
 import { ownershipSelectInitialized } from '../../concepts/ownership/ownership.selector';
-import { getMuxiumState, isMuxiumOpen } from '../muxium/muxium';
+import { getMuxiumState, isMuxiumOpen } from '../muxium/muxiumHelpers';
 import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { Action, AnyAction } from '../action/action.type';
 import { dispatchOptions, Plan, Stage, StageDelimiter, Staging } from './stagePlanner.type';

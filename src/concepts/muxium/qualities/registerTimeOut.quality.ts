@@ -10,7 +10,7 @@ import { muxiumTimeOut } from '../../../model/time';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 import { MuxiumState } from '../muxium.concept';
 import { MuxiumRegisterTimeOutPayload } from '.';
-import { LoadConcepts } from '../../../model/concept/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumRegisterTimeOut = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumRegisterTimeOutPayload>({
   type: 'register an Action to Muxium\'s timerLedger',

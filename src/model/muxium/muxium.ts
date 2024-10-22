@@ -4,260 +4,30 @@ This file dictates the creation of the Muxium itself and engages all necessary p
 as a provably recursive terminating function.
 $>*/
 /*<#*/
+import { Observable, withLatestFrom, Subscriber, catchError } from 'rxjs';
 import {
-  Observable,
-  Subject,
-  withLatestFrom,
-  Subscriber,
-  catchError,
-  Subscription,
-  Observer,
-} from 'rxjs';
-import {
-  AnyConcept,
   Concept,
   Concepts,
   LoadConcepts,
   Mode,
+} from '../concept/concept.type';
+import {
   forEachConcept,
   qualityToString
-} from '../concept/concept';
-import {
-  muxificationConcept,
-  MuxiumState,
-  initializationStrategy,
-  MuxiumDeck,
-} from '../../concepts/muxium/muxium.concept';
-import { Planner, StagePlanner } from '../stagePlanner/stagePlanner.type';
-import { muxiumTimeOut } from '../time';
+} from '../concept/conceptHelpers';
+import { muxificationConcept, MuxiumState, initializationStrategy, MuxiumDeck } from '../../concepts/muxium/muxium.concept';
+import { Planner } from '../stagePlanner/stagePlanner.type';
 import { handlePriority, isPriorityValid } from '../priority';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { Deck, Decks, ECK } from '../deck';
-import { BundledSelectors, createSelectors, updateKeyedSelectors } from '../selectors/selector';
-import { Comparators } from '../interface';
-import { createAction } from '../action/action';
+import { Deck, Decks, demuxifyDeck } from '../deck';
+import { createSelectors, updateKeyedSelectors } from '../selector/selectorAdvanced';
+import { BundledSelectors } from '../selector/selector.type';
 import { Action, Actions } from '../action/action.type';
 import { createCachedSemaphores } from '../action/actionSemaphore';
 import { strategyBegin } from '../action/strategy/actionStrategyConsumers';
-
-// eslint-disable-next-line no-shadow
-export enum MuxiumOrigins {
-  strategyTail = 'strategyTail',
-  muxiumHead = 'muxiumHead'
-}
-
-export const tailWhip = <Q, C extends LoadConcepts>(muxiumState: MuxiumState<Q, C>) => {
-  if (muxiumState.tailTimer.length === 0) {
-    muxiumState.tailTimer.push(setTimeout(() => {
-      muxiumState.action$.next(createAction('Kick Muxium'));
-    }, 3));
-  }
-};
-
-export const createOrigin = (location: unknown[]): string => {
-  let origin = '';
-  let addSign = false;
-  location.forEach(l => {
-    if (addSign) {
-      origin += '+' + l;
-    } else {
-      origin += l;
-      addSign = true;
-    }
-  });
-  return origin;
-};
-
-export const HandleOrigin = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>, action: Action) => {
-  const {
-    body,
-    tail
-  } = state;
-  let found = false;
-  for (const [i, a] of body.entries()) {
-    if (a.origin && a.origin === action.origin) {
-      body[i] = action;
-      found = true;
-      break;
-    }
-  }
-  if (!found) {
-    for (const [i, a] of tail.entries()) {
-      if (a.origin && a.origin === action.origin) {
-        body[i] = action;
-        found = true;
-        break;
-      }
-    }
-  }
-
-  if (!found) {
-    body.push(action);
-  }
-  tailWhip(state);
-};
-
-export const HandleHardOrigin = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>, action: Action) => {
-  // Fill Bucket
-  // Empty Bucket
-  // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
-  const {
-    body,
-    tail
-  } = state;
-  let found = false;
-  const origin = action.origin?.split('+')[0];
-  for (const [i, a] of body.entries()) {
-    const aOrigin = a.origin?.split('+')[0];
-    if (aOrigin !== undefined && aOrigin === origin) {
-      body[i] = action;
-      found = true;
-      break;
-    }
-  }
-  if (!found) {
-    for (const [i, a] of tail.entries()) {
-      const aOrigin = a.origin?.split('+')[0];
-      if (aOrigin !== undefined && aOrigin === action.origin) {
-        body[i] = action;
-        found = true;
-        break;
-      }
-    }
-  }
-
-  if (!found) {
-    body.push(action);
-  }
-  tailWhip(state);
-};
-
-export const blockingMethodSubscription = (
-  concepts: Concepts,
-  tail: Action<unknown>[],
-  action: Action
-) => {
-  if (
-    action.strategy &&
-    // Logical Determination: muxiumConcludeType
-    action.semaphore[3] === 3
-  ) {
-    // Allows for reducer next in sequence
-    const appendToDialog = accessMuxium(concepts).e.muxiumAppendActionListToDialog({
-      actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic,
-      strategyData: action.strategy.data,
-    });
-    if (isPriorityValid(action)) {
-      appendToDialog.priority = action.priority;
-      const state = getMuxiumState(concepts);
-      handlePriority(state, action);
-      handlePriority(state, appendToDialog);
-    } else {
-      action.origin = MuxiumOrigins.strategyTail;
-      tail.push(action);
-      tail.push(appendToDialog);
-    }
-  } else if (
-    action.strategy &&
-    // Logical Determination: muxiumBadType
-    action.semaphore[3] !== 1
-  ) {
-    if (isPriorityValid(action)) {
-      handlePriority(getMuxiumState(concepts), action);
-    } else {
-      tail.push(action);
-    }
-  }
-};
-
-export const defaultMethodSubscription = (
-  concepts: Concepts,
-  tail: Action<unknown>[],
-  action$: Subject<Action>,
-  action: Action,
-  async: boolean
-) => {
-  if (
-    action.strategy &&
-    // Logical Determination: muxiumConcludeType
-    action.semaphore[3] === 3
-  ) {
-    // Allows for reducer next in sequence
-    const appendToDialog = accessMuxium(concepts).e.muxiumAppendActionListToDialog({
-      actionList: action.strategy.actionList,
-      strategyTopic: action.strategy.topic,
-      strategyData: action.strategy.data
-    });
-    // setTimeout(() => {
-    if (isPriorityValid(action)) {
-      const state = getMuxiumState(concepts);
-      handlePriority(state, action);
-      appendToDialog.priority = action.priority;
-      handlePriority(state, appendToDialog);
-    } else {
-      tail.push(action);
-      tail.push(appendToDialog);
-    }
-    if (async) {
-      muxiumTimeOut(concepts, () => {
-        return accessMuxium(concepts).e.muxiumKick();
-      }, 0);
-    }
-    // }, 0);
-  } else if (
-    action.strategy &&
-    // Logical Determination: muxiumBadType
-    action.semaphore[3] !== 1
-  ) {
-    if (isPriorityValid(action)) {
-      handlePriority(getMuxiumState(concepts), action);
-    } else {
-      tail.push(action);
-    }
-    if (async) {
-      muxiumTimeOut(concepts, () => {
-        return accessMuxium(concepts).e.muxiumKick();
-      }, 0);
-    }
-  }
-};
-
-// export type MuxiumLoad<C extends LoadConcepts> = {
-//   muxium: Concept<MuxiumState<MuxiumQualities, C>, MuxiumQualities>,
-//   [key: string] : AnyConcept;
-// };
-
-export type MuxiumLoad<C extends LoadConcepts> = {
-  [K in keyof C] : C[K] extends AnyConcept ? C[K] : AnyConcept
-};
-
-export const demuxifyDeck = (concept: AnyConcept): {name: string, eck: ECK<any>}[] => {
-  const final: {name: string, eck: ECK<any>}[] = [];
-  const keys = Object.keys(concept.muxifiedRecord);
-  keys.forEach(name => {
-    const e: Actions<any> = {};
-    const c: Comparators<any> = {};
-    const k = {...concept.selectors} as BundledSelectors<any>;
-    concept.muxifiedRecord[name].actionMap.forEach(ky => {
-      e[ky] = concept.actions[ky];
-      c[ky] = concept.comparators[ky];
-    });
-    concept.muxifiedRecord[name].stateMap.forEach(ky => {
-      k[ky] = concept.keyedSelectors[ky];
-    });
-    const eck: ECK<any> = {
-      e,
-      c,
-      k
-    };
-    final.push({
-      name,
-      eck
-    });
-  });
-  return final;
-};
+import { Muxium, MuxiumLoad, MuxiumOrigins } from './muxium.type';
+import { blockingMethodSubscription } from '../method/methodSubscription';
+import { getMuxiumState } from './muxiumHelpers';
 
 export function muxification<C extends LoadConcepts>(
   name: string,
@@ -435,27 +205,4 @@ export function muxification<C extends LoadConcepts>(
   } as unknown as Muxium<MuxiumQualities, C & MuxiumDeck, MuxiumState<MuxiumQualities, C>>;
 }
 
-// [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
-export type Muxium<Q extends Record<string, unknown>, C extends LoadConcepts, S extends Record<string, unknown>> = {
-  subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
-  unsubscribe: () => void;
-  close: (exit?: boolean) => void;
-  dispatch: (action: Action<any>) => void;
-  plan: <Co>(title: string, planner: Planner<MuxiumQualities, Co & MuxiumDeck, MuxiumState<MuxiumQualities, C>>) => StagePlanner;
-  deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
-  e: Actions<MuxiumQualities>
-}
-
-export const getMuxiumState = <Q = void, C = void>(concepts: Concepts) =>
-  (concepts[0].state as MuxiumState<Q extends void ? MuxiumQualities : Q, C extends LoadConcepts ? C : MuxiumDeck >);
-
-export const accessMuxium = (concepts: Concepts) => (getMuxiumState(concepts).deck.d.muxium);
-
-export const isMuxiumOpen = (concepts: Concepts) => ((concepts[0].state as MuxiumState<MuxiumQualities, MuxiumLoad<any>>).open);
-
-export const muxium = ({
-  create: muxification,
-  getState: getMuxiumState,
-  isOpen: isMuxiumOpen
-});
 /*#>*/

@@ -6,7 +6,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { CounterState } from '../counter.concept';
 import { counterSelectCount } from '../counter.selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
-import { selectPayload } from '../../../model/selectors/selector';
+import { selectPayload } from '../../../model/selector/selector';
 
 type CounterMultiplyPayload = {
   by: number;

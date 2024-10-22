@@ -3,7 +3,8 @@ For the asynchronous graph programming framework Stratimux generate the Experime
 different configurations of Stratimux to be provably terminating.
 $>*/
 /*<#*/
-import { Mode, createConcept } from '../../model/concept/concept';
+import { Mode } from '../../model/concept/concept.type';
+import { createConcept } from '../../model/concept/concept';
 import { Action } from '../../model/action/action.type';
 import { PrincipleFunction } from '../../model/principle';
 

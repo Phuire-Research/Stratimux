@@ -3,12 +3,12 @@ For the asynchronous graph programming framework Stratimux, define the Method Ty
 This file holds the type definitions required for the method helper functions.
 $>*/
 /*<#*/
-import { Observable, Subject, map, switchMap, withLatestFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ActionStrategy } from '../action/strategy/actionStrategy.type';
-import { KeyedSelector } from '../selectors/selector';
+import { KeyedSelector } from '../selector/selector.type';
 import { Deck } from '../deck';
 import { ActionCreator, ActionCreatorWithPayload } from '../action/action.type';
-import { Concepts, MethodCreator } from '../concept/concept';
+import { Concepts, MethodCreator } from '../concept/concept.type';
 import { ActionController } from '../action/actionController';
 
 type ActionType = string;

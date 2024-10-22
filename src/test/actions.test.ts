@@ -5,7 +5,8 @@ $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
 import { createQualityCard, createQualityCardWithPayload } from '../model/quality';
-import { Concept, Concepts, createConcept } from '../model/concept/concept';
+import { Concept, Concepts  } from '../model/concept/concept.type';
+import { createConcept } from '../model/concept/concept';
 import { Actions } from '../model/action/action.type';
 
 test('Quality Actions', (done) => {

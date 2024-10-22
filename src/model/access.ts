@@ -6,8 +6,8 @@ $>*/
 /*<#*/
 
 import { Actions } from './action/action.type';
-import { Concepts } from './concept/concept';
-import { KeyedSelectors } from './selectors/selector';
+import { Concepts } from './concept/concept.type';
+import { KeyedSelectors } from './selector/selector.type';
 
 // PUNT we will be attaching this to the Muxium to create a public API. To restrict what actions a foreign Muxium may access.
 // Noting that the initial starting point for semaphores can be scrambled to a random value upon creation.

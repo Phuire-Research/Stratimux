@@ -7,7 +7,7 @@ $>*/
 /*<#*/
 import { OwnershipPrinciple, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { selectMuxifiedState } from '../../model/selectors/selector';
+import { selectMuxifiedState } from '../../model/selector/selector';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
 import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';

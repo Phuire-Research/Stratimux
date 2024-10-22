@@ -5,7 +5,7 @@ in sequence upon each observation of state.
 $>*/
 /*<#*/
 import { PrincipleFunction } from '../../model/principle';
-import { selectMuxifiedState } from '../../model/selectors/selector';
+import { selectMuxifiedState } from '../../model/selector/selector';
 import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
 import { ExperimentState, experimentName } from './experiment.concept';
 

@@ -7,27 +7,11 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import { Subject } from 'rxjs';
-import { Concepts } from '../concept/concept';
-import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
-import {
-  BundledSelectors,
-  KeyedSelector,
-  createConceptKeyedSelector,
-  select,
-} from '../selectors/selector';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxium';
-import { Comparators } from '../interface';
-import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { accessDeck } from '../deck';
-import { Action, Actions } from '../action/action.type';
-import { Dispatcher, dispatchOptions, MuxifiedSubjectProperties, Plan, Planner, Planning, StagePlanner } from './stagePlanner.type';
-import { handleRun, handleStageDelimiter } from './stagePlannerHelpers';
-import {
-  addSelector, handleAddSelector, handleNewStageOptions, handleRemoveSelector, handleSetStageOptions, removeSelector
-} from './stagePlannerHandlers';
-import { createPlan, deletePlan, initPlan, nextPlan, nextPlans } from './stagePlannerPlan';
-import { assembleGeneralQues, assemblePriorityQue, manageQues, updateFrequencyMap } from './stagePlannerQues';
+import { Concepts } from '../concept/concept.type';
+import { select } from '../selector/';
+import { KeyedSelector } from '../selector/selector.type';
+import { MuxifiedSubjectProperties, Plan  } from './stagePlanner.type';
+import { nextPlan } from './stagePlannerPlan';
 
 const Inner = 0;
 const Base = 1;
@@ -36,6 +20,7 @@ const Outer = 2;
 // Token to denote ALL, using a selector that utilizes this token should return undefined
 const ALL = '*4||*';
 const ALL_KEYS = '*4||*.*4||*';
+
 export function handleChange<Q,C,S>(
   properties: MuxifiedSubjectProperties,
   concepts: Concepts,

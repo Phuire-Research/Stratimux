@@ -1,5 +1,6 @@
-import { muxification, getMuxiumState } from '../../model/muxium/muxium';
-import { selectState } from '../../model/selectors/selector';
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
+import { muxification } from '../../model/muxium/muxium';
+import { selectState } from '../../model/selector/selector';
 import { CounterState, createCounterConcept, counterName, CounterDeck } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
 import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';

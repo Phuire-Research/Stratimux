@@ -7,7 +7,7 @@ $>*/
 import { Actions } from '../../../model/action/action.type';
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 import { ActionNode, ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
-import { Concepts } from '../../../model/concept/concept';
+import { Concepts } from '../../../model/concept/concept.type';
 import { MuxiumQualities } from '../qualities';
 
 export const initializeTopic = 'Muxium Initialization Strategy';

@@ -8,7 +8,7 @@ This is a combination of throttle and debounce.
 $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
-import { selectSlice, selectState } from '../model/selectors/selector';
+import { selectSlice, selectState } from '../model/selector/selector';
 import { muxiumSelectOpen } from '../concepts/muxium/muxium.selector';
 import { CounterDeck, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createStage } from '../model/stagePlanner/stagePlannerHelpers';

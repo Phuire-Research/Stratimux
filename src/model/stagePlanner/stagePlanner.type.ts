@@ -7,16 +7,11 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import { Concepts } from '../concept/concept';
-import {
-  KeyedSelector,
-} from '../selectors/selector';
+import { Concepts } from '../concept/concept.type';
+import { KeyedSelector } from '../selector/selector.type';
 import { HInterface, UInterface } from '../interface';
 import { Action, ActionType } from '../action/action.type';
 import { createStage, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
-
-export type MappedSelectors = Map<string, {selector: KeyedSelector, ids: number[]}>;
-export type CurrentPlans = Map<number, Plan<any, any, any>>;
 
 export type MuxifiedSubjectProperties = {
   planId: number;

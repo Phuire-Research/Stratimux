@@ -7,7 +7,7 @@ $>*/
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { MuxiumClearBadPlanFromBadPlanListPayload } from '.';
-import { LoadConcepts } from '../../../model/concept/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClearBadPlanFromBadPlanList =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClearBadPlanFromBadPlanListPayload>({

@@ -2,11 +2,12 @@
 For the asynchronous graph programming framework Stratimux, generate a test that the setStageOption derivatives.are functioning as intended
 $>*/
 /*<#*/
-import { muxification, getMuxiumState, isMuxiumOpen } from '../model/muxium/muxium';
-import { selectState } from '../model/selectors/selector';
+import { muxification } from '../model/muxium/muxium';
+import { getMuxiumState, isMuxiumOpen } from '../model/muxium/muxiumHelpers';
+import { selectState } from '../model/selector/selector';
 import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
 import { countingTopic } from '../concepts/counter/strategies/counting.strategy';
-import { Concept } from '../model/concept/concept';
+import { Concept } from '../model/concept/concept.type';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium setStageSelectors Test', (done) => {

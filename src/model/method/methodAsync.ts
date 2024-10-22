@@ -5,7 +5,7 @@ within their own defined qualities.
 $>*/
 /*<#*/
 import { map, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { ActionDeck, Concepts, MethodCreator } from '../concept/concept';
+import { ActionDeck, Concepts, MethodCreator } from '../concept/concept.type';
 import {
   Method,
   MethodAsyncParams,
@@ -16,7 +16,7 @@ import {
   MethodCreatorAsyncWithState
 } from './method.type';
 import { createActionController$ } from '../action/actionController';
-import { selectMuxifiedState } from '../selectors/selector';
+import { selectMuxifiedState } from '../selector/selector';
 
 export const createAsyncMethod: MethodCreatorAsync =
   <S extends Record<string, unknown>, T = void, C = void>(

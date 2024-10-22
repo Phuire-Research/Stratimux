@@ -3,8 +3,8 @@ For the asynchronous graph programming framework Stratimux and Chain Concept, ge
 $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
-import { Concepts } from '../model/concept/concept';
-import { selectState } from '../model/selectors/selector';
+import { Concepts } from '../model/concept/concept.type';
+import { selectState } from '../model/selector/selector';
 import { CounterState, createCounterConcept, counterName } from '../concepts/counter/counter.concept';
 import { ChainState, chainName, createChainConcept } from '../concepts/chain/chain.concept';
 

@@ -7,10 +7,8 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import {
-  KeyedSelector,
-  createConceptKeyedSelector,
-} from '../selectors/selector';
+import { createConceptKeyedSelector } from '../selector/selector';
+import { KeyedSelector } from '../selector/selector.type';
 import { MuxifiedSubjectProperties } from './stagePlanner.type';
 import { createPriorityKey } from './stagePlannerHelpers';
 

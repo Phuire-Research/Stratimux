@@ -2,9 +2,10 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState  } from '../model/muxium/muxium';
-import { Concepts } from '../model/concept/concept';
-import { selectConcept, selectState } from '../model/selectors/selector';
+import { getMuxiumState  } from '../model/muxium/muxiumHelpers';
+import { muxification } from '../model/muxium/muxium';
+import { Concepts } from '../model/concept/concept.type';
+import { selectConcept, selectState } from '../model/selector/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';

@@ -7,11 +7,9 @@ also ensures Stratimux of its own provable termination in majority of configurat
 $>*/
 /*<#*/
 /* eslint-disable complexity */
-import {
-  KeyedSelector,
-  select,
-} from '../selectors/selector';
-import { dispatchOptions, MappedSelectors, MuxifiedSubjectProperties, Plan } from './stagePlanner.type';
+import { KeyedSelector } from '../selector/selector.type';
+import { select } from '../selector/';
+import { dispatchOptions, MuxifiedSubjectProperties, Plan } from './stagePlanner.type';
 
 // Token to denote ALL, using a selector that utilizes this token should return undefined
 const ALL = '*4||*';

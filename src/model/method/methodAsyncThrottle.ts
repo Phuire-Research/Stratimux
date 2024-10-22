@@ -5,7 +5,7 @@ within their own defined qualities.
 $>*/
 
 import { map, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { ActionDeck, Concepts, MethodCreator } from '../concept/concept';
+import { ActionDeck, Concepts, MethodCreator } from '../concept/concept.type';
 import {
   Method,
   MethodAsyncParams,
@@ -17,7 +17,7 @@ import {
 } from './method.type';
 import { throttleAction } from '../action/actionOperators';
 import { createActionController$ } from '../action/actionController';
-import { selectMuxifiedState } from '../selectors/selector';
+import { selectMuxifiedState } from '../selector/selector';
 
 /*<#*/
 export const createAsyncMethodThrottle: MethodCreatorAsyncThrottle =
@@ -33,7 +33,7 @@ export const createAsyncMethodThrottle: MethodCreatorAsyncThrottle =
       throttleAction(duration),
       switchMap((act) => {
         defaultMethod.toString = () => ('Async Throttle Method: ' + act.action.type);
-        return createActionController$(act, (params) => {
+        return createActionController$<T,C>(act, (params) => {
           asyncMethod(params);
         });
       }),
