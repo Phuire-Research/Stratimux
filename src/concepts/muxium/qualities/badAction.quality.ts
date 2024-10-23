@@ -6,7 +6,7 @@ of the bad action that was received.
 $>*/
 /*<#*/
 import { MuxiumBadActionPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 

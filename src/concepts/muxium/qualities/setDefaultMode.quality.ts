@@ -4,12 +4,14 @@ This mode likewise can be specified by changing the defaultModeIndex state prope
 $>*/
 /*<#*/
 import { Subscriber } from 'rxjs';
-import { forEachConcept, LoadConcepts } from '../../../model/concept';
-import { Action } from '../../../model/action';
+import { forEachConcept } from '../../../model/concept/conceptHelpers';
+import { LoadConcepts } from '../../../model/concept/concept.type';
+import { Action } from '../../../model/action/action.type';
 import { MuxiumState } from '../muxium.concept';
-import { defaultMethodSubscription, getMuxiumState } from '../../../model/muxium';
+import { getMuxiumState } from '../../../model/muxium/muxiumHelpers';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumSetDefaultModePayload } from '.';
+import { defaultMethodSubscription } from '../../../model/method/methodSubscription';
 
 export const muxiumSetDefaultMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModePayload>({
   type: 'set Muxium to its current Default Mode Index',

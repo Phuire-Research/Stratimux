@@ -5,7 +5,8 @@ $>*/
 import { counterAdd } from './qualities/add.quality';
 import { counterSubtract } from './qualities/subtract.quality';
 import { counterSetCount } from './qualities/setCount.quality';
-import { Concept, createConcept } from '../../model/concept';
+import { createConcept } from '../../model/concept/concept';
+import { Concept } from '../../model/concept/concept.type';
 import { counterMultiply } from './qualities/multiply.quality';
 export { countingStrategy } from './strategies/counting.strategy';
 

@@ -3,8 +3,9 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 Then when the debounce time expires enacts the counter add one quality.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy, ActionStrategyParameters } from '../../../model/action/strategy/actionStrategy.type';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { CounterDeck } from '../../counter/counter.concept';
 import { ExperimentState } from '../experiment.concept';

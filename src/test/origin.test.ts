@@ -3,14 +3,15 @@ For the asynchronous graph programming framework Stratimux, generate a test to e
 $>*/
 /*<#*/
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
-import { muxification, createOrigin, getMuxiumState } from '../model/muxium';
+import { createOrigin, getMuxiumState } from '../model/muxium/muxiumHelpers';
+import { muxification } from '../model/muxium/muxium';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
-import { CounterDeck, CounterState } from '../concepts/counter/counter.concept';
+import { CounterState } from '../concepts/counter/counter.concept';
 import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
-import { selectState } from '../model/selector';
+import { selectState } from '../model/selector/selector';
 import { PrincipleFunction } from '../model/principle';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
-import { Concept } from '../model/concept';
+import { Concept } from '../model/concept/concept.type';
 
 test('Origin Creation', (done) => {
   expect(createOrigin(['one'])).toBe('one');

@@ -1,9 +1,14 @@
-import { muxification, getMuxiumState } from '../../model/muxium';
-import { strategyBegin } from '../../model/actionStrategy';
-import { selectState } from '../../model/selector';
+/*<$
+For the asynchronous graph programming framework Stratimux generate a test that will ensure that a basic random number counting strategy
+is working as intended.
+$>*/
+/*<#*/
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
+import { muxification } from '../../model/muxium/muxium';
+import { selectState } from '../../model/selector/selector';
 import { CounterState, createCounterConcept, counterName, CounterDeck } from '../../concepts/counter/counter.concept';
 import { generateRandomCountingStrategy } from './generateCountingStrategy.strategy';
-import { createStage, stageWaitForOpenThenIterate } from '../../model/stagePlanner';
+import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium Counting Strategy Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
@@ -14,9 +19,9 @@ test('Muxium Counting Strategy Test', (done) => {
   const repeat = 10;
   let steps = 0;
   const plan = muxium.plan<CounterDeck>('Counting Strategy Stage',
-    ({e__}) => [
-      stageWaitForOpenThenIterate(() => e__.muxiumKick()),
-      createStage(({dispatch, d}) => {
+    ({e__, stage, stageO}) => [
+      stageO(() => e__.muxiumKick()),
+      stage(({dispatch, d}) => {
         const [shouldBe, strategy] = generateRandomCountingStrategy(d, count);
         strategyTopic = strategy.topic;
         expectedOutput = shouldBe;
@@ -27,7 +32,7 @@ test('Muxium Counting Strategy Test', (done) => {
           throttle: 1
         });
       }),
-      createStage(({concepts, dispatch, e}) => {
+      stage(({concepts, dispatch, e}) => {
         const muxiumState = getMuxiumState(concepts);
         const counter = selectState<CounterState>(concepts, counterName);
         console.log('HIT, AX', muxiumState.lastStrategy);
@@ -56,3 +61,4 @@ test('Muxium Counting Strategy Test', (done) => {
     ]);
   muxium.subscribe(concepts => console.log(getMuxiumState(concepts).lastStrategy));
 });
+/*#>*/

@@ -5,13 +5,12 @@ This allows for the clean closure of concepts that are removed or when the muxiu
 $>*/
 /*<#*/
 import { createQualityCardWithPayload, defaultReducer } from '../../../model/quality';
-import { createMethodWithConcepts } from '../../../model/method';
+import { createMethodWithConcepts } from '../../../model/method/method';
 import { muxiumTimeOut } from '../../../model/time';
-import { AnyAction } from '../../../model/action';
-import { strategySuccess } from '../../../model/actionStrategy';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 import { MuxiumState } from '../muxium.concept';
 import { MuxiumRegisterTimeOutPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumRegisterTimeOut = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumRegisterTimeOutPayload>({
   type: 'register an Action to Muxium\'s timerLedger',

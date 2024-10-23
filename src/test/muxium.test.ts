@@ -5,20 +5,14 @@ $>*/
 /*<#*/
 import { muxiumSelectLastStrategy } from '../concepts/muxium/muxium.selector';
 import { muxium_createStitchNode } from '../concepts/muxium/model/stitch.model';
-import {
-  ActionStrategy,
-  ActionStrategyStitch,
-  createActionNode,
-  createActionNodeFromStrategy,
-  createStrategy,
-  strategyBegin
-} from '../model/actionStrategy';
-import { muxification, getMuxiumState } from '../model/muxium';
-import { selectSlice } from '../model/selector';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice } from '../model/selector/selector';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
-import { createAction } from '../model/action';
+import { createAction } from '../model/action/action';
+import { ActionStrategy, ActionStrategyStitch } from '../model/action/strategy/actionStrategy.type';
+import { createActionNode, createActionNodeFromStrategy, createStrategy } from '../model/action/strategy/actionStrategy';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
+import { getMuxiumState } from '../model/muxium/muxiumHelpers';
 
 test('Muxium advanced usage: StrategyStitch', (done) => {
   const yourStrategyStitch: ActionStrategyStitch = () => {

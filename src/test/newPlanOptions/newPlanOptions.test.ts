@@ -4,11 +4,11 @@ test to ensure that they can change the priority of their stages and again for b
 $>*/
 /*<#*/
 import { createExperimentPlanOptionsConcept } from './newPlanOptions.concept';
-import { muxification } from '../../model/muxium';
-import { createStage } from '../../model/stagePlanner';
-import { KeyedSelector, selectSlice } from '../../model/selector';
-import { planOptionsSelect } from './newPlanOptions.selectors';
-import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
+import { muxification } from '../../model/muxium/muxium';
+import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
+import { KeyedSelector } from '../../model/selector/selector.type';
+import { selectSlice } from '../../model/selector/selector';
+import { experimentPlanOptionsReadySelector, planOptionsSelect } from './newPlanOptions.selectors';
 
 test('New Plan Options Selector Test', (done) => {
   const planNewStageSelectors = muxification('Plan New Stage Selectors Test', {

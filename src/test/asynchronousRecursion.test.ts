@@ -4,18 +4,16 @@ generate a test to ensure that the strategy consumer function strategyRecurse is
 $>*/
 /*<#*/
 import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData, muxiumSelectLastStrategyDialog } from '../concepts/muxium/muxium.selector';
-import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import { experimentRecurseIterateId } from '../concepts/experiment/qualities/recurseIncrementId.quality';
 import {
   experimentRecursivelyIterateId,
   experimentRecursivelyIterateIdTopic
 } from '../concepts/experiment/strategies/recursivelyIterateId.strategy';
-import { strategyBegin } from '../model/actionStrategy';
-import { muxification } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
-import { createStage, stageWaitForOpenThenIterate } from '../model/stagePlanner';
-import { Concept } from '../model/concept';
+import { muxification } from '../model/muxium/muxium';
+import { selectSlice, selectState } from '../model/selector/selector';
+import { Concept } from '../model/concept/concept.type';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];

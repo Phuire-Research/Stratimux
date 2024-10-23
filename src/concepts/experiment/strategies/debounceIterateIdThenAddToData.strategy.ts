@@ -3,8 +3,9 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 then debounce notify the Muxium of its conclusion while appending the ID to its data field.
 $>*/
 /*<#*/
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceIterateIdThenReceiveInMethod } from '../qualities/debounceIterateIdThenReceiveInMethod.quality';

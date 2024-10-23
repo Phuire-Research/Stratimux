@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 addConceptQue. This will then be observed via the Muxium's principle.
 $>*/
 /*<#*/
-import { AnyConcept, Concept, LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumAppendConceptsToAddQuePayload } from '.';

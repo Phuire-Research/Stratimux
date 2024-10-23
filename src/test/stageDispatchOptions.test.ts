@@ -2,8 +2,9 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure the stage planner and its options are working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState } from '../model/muxium';
-import { selectSlice, selectState } from '../model/selector';
+import { muxification } from '../model/muxium/muxium';
+import { getMuxiumState } from '../model/muxium/muxiumHelpers';
+import { selectSlice, selectState } from '../model/selector/selector';
 import { CounterState, createCounterConcept, counterName, CounterDeck } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 

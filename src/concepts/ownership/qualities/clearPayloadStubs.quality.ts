@@ -7,7 +7,7 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
-import { selectPayload } from '../../../model/selector';
+import { selectPayload } from '../../../model/selector/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
 
 export type OwnershipClearPayloadStubsPayload = {

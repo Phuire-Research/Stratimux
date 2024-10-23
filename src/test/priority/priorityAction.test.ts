@@ -4,18 +4,17 @@ is managing plan notifications as intended.
 $>*/
 /*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
-import { muxification, getMuxiumState } from '../../model/muxium';
-import { select, selectPayload, selectState } from '../../model/selector';
-import { StagePlanner, createStage } from '../../model/stagePlanner';
+import { muxification } from '../../model/muxium/muxium';
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
+import { select } from '../../model/selector/';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
-import { experimentPriorityIsReady } from './qualities/isReady.quality';
-import { experimentPriorityAddValue } from './qualities/addValue.quality';
 import { handlePriority } from '../../model/priority';
 import { CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSetCount } from '../../concepts/counter/qualities/setCount.quality';
 import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
+import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
 
 test('Priority Action Test', (done) => {
   console.log('Priority Test');
@@ -147,10 +146,10 @@ test('Priority Action Manual Test', (done) => {
     handlePriority(muxiumState, two);
     handlePriority(muxiumState, three);
     handlePriority(muxiumState, four);
-    expect(selectPayload<SetCount>(body[0]).newCount).toBe(selectPayload<SetCount>(one).newCount);
-    expect(selectPayload<SetCount>(body[1]).newCount).toBe(selectPayload<SetCount>(three).newCount);
-    expect(selectPayload<SetCount>(body[2]).newCount).toBe(selectPayload<SetCount>(two).newCount);
-    expect(selectPayload<SetCount>(body[3]).newCount).toBe(selectPayload<SetCount>(four).newCount);
+    expect(select.payload<SetCount>(body[0]).newCount).toBe(select.payload<SetCount>(one).newCount);
+    expect(select.payload<SetCount>(body[1]).newCount).toBe(select.payload<SetCount>(three).newCount);
+    expect(select.payload<SetCount>(body[2]).newCount).toBe(select.payload<SetCount>(two).newCount);
+    expect(select.payload<SetCount>(body[3]).newCount).toBe(select.payload<SetCount>(four).newCount);
     expect(body[4].type).toBe(kick.type);
     done();
   });
@@ -191,10 +190,10 @@ test('Priority Action Close Test', (done) => {
     handlePriority(muxiumState, two);
     handlePriority(muxiumState, three);
     handlePriority(muxiumState, four);
-    expect(selectPayload<SetCount>(body[0]).newCount).toBe(selectPayload<SetCount>(one).newCount);
-    expect(selectPayload<SetCount>(body[1]).newCount).toBe(selectPayload<SetCount>(three).newCount);
-    expect(selectPayload<SetCount>(body[2]).newCount).toBe(selectPayload<SetCount>(two).newCount);
-    expect(selectPayload<SetCount>(body[3]).newCount).toBe(selectPayload<SetCount>(four).newCount);
+    expect(select.payload<SetCount>(body[0]).newCount).toBe(select.payload<SetCount>(one).newCount);
+    expect(select.payload<SetCount>(body[1]).newCount).toBe(select.payload<SetCount>(three).newCount);
+    expect(select.payload<SetCount>(body[2]).newCount).toBe(select.payload<SetCount>(two).newCount);
+    expect(select.payload<SetCount>(body[3]).newCount).toBe(select.payload<SetCount>(four).newCount);
     expect(body[4].type).toBe(kick.type);
     let dispatched = false;
     muxium.subscribe(cpts => {
@@ -206,7 +205,7 @@ test('Priority Action Close Test', (done) => {
         preClose.priority = 100000;
         muxium.dispatch(preClose);
       }
-      expect(selectState<CounterState>(cpts, counterName)?.count).toBe(0);
+      expect(select.state<CounterState>(cpts, counterName)?.count).toBe(0);
       if (!dispatched) {
         setTimeout(() => {
           done();

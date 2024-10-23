@@ -3,15 +3,11 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 dispatch the next action in the incoming strategy, then throttle the quality for a period of time.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { MuxifiedSubject } from '../../../model/stagePlanner';
-import { createMethodThrottleWithState } from '../../../model/method';
-import { selectPayload } from '../../../model/selector';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
-import { Subject } from 'rxjs';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { createMethodThrottleWithState } from '../../../model/method/methodThrottle';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
   setId: number;

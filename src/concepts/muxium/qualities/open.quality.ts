@@ -9,7 +9,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { OpenPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumOpen = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, OpenPayload>({
   type: 'Open Muxium',

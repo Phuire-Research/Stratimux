@@ -1,3 +1,8 @@
+/*<$
+For the asynchronous graph programming framework Stratimux generate an Experiment Concept that will be used to test
+the ability to change plan options at runtime.
+$>*/
+/*<#*/
 import { createExperimentConcept } from '../../concepts/experiment/experiment.concept';
 import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
 import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
@@ -40,3 +45,4 @@ export const createExperimentPlanOptionsConcept = () => createExperimentConcept<
   experimentPlanOptionsQualities,
   []
 );
+/*#>*/

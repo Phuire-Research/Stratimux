@@ -3,14 +3,11 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 Then its method will asynchronously unify the state's id value onto the strategy.
 $>*/
 /*<#*/
-import { Concepts } from '../../../model/concept';
 import { ExperimentState } from '../experiment.concept';
-import { MuxifiedSubject } from '../../../model/stagePlanner';
-import { createAsyncMethodWithState } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
-import { Subject } from 'rxjs';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCard } from '../../../model/quality';
+import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const experimentAsyncIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
   type: 'Experiment asynchronously iterate ID then receive in Method via State',

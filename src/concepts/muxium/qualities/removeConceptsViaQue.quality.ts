@@ -7,9 +7,9 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { NamedSubscription } from '../muxium.concept';
 import { MuxiumState } from '../muxium.concept';
-import { NamedStagePlanner } from '../../../model/stagePlanner';
+import { NamedStagePlanner } from '../../../model/stagePlanner/stagePlanner.type';
 import { createQualityCard } from '../../../model/quality';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumRemoveConceptsViaQue = createQualityCard<MuxiumState<unknown, LoadConcepts>>({
   type: 'remove Concepts via Muxium\'s Removal Concept Que',

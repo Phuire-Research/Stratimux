@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 $>*/
 /*<#*/
 import { MuxiumState } from '../muxium.concept';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { createMethod } from '../../../model/method';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
+import { createMethod } from '../../../model/method/method';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumSetModePayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumSetMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetModePayload>({
   type: 'set Muxium Mode',

@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux and Ownership Concept
 generate a quality clear pending actions of the provided ActionStrategy topic.
 $>*/
 /*<#*/
-import { Action } from '../../../model/action';
 import { OwnershipState } from '../ownership.concept';
-import { ActionStrategyTopic } from '../../../model/actionStrategy';
-import { selectPayload } from '../../../model/selector';
+import { selectPayload } from '../../../model/selector/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { ActionStrategyTopic } from '../../../model/action/strategy/actionStrategy.type';
+import { Action } from '../../../model/action/action.type';
 
 export type OwnershipClearPendingActionsOfStrategyPayload = {
   topic: ActionStrategyTopic

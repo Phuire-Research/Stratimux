@@ -4,12 +4,12 @@ generate a quality that will set the Muxium's mode to blocking. While in this mo
 the Muxium operates in a synchronous behavior to quickly modify the Muxium's conceptual set.
 $>*/
 /*<#*/
-import { BehaviorSubject, Subject, Subscriber } from 'rxjs';
-import { Concepts, forEachConcept, LoadConcepts } from '../../../model/concept';
-import { Action } from '../../../model/action';
+import { Subscriber } from 'rxjs';
+import { LoadConcepts } from '../../../model/concept/concept.type';
+import { forEachConcept } from '../../../model/concept/conceptHelpers';
+import { Action } from '../../../model/action/action.type';
 import { MuxiumState } from '../muxium.concept';
-import { blockingMethodSubscription } from '../../../model/muxium';
-import { selectPayload } from '../../../model/selector';
+import { blockingMethodSubscription } from '../../../model/method/methodSubscription';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumSetBlockingModePayload } from '.';
 

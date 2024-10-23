@@ -5,16 +5,16 @@ ownershipLedger's contents. Only actions that are first in all lines of their ti
 may be dispatched into the Muxium. This principle will also clear duplicate strategies, and handle actions if their agreement has expired.
 $>*/
 /*<#*/
-import { PrincipleFunction } from '../../model/principle';
-import { OwnershipDeck, OwnershipPrinciple, OwnershipQualities, OwnershipState, ownershipName} from '../ownership/ownership.concept';
+import { OwnershipPrinciple, OwnershipState, ownershipName} from '../ownership/ownership.concept';
 import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode.strategy';
-import { Action, AnyAction, areSemaphoresEqual, createAction, primeAction } from '../../model/action';
-import { selectMuxifiedState } from '../../model/selector';
-import { strategyBegin } from '../../model/actionStrategy';
+import { selectMuxifiedState } from '../../model/selector/selector';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
-import { StagePlanner } from '../../model/stagePlanner';
-import { failureConditions, strategyData_appendFailure } from '../../model/actionStrategyData';
+import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
+import { failureConditions, strategyData_appendFailure } from '../../model/action/strategy/actionStrategyData';
 import { MuxiumBadActionPayload } from '../muxium/qualities';
+import { Action, AnyAction } from '../../model/action/action.type';
+import { areSemaphoresEqual } from '../../model/action/actionSemaphore';
+import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {

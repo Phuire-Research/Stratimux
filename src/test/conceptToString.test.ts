@@ -2,9 +2,9 @@
 For the asynchronous graph programming framework Stratimux, generate a test that logs how a concept would be parsed to a stream to the console.
 $>*/
 /*<#*/
-import { muxification } from '../model/muxium';
+import { muxification } from '../model/muxium/muxium';
 import { createCounterConcept } from '../concepts/counter/counter.concept';
-import { conceptsToString } from '../model/concept';
+import { conceptsToString } from '../model/concept/conceptHelpers';
 
 test('Muxium Counting Strategy Test', (done) => {
   const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});

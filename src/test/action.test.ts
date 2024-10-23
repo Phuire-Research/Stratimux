@@ -2,7 +2,7 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that actions are being created as intended.
 $>*/
 /*<#*/
-import { createAction } from '../model/action';
+import { createAction } from '../model/action/action';
 import { counterAdd } from '../concepts/counter/qualities/add.quality';
 
 test('Muxium add Concepts Strategy Test', (done) => {

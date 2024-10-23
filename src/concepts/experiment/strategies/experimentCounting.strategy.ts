@@ -4,16 +4,16 @@ generate a strategy that will take ownership of the Counter's count state proper
 Then proceed to increment and decrement the count over a sequence that in total only increments to count by one.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept, } from '../../../model/concept';
+import { Concept, } from '../../../model/concept/concept.type';
 import { CounterDeck, } from '../../counter/counter.concept';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { OwnershipDeck } from '../../ownership/ownership.concept';
 import { experimentCheckInStrategy } from '../qualities/checkInStrategy.quality';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
-import { Quality } from '../../../model/quality';
 import { MuxiumDeck } from '../../muxium/muxium.concept';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 
 const qs = {experimentCheckInStrategy};
 type ExperimentDeck = {experiment: Concept<ExperimentState, typeof qs>};

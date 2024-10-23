@@ -2,11 +2,10 @@
 For the asynchronous graph programming framework Stratimux, define the Interface model file.
 $>*/
 
-import { MuxiumQualities } from '../concepts/muxium/qualities';
-import { Action, Actions } from './action';
-import { AnyConcept, Concept, LoadConcepts } from './concept';
+import { Action, Actions } from './action/action.type';
+import { LoadConcepts } from './concept/concept.type';
 import { Deck } from './deck';
-import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
+import { BundledSelectors } from './selector/selector.type';
 
 /*<#*/
 /**

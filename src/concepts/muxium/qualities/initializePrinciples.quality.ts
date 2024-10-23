@@ -4,15 +4,17 @@ generate a quality that will initialize principles loaded into the Muxium's conc
 $>*/
 /*<#*/
 import { Subject, Subscriber } from 'rxjs';
-import { forEachConcept, LoadConcepts  } from '../../../model/concept';
+import { forEachConcept } from '../../../model/concept/conceptHelpers';
+import { LoadConcepts  } from '../../../model/concept/concept.type';
 import { PrincipleFunction, createPrinciple$ } from '../../../model/principle';
-import { Action, Actions, } from '../../../model/action';
 import { MuxiumState, muxiumName } from '../muxium.concept';
-import { Planning, MuxifiedSubject } from '../../../model/stagePlanner';
+import { MuxifiedSubject } from '../../../model/stagePlanner/stagePlanner';
 import { createQualityCardWithPayload, defaultMethodCreator } from '../../../model/quality';
 import { MuxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
-import { BundledSelectors, Selectors } from '../../../model/selector';
+import { BundledSelectors } from '../../../model/selector/selector.type';
+import { Action, Actions } from '../../../model/action/action.type';
+import { Planning } from '../../../model/stagePlanner/stagePlanner.type';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({

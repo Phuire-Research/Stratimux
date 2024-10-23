@@ -1,6 +1,18 @@
+/*<$
+For the asynchronous graph programming framework Stratimux and a Experiment PlanOptions Concept, generate the possible selectors based on
+the state declared in the concept file.
+$>*/
+/*<#*/
 import { experimentName } from '../../concepts/experiment/experiment.concept';
 import { select } from '../../model/selector';
+import { KeyedSelector } from '../../model/selector/selector.type';
 import { ExperimentPlanOptionsState } from './newPlanOptions.concept';
+
+export const experimentPlanOptionsReadySelector: KeyedSelector =
+  select.createConceptKeyedSelector<ExperimentPlanOptionsState>(experimentName, 'ready');
+
+export const experimentPlanOptionsValueSelector: KeyedSelector =
+  select.createConceptKeyedSelector<ExperimentPlanOptionsState>(experimentName, 'value');
 
 const experimentSelectOne = select.createConceptKeyedSelector<ExperimentPlanOptionsState>(experimentName, 'one');
 
@@ -25,3 +37,4 @@ export const planOptionsSelect = {
   six: experimentSelectSix,
   seven: experimentSelectSeven
 };
+/*#>*/

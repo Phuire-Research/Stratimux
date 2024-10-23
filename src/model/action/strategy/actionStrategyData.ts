@@ -8,7 +8,8 @@ if being observed via a plan or subscription.
 $>*/
 /*<#*/
 // eslint-disable-next-line no-shadow
-import { ActionStrategy } from './actionStrategy';
+
+import { ActionStrategy } from './actionStrategy.type';
 
 // eslint-disable-next-line no-shadow
 export enum failureConditions {

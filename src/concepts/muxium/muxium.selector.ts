@@ -2,8 +2,9 @@
 For the asynchronous graph programming framework Stratimux and Muxium Concept, generate a series of KeyedSelectors for the MuxiumState<unknown,unknown>.
 $>*/
 /*<#*/
-import { LoadConcepts } from '../../model/concept';
-import { KeyedSelector, createConceptKeyedSelector } from '../../model/selector';
+import { LoadConcepts } from '../../model/concept/concept.type';
+import { createConceptKeyedSelector } from '../../model/selector/selector';
+import { KeyedSelector } from '../../model/selector/selector.type';
 import { MuxiumState } from './muxium.concept';
 
 export const muxiumSelectOpen: KeyedSelector = createConceptKeyedSelector<MuxiumState<unknown, LoadConcepts>>('muxium', 'open');

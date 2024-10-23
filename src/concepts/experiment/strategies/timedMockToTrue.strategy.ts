@@ -4,8 +4,9 @@ generate a strategy that will eventually set the Experiment's mock property
 to true. This is accomplished via a timer emit action quality. That will then finally dispatch the setting action.
 $>*/
 /*<#*/
-import { ActionStrategy, ActionStrategyParameters, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { experimentMockToTrue } from '../qualities/mockToTrue.quality';

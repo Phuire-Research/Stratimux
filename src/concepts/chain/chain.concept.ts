@@ -6,7 +6,7 @@ And would be considered a precursor to ActionStrategy.
 $>*/
 /*<#*/
 import { Action, MuxiumDeck, PrincipleFunction } from '../../index';
-import { createConcept } from '../../model/concept';
+import { createConcept } from '../../model/concept/concept';
 import { chainPrinciple } from './chain.principle';
 import { chainEnd } from './qualities/chainEnd.quality';
 import { chainPrepareChain } from './qualities/prepareChain.quality';

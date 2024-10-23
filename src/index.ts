@@ -3,7 +3,9 @@ For the asynchronous graph programming framework Stratimux,
 define the current index file that exports all public functionality for the framework as a module.
 $>*/
 /*<#*/
-export { muxification, getMuxiumState, Muxium, isMuxiumOpen } from './model/muxium';
+export { muxification } from './model/muxium/muxium';
+export { getMuxiumState, isMuxiumOpen } from './model/muxium/muxiumHelpers';
+export { Muxium } from './model/muxium/muxium.type';
 export type {
   ActionNode,
   ActionNotes,
@@ -12,7 +14,7 @@ export type {
   ActionStrategyParameters,
   ActionStrategyStitch,
   ActionStrategyCreator
-} from './model/actionStrategy';
+} from './model/action/strategy/actionStrategy.type';
 export {
   Deck,
   Decks,
@@ -21,17 +23,23 @@ export {
   createStrategy,
   createActionNode,
   createActionNodeFromStrategy,
+} from './model/action/strategy/actionStrategy';
+export {
   strategyBegin,
-  strategySuccess,
-  strategyFailed,
   strategyDecide,
+  strategyFailed,
+  strategySuccess
+} from './model/action/strategy/actionStrategyConsumers';
+export {
+  strategyBackTrack,
   strategyDetermine,
   strategyPunt,
-  strategySequence,
-  strategyBackTrack,
   strategyRecurse,
-  strategy
-} from './model/actionStrategy';
+  strategySequence
+} from './model/action/strategy/actionStrategyConsumersAdvanced';
+export {
+  strata
+} from './model/action/strategy';
 export {
   failureConditions,
   strategyData_appendFailure,
@@ -40,32 +48,44 @@ export {
   strategyData_select,
   strategyData_muxifyData,
   strategyData
-} from './model/actionStrategyData';
+} from './model/action/strategy/actionStrategyData';
 export {
   createMethod,
-  createAsyncMethod,
   createMethodWithState,
+  createMethodWithConcepts,
+} from './model/method/method';
+export {
+  createAsyncMethod,
   createAsyncMethodWithState,
-  createMethodDebounce,
+  createAsyncMethodWithConcepts
+} from './model/method/methodAsync';
+export {
   createAsyncMethodDebounce,
-  createMethodDebounceWithState,
   createAsyncMethodDebounceWithState,
-  createMethodThrottle,
-  createMethodThrottleWithState,
+  createAsyncMethodDebounceWithConcepts
+} from './model/method/methodAsyncDebounce';
+export {
   createAsyncMethodThrottle,
   createAsyncMethodThrottleWithState,
-  createMethodWithConcepts,
-  createAsyncMethodWithConcepts,
-  createMethodThrottleWithConcepts,
-  createMethodDebounceWithConcepts,
   createAsyncMethodThrottleWithConcepts,
-  createAsyncMethodDebounceWithConcepts,
+} from './model/method/methodAsyncThrottle';
+export {
+  createMethodDebounce,
+  createMethodDebounceWithState,
+  createMethodDebounceWithConcepts
+} from './model/method/methodDebounce';
+export {
+  createMethodThrottle,
+  createMethodThrottleWithState,
+  createMethodThrottleWithConcepts
+} from './model/method/methodThrottle';
+export {
   method
 } from './model/method';
 export {
   debounceAction,
   throttleAction
-} from './model/actionOperators';
+} from './model/action/actionOperators';
 export type {
   Action,
   AnyAction,
@@ -74,27 +94,37 @@ export type {
   ActionCreatorWithPayload,
   ActionOptions,
   ActionWithPayloadOptions
-} from './model/action';
+} from './model/action/action.type';
 export {
   primeAction,
   createAction,
-  getSemaphore,
   prepareActionCreator,
   prepareActionWithPayloadCreator,
   refreshAction,
+} from './model/action/action';
+export {
+  getSemaphore
+} from './model/action/actionSemaphore';
+export {
   act
 } from './model/action';
 export {
+  concept
+} from './model/concept/';
+export {
   createConcept,
+} from './model/concept/concept';
+export {
   isConceptLoaded,
   areConceptsLoaded,
-  muxifyConcepts,
   forEachConcept,
   conceptToString,
   conceptsToString,
   getConceptSemaphore,
-  concept
-} from './model/concept';
+} from './model/concept/conceptHelpers';
+export {
+  muxifyConcepts,
+} from './model/concept/conceptAdvanced';
 export type {
   Concept,
   Concepts,
@@ -107,7 +137,7 @@ export type {
   AnyConcept,
   ConceptDeck,
   SpecificReducer
-} from './model/concept';
+} from './model/concept/concept.type';
 export {
   createQualityCard,
   createQualityCardWithPayload,
@@ -118,7 +148,7 @@ export {
   quality,
   Qualities
 } from './model/quality';
-export type { KeyedSelector } from './model/selector';
+export type { KeyedSelector } from './model/selector/selector.type';
 export {
   selectState,
   selectConcept,
@@ -126,19 +156,22 @@ export {
   selectPayload,
   selectMuxifiedState,
   selectMuxifiedName,
-  updateMuxifiedKeyedSelector,
   createConceptKeyedSelector,
   createMuxifiedKeyedSelector,
   createAdvancedKeys,
-  select,
-} from './model/selector';
+} from './model/selector/selector';
+export {
+  updateMuxifiedKeyedSelector,
+} from './model/selector/selectorAdvanced';
+export { select } from './model/selector';
 export type {
   DotPath
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
-export { createActionController$, actionController } from './model/actionController';
-export type { dispatchOptions, Staging, MuxifiedSubject, StagePlanner, NamedStagePlanner } from './model/stagePlanner';
-export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner';
+export { createActionController$, actionController } from './model/action/actionController';
+export type { dispatchOptions, Staging, StagePlanner, NamedStagePlanner } from './model/stagePlanner/stagePlanner.type';
+export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner/stagePlannerHelpers';
+export { MuxifiedSubject } from './model/stagePlanner/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
 export { muxiumTimeOut } from './model/time';
@@ -147,7 +180,12 @@ export { muxiumTimeOut } from './model/time';
 // Muxium
 export { MuxiumState, muxiumName, muxificationConcept, MuxiumDeck } from './concepts/muxium/muxium.concept';
 export { blockingMode, permissiveMode } from './concepts/muxium/muxium.mode';
-export { muxiumSelectOpen, muxiumSelectLastStrategy, muxiumSelectBadActions, muxiumSelectBadPlans } from './concepts/muxium/muxium.selector';
+export {
+  muxiumSelectOpen,
+  muxiumSelectLastStrategy,
+  muxiumSelectBadActions,
+  muxiumSelectBadPlans
+} from './concepts/muxium/muxium.selector';
 // Models
 export {
   MuxiumGatherNode,

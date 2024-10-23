@@ -4,8 +4,9 @@ generate a single step strategy that will iterate the Experiment state ID,
 then debounce and asynchronously notify the Muxium of the strategy's conclusion.
 $>*/
 /*<#*/
-import { ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceAsyncIterateIdThenReceiveInMethod } from '../qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';

@@ -6,10 +6,13 @@ reached its expiration. Emitting a Strategy Failed if the Action was a Strategy,
 not provided.
 $>*/
 /*<#*/
-import { Action, AnyAction, muxiumBadAction, createAction, Deck, strategyFailed } from '../index';
 import { Subject } from 'rxjs';
-import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
-import { ActionDeck, Self } from './concept';
+import { failureConditions, strategyData_appendFailure } from './strategy/actionStrategyData';
+import { ActionDeck, Self } from '../concept/concept.type';
+import { Action, AnyAction } from './action.type';
+import { createAction } from './action';
+import { Deck } from '../deck';
+import { strategyFailed } from './strategy/actionStrategyConsumers';
 
 const badAction = (payload: {
   badActions: AnyAction[]

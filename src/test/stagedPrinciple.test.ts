@@ -2,14 +2,12 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that you can create a stage planner within a concept's principle.
 $>*/
 /*<#*/
-import { muxification } from '../model/muxium';
-import { selectState } from '../model/selector';
+import { muxification } from '../model/muxium/muxium';
+import { selectState } from '../model/selector/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
-import { Action } from '../model/action';
-import { muxiumPreClose } from '../concepts/muxium/qualities/preClose.quality';
+import { Action } from '../model/action/action.type';
 import { createQualityCard } from '../model/quality';
-import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
 
 type ExperimentState = {

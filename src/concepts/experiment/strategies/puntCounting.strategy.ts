@@ -4,7 +4,9 @@ generate a strategy that will punt a counting strategy in favor of a new
 strategy that will check in the punted strategy into an actionQue. That will later be dispatched via a principle.
 $>*/
 /*<#*/
-import { ActionStrategy, createActionNode, createStrategy, strategyPunt } from '../../../model/actionStrategy';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { strategyPunt } from '../../../model/action/strategy/actionStrategyConsumersAdvanced';
 import { counterSelectCount } from '../../counter/counter.selector';
 import { additionalCountingStrategy } from '../../counter/strategies/counting.strategy';
 import { ExperimentCountingDeck } from './experimentCounting.strategy';

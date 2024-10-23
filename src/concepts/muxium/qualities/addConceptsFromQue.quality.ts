@@ -6,7 +6,7 @@ $>*/
 import { defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCard } from '../../../model/quality';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumAddConceptsFromQue =
   createQualityCard<MuxiumState<unknown, LoadConcepts>>({

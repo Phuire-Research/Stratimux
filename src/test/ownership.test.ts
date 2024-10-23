@@ -2,26 +2,24 @@
 For the asynchronous graph programming framework Stratimux and Ownership Concept, devise a test that will ensure that the concept is working as intended.
 $>*/
 /*<#*/
-import { muxification, getMuxiumState  } from '../model/muxium';
-import { ConceptDeck, Concepts } from '../model/concept';
-import { selectConcept, selectState } from '../model/selector';
+import { getMuxiumState  } from '../model/muxium/muxiumHelpers';
+import { muxification } from '../model/muxium/muxium';
+import { Concepts } from '../model/concept/concept.type';
+import { selectConcept, selectState } from '../model/selector/selector';
 import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
-import { MuxiumState } from '../concepts/muxium/muxium.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
 import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
-import { strategyBegin } from '../model/actionStrategy';
 import {
   ExperimentCountingDeck,
   experimentCountingStrategy,
   experimentCountingTopic,
 } from '../concepts/experiment/strategies/experimentCounting.strategy';
-import { muxiumLog } from '../concepts/muxium/qualities/log.quality';
-import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { experimentCheckInStrategy } from '../concepts/experiment/qualities/checkInStrategy.quality';
 import { experimentActionQuePrincipleCreator } from '../concepts/experiment/experiment.principle';
 import { additionalCountingStrategyTopic } from '../concepts/counter/strategies/counting.strategy';
+import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];

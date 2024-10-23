@@ -3,14 +3,15 @@ For the asynchronous graph programming framework Stratimux and Muxium Concept, g
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { ActionDeck, Concepts, Mode } from '../../model/concept';
-import { Action, AnyAction, primeAction } from '../../model/action';
+import { ActionDeck, Concepts, Mode } from '../../model/concept/concept.type';
+import { primeAction } from '../../model/action/action';
 import { MuxiumState } from './muxium.concept';
-import { MuxifiedSubject } from '../../model/stagePlanner';
-import { getMuxiumState } from '../../model/muxium';
+import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
+import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { MuxiumBadActionPayload } from './qualities';
-import { KeyedSelector, updateAtomicSelects } from '../../model/selector';
+import { updateAtomicSelects } from '../../model/selector/selectorAdvanced';
 import { Deck } from '../../model/deck';
+import { Action, AnyAction } from '../../model/action/action.type';
 
 export const isActionable = (muxiumState: MuxiumState<any, any>, action: Action): boolean => {
   let actionable = true;

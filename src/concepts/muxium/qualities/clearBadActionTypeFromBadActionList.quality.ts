@@ -8,7 +8,7 @@ import { defaultMethodCreator } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumClearBadActionTypeFromBadActionListPayload } from '.';
-import { LoadConcepts } from '../../../model/concept';
+import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClearBadActionTypeFromBadActionList =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClearBadActionTypeFromBadActionListPayload>({

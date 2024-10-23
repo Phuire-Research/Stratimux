@@ -4,9 +4,9 @@ This is used to trouble shoot strategies or simply notify the log of different s
 $>*/
 /*<#*/
 import { nullReducer } from '../../../model/quality';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { createMethod } from '../../../model/method';
+import { createMethod } from '../../../model/method/method';
 import { createQualityCard } from '../../../model/quality';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const muxiumLog = createQualityCard({
   type: 'logged a message passed to Muxium',

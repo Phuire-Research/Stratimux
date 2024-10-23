@@ -3,10 +3,7 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 the incoming action's payload
 $>*/
 /*<#*/
-import { ExperimentState } from '../../../concepts/experiment/experiment.concept';
-import { Action } from '../../../model/action';
 import { quality } from '../../../model/quality';
-import { select } from '../../../model/selector';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
 export type ExperimentPlanOptionsAddValuePayload = {

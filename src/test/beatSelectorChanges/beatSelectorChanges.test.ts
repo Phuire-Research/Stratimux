@@ -3,12 +3,10 @@ For the asynchronous graph programming framework Stratimux generate a test that 
 utilizing the provided BeatSelectorChanges concept
 $>*/
 /*<#*/
-import { muxification, getMuxiumState, isMuxiumOpen } from '../../model/muxium';
-import { createStage } from '../../model/stagePlanner';
+import { muxification } from '../../model/muxium/muxium';
+import { getMuxiumState, isMuxiumOpen } from '../../model/muxium/muxiumHelpers';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
-import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
-import { initializeTopic } from '../../concepts/muxium/strategies/initialization.strategy';
-import { strategyBegin } from '../../model/actionStrategy';
+import { BeatSelectorChangesDeck, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
 import {
   beatSelectorChangesSelectCountFive,
   beatSelectorChangesSelectCountFour,
@@ -18,9 +16,10 @@ import {
   beatSelectorChangesSelectCountThree,
   beatSelectorChangesSelectCountTwo
 } from './beatSelectorChanges.selector';
-import { selectSlice, selectState } from '../../model/selector';
+import { selectSlice } from '../../model/selector/selector';
 import { Deck } from '../../model/deck';
 import { MuxiumDeck } from '../../concepts/muxium/muxium.concept';
+import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
 jest.setTimeout(30000);
 test('Deferred Beat Selector Changes Test', (done) => {
   const beat = 7000;
@@ -28,15 +27,15 @@ test('Deferred Beat Selector Changes Test', (done) => {
     beatSelectors: createBeatSelectorChangesConcept()
   });
   const [tally, strategy, topic] = generateRandomCountingStrategy(muxium.deck.d as Deck<MuxiumDeck & BeatSelectorChangesDeck>);
-  const plan = muxium.plan('Prolonged Counting Strategy', () => [
-    createStage(({concepts, dispatch}) => {
+  const plan = muxium.plan('Prolonged Counting Strategy', ({stage}) => [
+    stage(({concepts, dispatch}) => {
       if (isMuxiumOpen(concepts)) {
         dispatch(strategyBegin(strategy), {
           iterateStage: true
         });
       }
     }),
-    createStage(({concepts, changes}) => {
+    stage(({concepts, changes}) => {
       if (getMuxiumState(concepts).lastStrategy === topic) {
         expect(selectSlice(concepts, beatSelectorChangesSelectCountOne)).toBe(tally[0]);
         expect(selectSlice(concepts, beatSelectorChangesSelectCountTwo)).toBe(tally[1]);

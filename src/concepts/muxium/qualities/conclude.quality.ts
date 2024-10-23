@@ -5,7 +5,10 @@ Functionally. This is a pure action with no method or reducer. That will instead
 within each qualities method if specified. As well as ownership if loaded in the Muxium's concept set.
 $>*/
 /*<#*/
-import { ActionType, getSpecialSemaphore, prepareActionCreator } from '../../../model/action';
+
+import { prepareActionCreator } from '../../../model/action/action';
+import { ActionType } from '../../../model/action/action.type';
+import { getSpecialSemaphore } from '../../../model/action/actionSemaphore';
 
 /**
  * muxiumConcludeType

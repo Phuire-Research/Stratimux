@@ -3,8 +3,9 @@ For the asynchronous graph programming framework Stratimux generate an ActionStr
 BeatSelectorChanges count variants for 100 steps.
 $>*/
 /*<#*/
-import { ActionNode, ActionStrategy, createActionNode, createStrategy } from '../../../model/actionStrategy';
 import { MuxiumDeck } from '../../../concepts/muxium/muxium.concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionNode, ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
 import { Deck } from '../../../model/deck';
 import { BeatSelectorChangesDeck } from '../beatSelectorChanges.concept';
 

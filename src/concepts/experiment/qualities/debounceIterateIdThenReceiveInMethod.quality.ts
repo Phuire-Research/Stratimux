@@ -5,10 +5,10 @@ That will finally unify the state id and setId from the payload into the most re
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { createMethodDebounceWithState } from '../../../model/method';
-import { strategySuccess } from '../../../model/actionStrategy';
-import { strategyData_muxifyData } from '../../../model/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
+import { createMethodDebounceWithState } from '../../../model/method/methodDebounce';
+import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;

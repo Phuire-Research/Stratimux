@@ -4,9 +4,9 @@ $>*/
 /*<#*/
 import { CounterDeck, CounterState, counterName, createCounterConcept } from '../../concepts/counter/counter.concept';
 import { counterSelectCount } from '../../concepts/counter/counter.selector';
-import { createAction } from '../../model/action';
-import { muxification } from '../../model/muxium';
-import { selectState } from '../../model/selector';
+import { createAction } from '../../model/action/action';
+import { muxification } from '../../model/muxium/muxium';
+import { selectState } from '../../model/selector/selector';
 
 test('Muxium Register Time Out', (done) => {
   const muxium = muxification('timeout defer actions', {counter: createCounterConcept()});

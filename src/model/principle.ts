@@ -5,15 +5,15 @@ within its recursive run time.
 $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept';
-import { Action, Actions } from './action';
-import { Planning } from './stagePlanner';
-import { BundledSelectors, KeyedSelectors, Selectors } from './selector';
+import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept/concept.type';
+import { Action, Actions } from './action/action.type';
+import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { BInterface, Comparators } from './interface';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
 import { Deck, accessDeck } from './deck';
 import { access } from 'fs';
 import { Qualities } from './quality';
+import { Planning } from './stagePlanner/stagePlanner.type';
 
 export type PrincipleInterface<Q = void, C = void, S = void> = {
   observer: Subscriber<Action>,

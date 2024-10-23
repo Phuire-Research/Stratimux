@@ -3,11 +3,11 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 The final step of the strategy will increment the Counter's count by one.
 $>*/
 /*<#*/
-import { createStrategy, ActionStrategy, ActionStrategyParameters, createActionNode } from '../../../model/actionStrategy';
-import { Concept } from '../../../model/concept';
+import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
+import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
+import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
 import { CounterDeck } from '../../counter/counter.concept';
-import { counterAdd } from '../../counter/qualities/add.quality';
 import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceNextActionNode } from '../qualities/debounceNextActionNode.quality';
 
