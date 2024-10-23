@@ -1,6 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Muxium model file.
-This file dictates the creation of the Muxium itself and engages all necessary parts to ensure its functionality
+This file dictates the creation of a Muxium and engages all necessary parts to ensure its functionality
 as a provably recursive terminating function.
 $>*/
 /*<#*/

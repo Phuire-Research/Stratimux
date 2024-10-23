@@ -10,7 +10,7 @@ import { ownershipSetOwnershipModeStrategy } from './strategies/setOwnerShipMode
 import { selectMuxifiedState } from '../../model/selector/selector';
 import { OwnershipTicket, createOwnershipLedger, isActionReady } from '../../model/ownership';
 import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
-import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from '../../model/action/strategy/actionStrategyData';
 import { MuxiumBadActionPayload } from '../muxium/qualities';
 import { Action, AnyAction } from '../../model/action/action.type';
 import { areSemaphoresEqual } from '../../model/action/actionSemaphore';

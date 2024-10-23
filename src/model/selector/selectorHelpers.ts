@@ -1,6 +1,6 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, define the Selector model file.
-This file will contain a series of selectors that can be used to engage with different parts of the Muxium Conceptual Set.
+For the asynchronous graph programming framework Stratimux, define the Selector Helper model file.
+This file defines a series of functions that are used to aid in the creation of Selectors.
 $>*/
 /*<#*/
 import { SelectorFunction } from './selector.type';

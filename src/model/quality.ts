@@ -2,9 +2,7 @@
 For the asynchronous graph programming framework Stratimux, define the Quality model file.
 This model allows for qualities to be made at a single point of entry, reducing the complexity of defining such.
 $>*/
-
 /*<#*/
-
 import { Subject, map } from 'rxjs';
 import {
   prepareActionCreator,

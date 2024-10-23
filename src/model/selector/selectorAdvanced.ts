@@ -1,6 +1,6 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, define the Selector model file.
-This file will contain a series of selectors that can be used to engage with different parts of the Muxium Conceptual Set.
+For the asynchronous graph programming framework Stratimux, define the Selector Advanced model file.
+This file sets the function definitions for advanced utilization of Stratimux Selector Functions.
 $>*/
 /*<#*/
 import { AnyConcept, Concepts } from '../concept/concept.type';

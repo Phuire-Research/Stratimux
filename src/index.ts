@@ -48,7 +48,7 @@ export {
   strategyData_select,
   strategyData_muxifyData,
   strategyData
-} from './model/action/actionStrategyData';
+} from './model/action/strategy/actionStrategyData';
 export {
   createMethod,
   createMethodWithState,

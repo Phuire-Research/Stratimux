@@ -9,7 +9,7 @@ $>*/
 /*<#*/
 // eslint-disable-next-line no-shadow
 
-import { ActionStrategy } from './strategy/actionStrategy.type';
+import { ActionStrategy } from './actionStrategy.type';
 
 // eslint-disable-next-line no-shadow
 export enum failureConditions {

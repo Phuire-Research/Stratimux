@@ -15,7 +15,7 @@ import { Mode } from '../../model/concept/concept.type';
 import { permissiveMode, blockingMode } from '../muxium/muxium.mode';
 import { checkIn, clearStubs, ownershipShouldBlock, updateAddToPendingActions } from '../../model/ownership';
 import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
-import { failureConditions, strategyData_appendFailure } from '../../model/action/actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from '../../model/action/strategy/actionStrategyData';
 import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { strategyFailed } from '../../model/action/strategy/actionStrategyConsumers';
 import { ActionStrategy } from '../../model/action/strategy/actionStrategy.type';

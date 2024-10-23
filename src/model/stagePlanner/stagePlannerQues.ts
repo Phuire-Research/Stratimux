@@ -1,9 +1,8 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, define the Stage Planner model file.
-This file introduces the Muxified Subject, that allows for users to stage plans based on observation of the Concepts stream.
-The Stage Planner paradigm is what allows for the ease of working within a recursive run time, via setting plans to specific stages
-in order to prevent action overflow. Action overflow is when a function is stuck within a recursive loop. This paradigm
-also ensures Stratimux of its own provable termination in majority of configurations.
+For the asynchronous graph programming framework Stratimux, define the Stage Planner Que model file.
+This file defines helper functions that handle the shortest path of notification within a Muxium and its
+varying points of observation. Allowing for a Muxified Subject to be both General and Specific with its
+notifications. Using generalities as a fallback for developer experience.
 $>*/
 /*<#*/
 /* eslint-disable complexity */

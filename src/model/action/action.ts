@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { Concepts, LoadConcepts } from '../concept/concept.type';
 import { MuxiumState } from '../../concepts/muxium/muxium.concept';
-import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from './strategy/actionStrategyData';
 import { MuxiumBadActionPayload, MuxiumQualities } from '../../concepts/muxium/qualities';
 import { Action, ActionCreatorWithPayload, ActionOptions, ActionType, ActionWithPayloadOptions } from './action.type';
 import { getSemaphore, getSpecialSemaphore } from './actionSemaphore';

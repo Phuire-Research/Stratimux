@@ -4,7 +4,7 @@ Then its method will asynchronously unify the state's id value onto the strategy
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCard } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';

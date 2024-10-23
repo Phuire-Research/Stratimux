@@ -6,7 +6,7 @@ $>*/
 import { muxification } from '../../model/muxium/muxium';
 import { getMuxiumState, isMuxiumOpen } from '../../model/muxium/muxiumHelpers';
 import { generateRandomCountingStrategy } from './strategies/generateCountingStrategy.strategy';
-import { BeatSelectorChangesDeck, beatSelectorChangesName, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
+import { BeatSelectorChangesDeck, createBeatSelectorChangesConcept } from './beatSelectorChanges.concept';
 import {
   beatSelectorChangesSelectCountFive,
   beatSelectorChangesSelectCountFour,

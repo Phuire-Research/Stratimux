@@ -8,8 +8,7 @@ import { muxification } from '../../model/muxium/muxium';
 import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
 import { KeyedSelector } from '../../model/selector/selector.type';
 import { selectSlice } from '../../model/selector/selector';
-import { planOptionsSelect } from './newPlanOptions.selectors';
-import { experimentPlanOptionsReadySelector } from './newPlanOptions.selector';
+import { experimentPlanOptionsReadySelector, planOptionsSelect } from './newPlanOptions.selectors';
 
 test('New Plan Options Selector Test', (done) => {
   const planNewStageSelectors = muxification('Plan New Stage Selectors Test', {

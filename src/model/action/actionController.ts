@@ -7,7 +7,7 @@ not provided.
 $>*/
 /*<#*/
 import { Subject } from 'rxjs';
-import { failureConditions, strategyData_appendFailure } from './actionStrategyData';
+import { failureConditions, strategyData_appendFailure } from './strategy/actionStrategyData';
 import { ActionDeck, Self } from '../concept/concept.type';
 import { Action, AnyAction } from './action.type';
 import { createAction } from './action';

@@ -4,7 +4,7 @@ asynchronously dispatch the next action in the incoming strategy, then throttle 
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { createAsyncMethodThrottleWithState } from '../../../model/method/methodAsyncThrottle';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';

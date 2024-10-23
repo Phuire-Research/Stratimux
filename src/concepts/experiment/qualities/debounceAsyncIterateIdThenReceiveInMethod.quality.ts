@@ -4,7 +4,7 @@ Then debounce the action via the qualities method that will then unify the state
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { createAsyncMethodDebounceWithState } from '../../../model/method/methodAsyncDebounce';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';

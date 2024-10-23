@@ -1,7 +1,7 @@
 /*<$
-For the asynchronous graph programming framework Stratimux, define the Concept model file.
-This file defines the Concept abstraction that the Muxium uses to Transform its functionality.
-A concept is composed of name, muxified, state, qualities, semaphore, principles, and some meta attributes if necessary.
+For the asynchronous graph programming framework Stratimux, define the Concept Index model file.
+This file defines a bundled concept object, that enables ease of access to the handling of concepts within
+a Muxium.
 $>*/
 /*<#*/
 import { createConcept } from './concept';

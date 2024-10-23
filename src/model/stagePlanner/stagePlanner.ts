@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Stage Pla
 This file introduces the Muxified Subject, that allows for users to stage plans based on observation of the Concepts stream.
 The Stage Planner paradigm is what allows for the ease of working within a recursive run time, via setting plans to specific stages
 in order to prevent action overflow. Action overflow is when a function is stuck within a recursive loop. This paradigm
-also ensures Stratimux of its own provable termination in majority of configurations.
+also ensures Stratimux of its own provable termination in logically consistent configurations.
 $>*/
 /*<#*/
 /* eslint-disable complexity */

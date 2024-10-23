@@ -4,7 +4,7 @@ next action in the ActionStrategy via a timeout. While appending to the strategy
 $>*/
 /*<#*/
 import { muxiumConclude } from '../../muxium/qualities/conclude.quality';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { ExperimentState } from '../experiment.concept';
 import { createQualityCard, nullReducer } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';

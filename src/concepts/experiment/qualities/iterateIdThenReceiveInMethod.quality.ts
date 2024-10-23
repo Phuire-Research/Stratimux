@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { createMethodWithState } from '../../../model/method/method';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCard } from '../../../model/quality';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 

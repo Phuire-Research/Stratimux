@@ -4,7 +4,7 @@ limited via a control variable that is an arbitrary string array that is shifted
 $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
-import { strategyData_muxifyData } from '../../../model/action/actionStrategyData';
+import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { createQualityCardWithPayload } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
 import { strategyRecurse } from '../../../model/action/strategy/actionStrategyConsumersAdvanced';

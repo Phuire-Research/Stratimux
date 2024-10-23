@@ -1,3 +1,9 @@
+/*<$
+For the asynchronous graph programming framework Stratimux generate an ActionStrategy of a random length.
+To count via a randomly determined add and subtract actions to reach a final number. That is determined by the difference of
+add and subtract actions used within the ActionStrategy.
+$>*/
+/*<#*/
 import { Deck } from '../../model/deck';
 import { CounterDeck } from '../../concepts/counter/counter.concept';
 import { ActionNode, ActionStrategy } from '../../model/action/strategy/actionStrategy.type';
@@ -54,3 +60,4 @@ export const generateRandomCountingStrategy = (deck: GenerateRandomCountingStrat
       topic,
     })];
 };
+/*#>*/

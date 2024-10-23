@@ -1,3 +1,8 @@
+/*<$
+For the asynchronous graph programming framework Stratimux generate a test that will ensure that a basic random number counting strategy
+is working as intended.
+$>*/
+/*<#*/
 import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { muxification } from '../../model/muxium/muxium';
 import { selectState } from '../../model/selector/selector';
@@ -56,3 +61,4 @@ test('Muxium Counting Strategy Test', (done) => {
     ]);
   muxium.subscribe(concepts => console.log(getMuxiumState(concepts).lastStrategy));
 });
+/*#>*/
