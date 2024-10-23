@@ -51,7 +51,10 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge
-### Stratimux 0.2.0 Stealth Roll Out
+### QoL
+* Broke up complex files into distinguishable parts
+* Hooked in deck functionality into method creators properly
+### Stratimux 0.2.0-1 Stealth Roll Out
 * Introduces type safety throughout your muxiums via a new DECK Interface System
   * e: Entry Action
   * c: Comparators, uses semaphores to ensure a stringless comparison
@@ -59,9 +62,6 @@ When in doubt simplify.
 * Override + Hard Override - Will wipe out current actions within the Muxiums Action Que System
 
 
-### Beyond 0.2.0
-* Originally intended to release a conversion guide, but due to the degree of changes. The focus has shifted back towards Huirth and supplying an easy means of accessing tutorials and a proper conceptual library.
-* With this release will be reverting back to incremental changes and improvements.
 
 
 Other typescript projects

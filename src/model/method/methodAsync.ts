@@ -41,7 +41,7 @@ export const createAsyncMethod: MethodCreatorAsync =
 export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithState: (params: MethodAsyncWithStateParams<S, T, C>) => void,
-  ) : MethodCreator<S, T, any> => (
+  ) : MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ) : [Method<T>, Subject<ActionDeck<T,C>>] => {
@@ -69,7 +69,7 @@ export const createAsyncMethodWithConcepts: MethodCreatorAsyncWithConcepts =
     asyncMethodWithConcepts: (
       params: MethodAsyncWithConceptsParams<T, C>
     ) => void,
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {

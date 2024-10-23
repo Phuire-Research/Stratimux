@@ -28,7 +28,7 @@ export const createMethodDebounce: MethodCreatorBaseDebounce =
   <S extends Record<string, unknown>, T = void, C = void>(
     method: (params: MethodParams<T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -61,7 +61,7 @@ export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithState: (params: MethodWithStateParams<S,T,C>) => Action<any>,
     duration: number
-  ) : MethodCreator<S, T, any> => (
+  ) : MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -92,13 +92,11 @@ export const createMethodDebounceWithState: MethodCreatorBaseDebounceWithState =
     return [defaultMethod, defaultSubject];
   };
 
-
-
 export const createMethodDebounceWithConcepts: MethodCreatorBaseDebounceWithConcepts =
   <S extends Record<string, unknown>, T = void, C = void>(
     methodWithConcepts: (params: MethodWithConceptsParams<T,C>) => Action<any>,
     duration: number
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {

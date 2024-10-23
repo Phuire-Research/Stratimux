@@ -24,7 +24,7 @@ export const createAsyncMethodDebounce: MethodCreatorAsyncDebounce =
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethod: (params: MethodAsyncParams<T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     _concepts$: Subject<Concepts>,
     _semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -46,7 +46,7 @@ export const createAsyncMethodDebounceWithState: MethodCreatorAsyncDebounceWithS
   <S extends Record<string, unknown>, T = void, C = void>(
     asyncMethodWithState: (params: MethodAsyncWithStateParams<S,T,C>) => void,
     duration: number
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
@@ -73,7 +73,7 @@ export const createAsyncMethodDebounceWithConcepts: MethodCreatorAsyncDebounceWi
       params: MethodAsyncWithConceptsParams<T,C>
     ) => void,
     duration: number,
-  ): MethodCreator<S, T, any> => (
+  ): MethodCreator<S, T, C> => (
     concepts$: Subject<Concepts>,
     semaphore: number,
   ): [Method<T>, Subject<ActionDeck<T, C>>] => {
