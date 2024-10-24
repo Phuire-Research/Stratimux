@@ -5,6 +5,7 @@ $>*/
 import { Action, ActionType } from '../action.type';
 import { OwnershipTicketStub } from '../../ownership';
 import { KeyedSelector } from '../../selector/selector.type';
+import { Deck } from '../../deck';
 
 /**
  * ActionNode - Control Structure used by ActionStrategy

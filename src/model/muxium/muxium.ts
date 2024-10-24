@@ -15,7 +15,7 @@ import {
   forEachConcept,
   qualityToString
 } from '../concept/conceptHelpers';
-import { muxificationConcept, MuxiumState, initializationStrategy, MuxiumDeck } from '../../concepts/muxium/muxium.concept';
+import { muxiumConcept, MuxiumState, initializationStrategy, MuxiumDeck } from '../../concepts/muxium/muxium.concept';
 import { Planner } from '../stagePlanner/stagePlanner.type';
 import { handlePriority, isPriorityValid } from '../priority';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
@@ -40,7 +40,7 @@ export function muxification<C extends LoadConcepts>(
     dynamic?: boolean,
   }
 ): Muxium<MuxiumQualities, C & MuxiumDeck, MuxiumState<MuxiumQualities, C>> {
-  const muxiumConcept = muxificationConcept<MuxiumQualities, C>(
+  const muxium = muxiumConcept<MuxiumQualities, C>(
     name,
     options?.storeDialog,
     options?.logging,
@@ -48,27 +48,27 @@ export function muxification<C extends LoadConcepts>(
     options?.dynamic
   ) as Concept<MuxiumState<MuxiumQualities, C>, MuxiumQualities>;
   const concepts: Concepts = {
-    0: muxiumConcept
+    0: muxium
   };
   // as Concept<MuxiumState<MuxiumQualities, MuxiumDeck & C>, MuxiumQualities>;
-  updateKeyedSelectors(concepts, muxiumConcept.keyedSelectors, 0);
-  muxiumConcept.selectors = createSelectors(0);
+  updateKeyedSelectors(concepts, muxium.keyedSelectors, 0);
+  muxium.selectors = createSelectors(0);
   const bundledSelectors = {
-    ...muxiumConcept.keyedSelectors,
-    ...muxiumConcept.selectors
+    ...muxium.keyedSelectors,
+    ...muxium.selectors
   } as BundledSelectors<MuxiumState<MuxiumQualities, C>>;
   const baseDeck: Decks<MuxiumQualities, MuxiumState<MuxiumQualities, C>, MuxiumLoad<MuxiumDeck>> = {
     d: { muxium: {
-      e: muxiumConcept.actions,
-      c: muxiumConcept.comparators,
+      e: muxium.actions,
+      c: muxium.comparators,
       k: bundledSelectors,
     },
     } as Deck<MuxiumLoad<MuxiumDeck>>,
-    e: muxiumConcept.actions,
-    c: muxiumConcept.comparators,
+    e: muxium.actions,
+    c: muxium.comparators,
     k: bundledSelectors,
   };
-  muxiumConcept.semaphore = 0;
+  muxium.semaphore = 0;
   Object.keys(deckLoad).forEach((key, i) => {
     const semaphore = i + 1;
     concepts[semaphore] = deckLoad[key];

@@ -178,7 +178,7 @@ export { muxiumTimeOut } from './model/time';
 
 //** Concept Exports */
 // Muxium
-export { MuxiumState, muxiumName, muxificationConcept, MuxiumDeck } from './concepts/muxium/muxium.concept';
+export { MuxiumState, muxiumName, muxiumConcept, MuxiumDeck } from './concepts/muxium/muxium.concept';
 export { blockingMode, permissiveMode } from './concepts/muxium/muxium.mode';
 export {
   muxiumSelectOpen,
