@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux, define the Deck Mode
 $>*/
 /*<#*/
 import { getMuxiumState } from './muxium/muxiumHelpers';
-import { AnyConcept, Concept, Concepts } from './concept/concept.type';
+import { AnyConcept, Concept, Concepts, LoadConcepts } from './concept/concept.type';
 import { Comparators } from './interface';
 import { Qualities } from './quality';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';

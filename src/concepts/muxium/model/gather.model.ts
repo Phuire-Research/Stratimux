@@ -9,6 +9,8 @@ import { ActionNode, ActionNodeOptions } from '../../../model/action/strategy/ac
 import { Action, AnyAction } from '../../../model/action/action.type';
 import { createActionNode, createStrategy } from '../../../model/action/strategy/actionStrategy';
 import { createAction } from '../../../model/action/action';
+import { Deck } from '../../../model/deck';
+import { MuxiumDeck } from '../muxium.concept';
 
 export type MuxiumGatherNode = {
   actions: Action[],
@@ -23,7 +25,7 @@ export type MuxiumGatherNode = {
  * You may use this to continue a strategy after the gathered actions have concluded.
  * @returns ActionNode of muxiumStitch
  */
-export const muxium_createGatherNode = (props: MuxiumGatherNode, options?: ActionNodeOptions[]) => {
+export const muxium_createGatherNode = (deck: Deck<MuxiumDeck>, props: MuxiumGatherNode, options?: ActionNodeOptions[]) => {
   const {
     actions,
     last,
@@ -51,7 +53,7 @@ export const muxium_createGatherNode = (props: MuxiumGatherNode, options?: Actio
   if (first) {
     return first;
   } else {
-    const log = createAction('logged a message passed to Muxium') as AnyAction;
+    const log = deck.muxium.e.muxiumLog() as AnyAction;
     log.payload = {message: 'NO ACTIONS WERE GATHERED VIA AXIUM_CREATE_GATHER_NODE'};
     return createActionNode(log, {
       successNode: null,
@@ -76,8 +78,8 @@ export type MuxiumGatherStrategy = {
 
  * @returns ActionStrategy of the provided actions to be executed in a sequence.
  */
-export const muxium_createGatherStrategy = (props: MuxiumGatherStrategy, options?: ActionNodeOptions[]) => {
-  const stepFirst = muxium_createGatherNode(props, options);
+export const muxium_createGatherStrategy = (deck: Deck<MuxiumDeck>, props: MuxiumGatherStrategy, options?: ActionNodeOptions[]) => {
+  const stepFirst = muxium_createGatherNode(deck, props, options);
   return createStrategy({
     topic: props.topic ? props.topic : 'Muxium Gather Strategy for: ' + props.actions.map(act => act.type).join(', '),
     initialNode: stepFirst

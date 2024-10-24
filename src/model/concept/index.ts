@@ -1,7 +1,6 @@
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Concept Index model file.
-This file defines a bundled concept object, that enables ease of access to the handling of concepts within
-a Muxium.
+This file defines a bundled concept object, that enables ease of access to the handling of concepts.
 $>*/
 /*<#*/
 import { createConcept } from './concept';

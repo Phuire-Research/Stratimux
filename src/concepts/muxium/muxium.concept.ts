@@ -201,7 +201,7 @@ const muxificationState = <Q, C extends LoadConcepts>(
 const muxiumStaticPrinciple = [muxiumClosePrinciple];
 export type MuxiumPrinciple = PrincipleFunction<MuxiumQualities, MuxiumDeck, MuxiumState<MuxiumQualities, LoadConcepts>>;
 
-export const muxificationConcept = <Q, C extends LoadConcepts>(
+export const muxiumConcept = <Q, C extends LoadConcepts>(
   name: string,
   storeDialog?: boolean,
   logging?: boolean,

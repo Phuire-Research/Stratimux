@@ -4,17 +4,18 @@ This function allows for Strategy Stitches to be composed of only one action nod
 While calling the muxium's stitch quality to silently move to the next node assigned to the end of that stitch.
 $>*/
 /*<#*/
-import { createAction } from '../../../model/action/action';
 import { createActionNode } from '../../../model/action/strategy/actionStrategy';
 import { ActionNodeOptions } from '../../../model/action/strategy/actionStrategy.type';
+import { Deck } from '../../../model/deck';
+import { MuxiumDeck } from '../muxium.concept';
 
 /**
  * Must be used within an ActionStrategyStitch with only one ActionNode provided.
  * @param options `optional` will set return ActionNode's options if provided.
  * @returns ActionNode of muxiumStitch
  */
-export const muxium_createStitchNode = (options?: ActionNodeOptions) =>
-  (createActionNode(createAction('Muxium Stitch'), options ? options : {
+export const muxium_createStitchNode = (deck: Deck<MuxiumDeck>, options?: ActionNodeOptions) =>
+  (createActionNode(deck.muxium.e.muxiumStitch(), options ? options : {
     successNode: null,
     failureNode: null,
   }));
