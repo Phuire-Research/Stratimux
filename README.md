@@ -54,7 +54,8 @@ When in doubt simplify.
 ### QoL 0.2.42
 * Broke up complex files into distinguishable parts
 * Hooked in deck functionality into method creators properly
-* muxium_createStitchNode now requires a deck parameter
+* muxium_createStitchNode now requires a deck load
+* Renamed muxificationConcept to muxiumConcept
 ### Stratimux 0.2.0-1 Stealth Roll Out
 * Introduces type safety throughout your muxiums via a new DECK Interface System
   * e: Entry Action
