@@ -46,7 +46,7 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>,
-): Quality<S, T, C> {
+): Quality<S, T, any> {
   return {
     actionType,
     actionCreator,
@@ -95,7 +95,7 @@ export function createQualityCard<S extends Record<string, unknown>, C = void>(q
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): Quality<S, void, C> {
+}): Quality<S, void, any> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreator = prepareActionCreator(q.type, bucket);
   if (q.methodCreator) {
@@ -115,7 +115,7 @@ export function createQualityCardWithPayload<
   keyedSelectors?: KeyedSelector[],
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
-}): Quality<S, T, C> {
+}): Quality<S, T, any> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
   const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket);
   if (q.methodCreator) {
