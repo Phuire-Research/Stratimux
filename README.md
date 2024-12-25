@@ -50,7 +50,7 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge
-### Restored Dialog Functionality
+### Restored Dialog Functionality 0.2.44
 * Moved the handling of the decision action node notes to the consumer function itself.
 ### QoL 0.2.42
 * Broke up complex files into distinguishable parts
