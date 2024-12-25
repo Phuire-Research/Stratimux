@@ -18,19 +18,18 @@ export function isNotPunctuated(str: string): boolean {
   return notPunctuated;
 }
 
-export function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes , decisionKey?: string): string {
-  const preposition = actionNotes?.preposition ? `${actionNotes.preposition} ` : '';
-  const decision = decisionKey ? `${decisionKey} ` : '';
+export function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes): string {
+  const preposition = actionNotes?.preposition !== undefined ? `${actionNotes.preposition} ` : '';
   const body = `${actionNode.actionType}`;
   let denoter = '.';
-  if (actionNotes?.denoter) {
+  if (actionNotes?.denoter !== undefined) {
     if (isNotPunctuated(actionNotes.denoter)) {
       denoter = ` ${actionNotes.denoter}`;
     } else {
       denoter = actionNotes.denoter;
     }
   }
-  return preposition + decision + body + denoter;
+  return preposition + body + denoter;
 }
 
 /*#>*/
