@@ -157,10 +157,10 @@ The direct comparison of Stratimux to an LLM, during runtime these actions are o
 
 ### The anatomy of a Stratimux sentence
 ```
-preposition(/+)decision + body + denoter
+preposition + body + denoter
 example: Finally + Open Muxium + to Notify Subscribers of State changes.
 ```
-This allows for a Stratimux Dialog to be constructed in the same formalization of that of a paragraph. Where the strategy topic is the literal topic sentence of a paragraph. And is followed by all steps and possible decision that create a muxified paragraph.
+This allows for a Stratimux Dialog to be constructed in the same formalization of that of a paragraph. Where the strategy topic is the literal topic sentence of a paragraph. And is followed by all steps and possible decisions that formalizes a muxified paragraph when paired with the quality definition.
 ```
 TOPIC + SENTENCE + SENTENCE + SENTENCE
 Example: 

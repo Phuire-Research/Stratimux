@@ -62,8 +62,7 @@ const strategyConsumer = (
   let nextAction: Action<unknown>;
   const actionListEntry = createSentence(
     strategy.currentNode,
-    notes,
-    notes?.preposition ? notes.preposition : defaultPreposition
+    notes !== undefined ? notes : {preposition: defaultPreposition},
   );
   if (nextNode !== null) {
     const origin = strategy.currentNode.action?.origin;
@@ -174,13 +173,17 @@ export function strategyFailed(_strategy: ActionStrategy, data?: Record<string, 
  * strategyDecide(strategy: ActionStrategy, index:number, data?: any)
  * Returns the DecisionNode of Index reassigns ActionStrategy to that Action's strategy parameter.
  * If no decisionNode is found, will return Conclude instead.
+ * @param decideKey - Selects from the decisionNodes Dictionary the next Action Node, also acts as the default preposition when assigned
+ * to your Dialog's Sentence.
  * @param data - OPTIONAL, if used will override the ActionStrategy's payload
+ * @param notes - OPTIONAL, if used will override the current ActionNotes, use this to be specific in regards to your decision.
  */
 export const strategyDecide = (
   _strategy: ActionStrategy,
   decideKey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: Record<string, unknown>,
+  notes?: ActionNotes
 ) => {
   if (_strategy.currentNode.decisionNodes) {
     const decisionNodes = _strategy.currentNode.decisionNodes as Record<string, ActionNode>;
@@ -192,7 +195,7 @@ export const strategyDecide = (
         _strategy,
         nextNode,
         decideKey,
-        _strategy.currentNode.decisionNotes,
+        notes ? notes : _strategy.currentNode.decisionNotes,
         data
       );
     }
