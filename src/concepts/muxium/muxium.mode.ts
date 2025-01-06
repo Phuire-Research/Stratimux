@@ -5,26 +5,21 @@ $>*/
 import { Subject } from 'rxjs';
 import { ActionDeck, Concepts, Mode } from '../../model/concept/concept.type';
 import { primeAction } from '../../model/action/action';
-import { MuxiumState } from './muxium.concept';
+import { MuxiumDeck, MuxiumState } from './muxium.concept';
 import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
 import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { MuxiumBadActionPayload } from './qualities';
 import { updateAtomicSelects } from '../../model/selector/selectorAdvanced';
-import { Deck } from '../../model/deck';
+import { accessDeck, Deck } from '../../model/deck';
 import { Action, AnyAction } from '../../model/action/action.type';
 
 export const isActionable = (muxiumState: MuxiumState<any, any>, action: Action): boolean => {
   let actionable = true;
   // We are logically determining these semaphore values by hand for now.
   if (
-    // Logical Determination: muxiumBadActionType
-    action.semaphore[3] === 1 ||
     // Logical Determination: muxiumConcludeType
     action.semaphore[3] === 3) {
     actionable = false;
-    if (muxiumState.logging && action.semaphore[3] === 1) {
-      console.warn('Bad Action', action);
-    }
   }
   return actionable;
 };
@@ -73,6 +68,13 @@ export const permissiveMode: Mode = (
     } else {
       blockingMode([action, concepts, action$, concepts$]);
     }
+  } else if (action.semaphore[3] !== 3) {
+    const badAction = accessDeck<MuxiumDeck>(concepts).muxium.e.muxiumBadAction({
+      badActions: [
+        action
+      ]
+    });
+    action$.next(badAction as unknown as Action);
   }
 };
 
@@ -122,6 +124,13 @@ export const blockingMode: Mode = (
         ]);
       }
     }
+  } else if (action.semaphore[3] !== 3) {
+    const badAction = accessDeck<MuxiumDeck>(concepts).muxium.e.muxiumBadAction({
+      badActions: [
+        action
+      ]
+    });
+    action$.next(badAction as unknown as Action);
   }
 };
 /*#>*/

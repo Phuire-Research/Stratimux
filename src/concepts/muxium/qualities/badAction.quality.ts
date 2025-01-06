@@ -15,7 +15,7 @@ export const muxiumBadAction = createQualityCardWithPayload<MuxiumState<unknown,
   reducer: (state, action) => {
     const payload = action.payload.badActions;
     if (state.logging) {
-      console.log('Muxium Received a Bad Action: ', action);
+      console.log('Muxium Received a Bad Action: ', action, payload);
     }
     return {
       badActions: [
