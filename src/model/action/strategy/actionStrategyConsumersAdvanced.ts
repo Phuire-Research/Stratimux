@@ -4,7 +4,7 @@ This provides additional functionality for the consumption of ActionStrategies n
 $>*/
 /*<#*/
 import { muxiumConclude } from '../../../concepts/muxium/qualities/conclude.quality';
-import { Action, nullActionType } from '../action.type';
+import { Action, AnyAction, nullActionType } from '../action.type';
 import { ActionNode, ActionStrategy } from './actionStrategy.type';
 import { createActionNode, createStrategy } from './actionStrategy';
 import { createSentence } from './actionStrategyHelpers';
@@ -57,17 +57,17 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
 };
 
 export const strategyDetermine = <T extends Record<string, unknown>>(
-  action: Action,
-  options: {
+  action: AnyAction,
+  options?: {
     topic?: string,
     priority?: number,
     data?: T
   }): Action => {
   return strategyBegin(createStrategy({
-    topic: options.topic ? options.topic : 'STRATEGY DETERMINED',
+    topic: options?.topic ? options.topic : 'STRATEGY DETERMINED',
     initialNode: createActionNode(action),
-    priority: options.priority,
-    data: options.data
+    priority: options?.priority,
+    data: options?.data
   }));
 };
 
