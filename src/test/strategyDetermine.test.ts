@@ -4,7 +4,7 @@ dispatching a single action ActionStrategy, and is also able to accept any possi
 $>*/
 /*<#*/
 import { muxification } from '../model/muxium/muxium';
-import { CounterState, createCounterConcept, countingStrategy, counterName, CounterQualities } from '../concepts/counter/counter.concept';
+import { CounterState, createCounterConcept, CounterQualities } from '../concepts/counter/counter.concept';
 import { Concept } from '../model/concept/concept.type';
 import { strategyDetermine } from '../model/action/strategy/actionStrategyConsumersAdvanced';
 
