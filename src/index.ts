@@ -169,7 +169,14 @@ export type {
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
 export { createActionController$, actionController } from './model/action/actionController';
-export type { dispatchOptions, Staging, StagePlanner, NamedStagePlanner } from './model/stagePlanner/stagePlanner.type';
+export type {
+  dispatchOptions,
+  Staging,
+  StagePlanner,
+  NamedStagePlanner,
+  Stage,
+  PartialStaging
+} from './model/stagePlanner/stagePlanner.type';
 export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner/stagePlannerHelpers';
 export { MuxifiedSubject } from './model/stagePlanner/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';

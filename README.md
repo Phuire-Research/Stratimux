@@ -50,6 +50,8 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actiActionStrategies are working as intended.ons/workflows/node.js.yml/badge)
+### QoL 0.2.48
+* Exported both the Stage and PartialStaging Types for Algorithmic Stage Generation.
 ### Strategy Determine 0.2.47
 * Ensured that the Strategy Determine helper function is working as intended. Noting it creates a single Action Strategy, this is used primarily in Methods to ensure Halting Completeness.
 * Now accepts Any Action and no longer requires an options object.
