@@ -19,7 +19,7 @@ import {
 import { Planner, StagePlanner } from '../stagePlanner/stagePlanner.type';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { Decks } from '../deck';
-import { Action, Actions } from '../action/action.type';
+import { Action, Actions, AnyAction } from '../action/action.type';
 
 // eslint-disable-next-line no-shadow
 export enum MuxiumOrigins {
@@ -31,15 +31,26 @@ export type MuxiumLoad<C extends LoadConcepts> = {
   [K in keyof C] : C[K] extends AnyConcept ? C[K] : AnyConcept
 };
 
+export type MaybeEnhancedMuxiumQualities<Q = void | Record<string, unknown>> = Q extends void ? MuxiumQualities : Record<string, unknown>;
 // [TODO] - IMPORTANT - Point of providing access to white listed qualities organized by concepts.
-export type Muxium<Q extends Record<string, unknown>, C extends LoadConcepts, S extends Record<string, unknown>> = {
+export type Muxium<C extends LoadConcepts, Q = void> = {
   subscribe: (observerOrNext?: Partial<Observer<Concepts>> | ((value: Concepts) => void) | undefined) => Subscription;
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
-  dispatch: (action: Action<any>) => void;
-  plan: <Co>(title: string, planner: Planner<MuxiumQualities, Co & MuxiumDeck, MuxiumState<MuxiumQualities, C>>) => StagePlanner;
-  deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
-  e: Actions<MuxiumQualities>
+  dispatch: (action: AnyAction) => void;
+  plan: <Co = void>(
+    title: string,
+    planner: Planner<
+    MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities,
+    (Co extends void ? Record<string, unknown> : Co) & C & MuxiumDeck,
+    MuxiumState<
+      MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities,
+      (Co extends void ? Record<string, unknown> : Co) & C & MuxiumDeck
+      >
+    >
+  ) => StagePlanner;
+  deck: Decks<MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+  e: Actions<MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities>
 }
 
 /*#>*/

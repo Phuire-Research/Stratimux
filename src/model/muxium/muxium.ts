@@ -25,11 +25,11 @@ import { BundledSelectors } from '../selector/selector.type';
 import { Action, Actions } from '../action/action.type';
 import { createCachedSemaphores } from '../action/actionSemaphore';
 import { strategyBegin } from '../action/strategy/actionStrategyConsumers';
-import { Muxium, MuxiumLoad, MuxiumOrigins } from './muxium.type';
+import { MaybeEnhancedMuxiumQualities, Muxium, MuxiumLoad, MuxiumOrigins } from './muxium.type';
 import { blockingMethodSubscription } from '../method/methodSubscription';
 import { getMuxiumState } from './muxiumHelpers';
 
-export function muxification<C extends LoadConcepts>(
+export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxiumQualities>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deckLoad: C,
@@ -39,14 +39,14 @@ export function muxification<C extends LoadConcepts>(
     logActionStream?: boolean,
     dynamic?: boolean,
   }
-): Muxium<MuxiumQualities, C & MuxiumDeck, MuxiumState<MuxiumQualities, C>> {
-  const muxium = muxiumConcept<MuxiumQualities, C>(
+): Muxium<C & MuxiumDeck, Q> {
+  const muxium = muxiumConcept<Q, C>(
     name,
     options?.storeDialog,
     options?.logging,
     options?.logActionStream,
     options?.dynamic
-  ) as Concept<MuxiumState<MuxiumQualities, C>, MuxiumQualities>;
+  ) as Concept<MuxiumState<Q, C>, Q>;
   const concepts: Concepts = {
     0: muxium
   };
@@ -56,8 +56,8 @@ export function muxification<C extends LoadConcepts>(
   const bundledSelectors = {
     ...muxium.keyedSelectors,
     ...muxium.selectors
-  } as BundledSelectors<MuxiumState<MuxiumQualities, C>>;
-  const baseDeck: Decks<MuxiumQualities, MuxiumState<MuxiumQualities, C>, MuxiumLoad<MuxiumDeck>> = {
+  } as BundledSelectors<MuxiumState<Q, C>>;
+  const baseDeck: Decks<Q, MuxiumState<Q, C>, MuxiumLoad<MuxiumDeck>> = {
     d: { muxium: {
       e: muxium.actions,
       c: muxium.comparators,
@@ -75,20 +75,22 @@ export function muxification<C extends LoadConcepts>(
     deckLoad[key].semaphore = semaphore;
     updateKeyedSelectors(concepts, concepts[semaphore].keyedSelectors, semaphore);
     concepts[semaphore].selectors = createSelectors(semaphore);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (baseDeck as any).d[key] = {
       e: concepts[semaphore].actions,
       c: concepts[semaphore].comparators,
       k: {...concepts[semaphore].keyedSelectors, ...concepts[semaphore].selectors},
     };
     demuxifyDeck(concepts[semaphore]).forEach(u => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (baseDeck as any).d[u.name] = u.eck;
     });
   });
 
-  const deck = baseDeck as Decks<MuxiumQualities, MuxiumState<MuxiumQualities, C>, MuxiumLoad<C & MuxiumDeck>>;
+  const deck = baseDeck;
   baseDeck.d.muxium.c.muxiumAddConceptsFromQue;
-  let muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, C>;
-  muxiumState.deck = deck;
+  let muxiumState = concepts[0].state as MuxiumState<Q, C>;
+  muxiumState.deck = deck as Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>;
   muxiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     muxiumState.conceptCounter += 1;
@@ -106,7 +108,7 @@ export function muxification<C extends LoadConcepts>(
         const methodSub = quality.method.subscribe(([action, _]) => {
           blockingMethodSubscription(concepts, muxiumState.tail, action);
         }) as Subscriber<Action>;
-        muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, C>;
+        muxiumState = concepts[0].state as MuxiumState<Q, C>;
         muxiumState.methodSubscribers.push({
           name: concept.name,
           subscription: methodSub,
@@ -114,7 +116,7 @@ export function muxification<C extends LoadConcepts>(
       }
     });
     if (semaphore !== 0 && concept.mode !== undefined) {
-      muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, C>;
+      muxiumState = concepts[0].state as MuxiumState<Q, C>;
       const names = muxiumState.modeNames;
       const modes = concepts[0].mode as Mode[];
       concept.mode.forEach((mode) => {
@@ -144,7 +146,7 @@ export function muxification<C extends LoadConcepts>(
           ' topic: ', action.strategy?.topic
         );
       }
-      const _muxiumState = _concepts[0].state as MuxiumState<MuxiumQualities, C>;
+      const _muxiumState = _concepts[0].state as MuxiumState<Q, C>;
       if (_muxiumState.head.length === 0) {
         action.origin = MuxiumOrigins.muxiumHead;
         _muxiumState.head.push(action);
@@ -179,7 +181,7 @@ export function muxification<C extends LoadConcepts>(
       }
     });
 
-  muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, C>;
+  muxiumState = concepts[0].state as MuxiumState<Q, C>;
   const action$ = muxiumState.action$;
   muxiumState.actionConcepts$.next(concepts);
   muxiumState.concepts$.init(concepts);
@@ -198,11 +200,11 @@ export function muxification<C extends LoadConcepts>(
     dispatch: (action: Action) => {
       action$.next(action);
     },
-    plan: <Co>(title: string, planner: Planner<MuxiumQualities, Co & MuxiumDeck, MuxiumState<MuxiumQualities, C>>) => (
-      muxiumState.concepts$.outerPlan(title, planner as unknown as Planner<MuxiumQualities, C, void>)),
+    plan: <Co = void>(title: string, planner: Planner<Q, Co extends void ? MuxiumDeck : Co & MuxiumDeck, MuxiumState<Q, C>>) => (
+      muxiumState.concepts$.outerPlan(title, planner as unknown as Planner<Q, C, void>)),
     deck,
     e: deck.d.muxium.e
-  } as unknown as Muxium<MuxiumQualities, C & MuxiumDeck, MuxiumState<MuxiumQualities, C>>;
+  } as unknown as Muxium<C & MuxiumDeck, Q>;
 }
 
 /*#>*/

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*<$
 For the asynchronous graph programming framework Stratimux generate the Muxium Concept that will manage Stratimux's functionality.
 The Muxium is a set of concepts that create a greater whole via their associations
