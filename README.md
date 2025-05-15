@@ -50,33 +50,31 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actiActionStrategies are working as intended.ons/workflows/node.js.yml/badge)
-## 0.3.0
-### QoL 0.2.52
-* Implemented a custom generateUUID function for the Ownership Concept to smooth out roll up processes for newer environments with a global crypto object.
-### QoL 0.2.51
-* Simplified Muxium Type (Muxium<Deck_of_Concepts, Enhanced_Muxium_Qualities_Optional>) and Accessing Plan directly with the ability to extend what deck may be access at the planning stage.
-### QoL 0.2.48
-* Exported both the Stage and PartialStaging Types for Algorithmic Stage Generation.
-### Strategy Determine 0.2.47
-* Ensured that the Strategy Determine helper function is working as intended. Noting it creates a single Action Strategy, this is used primarily in Methods to ensure Halting Completeness.
-* Now accepts Any Action and no longer requires an options object.
-### Verbose Bad Actions 0.2.46
-* The Muxium Bad Action Quality is now being utilized and setting the muxium's bad action property as intended.
-### Restored Dialog Functionality 0.2.44
-* Moved the handling of the decision action node notes to the consumer function itself.
-### QoL 0.2.42
-* Broke up complex files into distinguishable parts
-* Hooked in deck functionality into method creators properly
-* muxium_createStitchNode now requires a deck load
-* Renamed muxificationConcept to muxiumConcept
-### Stratimux 0.2.0-1
-* Introduces type safety throughout your muxiums via a new DECK Interface System
-  * e: Entry Action
-  * c: Comparators, uses semaphores to ensure a stringless comparison
-  * k: Constants, allows you to select individual properties, make new selectors, get the entire state, etc...
-* Override + Hard Override - Will wipe out current actions within the Muxiums Action Que System
+# Stratimux 0.3.0: Precision & Performance
 
+## Features & Enhancements
 
+- **Forward Capability Implementation** ([PR #251](https://github.com/Phuire-Research/Stratimux/pull/251)): Implemented custom UUID generation for smoother Ownership Concept roll-up processes, simplified Muxium Type declarations, and added exported Stage types for algorithmic generation.
+
+- **DECK Interface System** ([PR #242](https://github.com/Phuire-Research/Stratimux/pull/242)): Introduced type safety through the DECK interface with entry actions (e), stringless comparison semaphores (c), and constant selectors (k).
+
+## Bug Fixes
+
+- **Dialog Functionality Restored** ([PR #245](https://github.com/Phuire-Research/Stratimux/pull/245)): Moved decision action node handling to the consumer function itself.
+
+- **Bad Action Handling Improved** ([PR #246](https://github.com/Phuire-Research/Stratimux/pull/246)): Ensured Muxium Bad Action Quality properly sets the muxium's bad action property.
+
+## Maintenance & Refinements
+
+- **Strategy Determine Helper** ([PR #247](https://github.com/Phuire-Research/Stratimux/pull/247)): Improved to work with any Action type without requiring an options object, ensuring proper halting completeness.
+
+- **Codebase Organization** ([PR #243](https://github.com/Phuire-Research/Stratimux/pull/243)): Broke up complex files into distinguishable parts and properly connected deck functionality to method creators.
+
+## Release Status
+
+Version 0.3.0 is officially tagged and released ([PR #252](https://github.com/Phuire-Research/Stratimux/pull/252)).
+
+**Release Notes**: https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.0
 
 
 Other typescript projects
