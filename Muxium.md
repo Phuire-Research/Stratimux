@@ -41,6 +41,7 @@ export type MuxiumState = {
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
+  lastStrategyActionList: Array<string>;
   lastStrategyData: unknown;
   lastStrategyDialog: string;
   generation: number;
@@ -77,6 +78,7 @@ export type MuxiumState = {
 * dialog - Is the internal representation of the strategies that the muxium has ran.
 * storeDialog - This is set to false by default to save on memory, but if true will store each dialog, and allows such to be subscribed to.
 * lastStrategy - Informs specifically the of the last ActionStrategy topic to have ran through the system. This is used via testing or the deployment of addition strategies upon completion.
+* lastStrategyActionList - Temporary Store of the Last Strategy and it's associated ActionList. Many Uses, but start with Debugging while keeping in mind this formalizes a Stratimux Dialog as Paragraph.
 * lastStrategyData - Paired with lastStrategy. Use to access thee last data of the previous strategy.
 * lastStrategyDialog - Will only store the lastStrategy actionList as a dialog if storeDialog is set to true for performance reasons. This allows access of your strategies final action list as a verbose dialog.
 * generation - This iterates each time the Set of Concepts is transformed. And if an action is received of the wrong generation. Will be primed at run time, if not found this will emit a badAction that if logging is set to True. Will be emitted to the console alongside the invalidated action as payload.

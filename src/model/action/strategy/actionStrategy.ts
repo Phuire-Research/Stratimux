@@ -7,7 +7,7 @@ of the strategies that currently exist within it.
 $>*/
 /*<#*/
 import { createAction } from '../action';
-import { Action, nullActionType } from '../action.type';
+import { AnyAction, nullActionType } from '../action.type';
 import { ActionNode, ActionNodeOptions, ActionStrategy, ActionStrategyParameters } from './actionStrategy.type';
 
 /**
@@ -16,7 +16,7 @@ import { ActionNode, ActionNodeOptions, ActionStrategy, ActionStrategyParameters
  * @param options successNode and failureNodes are always required. If using decisionNodes, set both to null.
  * @returns ActionNode
  */
-export function createActionNode(action: Action<any>, options?: ActionNodeOptions): ActionNode {
+export function createActionNode(action: AnyAction, options?: ActionNodeOptions): ActionNode {
   if (options) {
     return {
       actionType: action.type,
