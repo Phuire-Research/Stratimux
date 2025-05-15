@@ -50,6 +50,7 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actiActionStrategies are working as intended.ons/workflows/node.js.yml/badge)
+## 0.3.0
 ### QoL 0.2.52
 * Implemented a custom generateUUID function for the Ownership Concept to smooth out roll up processes for newer environments with a global crypto object.
 ### QoL 0.2.51
@@ -68,7 +69,7 @@ When in doubt simplify.
 * Hooked in deck functionality into method creators properly
 * muxium_createStitchNode now requires a deck load
 * Renamed muxificationConcept to muxiumConcept
-### Stratimux 0.2.0-1 Stealth Roll Out
+### Stratimux 0.2.0-1
 * Introduces type safety throughout your muxiums via a new DECK Interface System
   * e: Entry Action
   * c: Comparators, uses semaphores to ensure a stringless comparison
@@ -80,12 +81,11 @@ When in doubt simplify.
 
 Other typescript projects
 ```bash
-npm i stratimux
+npm i stratimux@latest
 ```
 
 From the template template
 ```bash
-npm i --force
 npm run start
 ```
 
