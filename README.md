@@ -50,6 +50,8 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actiActionStrategies are working as intended.ons/workflows/node.js.yml/badge)
+### QoL 0.2.52
+* Implemented a custom generateUUID function for the Ownership Concept to smooth out roll up processes for newer environments with a global crypto object.
 ### QoL 0.2.51
 * Simplified Muxium Type (Muxium<Deck_of_Concepts, Enhanced_Muxium_Qualities_Optional>) and Accessing Plan directly with the ability to extend what deck may be access at the planning stage.
 ### QoL 0.2.48

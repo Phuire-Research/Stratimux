@@ -7,7 +7,6 @@ $>*/
 import { OwnershipState, ownershipName } from '../concepts/ownership/ownership.concept';
 import { Concepts } from './concept/concept.type';
 import { selectState } from './selector/selector';
-import { randomUUID } from 'crypto';
 import { getMuxiumState } from './muxium/muxiumHelpers';
 import { Action } from './action/action.type';
 import { ActionNode, ActionStrategy } from './action/strategy/actionStrategy.type';
@@ -26,6 +25,30 @@ export type OwnershipTicketStub = {
 }
 
 export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, OwnershipTicket[]>());
+
+const generateUUID = (): string => {
+  const randomHex = (): string => {
+    return Math.floor(Math.random() * 16).toString(16);
+  };
+
+  let uuid = '';
+  for (let i = 0; i < 36; i++) {
+    if (i === 8 || i === 13 || i === 18 || i === 23) {
+      uuid += '-';
+    }
+    else if (i === 14) {
+      uuid += '4';
+    }
+    else if (i === 19) {
+      const variant = Math.floor(Math.random() * 4 + 8).toString(16);
+      uuid += variant;
+    }
+    else {
+      uuid += randomHex();
+    }
+  }
+  return uuid;
+};
 
 export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolean => {
   const qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
@@ -149,7 +172,7 @@ export const checkIn =
       if (!found) {
         const expiration = action.expiration;
         const muxiumState = getMuxiumState(concepts);
-        const ticket = muxiumState.name + randomUUID();
+        const ticket = muxiumState.name + generateUUID();
         const newTicketStub = {
           key,
           ticket,
