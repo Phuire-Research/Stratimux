@@ -49,8 +49,9 @@ When in doubt simplify.
 * [The Impossible Halting Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/Index.md) - Original Paper for Stratimux
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
-## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actiActionStrategies are working as intended.ons/workflows/node.js.yml/badge)
-## QoL 0.3.01 Default Store Last ActionStrategy ActionList
+## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+
+## QoL 0.3.1 Default Store Last ActionStrategy ActionList
 * No longer have to toggle Store Dialog to access the most recent successful ActionStrategy and it's Action List. Issue with prior approach in long running conditions is having to repeatedly clear the stored dialog if you are just attempting to debug your decks.
 
 # Stratimux 0.3.0: Precision & Performance
