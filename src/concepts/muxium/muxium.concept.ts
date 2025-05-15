@@ -122,6 +122,7 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   dialog: string;
   storeDialog: boolean;
   lastStrategy: string;
+  lastStrategyActionList: Array<string>;
   lastStrategyData: unknown;
   lastStrategyDialog: string;
   generation: number;
@@ -172,6 +173,7 @@ const muxificationState = <Q, C extends LoadConcepts>(
     dialog: '',
     storeDialog: storeDialog ? storeDialog : false,
     lastStrategy: '',
+    lastStrategyActionList: [],
     lastStrategyData: '',
     lastStrategyDialog: '',
     generation: 0,

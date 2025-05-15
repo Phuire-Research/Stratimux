@@ -22,12 +22,14 @@ export const muxiumAppendActionListToDialog =
         return {
           dialog: state.dialog + newDialog,
           lastStrategy: payload.strategyTopic,
+          lastStrategyActionList: payload.actionList,
           lastStrategyData: payload.strategyData,
           lastStrategyDialog: newDialog
         };
       }
       return {
         lastStrategy: payload.strategyTopic,
+        lastStrategyActionList: payload.actionList,
         lastStrategyData: payload.strategyData,
       };
     }
