@@ -50,7 +50,8 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-
+## QoL 0.3.11 Default Store Last ActionStrategy ActionList
+* Added a new Helper Function to the Stage Planner called createStaging or accessed as "staging" in the plan callback deconstruction. This provides a simple encapsulated environment to compose stages without having to use one-liners or additional imports.
 ## QoL 0.3.1 Default Store Last ActionStrategy ActionList
 * No longer have to toggle Store Dialog to access the most recent successful ActionStrategy and it's Action List. Issue with prior approach in long running conditions is having to repeatedly clear the stored dialog if you are just attempting to debug your decks.
 
@@ -221,7 +222,7 @@ export const muXPrinciple: MUXPrinciple = ({
   // There always needs to be atleast one subscriber or plan for the Muxium to be active.
   const muxPlan = plan('muX Plan', ({stageO, stage, d__}) => [
     // This will register this plan to the muxium, this allows for the muxium to close or remove your concept cleanly.
-    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan}))),
+    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan})))e
     stage(({concepts, dispatch, k, d}) => {
       const state = k.state(concepts);
       if (state) {
@@ -237,6 +238,31 @@ export const muXPrinciple: MUXPrinciple = ({
       }
     })
   ]);
+  // Advanced
+  // *Note* when accessing your deck from outside of Stratimux, you will need to supply your Deck Type Interface to the plan to access such. This is a QoL Decision allowing for Stratimux to be adapted to any number of environments.
+  const muxPlan = plan<MUXDeck>('muX Plan', ({staging, stageO, stage, d__}) => staging(() => {
+      // By using the staging helper function you gain access to scope encapsulation while maintaining type safety. This allow you to process which stages you would like to include in an open environment, versus having to perform sophisticated one-liners and reducing readability. 
+      const stageRegister = stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan})))
+
+      const stageDispatch = stage(({concepts, dispatch, k, d}) => {
+          const state = k.state(concepts);
+          if (state) {
+            dispatch(strategyBegin(muXSomeStrategy(d)), {
+              iterateStage: true
+            });
+          }
+        }, {beat: 30});
+
+      const stageFinalize = stage(({concepts, stagePlanner}) => {
+        const {lastStrategy} = getMuxiumState(concepts);
+        if (lastStrategy === muXSomeStrategyTopic) {
+          stagePlanner.conclude();
+        }
+      });
+
+      return [stageRegister, stageDispatch, stageFinalize];
+    })
+  );
 };
 ```
 

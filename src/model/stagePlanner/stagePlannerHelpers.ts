@@ -65,6 +65,13 @@ export const createStage = <Q = void, C = void, S = void>(
   }
 };
 
+export const createStages = <
+  Q = void,
+  C = void,
+  S = void
+  >(cb: () => Staging<Q, C, S>[]):
+    Staging<Q, C, S>[] => cb();
+
 export const handleRun =
   <Q, C, S>(stageDelimiter: StageDelimiter, plan: Plan<Q, C, S>, action: Action, options?: dispatchOptions)
     : [StageDelimiter, boolean] => {

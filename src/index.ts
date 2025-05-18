@@ -177,7 +177,12 @@ export type {
   Stage,
   PartialStaging
 } from './model/stagePlanner/stagePlanner.type';
-export { stageWaitForOpenThenIterate, stageWaitForOwnershipThenIterate, createStage } from './model/stagePlanner/stagePlannerHelpers';
+export {
+  stageWaitForOpenThenIterate,
+  stageWaitForOwnershipThenIterate,
+  createStage,
+  createStages
+} from './model/stagePlanner/stagePlannerHelpers';
 export { MuxifiedSubject } from './model/stagePlanner/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';
 export { ownership } from './model/ownership';
