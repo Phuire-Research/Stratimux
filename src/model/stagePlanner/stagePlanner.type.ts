@@ -9,7 +9,7 @@ import { Concepts } from '../concept/concept.type';
 import { KeyedSelector } from '../selector/selector.type';
 import { HInterface, UInterface } from '../interface';
 import { Action, ActionType } from '../action/action.type';
-import { createStage, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
+import { createStage, createStages, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
 
 export type MuxifiedSubjectProperties = {
   planId: number;
@@ -57,7 +57,8 @@ export type Planning<Q = void, C = void, S = void> = (title: string, planner: Pl
 export type Planner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
   stage: typeof createStage<Q, C, S>
   stageO: typeof stageWaitForOpenThenIterate,
-  conclude: typeof stageConclude
+  conclude: typeof stageConclude,
+  staging: typeof createStages<Q, C, S>
 }) => PartialStaging<Q, C, S>[];
 
 export type Staging<Q = void, C = void, S = void> = {

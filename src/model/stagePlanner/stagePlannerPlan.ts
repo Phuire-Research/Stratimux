@@ -12,7 +12,7 @@ import { accessDeck } from '../deck';
 import { Actions } from '../action/action.type';
 import { createAction } from '../action/action';
 import { MuxifiedSubjectProperties, Plan, Planner, StagePlanner, Staging } from './stagePlanner.type';
-import { createStage, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
+import { createStage, createStages, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
 import { handleAddSelector, handleRemoveSelector } from './stagePlannerHandlers';
 import { manageQues } from './stagePlannerQues';
 import { execute } from './stagePlannerEntropy';
@@ -34,7 +34,8 @@ export function createPlan<Q,C,S>(
     } as BundledSelectors<any>,
     stage: createStage,
     stageO: stageWaitForOpenThenIterate,
-    conclude: stageConclude
+    conclude: stageConclude,
+    staging: createStages
   });
   const staged: Staging<Q, C, S>[] = stages.map<Staging<Q, C, S>>(s => {
     return {
