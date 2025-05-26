@@ -132,11 +132,10 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   modeNames: string[]
   methodSubscribers: NamedSubscription[];
   principleSubscribers: NamedSubscription[];
-  generalSubscribers: NamedSubscription[];
-  stagePlanners: NamedStagePlanner[];
+  generalSubscribers: NamedSubscription[];  stagePlanners: NamedStagePlanner[];
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
-  concepts$: MuxifiedSubject<Q, C>;
+  concepts$: MuxifiedSubject<Q, C, MuxiumState<Q, C>>;
   deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
@@ -183,14 +182,13 @@ const muxificationState = <Q, C extends LoadConcepts>(
     modeNames: [muxiumName, muxiumName],
     methodSubscribers: [] as NamedSubscription[],
     principleSubscribers: [] as NamedSubscription[],
-    generalSubscribers: [] as NamedSubscription[],
-    stagePlanners: [] as NamedStagePlanner[],
+    generalSubscribers: [] as NamedSubscription[],    stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     head: [],
     body: [],
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
-    concepts$: new MuxifiedSubject(),
+    concepts$: new MuxifiedSubject<Q, C, MuxiumState<Q, C>>(),
     deck: {} as Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
     addConceptQue: {},
     removeConceptQue: {},
@@ -217,7 +215,7 @@ export const muxiumConcept = <Q, C extends LoadConcepts>(
       muxiumName,
       state,
       muxiumQualities,
-      [muxiumPrinciple, muxiumClosePrinciple] as PrincipleFunction<MuxiumQualities, any, MuxiumState<Q,C>>[],
+      [muxiumPrinciple, muxiumClosePrinciple],
       [blockingMode, permissiveMode]
     );
     return c;
@@ -226,7 +224,7 @@ export const muxiumConcept = <Q, C extends LoadConcepts>(
       muxiumName,
       state,
       muxiumStaticQualities,
-      muxiumStaticPrinciple as PrincipleFunction<MuxiumQualities, any, MuxiumState<Q,C>>[],
+      muxiumStaticPrinciple,
       [blockingMode, permissiveMode]
     );
     return c;

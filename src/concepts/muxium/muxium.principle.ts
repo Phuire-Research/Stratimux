@@ -6,13 +6,13 @@ $>*/
 import { Observable, Subscriber, catchError } from 'rxjs';
 import { AnyConcept, Concepts, Mode } from '../../model/concept/concept.type';
 import { forEachConcept, qualityToString } from '../../model/concept/conceptHelpers';
-import { createPrinciple$ } from '../../model/principle';
+import { createPrinciple$, PrincipleFunction } from '../../model/principle';
 import { MuxiumDeck, muxiumName, MuxiumPrinciple } from './muxium.concept';
 import { addConceptsFromQueThenUnblockStrategy } from './strategies/addConcept.strategy';
 import { removeConceptsViaQueThenUnblockStrategy } from './strategies/removeConcept.strategy';
 import { blockingMode, permissiveMode } from './muxium.mode';
 import { muxiumSelectAddConceptQue, muxiumSelectRemoveConceptQue } from './muxium.selector';
-import { Deck, demuxifyDeck } from '../../model/deck';
+import { Deck } from '../../model/deck';
 import { Comparators } from '../../model/interface';
 import { createSelectors, updateKeyedSelectors } from '../../model/selector/selectorAdvanced';
 import { BundledSelectors } from '../../model/selector/selector.type';
@@ -51,11 +51,10 @@ export const muxiumPrinciple: MuxiumPrinciple = (
         addKeys.forEach((key, _index) => {
           const concept = muxiumState.addConceptQue[key] as unknown as AnyConcept;
           concept.semaphore = muxiumState.conceptCounter;
-          muxiumState.conceptCounter += 1;
-          if (concept.mode !== undefined) {
+          muxiumState.conceptCounter += 1;          if (concept.mode !== undefined) {
             const names = muxiumState.modeNames;
-            const modes = concepts[0].mode as Mode[];
-            concept.mode.forEach((mode: Mode) => {
+            const modes = concepts[0].mode as Mode<unknown, unknown, unknown>[];
+            concept.mode.forEach((mode: Mode<unknown, unknown, unknown>) => {
               modes.push(mode);
               names.push(concept.name);
             });
@@ -63,23 +62,20 @@ export const muxiumPrinciple: MuxiumPrinciple = (
 
           newConcepts[concept.semaphore] = concept as AnyConcept;
           newConcepts[concept.semaphore].selectors = createSelectors(concept.semaphore);
-          updateKeyedSelectors(newConcepts, concept.keyedSelectors, concept.semaphore);
-
-          if (concept.principles !== undefined) {
+          updateKeyedSelectors(newConcepts, concept.keyedSelectors, concept.semaphore);          if (concept.principles !== undefined) {
             concept.principles.forEach(principle => {
-              const observable = createPrinciple$(
-                principle,
+              const observable = createPrinciple$<unknown, unknown, unknown>(
+                principle as PrincipleFunction<unknown, unknown, unknown>,
                 concepts,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (muxiumState.concepts$.plan(concept.semaphore) as any).bind(muxiumState.concepts$),
                 muxiumState.concepts$.subscribe.bind(muxiumState.concepts$),
-                muxiumState.concepts$.next.bind(muxiumState.concepts$),
-                muxiumState.action$.next.bind(muxiumState.action$),
+                muxiumState.concepts$.next.bind(muxiumState.concepts$),                muxiumState.action$.next.bind(muxiumState.action$),
                 concept.semaphore,
-                muxiumState.deck.d,
-                concept.actions as Actions<any>,
-                concept.comparators as Comparators<any>,
-                {...concept.keyedSelectors, ...concept.selectors} as BundledSelectors<any>,
+                muxiumState.deck.d as Deck<unknown>,
+                concept.actions as Actions<unknown>,
+                concept.comparators as Comparators<unknown>,
+                {...concept.keyedSelectors, ...concept.selectors} as BundledSelectors<unknown>,
               );
               muxiumState.principleSubscribers.push({
                 name: concept.name,
@@ -104,15 +100,12 @@ export const muxiumPrinciple: MuxiumPrinciple = (
               }) as Subscriber<Action>;
               getMuxiumState(concepts).methodSubscribers.push({name: concept.name, subscription: methodSub});
             }
-          });
-          (muxiumState.deck.d as any)[key] = {
+          });          (muxiumState.deck.d as Record<string, unknown>)[key] = {
+            d: concept.deck.d,
             e: concept.actions,
             c: concept.comparators,
             k: {...concept.keyedSelectors, ...concept.selectors}
           };
-          demuxifyDeck(concept).forEach(u => {
-            (muxiumState.deck.d as any)[u.name] = u.eck;
-          });
         });
         const newMuxiumState = getMuxiumState(newConcepts);
         newMuxiumState.cachedSemaphores = createCachedSemaphores(newConcepts);
@@ -157,10 +150,9 @@ export const muxiumPrinciple: MuxiumPrinciple = (
                 newMuxiumState.defaultModeIndex = 1;
               }
             }
-          });
-          if (shouldAdd) {
+          });          if (shouldAdd) {
             newModeNames.push(modeName);
-            newModes.push((concepts[0].mode as Mode[])[modeIndex]);
+            newModes.push((concepts[0].mode as Mode<unknown, unknown, unknown>[])[modeIndex]);
           }
           shouldAdd = false;
         });
@@ -171,20 +163,16 @@ export const muxiumPrinciple: MuxiumPrinciple = (
         newMuxiumState.methodSubscribers.forEach(named => {
           named.subscription.unsubscribe();
         });
-        newMuxiumState.methodSubscribers = [];
-        const newDeck = {} as Deck<any>;
+        newMuxiumState.methodSubscribers = [];        const newDeck = {} as Record<string, unknown>;
         Object.keys(newConcepts).forEach((key) => {
           const i = Number(key);
           if (!removeKeys.includes(newConcepts[i].name)) {
             newDeck[newConcepts[i].name] = {
+              d: newConcepts[i].deck.d,
               e: newConcepts[i].actions,
               c: newConcepts[i].comparators,
-              k: { ...newConcepts[i].keyedSelectors, ...newConcepts[i].selectors } as BundledSelectors<any>,
+              k: { ...newConcepts[i].keyedSelectors, ...newConcepts[i].selectors },
             };
-
-            demuxifyDeck(newConcepts[i]).forEach(u => {
-              (newDeck as any)[u.name].d = u.eck;
-            });
           }
         });
         newMuxiumState.deck.d = newDeck as Deck<MuxiumLoad<MuxiumDeck>>;

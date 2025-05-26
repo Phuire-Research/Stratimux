@@ -28,13 +28,12 @@ export const ownershipMode: Mode = (
   const conceptsSize = Object.keys(concepts).length;
   let finalMode: Mode = permissiveMode;
   const muxiumState = getMuxiumState(concepts);
-  const deck = muxiumState.deck;
-  // Logical Determination: setBlockingModeType
+  const deck = muxiumState.deck;  // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
   } else {
     // This assumes that ownership will be treated as the new default mode.
-    finalMode = (concepts[0].mode as Mode[])[1];
+    finalMode = (concepts[0].mode as Mode<unknown, unknown, unknown>[])[1];
   }
   // Logical Determination: muxiumConcludeType
   // If generation is set to -1, then the action is not primed.

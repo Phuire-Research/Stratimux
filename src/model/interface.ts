@@ -4,7 +4,7 @@ $>*/
 
 import { Action, Actions } from './action/action.type';
 import { LoadConcepts } from './concept/concept.type';
-import { Deck } from './deck';
+import { Deck, Decks } from './deck';
 import { BundledSelectors } from './selector/selector.type';
 
 /*<#*/
@@ -41,10 +41,11 @@ export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (act
 /**
  * Highest Order Interface
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
+ * Fixed to preserve specific concept types through functional composition
  */
 export type UInterface<Q = void, C = void, S = void> = {
-  // Deck
-  d: Deck<C extends void ? LoadConcepts : C>
+  // Deck - preserves specific concept types instead of degrading to AnyConcept
+  d: Deck<C>
   // Entry Actions
   e: Actions<Q>
   // Comparators
@@ -60,7 +61,7 @@ export type UInterface<Q = void, C = void, S = void> = {
  * Limited by a whitelist provided by some access property supplied to the Muxium
  */
 export type OInterface<Q = void, C = void, S = void> = {
-  d: Deck<C extends void ? LoadConcepts : C>
+  d: Deck<C>
   e: Actions<Q>
   c: Comparators<Q>
   k: BundledSelectors<S>
@@ -70,7 +71,7 @@ export type OInterface<Q = void, C = void, S = void> = {
  * Higher Order Interface
  */
 export type HInterface<Q = void, C = void, S = void> = {
-  d__: Deck<C extends void ? LoadConcepts : C>
+  d__: Deck<C>
   e__: Actions<Q>
   c__: Comparators<Q>
   k__: BundledSelectors<S>,
@@ -80,7 +81,7 @@ export type HInterface<Q = void, C = void, S = void> = {
  * Base Interface
  */
 export type BInterface<Q = void, C = void, S = void> = {
-  d_: Deck<C extends void ? LoadConcepts : C>,
+  d_: Deck<C>
   e_: Actions<Q>
   c_: Comparators<Q>
   k_: BundledSelectors<S>,

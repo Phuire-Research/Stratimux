@@ -172,16 +172,20 @@ export { createActionController$, actionController } from './model/action/action
 export type {
   dispatchOptions,
   Staging,
+  BaseStaging,
   StagePlanner,
   NamedStagePlanner,
   Stage,
-  PartialStaging
+  BaseStage,
+  PartialStaging,
+  BasePartialStaging
 } from './model/stagePlanner/stagePlanner.type';
 export {
   stageWaitForOpenThenIterate,
   stageWaitForOwnershipThenIterate,
   createStage,
-  createStages
+  createBaseStage,
+  createBaseStages
 } from './model/stagePlanner/stagePlannerHelpers';
 export { MuxifiedSubject } from './model/stagePlanner/stagePlanner';
 export type { OwnershipTicket, OwnershipTicketStub, OwnershipLedger } from './model/ownership';

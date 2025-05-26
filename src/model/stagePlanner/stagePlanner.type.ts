@@ -7,9 +7,9 @@ $>*/
 /* eslint-disable complexity */
 import { Concepts } from '../concept/concept.type';
 import { KeyedSelector } from '../selector/selector.type';
-import { HInterface, UInterface } from '../interface';
+import { HInterface, OInterface, UInterface } from '../interface';
 import { Action, ActionType } from '../action/action.type';
-import { createStage, createStages, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
+import { baseStageConclude, baseStageWaitForOpenThenIterate, createBaseStage, createBaseStages, createStage, createStages, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
 
 export type MuxifiedSubjectProperties = {
   planId: number;
@@ -44,6 +44,7 @@ export type Plan<Q = void, C = void, S = void> = {
 }
 
 export type Stage<Q, C, S> = (params: StageParams<Q, C, S>) => void;
+export type BaseStage<Q, C, S> = (params: BaseStageParams<Q, C, S>) => void;
 
 export type StageParams<Q = void, C = void, S = void> = {
   concepts: Concepts,
@@ -51,6 +52,13 @@ export type StageParams<Q = void, C = void, S = void> = {
   changes: KeyedSelector[],
   stagePlanner: StagePlanner
 } & UInterface<Q, C, S>
+
+export type BaseStageParams<Q = void, C = void, S = void> = {
+  concepts: Concepts,
+  dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
+  changes: KeyedSelector[],
+  stagePlanner: StagePlanner
+} & OInterface<Q, C, S>
 
 export type Planning<Q = void, C = void, S = void> = (title: string, planner: Planner<Q, C, S>) => StagePlanner;
 
@@ -61,6 +69,13 @@ export type Planner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
   staging: typeof createStages<Q, C, S>
 }) => PartialStaging<Q, C, S>[];
 
+export type BasePlanner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
+  stage: typeof createBaseStage<Q, C, S>
+  stageO: typeof baseStageWaitForOpenThenIterate,
+  conclude: typeof baseStageConclude,
+  staging: typeof createBaseStages<Q, C, S>
+}) => BasePartialStaging<Q, C, S>[];
+
 export type Staging<Q = void, C = void, S = void> = {
   stage: Stage<Q, C, S>;
   selectors: KeyedSelector[];
@@ -69,8 +84,23 @@ export type Staging<Q = void, C = void, S = void> = {
   beat?: number,
 };
 
+export type BaseStaging<Q = void, C = void, S = void> = {
+  stage: BaseStage<Q, C, S>;
+  selectors: KeyedSelector[];
+  firstRun: boolean;
+  priority?: number
+  beat?: number,
+};
+
 export type PartialStaging<Q = void, C = void, S = void> = {
   stage: Stage<Q, C, S>;
+  selectors?: KeyedSelector[];
+  priority?: number
+  beat?: number,
+};
+
+export type BasePartialStaging<Q = void, C = void, S = void> = {
+  stage: BaseStage<Q, C, S>;
   selectors?: KeyedSelector[];
   priority?: number
   beat?: number,

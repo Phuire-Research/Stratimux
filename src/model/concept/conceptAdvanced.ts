@@ -8,8 +8,9 @@ $>*/
 import { PrincipleFunction } from '../principle';
 import { Qualities, Quality } from '../quality';
 import { createConcept } from './concept';
-import { AnyConcept, Concept, Mode, Muxified } from './concept.type';
+import { AnyConcept, Concept, Mode, LoadConcepts, ConceptECK, Muxified } from './concept.type';
 import { forEachConcept } from './conceptHelpers';
+import { BundledSelectors, Selectors } from '../selector/selector.type';
 
 /**
  * This will remove any duplicate qualities, principles, and modes.
@@ -17,10 +18,11 @@ import { forEachConcept } from './conceptHelpers';
  */
 function filterSimilarQualities(concept: AnyConcept) {
   const newQualities: Quality<Record<string, unknown>>[] = [];
-  const newMuxified: Record<string, Muxified> = {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const newPrinciples: PrincipleFunction<Qualities, any, Record<string, unknown>>[] = [];
   const newMode: Mode[] = [];
+
+  // Filter duplicate qualities
   for (let i = 0; i < concept.qualities.length; i++) {
     let found = false;
     for (let j = i + 1; j < concept.qualities.length; j++) {
@@ -34,20 +36,8 @@ function filterSimilarQualities(concept: AnyConcept) {
     }
   }
   concept.qualities = newQualities;
-  const muxifiedKeys = Object.keys(concept.muxifiedRecord);
-  for (let i = 0; i < muxifiedKeys.length; i++) {
-    let found = false;
-    for (let j = i + 1; j < muxifiedKeys.length; j++) {
-      if (muxifiedKeys[i] === muxifiedKeys[j]) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      newMuxified[muxifiedKeys[i]] = concept.muxifiedRecord[muxifiedKeys[i]];
-    }
-  }
-  concept.muxifiedRecord = newMuxified;
+
+  // Filter duplicate principles
   if (concept.principles) {
     for (let i = 0; i < concept.principles.length; i++) {
       let found = false;
@@ -63,6 +53,8 @@ function filterSimilarQualities(concept: AnyConcept) {
     }
     concept.principles = newPrinciples;
   }
+
+  // Filter duplicate modes
   if (concept.mode) {
     for (let i = 0; i < concept.mode.length; i++) {
       let found = false;
@@ -85,16 +77,7 @@ function muxify<T extends Qualities, K extends Qualities>(
   base: Concept<Record<string, unknown>, T>,
   target: Concept<Record<string, unknown>, K> | AnyConcept
 ): Concept<Record<string, unknown>, T & K> {
-  if (target.name !== '') {
-    base.muxifiedRecord[target.name] = {
-      actionMap: Object.keys(target.actions),
-      stateMap: Object.keys(target.state)
-    };
-  }
-  base.muxifiedRecord = {
-    ...base.muxifiedRecord,
-    ...target.muxifiedRecord
-  };
+  // Merge all qualities, actions, comparators, selectors
   base.state = {
     ...base.state,
     ...target.state,
@@ -114,7 +97,28 @@ function muxify<T extends Qualities, K extends Qualities>(
   base.keyedSelectors = {
     ...base.keyedSelectors,
     ...target.keyedSelectors
-  };
+  };  // Build deck composition - add target to the deck if it has a name
+  if (target.name !== '') {
+    const targetECK = {
+      e: target.actions,
+      c: target.comparators,
+      k: {
+        ...target.selectors,
+        ...target.keyedSelectors
+      } as BundledSelectors<Record<string, unknown>>
+    };
+    (base.deck.d as Record<string, unknown>)[target.name] = targetECK;
+  }
+
+  // Update base deck's own e, c, k to reflect merged actions/comparators/selectors
+  base.deck.e = base.actions;
+  base.deck.c = base.comparators;
+  base.deck.k = {
+    ...base.selectors,
+    ...base.keyedSelectors
+  } as BundledSelectors<Record<string, unknown>> & Selectors<Record<string, unknown>>;
+
+  // Handle principles
   if (target.principles) {
     if (base.principles) {
       const principles = [
@@ -131,6 +135,8 @@ function muxify<T extends Qualities, K extends Qualities>(
       base.principles = principles;
     }
   }
+
+  // Handle modes
   if (target.mode) {
     if (base.mode) {
       base.mode = [
@@ -143,6 +149,8 @@ function muxify<T extends Qualities, K extends Qualities>(
       ];
     }
   }
+
+  // Handle meta
   if (target.meta) {
     if (base.meta) {
       base.meta = {
@@ -151,7 +159,7 @@ function muxify<T extends Qualities, K extends Qualities>(
       };
     } else {
       base.meta = {
-        ...target.mode
+        ...target.meta
       };
     }
   }
@@ -159,7 +167,8 @@ function muxify<T extends Qualities, K extends Qualities>(
 }
 /**
  * This will muxify concepts while prioritizing qualities later in the provided concepts list via recomposition.
- *  Then finally muxify the emergent concept with final priority.
+ * Then finally muxify the emergent concept with final priority.
+ * Uses the deck system for functional composition instead of muxifiedRecord.
  */
 export function muxifyConcepts<S extends Record<string, unknown>, T extends Qualities>(
   concepts: AnyConcept[],
@@ -167,18 +176,58 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
 ): AnyConcept {
   const dummy: Record<string, unknown> = {};
   let newConcept = createConcept<typeof dummy, T>('', dummy);
+
+  // Track all muxified concepts for the final deck composition
+  const allMuxifiedConcepts: LoadConcepts = {};
+
+  // Muxify each input concept
   forEachConcept(concepts, (concept => {
     newConcept = muxify(newConcept, concept);
-  }));
-  newConcept = muxify(newConcept, emergentConcept);
-  const newMuxifiedRecord: Record<string, Muxified> = {};
-  Object.keys(newConcept.muxifiedRecord).forEach(name => {
-    if (name !== emergentConcept.name) {
-      newMuxifiedRecord[name] = newConcept.muxifiedRecord[name];
+    // Track each concept by name for deck composition
+    if (concept.name !== '') {
+      allMuxifiedConcepts[concept.name] = concept;
     }
-  });
-  newConcept.muxifiedRecord = newMuxifiedRecord;
+  }));
+
+  // Muxify the emergent concept last
+  newConcept = muxify(newConcept, emergentConcept);
+
+  // Set the final name to the emergent concept's name
   newConcept.name = emergentConcept.name;
+  newConcept.deck.e = newConcept.actions;
+  newConcept.deck.c = newConcept.comparators;
+  newConcept.deck.k = {
+    ...newConcept.selectors,
+    ...newConcept.keyedSelectors
+  } as BundledSelectors<Record<string, unknown>> & Selectors<Record<string, unknown>>;
+
+  // Build the final deck with all tracked concepts
+  // This creates the { d: { conceptName: { e, c, k } }, e, c, k } structure
+  const finalDeckComposition = {} as Record<string, ConceptECK>;
+
+  Object.keys(allMuxifiedConcepts).forEach(conceptName => {
+    const concept = allMuxifiedConcepts[conceptName];
+    finalDeckComposition[conceptName] = {
+      e: concept.actions,
+      c: concept.comparators,
+      k: newConcept.deck.k
+    };
+  });
+  // Update the concept's deck with the complete composition
+  newConcept.deck.d = finalDeckComposition;
+
+  // Populate muxifiedRecord from the tracked concepts
+  const muxifiedRecord: Record<string, Muxified> = {};
+  Object.keys(allMuxifiedConcepts).forEach(conceptName => {
+    const concept = allMuxifiedConcepts[conceptName];
+    muxifiedRecord[conceptName] = {
+      stateMap: Object.keys(concept.state),
+      actionMap: Object.keys(concept.actions)
+    };
+  });
+  newConcept.muxifiedRecord = muxifiedRecord;
+
+  // Update string representations for debugging
   if (newConcept.mode) {
     newConcept.mode.forEach((m, i) => {
       m.toString = () => `MODE: ${newConcept.name} ${i}`;
@@ -189,8 +238,8 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
       p.toString = () => `PRINCIPLE: ${newConcept.name} ${i}`;
     });
   }
+
   return filterSimilarQualities(newConcept as AnyConcept) as Concept<S, T>;
 }
-
 
 /*#>*/

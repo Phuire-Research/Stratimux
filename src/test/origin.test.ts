@@ -12,6 +12,7 @@ import { selectState } from '../model/selector/selector';
 import { PrincipleFunction } from '../model/principle';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
 import { Concept } from '../model/concept/concept.type';
+import { Deck } from '../model/deck';
 
 test('Origin Creation', (done) => {
   expect(createOrigin(['one'])).toBe('one');
@@ -38,7 +39,7 @@ test('Test Dispatch Override', (done) => {
       } = getMuxiumState(concepts_);
       const stageName = 'Test Override';
       const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
-        stageO(() => d__.muxium.e.muxiumKick()),
+        stageO(() => (d__ as Deck<MuxiumDeck>).muxium.e.muxiumKick()),
         stage(({dispatch, e, d}) => {
           new Array(10).fill('').forEach(() => body.push(e.counterAdd()));
           body.push(e.counterSetCount({
@@ -69,7 +70,7 @@ test('Test Dispatch Override', (done) => {
               override: true,
             });
           } else {
-            dispatch(d.muxium.e.muxiumKick(), {
+            dispatch((d as Deck<MuxiumDeck>).muxium.e.muxiumKick(), {
               iterateStage: true
             });
           }

@@ -20,10 +20,6 @@ test('Muxium Counting Strategy Test', (done) => {
   const plan = muxium.plan<DECK>('Counting Strategy Plan',
     ({stage}) => [
       stage(({stagePlanner, dispatch, d, e}) => {
-        console.log('HIT!!!');
-        e.muxiumKick();
-        // Start HERE
-        d.counter.e.counterAdd();
         const str = countingStrategy(d);
         if (str) {
           dispatch(strategyBegin(str), {

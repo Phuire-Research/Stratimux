@@ -16,7 +16,7 @@ import {
   MuxiumState,
   MuxiumDeck,
 } from '../../concepts/muxium/muxium.concept';
-import { Planner, StagePlanner } from '../stagePlanner/stagePlanner.type';
+import { BasePlanner, Planner, StagePlanner } from '../stagePlanner/stagePlanner.type';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { Decks } from '../deck';
 import { Action, Actions, AnyAction } from '../action/action.type';
@@ -38,14 +38,14 @@ export type Muxium<C extends LoadConcepts, Q = void> = {
   unsubscribe: () => void;
   close: (exit?: boolean) => void;
   dispatch: (action: AnyAction) => void;
-  plan: <Co = void>(
+  plan: <Co extends LoadConcepts = C>(
     title: string,
-    planner: Planner<
+    planner: BasePlanner<
     MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities,
-    (Co extends void ? Record<string, unknown> : Co) & C & MuxiumDeck,
+    Co & MuxiumDeck,
     MuxiumState<
       MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities,
-      (Co extends void ? Record<string, unknown> : Co) & C & MuxiumDeck
+      Co & MuxiumDeck
       >
     >
   ) => StagePlanner;

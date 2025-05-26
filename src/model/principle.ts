@@ -10,7 +10,7 @@ import { Action, Actions } from './action/action.type';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { BInterface, Comparators } from './interface';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
-import { Deck, accessDeck } from './deck';
+import { Deck, Decks, accessDeck } from './deck';
 import { access } from 'fs';
 import { Qualities } from './quality';
 import { Planning } from './stagePlanner/stagePlanner.type';
@@ -37,7 +37,7 @@ export function createPrinciple$<Q = void, C = void, S = void>(
   nextC: (concepts: Concepts) => void,
   nextA: (action: Action) => void,
   conceptSemaphore: number,
-  d_: Deck<C extends void ? LoadConcepts : C>,
+  d_: Deck<C>,
   e_: Actions<Q extends Qualities ? Q : Qualities>,
   c_: Comparators<Q extends Qualities ? Q : Qualities>,
   k_: BundledSelectors<S>,

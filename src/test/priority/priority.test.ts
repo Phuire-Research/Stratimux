@@ -8,7 +8,7 @@ import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { experimentName } from '../../concepts/experiment/experiment.concept';
 import { muxification } from '../../model/muxium/muxium';
 import { select } from '../../model/selector/';
-import { createStage } from '../../model/stagePlanner/stagePlannerHelpers';
+import { createBaseStage, createStage } from '../../model/stagePlanner/stagePlannerHelpers';
 import { ExperimentPriorityState, createExperimentPriorityConcept } from './priority.concept';
 import { experimentPriorityReadySelector, experimentPriorityValueSelector } from './priority.selector';
 
@@ -30,7 +30,7 @@ test('Priority Test', (done) => {
   };
   const priorityTest = muxification('Priority Test', deck, {logging: true, storeDialog: true, logActionStream: true});
 
-  const firstStage = (name: string, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+  const firstStage = (name: string, priority: number) => createBaseStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       console.log('HIT: ', name, changes);
@@ -41,7 +41,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {selectors: [experimentPriorityReadySelector], priority});
-  const secondStage = (name: string, newValue: number, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+  const secondStage = (name: string, newValue: number, priority: number) => createBaseStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
     ({concepts, dispatch, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState) {
@@ -51,7 +51,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {priority});
-  const thirdStage = (name: string, expected: number, priority: number) => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
+  const thirdStage = (name: string, expected: number, priority: number) => createBaseStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(
     ({concepts, dispatch, changes, d}) => {
       const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
       if (priorityState && changes.length > 0) {
@@ -63,7 +63,7 @@ test('Priority Test', (done) => {
         });
       }
     }, {selectors: [experimentPriorityValueSelector], priority});
-  const concludePlan = () => createStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({stagePlanner}) => {
+  const concludePlan = () => createBaseStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({stagePlanner}) => {
     console.log(`${stagePlanner.title} Priority END`);
     stagePlanner.conclude();
     finalize();

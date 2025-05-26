@@ -7,10 +7,11 @@ $>*/
 import { PrincipleFunction } from '../../model/principle';
 import { selectMuxifiedState } from '../../model/selector/selector';
 import { StagePlanner } from '../../model/stagePlanner/stagePlanner.type';
+import { MuxiumDeck } from '../muxium/muxium.concept';
 import { ExperimentState, experimentName } from './experiment.concept';
 
 export const experimentActionQuePrincipleCreator = <T>() => {
-  const experimentActionQuePrinciple: PrincipleFunction<T> = ({
+  const experimentActionQuePrinciple: PrincipleFunction<T, MuxiumDeck> = ({
     observer,
     plan,
     nextC,
