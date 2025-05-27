@@ -16,7 +16,7 @@ import { KeyedSelectors, Selectors } from '../selector/selector.type';
 export function createConcept<
   S extends Record<string, unknown>,
   Q = void,
-  D extends LoadConcepts = Record<string, never>
+  MuX extends LoadConcepts = Record<string, never>
 >(
   name: string,
   state: S,
@@ -62,7 +62,7 @@ export function createConcept<
     e: actions as Actions<Q extends void ? any : Q>,
     c: comparators as Comparators<Q extends void ? any : Q>,
     k: {} as KeyedSelectors<S> & Selectors<S>
-  } as ConceptDECK<S, Q, D>;
+  } as ConceptDECK<S, Q, MuX>;
   return {
     name,
     muxifiedRecord: {}, // Kept for backward compatibility
