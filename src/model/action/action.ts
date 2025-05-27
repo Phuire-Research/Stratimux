@@ -129,7 +129,8 @@ export function createAction<T = void>(
 
 export function prepareActionCreator(
   actionType: ActionType,
-  actionSemaphoreBucket: [number, number, number, number][]
+  actionSemaphoreBucket: [number, number, number, number][],
+  identity: number
 ) {
   return (
     options?: ActionOptions
@@ -144,7 +145,8 @@ export function prepareActionCreator(
     }
     return createAction(
       actionType, {
-        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1]
+        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1],
+        identity
       }
     );
   };
@@ -152,7 +154,8 @@ export function prepareActionCreator(
 
 export function prepareActionWithPayloadCreator<T extends Record<string, unknown>>(
   actionType: ActionType,
-  actionSemaphoreBucket: [number, number, number, number][]
+  actionSemaphoreBucket: [number, number, number, number][],
+  identity: number
 ): ActionCreatorWithPayload<T> {
   return (
     payload: T,
@@ -166,7 +169,8 @@ export function prepareActionWithPayloadCreator<T extends Record<string, unknown
       actionType,
       {
         ...opt,
-        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1]
+        semaphore: actionSemaphoreBucket[0] ? actionSemaphoreBucket[0] : [-1, -1, -1, -1],
+        identity
       }
     );
   };

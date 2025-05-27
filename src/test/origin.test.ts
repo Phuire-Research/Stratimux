@@ -41,7 +41,12 @@ test('Test Dispatch Override', (done) => {
       const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
         stageO(() => (d__ as Deck<MuxiumDeck>).muxium.e.muxiumKick()),
         stage(({dispatch, e, d}) => {
-          new Array(10).fill('').forEach(() => body.push(e.counterAdd()));
+          // new Array(10).fill('').forEach(() => body.push()));
+          new Array(10).fill('').forEach((_, i) => {
+            body.push(e.counterAdd({
+              origin: createOrigin([stageName, i + ''])
+            }));
+          });
           body.push(e.counterSetCount({
             newCount: Infinity
           }, {
