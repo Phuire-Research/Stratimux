@@ -9,15 +9,15 @@ import { Concept } from '../../model/concept/concept.type';
 import { createConcept } from '../../model/concept/concept';
 import { Action } from '../../model/action/action.type';
 import { ownershipMode } from './ownership.mode';
-import { ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';
+import { OwnershipInitializeOwnership, ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
 import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
-import { ownershipBackTrack } from './qualities/backTrack.quality';
-import { ownershipClearPayloadStubs } from './qualities/clearPayloadStubs.quality';
-import { ownershipClearStrategyStubsFromLedgerAndSelf } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
-import { ownershipClearPendingActions } from './qualities/clearPendingActions.quality';
-import { ownershipClearPendingActionsOfStrategy } from './qualities/clearPendingActionsOfStrategy.quality';
-import { ownershipResetOwnershipLedger } from './qualities/resetOwnershipLedger.quality';
+import { OwnershipBackTrack, ownershipBackTrack } from './qualities/backTrack.quality';
+import { OwnershipClearPayloadStubs, ownershipClearPayloadStubs } from './qualities/clearPayloadStubs.quality';
+import { OwnershipClearStrategyStubsFromLedgerAndSelf, ownershipClearStrategyStubsFromLedgerAndSelf } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
+import { OwnershipClearPendingActions, ownershipClearPendingActions } from './qualities/clearPendingActions.quality';
+import { OwnershipClearPendingActionsOfStrategy, ownershipClearPendingActionsOfStrategy } from './qualities/clearPendingActionsOfStrategy.quality';
+import { OwnershipResetOwnershipLedger, ownershipResetOwnershipLedger } from './qualities/resetOwnershipLedger.quality';
 import { MuxiumDeck } from '../muxium/muxium.concept';
 import { PrincipleFunction } from '../../model/principle';
 
@@ -28,9 +28,7 @@ export type OwnershipState = {
   isResponsibleForMode: boolean;
 }
 
-export type OwnershipDeck = {
-  ownership: Concept<OwnershipState, OwnershipQualities>,
-}
+
 
 export const ownershipName = 'ownership';
 /**
@@ -55,7 +53,19 @@ const ownershipQualities = {
   ownershipResetOwnershipLedger
 };
 
-export type OwnershipQualities = typeof ownershipQualities;
+export type OwnershipQualities = {
+  ownershipInitializeOwnership: OwnershipInitializeOwnership,
+  ownershipBackTrack: OwnershipBackTrack,
+  ownershipClearPayloadStubs: OwnershipClearPayloadStubs,
+  ownershipClearStrategyStubsFromLedgerAndSelf: OwnershipClearStrategyStubsFromLedgerAndSelf,
+  ownershipClearPendingActions: OwnershipClearPendingActions,
+  ownershipClearPendingActionsOfStrategy: OwnershipClearPendingActionsOfStrategy,
+  ownershipResetOwnershipLedger: OwnershipResetOwnershipLedger
+};
+
+export type OwnershipDeck = {
+  ownership: Concept<OwnershipState, OwnershipQualities>,
+}
 
 export type OwnershipPrinciple = PrincipleFunction<OwnershipQualities, OwnershipDeck & MuxiumDeck, OwnershipState>
 

@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { OwnershipState } from '../ownership.concept';
 import { selectPayload } from '../../../model/selector/selector';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { ActionStrategyTopic } from '../../../model/action/strategy/actionStrategy.type';
 import { Action } from '../../../model/action/action.type';
 
@@ -13,6 +13,7 @@ export type OwnershipClearPendingActionsOfStrategyPayload = {
   topic: ActionStrategyTopic
 };
 
+export type OwnershipClearPendingActionsOfStrategy = Quality<OwnershipState, OwnershipClearPendingActionsOfStrategyPayload>
 export const ownershipClearPendingActionsOfStrategy =
   createQualityCardWithPayload<OwnershipState, OwnershipClearPendingActionsOfStrategyPayload>({
     type: 'clear Ownership\'s Pending Actions of Strategy Topic',
