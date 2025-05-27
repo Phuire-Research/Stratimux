@@ -4,7 +4,8 @@ $>*/
 
 import { Action, Actions } from './action/action.type';
 import { LoadConcepts } from './concept/concept.type';
-import { Deck, Decks } from './deck';
+import { Deck, Stratideck } from './deck';
+import { Quality } from './quality';
 import { BundledSelectors } from './selector/selector.type';
 
 /*<#*/
@@ -17,7 +18,7 @@ export type Comparators<T = void> = {
   [K in keyof T]: Comparator
 };
 
-export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, number][]) => Comparator;
+export type PrimeComparator = (quality: Quality<Record<string, unknown>>) => Comparator;
 
 /**
  * This will curry the actionSemaphoreBucket into a function that will supply type validation without the utilization of string comparison.
@@ -25,13 +26,9 @@ export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, n
  * @returns True of False if the action's semaphore matches the curried actionSemaphoreBucket
  * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the muxium.
  */
-export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (action) => {
-  const semaphore = actionSemaphoreBucket[0];
-  if (semaphore[0] && semaphore[0] !== -1) {
-    return action.semaphore[0] === semaphore[0] && action.semaphore[1] === semaphore[1];
-  } else {
-    throw 'ACTION SEMAPHORE BUCKET NOT PRIMED';
-  }
+export const createComparator: PrimeComparator = (quality: Quality<Record<string, unknown>>) => (action) => {
+  const identity = quality.qualityIdentity;
+  return identity === action.identity;
 };
 
 // Providing these interfaces to avoid overlap and denote some final order that should be maintained when orchestrating plans.

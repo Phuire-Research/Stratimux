@@ -12,6 +12,7 @@ export const nullActionType: ActionType = 'null';
 export type ActionType = string;
 export type Action<T = void> = {
     type: ActionType;
+    identity: number;
     semaphore: [number, number, number, number];
     conceptSemaphore?: number;
     payload: T extends Record<string, unknown> ? T : undefined;
@@ -26,6 +27,7 @@ export type Action<T = void> = {
 
 export type AnyAction = {
     type: ActionType;
+    identity: number;
     semaphore: [number, number, number, number];
     conceptSemaphore?: number;
     payload: any;
@@ -60,6 +62,7 @@ export type ActionCreatorWithPayload<T extends Record<string, unknown>> = (
 
 export type ActionOptions = {
     semaphore?: [number, number, number, number];
+    identity?: number;
     conceptSemaphore?: number;
     strategy?: ActionStrategy;
     keyedSelectors?: KeyedSelector[];
@@ -72,6 +75,7 @@ export type ActionOptions = {
 
 export type ActionWithPayloadOptions<T = void> = {
     semaphore?: [number, number, number, number];
+    identity?: number;
     conceptSemaphore?: number;
     payload?: T extends Record<string, unknown> ? T : undefined;
     strategy?: ActionStrategy;

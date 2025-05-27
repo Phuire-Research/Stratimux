@@ -107,10 +107,14 @@ function muxify<T extends Qualities, K extends Qualities>(
         ...target.keyedSelectors
       } as BundledSelectors<Record<string, unknown>>
     };
-    (base.deck.d as Record<string, unknown>)[target.name] = targetECK;
+    // (base.deck.d as Record<string, unknown>)[target.name] = targetECK;
   }
 
   // Update base deck's own e, c, k to reflect merged actions/comparators/selectors
+  base.deck.d = {
+    ...base.deck.d,
+    ...target.deck.d
+  };
   base.deck.e = base.actions;
   base.deck.c = base.comparators;
   base.deck.k = {
@@ -179,9 +183,18 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
 
   // Track all muxified concepts for the final deck composition
   const allMuxifiedConcepts: LoadConcepts = {};
+  let allDecks: {
+      [x: string]: ConceptECK<Record<string, unknown>, unknown>;
+  } | {
+      [x: string]: ConceptECK<any, any>;
+  } = {};
 
   // Muxify each input concept
   forEachConcept(concepts, (concept => {
+    allDecks = {
+      ...allDecks,
+      ...concept.deck.d
+    };
     newConcept = muxify(newConcept, concept);
     // Track each concept by name for deck composition
     if (concept.name !== '') {
@@ -214,7 +227,10 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
     };
   });
   // Update the concept's deck with the complete composition
-  newConcept.deck.d = finalDeckComposition;
+  newConcept.deck.d = {
+    ...finalDeckComposition,
+    ...allDecks
+  };
 
   // Populate muxifiedRecord from the tracked concepts
   const muxifiedRecord: Record<string, Muxified> = {};

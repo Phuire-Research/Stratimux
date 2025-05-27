@@ -46,8 +46,8 @@ export function createConcept<
         actionSemaphoreBucket
       };
       try {
-        actions[q] = qualia.bufferedActionCreator(actionSemaphoreBucket);
-        comparators[q] = createComparator(actionSemaphoreBucket);
+        actions[q] = qualia.bufferedActionCreator(actionSemaphoreBucket, qualia.qualityIdentity);
+        comparators[q] = createComparator(qualia);
         qualities.push(qualia as Quality<Record<string, unknown>>);
       } catch (error) {
         console.error('ERROR @: ', q, qualia);

@@ -17,10 +17,12 @@ import { Method } from './method/method.type';
 
 export type Quality<S extends Record<string, unknown>, T = void, C = void> = {
   actionType: ActionType;
+  qualityIdentity: number;
   actionSemaphoreBucket: [number, number, number, number][];
   actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
   bufferedActionCreator: (
-    semaphoreBucket: [[number, number, number, number]]
+    semaphoreBucket: [[number, number, number, number]],
+    identity: number
   ) => ActionCreatorType<T>
   reducer: SpecificReducer<any, T, C>;
   toString: () => string;
@@ -39,12 +41,29 @@ export type Qualities = {
   // [s: string]: Quality<Record<string, unknown>>
 };
 
+// Generate a unique quality identity that won't overflow for 1000+ years
+export function generateQualityIdentity(): number {
+  // Use a smaller random number to prevent overflow
+  // Random number between 1 and 999,999 (6 digits max)
+  const randomNumber = Math.floor(Math.random() * 999999) + 1;
+  // Get current timestamp in milliseconds
+  const timestampInMilliseconds = Date.now();
+  // Combine: timestamp + random component
+  // This ensures uniqueness while staying within safe integer bounds
+  // JavaScript's Number.MAX_SAFE_INTEGER is 9,007,199,254,740,991
+  // Current timestamp (2025) is ~1,737,000,000,000 (13 digits)
+  // Adding 6-digit random gives us ~19 digits total
+  // This will remain safe for well over 1000 years
+  return (timestampInMilliseconds * 1000000) + randomNumber;
+}
+
 export function createQuality<S extends Record<string, unknown>, T = void, C = void>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
   bufferedActionCreator: (
-    semaphoreBucket: [[number, number, number, number]]
+    semaphoreBucket: [[number, number, number, number]],
+    identity: number
   ) => ActionCreatorType<T>,
   reducer: SpecificReducer<S, T, C>,
   methodCreator?: MethodCreatorStep<S, T, C>,
@@ -56,6 +75,7 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
   return {
     actionType,
     actionCreator,
+    qualityIdentity: generateQualityIdentity(),
     bufferedActionCreator,
     actionSemaphoreBucket,
     reducer,

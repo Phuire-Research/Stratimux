@@ -9,6 +9,7 @@ $>*/
 import { prepareActionCreator } from '../../../model/action/action';
 import { ActionType } from '../../../model/action/action.type';
 import { getSpecialSemaphore } from '../../../model/action/actionSemaphore';
+import { muxiumPrepareActionCreator } from '../../../model/muxium/muxiumHelpers';
 
 /**
  * muxiumConcludeType
@@ -19,7 +20,7 @@ import { getSpecialSemaphore } from '../../../model/action/actionSemaphore';
  * This should not be used Directly
  */
 export const muxiumConcludeType: ActionType = 'Conclude';
-export const muxiumConclude = prepareActionCreator(
+export const muxiumConclude = muxiumPrepareActionCreator(
   muxiumConcludeType,
   [[-1, -1, -1, getSpecialSemaphore(muxiumConcludeType)]]
 );

@@ -17,7 +17,7 @@ export type {
 } from './model/action/strategy/actionStrategy.type';
 export {
   Deck,
-  Decks,
+  Stratideck,
 } from './model/deck';
 export {
   createStrategy,

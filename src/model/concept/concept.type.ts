@@ -55,15 +55,29 @@ export type ConceptECK<S = any, Q = any> = {
   k: BundledSelectors<S> & Selectors<S>;
 };
 
+// Helper type to recursively extract deck types while preserving their structure
+type ExtractNestedDecks<T> = T extends Concept<any, any, infer D>
+  ? D extends LoadConcepts
+    ? D & {
+        [K in keyof D]: ExtractNestedDecks<D[K]>
+      }
+    : Record<string, never>
+  : Record<string, never>;
+
+// Flatten all decks from MuX recursively
+type FlattenAllDecks<MuX extends LoadConcepts> = MuX & {
+  [K in keyof MuX]: ExtractNestedDecks<MuX[K]>
+}[keyof MuX];
+
 // Functional composition for Concept-level deck: { d: { e, c, k }, e, c, k }
 // The 'd' contains flattened access to muxified qualities/properties (halting API)
 export type ConceptDECK<
   S extends Record<string, unknown>,
   Q = void,
-  D extends LoadConcepts = Record<string, never>
+  MuX extends LoadConcepts = Record<string, never>
 > = {
     d: {
-      [K in keyof D]: D[K] extends Concept<infer CS, infer CQ> ?
+      [K in keyof FlattenAllDecks<MuX>]: FlattenAllDecks<MuX>[K] extends Concept<infer CS, infer CQ> ?
         ConceptECK<CS, CQ> // Halting API - only e, c, k from muxified concepts
         : never
     }

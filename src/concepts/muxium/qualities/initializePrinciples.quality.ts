@@ -15,7 +15,7 @@ import { Comparators } from '../../../model/interface';
 import { BundledSelectors } from '../../../model/selector/selector.type';
 import { Action, Actions } from '../../../model/action/action.type';
 import { Planning } from '../../../model/stagePlanner/stagePlanner.type';
-import { Deck, Decks } from '../../../model/deck';
+import { Deck, Stratideck } from '../../../model/deck';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({

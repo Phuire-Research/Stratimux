@@ -206,12 +206,12 @@ test('Test Dispatch Override', (done) => {
       muxium.close();
       console.log('Final: ', finalCount, finalDispatchedSet);
       expect(finalCount).toBe(finalDispatchedSet);
-      // if (finalCount === -1) {
-      //   expect(false).toBe(true);
-      // }
-      // if (finalCount === Infinity) {
-      //   expect(false).toBe(true);
-      // }
+      if (finalCount === -1) {
+        expect(false).toBe(true);
+      }
+      if (finalCount === Infinity) {
+        expect(false).toBe(true);
+      }
       setTimeout(() => {
         done();
       }, 10);

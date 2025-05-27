@@ -38,7 +38,7 @@ export { initializationStrategy } from './strategies/initialization.strategy';
 import { createConcept } from '../../model/concept/concept';
 import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
 import { MuxiumQualities } from './qualities';
-import { Decks } from '../../model/deck';
+import { Stratideck } from '../../model/deck';
 import { MuxiumLoad } from '../../model/muxium/muxium.type';
 import { PrincipleFunction } from '../../model/principle';
 import { Action, AnyAction } from '../../model/action/action.type';
@@ -137,7 +137,7 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
   concepts$: MuxifiedSubject<Q, C, MuxiumState<Q, C>>;
-  deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+  deck: Stratideck<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
   badPlans: Plan<any, any, any>[];
@@ -190,7 +190,7 @@ const muxificationState = <Q, C extends LoadConcepts>(
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
     concepts$: new MuxifiedSubject<Q, C, MuxiumState<Q, C>>(),
-    deck: {} as Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+    deck: {} as Stratideck<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
     addConceptQue: {},
     removeConceptQue: {},
     badPlans: [],

@@ -9,6 +9,8 @@ import { failureConditions, strategyData_appendFailure } from './strategy/action
 import { MuxiumBadActionPayload, MuxiumQualities } from '../../concepts/muxium/qualities';
 import { Action, ActionCreatorWithPayload, ActionOptions, ActionType, ActionWithPayloadOptions } from './action.type';
 import { getSemaphore, getSpecialSemaphore } from './actionSemaphore';
+import { generateQualityIdentity } from '../quality';
+import { muxiumBadAction } from '../../concepts/muxium/qualities/badAction.quality';
 
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
@@ -53,6 +55,7 @@ export function primeAction<T>(concepts: Concepts, action: Action<T>): Action<T>
   }
   const badAction: Action<MuxiumBadActionPayload> = {
     type: muxiumBadActionType,
+    identity: generateQualityIdentity(),
     payload: createPayload<MuxiumBadActionPayload>({badActions: [action]}),
     expiration: Date.now() + 5000,
     semaphore: getSemaphore(concepts, concepts[0].name, muxiumBadActionType)
@@ -103,6 +106,7 @@ export function createAction<T = void>(
     } = options;
     return {
       type,
+      identity: options.identity ? options.identity : generateQualityIdentity(),
       semaphore: options.semaphore ? options.semaphore : semaphore,
       payload: (payload ? payload  : {}) as T extends Record<string, unknown> ? T : undefined,
       keyedSelectors,
@@ -115,6 +119,7 @@ export function createAction<T = void>(
   } else {
     return {
       type,
+      identity: generateQualityIdentity(),
       semaphore,
       expiration: Date.now() + 5000,
       payload: {} as T extends Record<string, unknown> ? T : undefined

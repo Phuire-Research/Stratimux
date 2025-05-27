@@ -20,7 +20,7 @@ import { Planner } from '../stagePlanner/stagePlanner.type';
 import { MuxifiedSubject } from '../stagePlanner/stagePlanner';
 import { handlePriority, isPriorityValid } from '../priority';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { Deck, Decks } from '../deck';
+import { Deck, Stratideck } from '../deck';
 import { createSelectors, updateKeyedSelectors } from '../selector/selectorAdvanced';
 import { BundledSelectors } from '../selector/selector.type';
 import { Action, Actions } from '../action/action.type';
@@ -30,10 +30,10 @@ import { MaybeEnhancedMuxiumQualities, Muxium, MuxiumLoad, MuxiumOrigins } from 
 import { blockingMethodSubscription } from '../method/methodSubscription';
 import { getMuxiumState } from './muxiumHelpers';
 
-export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxiumQualities>(
+export function muxification<C extends LoadConcepts, Q = void>(
   name: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deckLoad: C,
+  deckLoad: LoadConcepts,
   options?: {
     logging?: boolean,
     storeDialog?: boolean,
@@ -58,7 +58,7 @@ export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxi
     ...muxium.keyedSelectors,
     ...muxium.selectors
   } as BundledSelectors<MuxiumState<Q, C>>;
-  const baseDeck: Decks<Q, MuxiumState<Q, C>, MuxiumLoad<MuxiumDeck>> = {
+  const baseDeck: Stratideck<Q, MuxiumState<Q, C>, MuxiumLoad<MuxiumDeck>> = {
     d: {
       muxium: {
         d: muxium.deck.d,
@@ -97,7 +97,7 @@ export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxi
   const deck = baseDeck;
   baseDeck.d.muxium.c.muxiumAddConceptsFromQue;
   let muxiumState = concepts[0].state as MuxiumState<Q, C>;
-  muxiumState.deck = deck as Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>;
+  muxiumState.deck = deck as Stratideck<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>;
   muxiumState.cachedSemaphores = createCachedSemaphores(concepts);
   forEachConcept(concepts, ((concept, semaphore) => {
     muxiumState.conceptCounter += 1;

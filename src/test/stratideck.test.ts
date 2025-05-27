@@ -64,8 +64,7 @@ export function randomCountingStrategy(deck: Deck<CounterDeck>): ActionStrategy 
   }
 }
 
-
-test('Stratideck Counter Add Test', (done) => {
+test('Stratideck Unique Counter per Muxified Concept', (done) => {
   const counterOne = muxifyConcepts([createCounterConcept()], createConcept('counterOne', {}));
   const counterTwo = muxifyConcepts([createCounterConcept()], createConcept('counterTwo', {}));
   const counterThree = muxifyConcepts([createCounterConcept()], createConcept('counterThree', {}));
@@ -89,27 +88,60 @@ test('Stratideck Counter Add Test', (done) => {
         // const strategy = randomCountingStrategy(d.counterOne);
         // Dispatch a single counterAdd action
         console.log('CHECK ACTION: ', d.counter.e.counterAdd());
-        dispatch(d.counter.e.counterAdd(), {
+        dispatch(d.counterOne.e.counterAdd(), {
+          iterateStage: true
+        });
+      }),
+      stage(({d}) => {
+        expect(d.counterOne.d.counter.k.count.select()).toBe(1);
+        expect(d.counter.k.count.select()).toBe(0);
+        expect(d.counterTwo.k.count.select()).toBe(0);
+        expect(d.counterThree.k.count.select()).toBe(0);
+        // Clean up and complete the test
+        plan.conclude();
+        muxium.close();
+        setTimeout(() => {done();}, 100);
+      })
+    ]);
+});
+
+test('Stratideck Unique Counter per Muxified Concept', (done) => {
+  const counterOne = muxifyConcepts([createCounterConcept()], createConcept('counterOne', {}));
+  const counterTwo = muxifyConcepts([createCounterConcept()], createConcept('counterTwo', {}));
+  const counterThree = muxifyConcepts([createCounterConcept()], createConcept('counterThree', {}));
+  const counterMuxed = muxifyConcepts([counterOne, counterTwo, counterThree], createConcept('counterMuxed', {}));
+  const cpts = {
+    counter: createCounterConcept(),
+    counterOne,
+    counterMuxed,
+  };
+  type DECK = {
+    counter: Concept<CounterState, CounterQualities>;
+    counterOne: Concept<CounterState, CounterQualities, CounterDeck>;
+    counterMuxed: Concept<CounterState, CounterQualities, {
+      counterOne: Concept<CounterState, CounterQualities, CounterDeck>;
+      counterTwo: Concept<CounterState, CounterQualities, CounterDeck>;
+      counterThree: Concept<CounterState, CounterQualities, CounterDeck>;
+    }>;
+  }
+
+  const muxium = muxification('stratideck test', cpts, {logging: true, storeDialog: true});
+  const plan = muxium.plan<DECK>('Counter Add Plan',
+    ({stage}) => [
+      stage(({dispatch, d}) => {
+        console.log('CHECK ACTION: ', d.counterMuxed.e.counterAdd());
+        dispatch(d.counterMuxed.e.counterAdd(), {
           iterateStage: true
         });
       }),
       stage(({d, concepts}) => {
-        // Verify that the counter state is now 1
-        // Object.keys(concepts).forEach(key => {
-        //   console.log('CHECK', JSON.stringify(concepts[key as any].keyedSelectors));
-        // });
         console.log(JSON.stringify(d.counter.k.count.select()));
+        expect(d.counter.k.count.select()).toBe(0);
         console.log(JSON.stringify(d.counter.k));
-        console.log(JSON.stringify(d.counterOne.k.count.select()));
-        console.log(JSON.stringify(d.counterOne.k));
-        console.log(JSON.stringify(d.counterOne.d.counter.k.count.select()));
-        console.log(JSON.stringify(d.counterOne.d.counter.k));
-        console.log(JSON.stringify(d.counterThree.d.counter.k.count.select()));
-        // expect(d.counterOne.d.counter.k.count.select()).toBe(1);
-        // expect(d.counter.k.count.select()).toBe(0);
-        // expect(d.counterTwo.k.count.select()).toBe(0);
-        // expect(d.counterThree.k.count.select()).toBe(0);
-        // Clean up and complete the test
+        console.log(JSON.stringify(d.counterMuxed.k.count.select()));
+        expect(d.counterMuxed.k.count.select()).toBe(1);
+        console.log(JSON.stringify(d.counterMuxed.k.count.select()));
+        expect(d.counterMuxed.d.counter.k.count.select()).toBe(1);
         plan.conclude();
         muxium.close();
         setTimeout(() => {done();}, 100);

@@ -10,7 +10,7 @@ import { Action, Actions } from './action/action.type';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { BInterface, Comparators } from './interface';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
-import { Deck, Decks, accessDeck } from './deck';
+import { Deck, Stratideck, accessDeck } from './deck';
 import { access } from 'fs';
 import { Qualities } from './quality';
 import { Planning } from './stagePlanner/stagePlanner.type';

@@ -18,7 +18,7 @@ import {
 } from '../../concepts/muxium/muxium.concept';
 import { BasePlanner, Planner, StagePlanner } from '../stagePlanner/stagePlanner.type';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { Decks } from '../deck';
+import { Stratideck } from '../deck';
 import { Action, Actions, AnyAction } from '../action/action.type';
 
 // eslint-disable-next-line no-shadow
@@ -49,7 +49,7 @@ export type Muxium<C extends LoadConcepts, Q = void> = {
       >
     >
   ) => StagePlanner;
-  deck: Decks<MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+  deck: Stratideck<MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
   e: Actions<MaybeEnhancedMuxiumQualities<Q> & MuxiumQualities>
 }
 

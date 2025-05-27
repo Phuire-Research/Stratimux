@@ -4,28 +4,12 @@ This file holds the type definitions required for the method helper functions.
 $>*/
 /*<#*/
 import { Observable } from 'rxjs';
-import { ActionStrategy } from '../action/strategy/actionStrategy.type';
-import { KeyedSelector } from '../selector/selector.type';
 import { Deck } from '../deck';
-import { ActionCreator, ActionCreatorWithPayload } from '../action/action.type';
+import { Action, ActionCreator, ActionCreatorWithPayload, AnyAction } from '../action/action.type';
 import { Concepts, MethodCreator } from '../concept/concept.type';
 import { ActionController } from '../action/actionController';
 
-type ActionType = string;
-type Action<T = void> = {
-  type: ActionType;
-  semaphore: [number, number, number, number];
-  conceptSemaphore?: number;
-  payload: T extends Record<string, unknown> ? T : undefined;
-  strategy?: ActionStrategy;
-  keyedSelectors?: KeyedSelector[];
-  agreement?: number;
-  expiration: number;
-  priority?: number;
-  muxium?: string;
-  origin?: string;
-};
-export type Method<T = void> = Observable<[Action<T>, boolean]> & {toString: () => string};
+export type Method<T = void> = Observable<[AnyAction, boolean]> & {toString: () => string};
 
 export type MethodParams<T = void, C = void> = {
   action: Action<T>, deck: Deck<C>, self: T extends void ?
