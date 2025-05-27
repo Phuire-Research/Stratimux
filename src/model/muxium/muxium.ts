@@ -75,9 +75,11 @@ export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxi
   Object.keys(deckLoad).forEach((key, i) => {
     const semaphore = i + 1;
     concepts[semaphore] = deckLoad[key];
-    deckLoad[key].semaphore = semaphore;    updateKeyedSelectors(concepts, concepts[semaphore].keyedSelectors, semaphore);
+    deckLoad[key].semaphore = semaphore;
+    updateKeyedSelectors(concepts, concepts[semaphore].keyedSelectors, semaphore);
     concepts[semaphore].selectors = createSelectors(semaphore);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (baseDeck as any).d[key] = {
       d: concepts[semaphore].deck.d,
       e: concepts[semaphore].actions,
@@ -152,7 +154,6 @@ export function muxification<C extends LoadConcepts, Q extends MaybeEnhancedMuxi
       }
       const _muxiumState = _concepts[0].state as MuxiumState<Q, C>;
       if (_muxiumState.head.length === 0) {
-        action.origin = MuxiumOrigins.muxiumHead;
         _muxiumState.head.push(action);
         if (_muxiumState.tailTimer.length > 0) {
           const timer = _muxiumState.tailTimer.shift();

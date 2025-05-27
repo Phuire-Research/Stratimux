@@ -51,7 +51,16 @@ const generateUUID = (): string => {
 };
 
 export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolean => {
-  const qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
+  // console.log(concepts, action);
+  let qualityKeys;
+  try {
+    qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
+  } catch (error) {
+    console.log('----');
+    console.error(error);
+    console.error(JSON.stringify(action.semaphore), action.type, action.origin, Object.keys(concepts));
+    console.log('----');
+  }
   const actionSelectors = action.keyedSelectors;
   const ownershipState = selectState(concepts, ownershipName) as OwnershipState;
   const ownershipLedger = ownershipState.ownershipLedger;

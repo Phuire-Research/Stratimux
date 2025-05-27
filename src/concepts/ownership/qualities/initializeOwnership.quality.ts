@@ -9,7 +9,7 @@ import { createQualityCard } from '../../../model/quality';
 
 export const ownershipInitializeOwnership = createQualityCard<OwnershipState>({
   type: 'Ownership Initialize to True to enable Ownership Principle',
-  reducer: (state) => ({...state, initialized: true}),
+  reducer: () => ({initialized: true}),
   methodCreator: defaultMethodCreator
 });
 /*#>*/

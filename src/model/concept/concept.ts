@@ -40,12 +40,17 @@ export function createConcept<
   const qualities: Quality<Record<string, unknown>>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
+      const actionSemaphoreBucket: [[number, number, number, number]] = [[-1, -1, -1, -1]];
+      const qualia: Quality<any> = {
+        ..._qualities[q] as Quality<any>,
+        actionSemaphoreBucket
+      };
       try {
-        actions[q] = (_qualities[q] as Quality<any>).actionCreator;
-        comparators[q] = createComparator((_qualities[q] as Quality<any>).actionSemaphoreBucket);
-        qualities.push(_qualities[q] as Quality<Record<string, unknown>>);
+        actions[q] = qualia.bufferedActionCreator(actionSemaphoreBucket);
+        comparators[q] = createComparator(actionSemaphoreBucket);
+        qualities.push(qualia as Quality<Record<string, unknown>>);
       } catch (error) {
-        console.error('ERROR @: ', q, _qualities[q]);
+        console.error('ERROR @: ', q, qualia);
         // console.warn('Check: ', _qualities);
       }
     });

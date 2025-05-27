@@ -5,7 +5,6 @@ $>*/
 import { getMuxiumState } from './muxium/muxiumHelpers';
 import { AnyConcept, Concept, Concepts, LoadConcepts, ConceptECK, ConceptDECK, AnyConceptDECK } from './concept/concept.type';
 import { Comparators } from './interface';
-import { Qualities } from './quality';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { Actions } from './action/action.type';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';

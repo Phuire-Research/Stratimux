@@ -50,7 +50,7 @@ export const permissiveMode: Mode = (
             ...newConcepts[action.semaphore[0]].state,
             ...newState
           };
-          const ks = updateAtomicSelects(newConcepts, newConcept.keyedSelectors, newState);
+          const ks = updateAtomicSelects(newConcepts, newConcept.keyedSelectors, newState, action);
           muxiumState.actionConcepts$.next(newConcepts);
           concepts$.next(newConcepts, ks);
         }
@@ -99,7 +99,7 @@ export const blockingMode: Mode = (
           ...newConcepts[action.semaphore[0]].state,
           ...newState
         };
-        const ks = updateAtomicSelects(newConcepts, newConcept.keyedSelectors, newState);
+        const ks = updateAtomicSelects(newConcepts, newConcept.keyedSelectors, newState, action);
         muxiumState.actionConcepts$.next(newConcepts);
         muxiumState.concepts$.nextBlocking(newConcepts, ks);
       }

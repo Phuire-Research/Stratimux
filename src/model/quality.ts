@@ -19,6 +19,9 @@ export type Quality<S extends Record<string, unknown>, T = void, C = void> = {
   actionType: ActionType;
   actionSemaphoreBucket: [number, number, number, number][];
   actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
+  bufferedActionCreator: (
+    semaphoreBucket: [[number, number, number, number]]
+  ) => ActionCreatorType<T>
   reducer: SpecificReducer<any, T, C>;
   toString: () => string;
   methodCreator?: MethodCreatorStep<S, T, C>;
@@ -40,6 +43,9 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
+  bufferedActionCreator: (
+    semaphoreBucket: [[number, number, number, number]]
+  ) => ActionCreatorType<T>,
   reducer: SpecificReducer<S, T, C>,
   methodCreator?: MethodCreatorStep<S, T, C>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,6 +56,7 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
   return {
     actionType,
     actionCreator,
+    bufferedActionCreator,
     actionSemaphoreBucket,
     reducer,
     methodCreator,
@@ -96,12 +103,36 @@ export function createQualityCard<S extends Record<string, unknown>, C = void>(q
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
 }): Quality<S, void, any> {
-  const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
+  const bucket: [number, number, number, number][] = [[-1, -Infinity, -1, -1]];
   const actionCreator = prepareActionCreator(q.type, bucket);
   if (q.methodCreator) {
-    return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+    return createQuality<S, void, C>(
+      q.type,
+      bucket,
+      actionCreator,
+      (semaphoreBucket: [[
+        number, number, number, number
+      ]]) => prepareActionCreator(q.type, semaphoreBucket) as ActionCreator,
+      q.reducer,
+      q.methodCreator,
+      q.keyedSelectors,
+      q.meta,
+      q.analytics
+    );
   }
-  return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+  return createQuality<S, void, C>(
+    q.type,
+    bucket,
+    actionCreator,
+    (semaphoreBucket: [[
+      number, number, number, number
+    ]]) => prepareActionCreator(q.type, semaphoreBucket) as ActionCreator,
+    q.reducer,
+    q.methodCreator,
+    q.keyedSelectors,
+    q.meta,
+    q.analytics
+  );
 }
 
 export function createQualityCardWithPayload<
@@ -123,6 +154,9 @@ export function createQualityCardWithPayload<
       q.type,
       bucket,
       actionCreatorWithPayload as ActionCreatorType<T>,
+      (semaphoreBucket: [[
+        number, number, number, number
+      ]]) => prepareActionWithPayloadCreator<T>(q.type, semaphoreBucket) as ActionCreatorType<T>,
       q.reducer,
       q.methodCreator,
       q.keyedSelectors,
@@ -134,6 +168,9 @@ export function createQualityCardWithPayload<
     q.type,
     bucket,
     actionCreatorWithPayload as ActionCreatorType<T>,
+    (semaphoreBucket: [[
+      number, number, number, number
+    ]]) => prepareActionWithPayloadCreator<T>(q.type, semaphoreBucket) as ActionCreatorType<T>,
     q.reducer,
     q.methodCreator,
     q.keyedSelectors,

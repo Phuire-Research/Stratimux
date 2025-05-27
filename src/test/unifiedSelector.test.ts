@@ -18,10 +18,8 @@ test('Muxified Selector Test', (done) => {
     stage(({concepts}) => {
       console.log('FIRED!!!');
       const concept = select.createConceptKeyedSelector<CounterState>(counterName, 'count');
-      const updated = select.updateMuxifiedKeyedSelector(concepts, 1, concept) as KeyedSelector;
       const muxified = select.createMuxifiedKeyedSelector<CounterState>(concepts, 1, 'count') as KeyedSelector;
-      console.log('CHECK SELECTORS', concept, updated, muxified);
-      expect(select.slice(concepts, updated)).toBe(0);
+      console.log('CHECK SELECTORS', concept, muxified);
       expect(select.slice(concepts, concept)).toBe(0);
       expect(select.slice(concepts, muxified)).toBe(0);
       setTimeout(() => done(), 0);

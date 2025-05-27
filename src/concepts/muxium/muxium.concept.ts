@@ -43,6 +43,7 @@ import { MuxiumLoad } from '../../model/muxium/muxium.type';
 import { PrincipleFunction } from '../../model/principle';
 import { Action, AnyAction } from '../../model/action/action.type';
 import { NamedStagePlanner, Plan } from '../../model/stagePlanner/stagePlanner.type';
+import { QualityMap } from '../../model/action/actionSemaphore';
 
 export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {
@@ -126,7 +127,7 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   lastStrategyData: unknown;
   lastStrategyDialog: string;
   generation: number;
-  cachedSemaphores: Map<string,Map<string,[number,number,number, number]>>
+  cachedSemaphores: Map<string, QualityMap>
   modeIndex: number;
   defaultModeIndex: number;
   modeNames: string[]
@@ -176,7 +177,7 @@ const muxificationState = <Q, C extends LoadConcepts>(
     lastStrategyData: '',
     lastStrategyDialog: '',
     generation: 0,
-    cachedSemaphores: new Map<string, Map<string, [number, number, number, number]>>(),
+    cachedSemaphores: new Map<string, QualityMap>(),
     modeIndex: 0,
     defaultModeIndex: 1,
     modeNames: [muxiumName, muxiumName],

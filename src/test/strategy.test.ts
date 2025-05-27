@@ -31,11 +31,13 @@ test('Muxium Counting Strategy Test', (done) => {
           setTimeout(() => {done();}, 500);
         }
       }),
-      stage(({concepts}) => {
+      stage(({concepts, d}) => {
         const muxiumState = getMuxiumState(concepts);
         if (muxiumState.lastStrategy === countingTopic) {
           const counter = selectState<CounterState>(concepts, counterName);
           expect(counter?.count).toBe(1);
+          expect(d.counter.k.count.select()).toBe(1);
+          console.log('CHECK FINAL COUNT: ', d.counter.k.count.select());
           setTimeout(() => {done();}, 500);
           plan.conclude();
           muxium.close();
