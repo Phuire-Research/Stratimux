@@ -2,7 +2,219 @@
 
 ## Introduction
 
-Stratimux is an asynchronous graph programming framework that implements a Muxified Turing Machine. This reference guide provides a comprehensive overview of the core concepts, patterns, and functionality based on analyzing the codebase and test files.
+Stratimux is an asynchronous graph programming framework that implements a Muxified Turing Machine. This reference guide is **specifically designed for AI agents** and provides a comprehensive overview of the core concepts, patterns, and functionality based on analyzing the codebase and test files.
+
+**Version Coverage**: This guide covers Stratimux v0.3.2 (Stratideck) with complete type system overhaul and DECK interface system.
+
+**For Agents**: This reference provides drop-in code patterns, type definitions, and implementation examples for effective Stratimux development without requiring deep framework knowledge.
+
+## Version 0.3.2 Key Changes (Stratideck)
+
+### Critical Breaking Changes
+
+**Package Name Change**: `@phuire/stratimux` → `stratimux`
+
+**Quality Type System Overhaul**: All qualities now require explicit type definitions due to TypeScript limitations at scale.
+
+```typescript
+// OLD Pattern (No longer works with complex concepts)
+const qualities = { counterAdd, counterSubtract };
+export type CounterQualities = typeof qualities;
+
+// NEW Pattern (Required for v0.3.2+)
+export type CounterAdd = Quality<CounterState>;
+export type CounterSubtract = Quality<CounterState>;
+export type CounterQualities = {
+  counterAdd: CounterAdd,
+  counterSubtract: CounterSubtract,
+};
+```
+
+### New Features
+
+#### 1. Enhanced MuxiumState (v0.3.01)
+```typescript
+export type MuxiumState = {
+  dialog: string;
+  lastStrategy: string;
+  lastStrategyActionList: Array<string>; // NEW: Debug enhancement
+  lastStrategyData: unknown;
+  generation: number;
+}
+```
+
+#### 2. createStages Helper Function (v0.3.11)
+```typescript
+// NEW: Scoped stage composition helper
+const plan = muxium.plan<CounterDeck>('createStages Example', ({staging, stage, stageO, d__}) => {
+  
+  // Traditional approach without createStages
+  const manualStages = [
+    stageO(() => d__.muxium.e.muxiumKick()),
+    stage(({dispatch, d}) => {
+      dispatch(d.counter.e.counterAdd(), {iterateStage: true});
+    }),
+    stage(({concepts, dispatch, d}) => {
+      const count = selectSlice(concepts, counterSelectCount);
+      if (count === 5) {
+        dispatch(d.counter.e.counterSetCount({newCount: 0}), {iterateStage: true});
+      }
+    })
+  ];
+  
+  // NEW: Using createStages for scoped composition
+  const composedStages = staging(() => {
+    const initStage = stageO(() => d__.muxium.e.muxiumKick());
+    
+    const countStage = stage(({dispatch, d}) => {
+      dispatch(d.counter.e.counterAdd(), {iterateStage: true});
+    });
+    
+    const resetStage = stage(({concepts, dispatch, d}) => {
+      const count = selectSlice(concepts, counterSelectCount);
+      if (count === 5) {
+        dispatch(d.counter.e.counterSetCount({newCount: 0}), {iterateStage: true});
+      }
+    });
+    
+    return [initStage, countStage, resetStage];
+  });
+  
+  return composedStages; // or manualStages - both work identically
+});
+```
+
+**Benefits of createStages (`staging`):**
+- **Scoped composition**: Groups related stages logically  
+- **Type safety**: Full TypeScript support within the callback
+- **Reusability**: Stage groups can be extracted and reused
+- **Readability**: Complex plans become more maintainable
+
+### Migration Required
+
+**All Quality Files Must Export Types**:
+```typescript
+// Every quality file now requires:
+export type QualityName = Quality<StateType, PayloadType?>;
+```
+
+**All Concept Files Must Use Explicit Type Mapping**:
+```typescript
+// Required pattern for all concepts
+export type ConceptQualities = {
+  qualityOne: QualityOneType,
+  qualityTwo: QualityTwoType,
+  // ... explicit mapping required
+};
+```
+
+## Migration Guide for v0.3.2
+
+### 1. Package Installation
+
+```bash
+# Remove old package
+npm uninstall @phuire/stratimux
+
+# Install new package  
+npm install stratimux
+```
+
+### 2. Update Import Statements
+
+```typescript
+// OLD
+import { muxification } from '@phuire/stratimux';
+
+// NEW  
+import { muxification } from 'stratimux';
+```
+
+### 3. Add Quality Type Exports
+
+For every quality file, add explicit type exports:
+
+```typescript
+// OLD (quality file - no type exports required)
+export const counterAdd = createQualityCard<CounterState>({
+  type: 'Counter Add',
+  reducer: (state) => ({ count: state.count + 1 })
+});
+
+// NEW (quality file - type export required)
+export type CounterAdd = Quality<CounterState>;
+export const counterAdd = createQualityCard<CounterState>({
+  type: 'Counter Add',
+  reducer: (state) => ({ count: state.count + 1 })
+});
+```
+
+### 4. Update Concept Quality Type Definitions
+
+```typescript
+// OLD (implicit typing)
+const qualities = { counterAdd, counterSubtract };
+export type CounterQualities = typeof qualities;
+
+// NEW (explicit mapping required)
+export type CounterQualities = {
+  counterAdd: CounterAdd,
+  counterSubtract: CounterSubtract,
+};
+```
+
+### 5. Leverage New createStages Helper
+
+```typescript
+// OLD (direct array)
+const plan = muxium.plan('My Plan', ({stage}) => [
+  stage(() => { /* logic */ }),
+  stage(() => { /* logic */ })
+]);
+
+// NEW (using staging for better composition)
+const plan = muxium.plan('My Plan', ({staging, stage}) => 
+  staging(() => {
+    const stage1 = stage(() => { /* logic */ });
+    const stage2 = stage(() => { /* logic */ });
+    return [stage1, stage2];
+  })
+);
+```
+
+### 6. Update Complex Concepts
+
+For concepts with many qualities, ensure all types are explicitly defined:
+
+```typescript
+// NEW pattern for complex concepts
+export type MyConceptAdd = Quality<MyState>;
+export type MyConceptRemove = Quality<MyState>;  
+export type MyConceptUpdate = Quality<MyState, UpdatePayload>;
+export type MyConceptQuery = Quality<MyState, QueryPayload>;
+
+export type MyConceptQualities = {
+  myConceptAdd: MyConceptAdd,
+  myConceptRemove: MyConceptRemove,
+  myConceptUpdate: MyConceptUpdate,
+  myConceptQuery: MyConceptQuery,
+};
+```
+
+### 7. Enhanced MuxiumState Usage
+
+Take advantage of the new `lastStrategyActionList` property:
+
+```typescript
+// NEW debugging capability
+stage(({concepts}) => {
+  const muxiumState = getMuxiumState(concepts);
+  
+  // Access new debugging property
+  console.log('Last strategy actions:', muxiumState.lastStrategyActionList);
+  console.log('Strategy execution trace:', muxiumState.lastStrategyActionList.join(' → '));
+});
+```
 
 ## Core Concepts
 
@@ -36,7 +248,7 @@ Key properties:
 A Concept is a fundamental building block composed of state, qualities, principles, and mode.
 
 ```typescript
-// Counter Concept definition from actual codebase
+// Modern Counter Concept definition (v0.3.2+)
 export type CounterState = {
   count: number
 }
@@ -45,6 +257,20 @@ export const counterName = 'counter';
 
 const initialCounterState: CounterState = {
   count: 0
+};
+
+// NEW: Explicit quality type definitions required
+export type CounterAdd = Quality<CounterState>;
+export type CounterSubtract = Quality<CounterState>;
+export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
+export type CounterMultiply = Quality<CounterState, CounterMultiplyPayload>;
+
+// NEW: Explicit qualities interface
+export type CounterQualities = {
+  counterAdd: CounterAdd,
+  counterSubtract: CounterSubtract,
+  counterSetCount: CounterSetCount,
+  counterMultiply: CounterMultiply
 };
 
 const counterQualities = {
@@ -60,6 +286,11 @@ export const createCounterConcept = () => {
     initialCounterState,
     counterQualities
   );
+};
+
+// Modern Deck type definition
+export type CounterDeck = {
+  counter: Concept<CounterState, CounterQualities>,
 };
 ```
 
@@ -81,7 +312,10 @@ Qualities define actions that can be performed on a concept. They contain:
 #### Quality Without Payload
 
 ```typescript
-// Real example from counter concept
+// Real example from counter concept (v0.3.2+)
+// REQUIRED: Export the quality type
+export type CounterAdd = Quality<CounterState>;
+
 export const counterAdd = createQualityCard<CounterState>({
   type: 'Counter Add',
   reducer: (state) => {
@@ -97,7 +331,10 @@ export const counterAdd = createQualityCard<CounterState>({
 #### Quality Without Payload (No Keyed Selectors)
 
 ```typescript
-// Simple quality that doesn't need DECK access
+// Simple quality that doesn't need DECK access (v0.3.2+)
+// REQUIRED: Export the quality type (even for simple qualities)
+export type MuxiumKick = Quality;
+
 export const muxiumKick = createQualityCard({
   type: 'Kick Muxium',
   reducer: defaultReducer,
@@ -108,22 +345,18 @@ export const muxiumKick = createQualityCard({
 #### Quality With Payload
 
 ```typescript
+// REQUIRED: Define the payload type
 export type CounterSetCountPayload = {
   newCount: number
 }
+
+// REQUIRED: Export the quality type (v0.3.2+)
+export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
 
 export const counterSetCount = createQualityCardWithPayload<CounterState, CounterSetCountPayload>({
   type: 'Counter set Count',
   reducer: (state, {payload}) => {
     const {newCount} = payload;
-    return {
-      count: newCount
-    };
-  },
-  methodCreator: defaultMethodCreator,
-  keyedSelectors: [counterSelectCount]
-});
-```
     return {
       count: newCount
     };
@@ -206,45 +439,59 @@ Key components:
 
 ### Stage Planner
 
-Stage Planners divide decklication functionality into discrete stages and prevent action overflows.
+Stage Planners divide application functionality into discrete stages and prevent action overflows. **Version 0.3.2** introduces the `createStages` helper (`staging`) for improved stage composition.
 
 ```typescript
-// Real stage planner example from test files
-const plan = muxium.plan<CounterDeck>('Stage Planner Beat Test', ({stage, stageO, e__}) => [
+// NEW v0.3.2 Pattern: Using createStages helper (staging)
+const plan = muxium.plan<CounterDeck>('Stage Planner Example', ({staging, stage, stageO, e__}) => 
+  staging(() => {
+    // Stage composition within a scoped callback
+    const kickStage = stageO(() => e__.muxiumKick());
+    
+    const incrementStage = stage(({concepts, dispatch, e}) => {
+      if (selectSlice(concepts, muxiumSelectOpen)) {
+        dispatch(e.muxiumKick(), {iterateStage: true});
+      }
+    }, {beat: 105});
+    
+    const addStage = stage(({dispatch, d}) => {
+      dispatch(d.counter.e.counterAdd(), {iterateStage: true});
+    }, {beat: 105});
+    
+    const completeStage = stage(({concepts, dispatch, d}) => {
+      const state = selectState<CounterState>(concepts, counterName);
+      if (state?.count === 9) {
+        dispatch(e__.muxiumPreClose({exit: false}), {iterateStage: true});
+        plan.conclude();
+      } else {
+        dispatch(d.counter.e.counterAdd(), {throttle: 1});
+      }
+    }, {beat: 105});
+    
+    return [kickStage, incrementStage, addStage, completeStage];
+  })
+);
+
+// LEGACY Pattern: Direct stage array (still supported)
+const legacyPlan = muxium.plan<CounterDeck>('Legacy Pattern', ({stage, stageO, e__}) => [
   stageO(() => e__.muxiumKick()),
   stage(({concepts, dispatch, e}) => {
-    if (selectSlice(concepts, muxiumSelectOpen)) {
-      dispatch(e.muxiumKick(), {
-        iterateStage: true,
-      });
-    }
+    // Same logic as above
   }, {beat: 105}),
-  stage(({dispatch, d}) => {
-    dispatch(d.counter.e.counterAdd(), {
-      iterateStage: true
-    });
-  }, {beat: 105}),
-  stage(({concepts, dispatch, d}) => {
-    const state = selectState<CounterState>(concepts, counterName);
-    if (state?.count === 9) {
-      dispatch(e.muxiumPreClose({exit: false}), {
-        iterateStage: true
-      });
-      plan.conclude();
-    } else {
-      dispatch(d.counter.e.counterAdd(), {
-        throttle: 1
-      });
-    }
-  }, {beat: 105})
+  // ... more stages
 ]);
 ```
 
-Key features:
+**Key Stage Planner Features (v0.3.2):**
+
+- **`staging` (createStages)**: NEW - Scoped stage composition helper
+- **`stage`**: Create individual stages with options (beat, priority, selectors)
+- **`stageO`**: Special stage that waits for muxium to be open, then iterates
+- **`conclude`**: Helper to create a stage that concludes the plan
 - **Stages**: Ordered sequence of operations
-- **Stage Options**: Configure behavior like beat (throttling/debouncing)
-- **Iterate Stage**: Move to the next stage
-- **Conclude**: End the plan execution
+- **Stage Options**: Configure behavior like beat (throttling/debouncing), priority, selectors
+- **Iterate Stage**: Move to the next stage via `{iterateStage: true}`
+- **Conclude**: End the plan execution via `plan.conclude()`
 
 ### Action Controller
 
@@ -2731,3 +2978,324 @@ test('Operation fails gracefully with invalid input', (done) => {
 ```
 
 These testing patterns ensure comprehensive coverage of Stratimux applications, from basic functionality to complex asynchronous operations and error scenarios.
+
+## Agent-Specific Usage Patterns and Best Practices
+
+This section provides AI agents with battle-tested patterns for effective Stratimux development, based on real production usage and comprehensive test coverage.
+
+### Drop-In Code Patterns for Agents
+
+#### Pattern 1: Basic Counter Application
+```typescript
+// Complete working counter concept (v0.3.2)
+export type CounterState = { count: number };
+export const counterName = 'counter';
+
+// Required type exports for v0.3.2
+export type CounterAdd = Quality<CounterState>;
+export type CounterSubtract = Quality<CounterState>;
+export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
+
+export type CounterQualities = {
+  counterAdd: CounterAdd,
+  counterSubtract: CounterSubtract,
+  counterSetCount: CounterSetCount,
+};
+
+const counterQualities = {
+  counterAdd: createQualityCard<CounterState>({
+    type: 'Counter Add',
+    reducer: (state) => ({ count: state.count + 1 })
+  }),
+  counterSubtract: createQualityCard<CounterState>({
+    type: 'Counter Subtract', 
+    reducer: (state) => ({ count: state.count - 1 })
+  }),
+  counterSetCount: createQualityCardWithPayload<CounterState, CounterSetCountPayload>({
+    type: 'Counter Set Count',
+    reducer: (state, action) => ({ count: action.payload.newCount })
+  })
+};
+
+export const createCounterConcept = () => createConcept<CounterState, CounterQualities>(
+  counterName,
+  { count: 0 },
+  counterQualities
+);
+
+// Usage in muxium
+const muxium = muxification('Counter App', {
+  counter: createCounterConcept()
+});
+
+// Stage planner usage
+const plan = muxium.plan('Counter Plan', ({staging, stage, d}) =>
+  staging(() => [
+    stage(({dispatch, d}) => {
+      dispatch(d.counter.e.counterAdd(), {iterateStage: true});
+    }),
+    stage(({d}) => {
+      expect(d.counter.k.count.select()).toBe(1);
+      plan.conclude();
+    })
+  ])
+);
+```
+
+#### Pattern 2: Async Processing with Controller
+```typescript
+// Async quality with action controller
+export type ProcessingStart = Quality<ProcessingState, ProcessingPayload>;
+
+export const processingStart = createQualityCardWithPayload<ProcessingState, ProcessingPayload>({
+  type: 'Processing Start Async',
+  reducer: (state, action) => ({
+    ...state,
+    status: 'processing',
+    taskId: action.payload.taskId
+  }),
+  methodCreator: () => createAsyncMethod(({controller, action}) => {
+    // Simulate async operation
+    setTimeout(() => {
+      const result = performComplexCalculation(action.payload);
+      
+      // Fire completion action
+      controller.fire(createAction('Processing Complete', {
+        payload: { result, taskId: action.payload.taskId }
+      }));
+    }, 1000);
+  })
+});
+```
+
+#### Pattern 3: Strategy with Data Flow
+```typescript
+// Multi-step strategy pattern
+export const createDataProcessingStrategy = (inputData: DataPayload): ActionStrategy => {
+  const stepTwo = createActionNode(
+    processDataStep2(),
+    {
+      successNode: createActionNode(processDataComplete()),
+      successNotes: { preposition: 'then', denoter: 'Processing Complete' }
+    }
+  );
+
+  return createStrategy({
+    topic: 'Data Processing Pipeline',
+    initialNode: createActionNode(
+      processDataStep1(),
+      {
+        successNode: stepTwo,
+        successNotes: { preposition: 'first', denoter: 'Data Validated' }
+      }
+    ),
+    data: inputData
+  });
+};
+
+// Usage in stage planner
+stage(({dispatch}) => {
+  const strategy = createDataProcessingStrategy({ data: inputData });
+  dispatch(strategyBegin(strategy), {iterateStage: true});
+})
+```
+
+### Agent Development Guidelines
+
+#### 1. Always Use v0.3.2 Patterns
+```typescript
+// ✅ Always export quality types
+export type MyQuality = Quality<StateType, PayloadType?>;
+
+// ✅ Always use explicit quality mapping
+export type MyQualities = {
+  qualityOne: QualityOneType,
+  qualityTwo: QualityTwoType,
+};
+
+// ✅ Prefer createStages for complex plans
+const plan = muxium.plan('My Plan', ({staging, stage}) =>
+  staging(() => {
+    // Compose stages here
+    return stageArray;
+  })
+);
+```
+
+#### 2. State Access Best Practices
+```typescript
+// ✅ Use DECK interface for state access
+stage(({d}) => {
+  const count = d.counter.k.count.select();
+  const user = d.user.k.profile.select();
+});
+
+// ✅ Use selectSlice for computed values
+stage(({concepts}) => {
+  const computedValue = selectSlice(concepts, myComputedSelector);
+});
+
+// ❌ Avoid manual concept lookups
+stage(({concepts}) => {
+  const counter = concepts.find(c => c.name === 'counter'); // Don't do this
+});
+```
+
+#### 3. Error Handling Patterns
+```typescript
+// ✅ Always handle strategy failures
+stage(({concepts, dispatch, d}) => {
+  const muxiumState = getMuxiumState(concepts);
+  
+  // Check for strategy failures
+  if (muxiumState.badPlans.length > 0) {
+    console.log('Strategy failed:', muxiumState.badPlans[0]);
+    dispatch(d.recovery.e.recoveryStart(), {iterateStage: true});
+  }
+});
+
+// ✅ Add timeout handling for async operations
+stage(({dispatch, d}) => {
+  dispatch(d.processing.e.processingStart(), {
+    iterateStage: true,
+    agreement: 10000 // 10 second timeout
+  });
+});
+```
+
+#### 4. Testing Patterns for Agents
+```typescript
+// ✅ Always clean up resources
+test('My Feature Test', (done) => {
+  const muxium = muxification('Test', concepts);
+  
+  const plan = muxium.plan('Test Plan', ({stage}) => [
+    stage(({}) => {
+      // Test logic here
+      
+      // Always conclude and close
+      setTimeout(() => {
+        plan.conclude();
+        muxium.close();
+        done();
+      }, 100);
+    })
+  ]);
+});
+
+// ✅ Test both success and failure paths
+test('Operation Success', (done) => { /* test success */ });
+test('Operation Failure', (done) => { /* test failure */ });
+```
+
+### Common Agent Pitfalls to Avoid
+
+#### 1. Missing Type Exports (v0.3.2)
+```typescript
+// ❌ Missing type export
+export const myQuality = createQualityCard({...});
+
+// ✅ Include type export
+export type MyQuality = Quality<StateType>;
+export const myQuality = createQualityCard({...});
+```
+
+#### 2. Incorrect Package Usage
+```typescript
+// ❌ Old package name
+import { muxification } from '@phuire/stratimux';
+
+// ✅ New package name (v0.3.2+)
+import { muxification } from 'stratimux';
+```
+
+#### 3. Stage Flow Issues
+```typescript
+// ❌ Missing iterateStage
+stage(({dispatch, d}) => {
+  dispatch(d.counter.e.counterAdd());
+  // Stage will not advance!
+});
+
+// ✅ Proper stage advancement
+stage(({dispatch, d}) => {
+  dispatch(d.counter.e.counterAdd(), {iterateStage: true});
+});
+```
+
+#### 4. Ownership System Misuse
+```typescript
+// ❌ Adding ownership unnecessarily
+export const simpleQuality = createQualityCard({
+  type: 'Simple Update',
+  reducer: (state) => ({ ...state, updated: true }),
+  keyedSelectors: [someSelector] // Not needed for simple operations
+});
+
+// ✅ Only use ownership when needed
+export const criticalQuality = createQualityCard({
+  type: 'Critical Update',
+  reducer: (state) => ({ ...state, criticalValue: newValue }),
+  keyedSelectors: [criticalSelector] // Only when race conditions are possible
+});
+```
+
+### Agent Quick Reference
+
+#### Essential Imports (v0.3.2)
+```typescript
+import { 
+  muxification, 
+  createConcept, 
+  createQualityCard, 
+  createQualityCardWithPayload,
+  Quality,
+  selectState,
+  selectSlice,
+  getMuxiumState
+} from 'stratimux';
+```
+
+#### Essential Type Patterns
+```typescript
+// State type
+export type MyState = { property: string };
+
+// Quality types (required exports)
+export type MyQuality = Quality<MyState>;
+export type MyQualityWithPayload = Quality<MyState, PayloadType>;
+
+// Qualities mapping (required pattern)
+export type MyQualities = {
+  myQuality: MyQuality,
+  myQualityWithPayload: MyQualityWithPayload,
+};
+
+// Deck type
+export type MyDeck = {
+  myConcept: Concept<MyState, MyQualities>,
+};
+```
+
+#### Stage Planner Template
+```typescript
+const plan = muxium.plan<MyDeck>('Plan Name', ({staging, stage, stageO, conclude, d}) =>
+  staging(() => [
+    stageO(() => d.muxium.e.muxiumKick()), // Wait for muxium open
+    
+    stage(({dispatch, d}) => {
+      // Main logic
+      dispatch(d.myConcept.e.myAction(), {iterateStage: true});
+    }),
+    
+    stage(({d}) => {
+      // Validation
+      expect(d.myConcept.k.property.select()).toBe(expectedValue);
+    }),
+    
+    conclude() // End the plan
+  ])
+);
+```
+
+This reference enables AI agents to implement Stratimux applications effectively using proven patterns and avoiding common pitfalls.
