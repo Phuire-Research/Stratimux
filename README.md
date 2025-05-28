@@ -54,6 +54,8 @@ When in doubt simplify.
 
 **[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.2)**
 
+> **⚠️ BREAKING CHANGES**: v0.3.2 introduces major type system changes requiring migration. See examples below and [migration guide](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md#version-032-migration-guide) for details.
+
 # Summary: Day One of Stratimux - The Design Intent Realized
 
 ## Core Achievement
@@ -153,8 +155,8 @@ src/ concepts / muX / qualities / qOfMux.quality.ts
 Treat your concepts as libraries, modules, and/or(anor) entire applications. As that was the initial inspiration for this system. Beyond this initial release, there will be a growing library of Standardized Concepts for utilization within your Muxiums. Including the ability to finally have an easy means of composing "Web Components," into your system. While enhancing upon their functionality, versus just the drop in. 
 
 ```typescript
-import { Concept, createConcept, MuxiumDeck, PrincipleFunction } from 'stratimux';
-import { muXqOfMux } from './qualities/qOfMux.quality';
+import { Concept, createConcept, MuxiumDeck, PrincipleFunction, Quality } from 'stratimux';
+import { muXqOfMux, MuXqOfMux } from './qualities/qOfMux.quality';
 import { muXPrinciple } from './muX.principle';
 
 export type MUXState = {
@@ -169,15 +171,16 @@ export const createMUXState = (): MUXState => {
   };
 };
 
-const qualities = {
-  muXqOfMux
+// v0.3.2 REQUIRED: Explicit quality type mapping for type safety at scale
+export type MUXQualities = {
+  muXqOfMux: MuXqOfMux;
 };
 
 export type MUXDeck = {
-  muX: Concept<MUXState, typeof qualities>;
+  muX: Concept<MUXState, MUXQualities>;
 };
 
-export type MUXPrinciple = PrincipleFunction<typeof qualities, MuxiumDeck & MUXDeck, MUXState>;
+export type MUXPrinciple = PrincipleFunction<MUXQualities, MuxiumDeck & MUXDeck, MUXState>;
 
 export const createMuXConcept = () => {
   return createConcept(
@@ -185,7 +188,7 @@ export const createMuXConcept = () => {
     createMUXState(),
     {
       muXqOfMux
-    },
+    } as MUXQualities,
     [
       muXPrinciple,
     ],
@@ -202,13 +205,15 @@ import {
   strategySuccess,
   strategyFailed,
   createQualityCardWithPayload,
-  strategyData_muxifyData
+  strategyData_muxifyData,
+  Quality
 } from 'stratimux';
 import { MUXDeck, MUXState, } from '../muX.concept';
 
 type muXOfMuxPayload = {
   message: string
 }
+
 export type uXqOfUxField = {
   state: MUXState
 };
@@ -216,6 +221,9 @@ export type uXqOfUxField = {
 function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
+
+// v0.3.2 REQUIRED: Export explicit quality type for concept type mapping
+export type MuXqOfMux = Quality<MUXState, muXOfMuxPayload>;
 
 export const muXqOfMux = createQualityCardWithPayload<MUXState, muXOfMuxPayload, MUXDeck>({
   type: 'muX allows for easy selection of your qualities, muXqOfMux is your quality, and Type is the distinction',
@@ -257,7 +265,8 @@ Your concept's "main" function. This will be called after the muxium initializes
 ```typescript
 import {
   getMuxiumState,
-  strategyBegin
+  strategyBegin,
+  createStages
 } from 'stratimux';
 import { muXName, MUXPrinciple } from './muX.concept';
 import { muXSomeStrategy, muXSomeStrategyTopic } from './strategies/muXSome.strategy';
@@ -268,7 +277,7 @@ export const muXPrinciple: MUXPrinciple = ({
   // There always needs to be atleast one subscriber or plan for the Muxium to be active.
   const muxPlan = plan('muX Plan', ({stageO, stage, d__}) => [
     // This will register this plan to the muxium, this allows for the muxium to close or remove your concept cleanly.
-    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan})))e
+    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan}))),
     stage(({concepts, dispatch, k, d}) => {
       const state = k.state(concepts);
       if (state) {
@@ -283,12 +292,14 @@ export const muXPrinciple: MUXPrinciple = ({
         stagePlanner.conclude();
       }
     })
-  ]);
-  // Advanced
+  ]);  // v0.3.2 Advanced: Using createStages helper for improved scoped composition
   // *Note* when accessing your deck from outside of Stratimux, you will need to supply your Deck Type Interface to the plan to access such. This is a QoL Decision allowing for Stratimux to be adapted to any number of environments.
-  const muxPlan = plan<MUXDeck>('muX Plan', ({staging, stageO, stage, d__}) => staging(() => {
-      // By using the staging helper function you gain access to scope encapsulation while maintaining type safety. This allow you to process which stages you would like to include in an open environment, versus having to perform sophisticated one-liners and reducing readability. 
-      const stageRegister = stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlan})))
+  const muxPlanWithStages = plan<MUXDeck>('muX Plan with createStages', ({d__}) => 
+    createStages(({stageO, stage}) => {
+      // By using createStages you gain access to scope encapsulation while maintaining type safety. 
+      // This allows you to process which stages you would like to include in an open environment, 
+      // versus having to perform sophisticated one-liners and reducing readability.
+      const stageRegister = stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: muXName, stagePlanner: muxPlanWithStages})));
 
       const stageDispatch = stage(({concepts, dispatch, k, d}) => {
           const state = k.state(concepts);
