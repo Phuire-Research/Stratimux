@@ -22,6 +22,7 @@
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
+* [v0.3.2 Migration Guide](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md) - **Required for v0.3.2 upgrade**
 * [Stratimux Agent Reference](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md) - Drop in reference sheet for utilization of Stratimux for Agent Environments Unfamiliar with Stratimux.
 
 ### What is Muxification?
@@ -54,7 +55,9 @@ When in doubt simplify.
 
 **[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.2)**
 
-> **⚠️ BREAKING CHANGES**: v0.3.2 introduces major type system changes requiring migration. See examples below and [migration guide](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md#version-032-migration-guide) for details.
+> **⚠️ BREAKING CHANGES**: v0.3.2 introduces major type system changes requiring migration. 
+> 
+> **📋 [Complete Migration Guide →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md)**
 
 # Summary: Day One of Stratimux - The Design Intent Realized
 
@@ -127,7 +130,7 @@ export type CounterQualities = {
 - **All concepts**: Require explicit quality type interfaces
 - **All tests**: Updated for new type patterns
 
-**[Complete migration details and examples →](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.2)**
+**[Complete migration details and examples →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md)**
 
 
 Other typescript projects
