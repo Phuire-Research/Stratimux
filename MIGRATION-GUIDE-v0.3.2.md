@@ -454,7 +454,7 @@ No need to import selectors or manage concept names manually.
 Create truly isolated concept instances for different APIs, databases, or services.
 
 ### 5. Higher Order Composition
-Navigate through muxified concept hierarchies with full type safety.
+Navigate through muxified conceptual composition with full type safety.
 
 ### 6. Framework Completion
 Stratimux now provides **Full Isolated Functional Composition of Concepts** - the system is architecturally complete.
