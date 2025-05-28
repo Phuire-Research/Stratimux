@@ -41,7 +41,7 @@ export type Deck<C> = C extends LoadConcepts
     ? Record<string, AnyConceptDECK> // True any - lossy format
     : {
         [K in keyof C]: C[K] extends Concept<infer S, infer Q, infer D> ?
-          ConceptDECK<S, Q, D> & Deck<MuxiumDeck>
+          ConceptDECK<S, Q, D & Deck<MuxiumDeck>>
           : Deck<MuxiumDeck>
       }
   : Deck<MuxiumDeck>;

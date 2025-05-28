@@ -12,20 +12,20 @@ Once attached to the badPlan property, it would be possible to reinitialize said
 The added benefit of the creation of a plan to control the flow of actions. Allows the ability to create a series of stages to handle how the dispatch would be handled within a subscription, but with the added benefit of iterating through each stage your plan. A typical plan would typically be composed of an initialization, main run time, and likewise the ability to conclude. 3 acts if you will.
 
 ### StratiDECK Planning Interface
-In v0.3.2, the Stage Planner introduces enhanced planning capabilities through the `Planner` interface, which provides access to comprehensive type-safe utilities:
+In v0.3.21, the Stage Planner introduces enhanced planning capabilities through the `Planner` interface, which provides access to comprehensive type-safe utilities:
 
 ```typescript
 export type Planner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
   stage: typeof createStage<Q, C, S>
   stageO: typeof stageWaitForOpenThenIterate,
   conclude: typeof stageConclude,
-  staging: typeof createStages<Q, C, S>  // NEW in v0.3.2
+  staging: typeof createStages<Q, C, S>  // NEW in v0.3.21
 }) => PartialStaging<Q, C, S>[];
 ```
 
 ### Enhanced Plan Structure  
 ```typescript
-// Enhanced Plan with v0.3.2 capabilities
+// Enhanced Plan with v0.3.21 capabilities
 export type Plan<Q = void, C = void, S = void> = {
   id: number;
   space: number;
@@ -175,8 +175,8 @@ test('Stage Planner Complete Example', (done) => {
     }
   });
 
-  // Enhanced v0.3.2 plan using modern patterns
-  const plan = muxium.plan<CounterDeck>('v0.3.2 Stage Dispatch Options Demo', 
+  // Enhanced v0.3.21 plan using modern patterns
+  const plan = muxium.plan<CounterDeck>('v0.3.21 Stage Dispatch Options Demo', 
     ({staging, stage, stageO, d}) => staging(() => {
       // Stage 0: Initialization using stageO helper
       const initStage = stageO(() => d.muxium.e.muxiumKick());
@@ -200,7 +200,7 @@ test('Stage Planner Complete Example', (done) => {
 
         // First action: increment once per state update only
         dispatch(d.counter.e.counterAdd(), {
-          runOnce: true  // v0.3.2 enhanced: prevents action repetition
+          runOnce: true  // v0.3.21 enhanced: prevents action repetition
         });
 
         // Conditional stage jumping when count reaches 2
@@ -239,7 +239,7 @@ test('Stage Planner Complete Example', (done) => {
 
 ### Advanced StratiDECK StagePlanner Features Demonstrated
 
-This example showcases key v0.3.2 enhancements:
+This example showcases key v0.3.21 enhancements:
 
 **1. Enhanced Stage Composition with `staging`:**
 - Scoped stage creation with full type safety
@@ -276,14 +276,14 @@ In an action overflow state, the system will sequentially process overflow calls
 
 ## Stage Planner within your Principle
 
-### v0.3.2 Principle Integration Patterns
+### v0.3.21 Principle Integration Patterns
 
 Stratimux is designed to operate primarily through loaded concepts and their associated principles. The Stage Planner integrates seamlessly with principle-driven architectures, providing structured workflows within concept lifecycles.
 
 To ensure predictable behavior and prevent race conditions, utilize the muxium's `open` property selector to coordinate stage execution with system readiness:
 
 ```typescript
-// Modern v0.3.2 principle-based stage planner
+// Modern v0.3.21 principle-based stage planner
 const conceptPrinciple: PrincipleFunction = (concept$, semaphore) => {
   const plan = concept$.plan('Principle Workflow Manager', ({staging, stage, stageO, d__, k__}) => 
     staging(() => {
@@ -310,7 +310,7 @@ const conceptPrinciple: PrincipleFunction = (concept$, semaphore) => {
         const myPrincipleState = selectState(concepts, 'myPrinciple');
         const muxiumState = getMuxiumState(concepts);
         
-        // Enhanced change detection with v0.3.2 selectors
+        // Enhanced change detection with v0.3.21 selectors
         if (changes?.some(change => change.keys.includes('initialized'))) {
           console.log('Principle state changed:', changes);
           
@@ -347,7 +347,7 @@ const conceptPrinciple: PrincipleFunction = (concept$, semaphore) => {
 
 ### Higher Order Conceptual Composition Integration
 
-In v0.3.2's StratiDECK system, Stage Planners can coordinate between outer concepts and their muxified inner concept dependencies:
+In v0.3.21's StratiDECK system, Stage Planners can coordinate between outer concepts and their muxified inner concept dependencies:
 
 ```typescript
 // Muxified concept with Stage Planner coordination
@@ -404,16 +404,16 @@ const outerConcept = createConcept('dataProcessor', createDataProcessorState(), 
 - Dynamic stage management for adaptive behaviors
 ## How Stage Priority Effects Actions
 
-### v0.3.2 Enhanced Priority System
+### v0.3.21 Enhanced Priority System
 
-The v0.3.2 priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept higher order compositions effectively. When actions are dispatched into the action stream, they enter a sophisticated queuing system that respects both stage priorities and action-specific priorities.
+The v0.3.21 priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept higher order compositions effectively. When actions are dispatched into the action stream, they enter a sophisticated queuing system that respects both stage priorities and action-specific priorities.
 
 ### Priority Inheritance and Overrides
 
-By default, any priority assigned to a stage will be inherited by actions dispatched from that stage. This ensures that high-priority stages maintain their precedence throughout the execution chain. However, v0.3.2 provides fine-grained control over this behavior:
+By default, any priority assigned to a stage will be inherited by actions dispatched from that stage. This ensures that high-priority stages maintain their precedence throughout the execution chain. However, v0.3.21 provides fine-grained control over this behavior:
 
 ```typescript
-// Modern v0.3.2 priority patterns with enhanced control
+// Modern v0.3.21 priority patterns with enhanced control
 
 // High observation priority, but neutral action priority
 const priorityObserverStage = stage(({dispatch, e}) => {
@@ -456,7 +456,7 @@ const adaptivePriorityStage = stage(({concepts, dispatch, d}) => {
 
 ### Advanced Priority Coordination
 
-The v0.3.2 priority system enables sophisticated coordination patterns:
+The v0.3.21 priority system enables sophisticated coordination patterns:
 
 **1. Multi-Space Priority Coordination:**
 ```typescript
@@ -501,7 +501,7 @@ const dynamicPriorityStage = stage(({concepts, dispatch, d}) => {
   
   dispatch(d.resourceManager.e.allocateResources(), {
     iterateStage: true,
-    newPriority: calculatedPriority  // v0.3.2: Dynamic priority assignment
+    newPriority: calculatedPriority  // v0.3.21: Dynamic priority assignment
   });
 });
 ```
@@ -561,11 +561,11 @@ const coordinatedPlan = staging(() => {
 
 ## Conclusion
 
-### The Evolution of Stage Planning in v0.3.2
+### The Evolution of Stage Planning in v0.3.21
 
-The Stage Planner represents one of Stratimux's most powerful paradigms for managing complex application workflows. With v0.3.2's StratiDECK enhancements, it has evolved into a sophisticated orchestration system capable of coordinating Higher Order Conceptual Compositions with precision and reliability.
+The Stage Planner represents one of Stratimux's most powerful paradigms for managing complex application workflows. With v0.3.21's StratiDECK enhancements, it has evolved into a sophisticated orchestration system capable of coordinating Higher Order Conceptual Compositions with precision and reliability.
 
-### Key Achievements in v0.3.2
+### Key Achievements in v0.3.21
 
 **1. Enhanced Composition Capabilities:**
 - The `staging` helper function enables scoped stage composition

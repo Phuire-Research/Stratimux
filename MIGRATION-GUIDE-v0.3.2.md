@@ -1,8 +1,8 @@
-# Stratimux v0.3.2 Migration Guide - Stratideck Complete
+# Stratimux v0.3.21 Migration Guide - Stratideck Complete
 
 ## Overview
 
-Stratimux v0.3.2 represents the completion of the **Stratideck** system and introduces **Full Isolated Functional Composition of Concepts**. This major release brings significant architectural improvements through the **DECK Interface System** while requiring explicit type definitions for enhanced type safety at scale.
+Stratimux v0.3.21 represents the completion of the **Stratideck** system and introduces **Full Isolated Functional Composition of Concepts**. This major release brings significant architectural improvements through the **DECK Interface System** while requiring explicit type definitions for enhanced type safety at scale.
 
 ## 🚨 Breaking Changes Summary
 
@@ -32,7 +32,7 @@ const counterQualities = {
 export type CounterQualities = typeof counterQualities;
 ```
 
-### After (v0.3.2 REQUIRED)
+### After (v0.3.21 REQUIRED)
 ```typescript
 // NEW: Explicit type definitions for each quality
 export type CounterAdd = Quality<CounterState>;
@@ -92,7 +92,7 @@ export type MuxifiedCounterDeck = {
 } & CounterDeck;
 ```
 
-### After (v0.3.2 REQUIRED)
+### After (v0.3.21 REQUIRED)
 ```typescript
 // REQUIRED: Place Muxified Decks into the Deck Slot for the Concept Type at your Deck Creation.
 export type MuxifiedCounterDeck = {
@@ -200,7 +200,7 @@ type DECK = {
 
 ### Complete d.e.c.k Access Pattern
 
-The v0.3.2 StratiDECK system provides **Full Isolated Functional Composition**:
+The v0.3.21 StratiDECK system provides **Full Isolated Functional Composition**:
 
 ```typescript
 // Complete type-safe access to concept functionality
@@ -483,4 +483,4 @@ Stratimux now provides **Full Isolated Functional Composition of Concepts** - th
 
 ---
 
-*The v0.3.2 release represents the completion of Stratimux's core architecture. While requiring more explicit boilerplate, this release ensures type safety and functionality at enterprise scale, making Stratimux a complete solution for complex asynchronous graph programming needs.*
+*The v0.3.21 release represents the completion of Stratimux's core architecture. While requiring more explicit boilerplate, this release ensures type safety and functionality at enterprise scale, making Stratimux a complete solution for complex asynchronous graph programming needs.*
