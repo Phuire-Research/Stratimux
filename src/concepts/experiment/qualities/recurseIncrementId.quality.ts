@@ -5,16 +5,18 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
 import { strategyRecurse } from '../../../model/action/strategy/actionStrategyConsumersAdvanced';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
-export type ExperimentRecurseIterateId = {
+export type ExperimentRecurseIterateIdPayload = {
   controlling: string[]
 };
 
-export const experimentRecurseIterateId = createQualityCardWithPayload<ExperimentState, ExperimentRecurseIterateId>({
+
+export type ExperimentRecurseIterateId = Quality<ExperimentState, ExperimentRecurseIterateIdPayload>;
+export const experimentRecurseIterateId = createQualityCardWithPayload<ExperimentState, ExperimentRecurseIterateIdPayload>({
   type: 'Asynchronous experiment, recursively iterate ID and receive in Method via State',
   reducer: (state) => {
     return {

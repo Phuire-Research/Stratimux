@@ -4,12 +4,12 @@ $>*/
 /*<#*/
 import { getMuxiumState  } from '../model/muxium/muxiumHelpers';
 import { muxification } from '../model/muxium/muxium';
-import { Concepts } from '../model/concept/concept.type';
+import { Concept, Concepts } from '../model/concept/concept.type';
 import { selectConcept, selectState } from '../model/selector/selector';
-import { OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
+import { OwnershipDeck, OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
+import { CounterDeck, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
+import { createExperimentState, createExperimentConcept, ExperimentState } from '../concepts/experiment/experiment.concept';
 import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import {
   ExperimentCountingDeck,
@@ -25,15 +25,29 @@ test('Ownership Test', (done) => {
   const orderOfTopics: string[] = [];
   let finalRun = true;
   const qualities = {experimentCheckInStrategy};
+  const experimentState = createExperimentState();
   const deck = {
     ownership: createOwnershipConcept(),
     counter: createCounterConcept(),
-    experiment: createExperimentConcept(createExperimentState(), qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
+    experiment: createExperimentConcept<ExperimentState, typeof qualities>(
+      experimentState,
+      qualities,
+      [
+        experimentActionQuePrincipleCreator<
+        typeof qualities,
+        ExperimentState
+        >()
+      ])
   };
+  type DECK = {
+    experiment: Concept<typeof experimentState, typeof qualities>
+  } & OwnershipDeck & CounterDeck;
   const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true});
-  const plan = muxium.plan<typeof deck>(
+  const plan = muxium.plan<DECK>(
     'Testing Ownership Staging', ({stage}) => [
       stage(({stagePlanner, concepts, dispatch, d, k}) => {
+        console.log('CHECK SEMAPHORE', d.counter.e.counterAdd().semaphore);
+        console.log('CHECK SEMAPHORE 2', d.muxium.e.muxiumKick().semaphore);
         const muxiumState = getMuxiumState(concepts);
         console.log(muxiumState.lastStrategy);
         if (muxiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {

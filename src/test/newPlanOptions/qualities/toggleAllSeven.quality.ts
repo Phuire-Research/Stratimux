@@ -2,9 +2,10 @@
 For the asynchronous graph programming framework Stratimux and based on the Experiment Concept, generate a quality set a five property to true
 $>*/
 /*<#*/
-import { quality } from '../../../model/quality';
+import { Quality, quality } from '../../../model/quality';
 import { ExperimentPlanOptionsState } from '../newPlanOptions.concept';
 
+export type ExperimentToggleAllSeven = Quality<ExperimentPlanOptionsState>;
 export const experimentToggleAllSeven = quality.create<ExperimentPlanOptionsState>({
   type: 'experimentPriority Add value',
   reducer: (state) => ({

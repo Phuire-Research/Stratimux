@@ -4,7 +4,8 @@ $>*/
 
 import { Action, Actions } from './action/action.type';
 import { LoadConcepts } from './concept/concept.type';
-import { Deck } from './deck';
+import { Deck, Stratideck } from './deck';
+import { Quality } from './quality';
 import { BundledSelectors } from './selector/selector.type';
 
 /*<#*/
@@ -17,7 +18,7 @@ export type Comparators<T = void> = {
   [K in keyof T]: Comparator
 };
 
-export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, number][]) => Comparator;
+export type PrimeComparator = (quality: Quality<Record<string, unknown>>) => Comparator;
 
 /**
  * This will curry the actionSemaphoreBucket into a function that will supply type validation without the utilization of string comparison.
@@ -25,13 +26,9 @@ export type PrimeComparator = (actionSemaphoreBucket: [number, number, number, n
  * @returns True of False if the action's semaphore matches the curried actionSemaphoreBucket
  * @throws 'ACTION SEMAPHORE BUCKET NOT PRIMED' If the actionSemaphoreBucket has not been primed in the muxium.
  */
-export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (action) => {
-  const semaphore = actionSemaphoreBucket[0];
-  if (semaphore[0] && semaphore[0] !== -1) {
-    return action.semaphore[0] === semaphore[0] && action.semaphore[1] === semaphore[1];
-  } else {
-    throw 'ACTION SEMAPHORE BUCKET NOT PRIMED';
-  }
+export const createComparator: PrimeComparator = (quality: Quality<Record<string, unknown>>) => (action) => {
+  const identity = quality.qualityIdentity;
+  return identity === action.identity;
 };
 
 // Providing these interfaces to avoid overlap and denote some final order that should be maintained when orchestrating plans.
@@ -41,10 +38,11 @@ export const createComparator: PrimeComparator = (actionSemaphoreBucket) => (act
 /**
  * Highest Order Interface
  * U in Stratimux represents the Universal Scale and limit of our physical existence.
+ * Fixed to preserve specific concept types through functional composition
  */
 export type UInterface<Q = void, C = void, S = void> = {
-  // Deck
-  d: Deck<C extends void ? LoadConcepts : C>
+  // Deck - preserves specific concept types instead of degrading to AnyConcept
+  d: Deck<C>
   // Entry Actions
   e: Actions<Q>
   // Comparators
@@ -60,7 +58,7 @@ export type UInterface<Q = void, C = void, S = void> = {
  * Limited by a whitelist provided by some access property supplied to the Muxium
  */
 export type OInterface<Q = void, C = void, S = void> = {
-  d: Deck<C extends void ? LoadConcepts : C>
+  d: Deck<C>
   e: Actions<Q>
   c: Comparators<Q>
   k: BundledSelectors<S>
@@ -70,7 +68,7 @@ export type OInterface<Q = void, C = void, S = void> = {
  * Higher Order Interface
  */
 export type HInterface<Q = void, C = void, S = void> = {
-  d__: Deck<C extends void ? LoadConcepts : C>
+  d__: Deck<C>
   e__: Actions<Q>
   c__: Comparators<Q>
   k__: BundledSelectors<S>,
@@ -80,7 +78,7 @@ export type HInterface<Q = void, C = void, S = void> = {
  * Base Interface
  */
 export type BInterface<Q = void, C = void, S = void> = {
-  d_: Deck<C extends void ? LoadConcepts : C>,
+  d_: Deck<C>
   e_: Actions<Q>
   c_: Comparators<Q>
   k_: BundledSelectors<S>,

@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { createAsyncMethodThrottleWithState } from '../../../model/method/methodAsyncThrottle';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
@@ -14,6 +14,8 @@ export type ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload = {
 }
 type Data = ExperimentState & ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload;
 
+export type ExperimentThrottleAsyncIterateIdThenReceiveInMethod =
+  Quality<ExperimentState, ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload>;
 export const experimentThrottleAsyncIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload>({
     type: 'Action Debounce Experiment asynchronously iterate ID then receive in Method via State',

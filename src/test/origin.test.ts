@@ -2,16 +2,18 @@
 For the asynchronous graph programming framework Stratimux, generate a test to ensure that action origin is functioning as intended.
 $>*/
 /*<#*/
-import { counterAdd } from '../concepts/counter/qualities/add.quality';
+import { CounterAdd, counterAdd } from '../concepts/counter/qualities/add.quality';
 import { createOrigin, getMuxiumState } from '../model/muxium/muxiumHelpers';
 import { muxification } from '../model/muxium/muxium';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
-import { CounterState } from '../concepts/counter/counter.concept';
-import { counterSetCount } from '../concepts/counter/qualities/setCount.quality';
+import { CounterDeck, CounterState } from '../concepts/counter/counter.concept';
+import { CounterSetCount, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { selectState } from '../model/selector/selector';
 import { PrincipleFunction } from '../model/principle';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
 import { Concept } from '../model/concept/concept.type';
+import { Deck } from '../model/deck';
+import { Quality } from '../model/quality';
 
 test('Origin Creation', (done) => {
   expect(createOrigin(['one'])).toBe('one');
@@ -28,59 +30,72 @@ test('Test Dispatch Override', (done) => {
     counterAdd,
     counterSetCount
   };
-  const muxium = muxification('Override actions based on Plan and Stage', {experiment: createExperimentConcept({
-    count: 0,
-  } as CounterState,
-  experimentCounterQualities, [
-    ({concepts_, plan}) => {
-      const {
-        body
-      } = getMuxiumState(concepts_);
-      const stageName = 'Test Override';
-      const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
-        stageO(() => d__.muxium.e.muxiumKick()),
-        stage(({dispatch, e, d}) => {
-          new Array(10).fill('').forEach(() => body.push(e.counterAdd()));
-          body.push(e.counterSetCount({
-            newCount: Infinity
-          }, {
-            origin: createOrigin([stageName, 3])
-          }));
-          dispatch(e.counterAdd(), {
-            iterateStage: true
-          });
-        }),
-        stage(({concepts, dispatch, d, e}) => {
-          const count = selectState<CounterState>(concepts, experimentName)?.count;
-          let exists = false;
-          getMuxiumState(concepts).body.forEach(a => {
-            if (a.type === e.counterAdd().type) {
-              exists = true;
-            }
-          });
-          if (exists) {
-            const newCount = count !== undefined ? count  * 2 : 0;
-            finalDispatchedSet = newCount;
-            dispatch(e.counterSetCount({
-              newCount
-            }), {
-              // iterateStage: true,
-              throttle: 0,
-              override: true,
+  type ExperimentCounterQualities = {
+    counterAdd: CounterAdd,
+    counterSetCount: CounterSetCount
+  };
+  type DECK = {
+    experiment: Concept<CounterState, Quality<CounterState, ExperimentCounterQualities>, CounterDeck>
+  }
+  const muxium = muxification<DECK>('Override actions based on Plan and Stage', {
+    experiment: createExperimentConcept<CounterState, ExperimentCounterQualities>({
+      count: 0,
+    } as CounterState,
+    experimentCounterQualities, [
+      ({concepts_, plan}) => {
+        const {
+          body
+        } = getMuxiumState(concepts_);
+        const stageName = 'Test Override';
+        const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
+          stageO(() => d__.muxium.e.muxiumKick()),
+          stage(({dispatch, e, d}) => {
+            // new Array(10).fill('').forEach(() => body.push()));
+            new Array(10).fill('').forEach((_, i) => {
+              body.push(e.counterAdd({
+                origin: createOrigin([stageName, i + ''])
+              }));
             });
-          } else {
-            dispatch(d.muxium.e.muxiumKick(), {
+            body.push(e.counterSetCount({
+              newCount: Infinity
+            }, {
+              origin: createOrigin([stageName, 3])
+            }));
+            dispatch(e.counterAdd(), {
               iterateStage: true
             });
-          }
-        // }, {selectors: [createMuxifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
-        }),
-        stage(() => {
-          planTestOverride.conclude();
-        })
-      ]);
-    }
-  ])}, {
+          }),
+          stage(({concepts, dispatch, d, e}) => {
+            const count = selectState<CounterState>(concepts, experimentName)?.count;
+            let exists = false;
+            getMuxiumState(concepts).body.forEach(a => {
+              if (a.type === e.counterAdd().type) {
+                exists = true;
+              }
+            });
+            if (exists) {
+              const newCount = count !== undefined ? count  * 2 : 0;
+              finalDispatchedSet = newCount;
+              dispatch(e.counterSetCount({
+                newCount
+              }), {
+                // iterateStage: true,
+                throttle: 0,
+                override: true,
+              });
+            } else {
+              dispatch((d as Deck<MuxiumDeck>).muxium.e.muxiumKick(), {
+                iterateStage: true
+              });
+            }
+          // }, {selectors: [createMuxifiedKeyedSelector<CounterState>(cpts, s, 'count') as KeyedSelector]}),
+          }),
+          stage(() => {
+            planTestOverride.conclude();
+          })
+        ]);
+      }
+    ])}, {
     // storeDialog: true,
     // logging: true,
     // logActionStream: true
@@ -98,12 +113,14 @@ test('Test Dispatch Override', (done) => {
       // expect(count).toBe();
       sub.unsubscribe();
       muxium.close();
-      console.log('Final: ', finalCount, finalDispatchedSet);
       expect(finalCount).toBe(finalDispatchedSet);
       if (finalCount === -1) {
+        console.log('Final: ', finalCount, finalDispatchedSet);
         expect(false).toBe(true);
       }
       if (finalCount === Infinity) {
+        console.log('Final: ', finalCount, finalDispatchedSet);
+        console.log(finalCount);
         expect(false).toBe(true);
       }
       setTimeout(() => {
@@ -212,7 +229,7 @@ test('Test Dispatch Override', (done) => {
       setTimeout(() => {
         done();
       }, 10);
-    }, 100));
+    }, 1000));
   });
 });
 /*#>*/

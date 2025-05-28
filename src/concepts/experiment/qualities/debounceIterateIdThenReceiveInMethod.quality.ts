@@ -6,14 +6,15 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { createMethodDebounceWithState } from '../../../model/method/methodDebounce';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export type ExperimentDebounceIterateIdThenReceiveInMethodPayload = {
   setId: number;
 }
-
+export type ExperimentDebounceIterateIdThenReceiveInMethod =
+  Quality<ExperimentState, ExperimentDebounceIterateIdThenReceiveInMethodPayload>
 export const experimentDebounceIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentDebounceIterateIdThenReceiveInMethodPayload>({
     type: 'Experiment debounce iterate ID then receive in Method via State',

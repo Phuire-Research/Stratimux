@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { createMethodThrottleWithState } from '../../../model/method/methodThrottle';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
@@ -15,6 +15,8 @@ export type ExperimentThrottleIterateIdThenReceiveInMethodPayload = {
 
 type Data = ExperimentState & ExperimentThrottleIterateIdThenReceiveInMethodPayload;
 
+export type ExperimentThrottleIterateIdThenReceiveInMethod =
+  Quality<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>;
 export const experimentThrottleIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
     type: 'Experiment throttle iterate ID then receive in Method via State',

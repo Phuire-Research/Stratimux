@@ -121,7 +121,7 @@ export const updateKeyedSelectors = <S = void>(
 ): void => {
   const keys = Object.keys(selectors);
   keys.forEach(key => {
-    (selectors as any)[key] = updateMuxifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
+    updateMuxifiedKeyedSelector(concepts, semaphore, (selectors as any)[key]);
     const keyed = (selectors as any)[key] as KeyedSelector<any>;
     const val = selectSlice<any>(concepts, keyed);
     keyed.select = () => val;
@@ -144,6 +144,7 @@ export const updateAtomicSelects = <S = void>(
   concepts: Concepts,
   selectors: KeyedSelectors<S>,
   partialState: Partial<S extends Record<string, unknown> ? S : Record<string, unknown>>,
+  action: any
 ): KeyedSelector<any>[] => {
   const kss: KeyedSelector<any>[] = [];
   Object.keys(partialState).forEach(key => {
@@ -162,31 +163,16 @@ export const updateAtomicSelects = <S = void>(
  * @Note Use this in place of createMuxifiedSelector if you find yourself needing to lock deep values.
  */
 export const updateMuxifiedKeyedSelector =
-  (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector): KeyedSelector | undefined => {
+  (concepts: Concepts, semaphore: number, keyedSelector: KeyedSelector) => {
     if (concepts[semaphore]) {
       const selectorBase = keyedSelector.keys.split('.');
       selectorBase[0] = concepts[semaphore].name;
       const _selector = creation(selectorBase, selectorBase.length - 1, selectorBase.length) as SelectorFunction;
-      if (keyedSelector.setKeys) {
-        return {
-          conceptName: concepts[semaphore].name,
-          conceptSemaphore: semaphore,
-          _selector,
-          select: () => undefined,
-          keys: selectorBase.join('.'),
-          setKeys: keyedSelector.setKeys,
-          setSelector: keyedSelector.setSelector
-        };
-      }
-      return {
-        conceptName: concepts[semaphore].name,
-        conceptSemaphore: semaphore,
-        _selector,
-        select: () => undefined,
-        keys: selectorBase.join('.')
-      };
-    } else {
-      return undefined;
+      keyedSelector.conceptName = concepts[semaphore].name;
+      keyedSelector.conceptSemaphore = semaphore;
+      keyedSelector._selector = _selector;
+      keyedSelector.select = () => false;
+      keyedSelector.keys = selectorBase.join('.');
     }
   };
 // Temporary until there is a better means to create this form of deep selection

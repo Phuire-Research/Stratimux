@@ -8,6 +8,7 @@ import { createActionNode, createStrategy } from '../../../model/action/strategy
 import { ActionStrategy } from '../../../model/action/strategy/actionStrategy.type';
 import { Concept } from '../../../model/concept/concept.type';
 import { Deck } from '../../../model/deck';
+import { MuxiumDeck } from '../../muxium/muxium.concept';
 import { ExperimentState } from '../experiment.concept';
 import { experimentDebounceAsyncIterateIdThenReceiveInMethod } from '../qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
 
@@ -15,7 +16,7 @@ const qs = {experimentDebounceAsyncIterateIdThenReceiveInMethod};
 type ExperimentDeck = {
   experiment : Concept<ExperimentState, typeof qs>
 }
-export type ExperimentDebounceAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck>
+export type ExperimentDebounceAsyncIterateIdThenAddToDataDeck = Deck<ExperimentDeck & MuxiumDeck>
 
 export const experimentDebounceAsyncIterateIdThenAddToDataTopic = 'Debounce async iterate experiment ID then add to strategy data';
 export function experimentDebounceAsyncIterateIdThenAddToData(

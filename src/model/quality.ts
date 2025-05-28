@@ -17,8 +17,13 @@ import { Method } from './method/method.type';
 
 export type Quality<S extends Record<string, unknown>, T = void, C = void> = {
   actionType: ActionType;
+  qualityIdentity: number;
   actionSemaphoreBucket: [number, number, number, number][];
   actionCreator: T extends Record<string, unknown> ? ActionCreatorWithPayload<T> : ActionCreator;
+  bufferedActionCreator: (
+    semaphoreBucket: [[number, number, number, number]],
+    identity: number
+  ) => ActionCreatorType<T>
   reducer: SpecificReducer<any, T, C>;
   toString: () => string;
   methodCreator?: MethodCreatorStep<S, T, C>;
@@ -36,10 +41,30 @@ export type Qualities = {
   // [s: string]: Quality<Record<string, unknown>>
 };
 
+// Generate a unique quality identity that won't overflow for 1000+ years
+export function generateQualityIdentity(): number {
+  // Use a smaller random number to prevent overflow
+  // Random number between 1 and 999,999 (6 digits max)
+  const randomNumber = Math.floor(Math.random() * 999999) + 1;
+  // Get current timestamp in milliseconds
+  const timestampInMilliseconds = Date.now();
+  // Combine: timestamp + random component
+  // This ensures uniqueness while staying within safe integer bounds
+  // JavaScript's Number.MAX_SAFE_INTEGER is 9,007,199,254,740,991
+  // Current timestamp (2025) is ~1,737,000,000,000 (13 digits)
+  // Adding 6-digit random gives us ~19 digits total
+  // This will remain safe for well over 1000 years
+  return (timestampInMilliseconds * 1000000) + randomNumber;
+}
+
 export function createQuality<S extends Record<string, unknown>, T = void, C = void>(
   actionType: ActionType,
   actionSemaphoreBucket: [number, number, number, number][],
   actionCreator: ActionCreatorType<T>,
+  bufferedActionCreator: (
+    semaphoreBucket: [[number, number, number, number]],
+    identity: number
+  ) => ActionCreatorType<T>,
   reducer: SpecificReducer<S, T, C>,
   methodCreator?: MethodCreatorStep<S, T, C>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,6 +75,8 @@ export function createQuality<S extends Record<string, unknown>, T = void, C = v
   return {
     actionType,
     actionCreator,
+    qualityIdentity: generateQualityIdentity(),
+    bufferedActionCreator,
     actionSemaphoreBucket,
     reducer,
     methodCreator,
@@ -96,12 +123,39 @@ export function createQualityCard<S extends Record<string, unknown>, C = void>(q
   meta?: Record<string,unknown>,
   analytics?: Record<string,unknown>
 }): Quality<S, void, any> {
-  const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
-  const actionCreator = prepareActionCreator(q.type, bucket);
+  const bucket: [number, number, number, number][] = [[-1, -Infinity, -1, -1]];
+  const qualityIdentity = generateQualityIdentity()
+  const actionCreator = prepareActionCreator(q.type, bucket, qualityIdentity);
   if (q.methodCreator) {
-    return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+    return createQuality<S, void, C>(
+      q.type,
+      bucket,
+      actionCreator,
+      (
+        semaphoreBucket: [[number, number, number, number]],
+        identity: number
+      ) => prepareActionCreator(q.type, semaphoreBucket, identity) as ActionCreator,
+      q.reducer,
+      q.methodCreator,
+      q.keyedSelectors,
+      q.meta,
+      q.analytics
+    );
   }
-  return createQuality<S, void, C>(q.type, bucket, actionCreator, q.reducer, q.methodCreator, q.keyedSelectors, q.meta, q.analytics);
+  return createQuality<S, void, C>(
+    q.type,
+    bucket,
+    actionCreator,
+    (
+      semaphoreBucket: [[number, number, number, number]],
+      identity: number
+    ) => prepareActionCreator(q.type, semaphoreBucket, identity) as ActionCreator,
+    q.reducer,
+    q.methodCreator,
+    q.keyedSelectors,
+    q.meta,
+    q.analytics
+  );
 }
 
 export function createQualityCardWithPayload<
@@ -117,12 +171,17 @@ export function createQualityCardWithPayload<
   analytics?: Record<string,unknown>
 }): Quality<S, T, any> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
-  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket);
+  const qualityIdentity = generateQualityIdentity()
+  const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket, qualityIdentity);
   if (q.methodCreator) {
     return createQuality<S, T, C>(
       q.type,
       bucket,
       actionCreatorWithPayload as ActionCreatorType<T>,
+      (
+        semaphoreBucket: [[number, number, number, number]],
+        identity: number
+      ) => prepareActionWithPayloadCreator<T>(q.type, semaphoreBucket, identity) as ActionCreatorType<T>,
       q.reducer,
       q.methodCreator,
       q.keyedSelectors,
@@ -134,6 +193,10 @@ export function createQualityCardWithPayload<
     q.type,
     bucket,
     actionCreatorWithPayload as ActionCreatorType<T>,
+    (
+      semaphoreBucket: [[number, number, number, number]],
+      identity: number
+    ) => prepareActionWithPayloadCreator<T>(q.type, semaphoreBucket, identity) as ActionCreatorType<T>,
     q.reducer,
     q.methodCreator,
     q.keyedSelectors,

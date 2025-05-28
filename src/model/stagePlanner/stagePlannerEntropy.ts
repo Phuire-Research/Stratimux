@@ -99,6 +99,8 @@ export function _dispatch<Q,C,S>(
           if (options.hardOverride) {
             HandleHardOrigin(muxiumState, action);
           } else if (options.override) {
+            console.log('CHECK ACTION WITH OVERRIDE, action', action);
+            console.log('CHECK STATE', muxiumState.body);
             HandleOrigin(muxiumState, action);
           } else {
             action$.next(action);

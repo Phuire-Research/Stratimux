@@ -4,8 +4,8 @@ generate a quality that will clear the provided stubs from the current Ownership
 If no tickets exist within a line, delete that line from the ledger.
 $>*/
 /*<#*/
-import { defaultMethodCreator } from '../../../model/quality';
-import { OwnershipState } from '../ownership.concept';
+import { defaultMethodCreator, Quality } from '../../../model/quality';
+import { OwnershipDeck, OwnershipState } from '../ownership.concept';
 import { OwnershipTicket, OwnershipTicketStub } from '../../../model/ownership';
 import { selectPayload } from '../../../model/selector/selector';
 import { createQualityCardWithPayload } from '../../../model/quality';
@@ -14,7 +14,8 @@ export type OwnershipClearPayloadStubsPayload = {
   stubs: OwnershipTicketStub[]
 };
 
-export const ownershipClearPayloadStubs = createQualityCardWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload>({
+export type OwnershipClearPayloadStubs = Quality<OwnershipState, OwnershipClearPayloadStubsPayload>;
+export const ownershipClearPayloadStubs = createQualityCardWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload, OwnershipDeck>({
   type: 'clear payload Stubs from Ownership Ledger',
   reducer: (state, action) => {
     const stubs = selectPayload<OwnershipClearPayloadStubsPayload>(action).stubs;

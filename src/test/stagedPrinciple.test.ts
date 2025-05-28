@@ -25,7 +25,7 @@ const experimentMockToTrue = createQualityCard({type: 'Experiment set mock to Tr
 
 test('Muxium Principle Stage', (done) => {
   const qualities = {experimentMockToTrue};
-  const experimentPrinciple: PrincipleFunction<typeof qualities, MuxiumDeck> = ({plan}) => {
+  const experimentPrinciple: PrincipleFunction<typeof qualities, MuxiumDeck, ExperimentState> = ({plan}) => {
     const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude, e__}) => [
       stageO(() => e__.experimentMockToTrue()),
       stage(({concepts, dispatch, d}) => {
@@ -43,7 +43,12 @@ test('Muxium Principle Stage', (done) => {
     ]);
   };
   muxification('muxiumStrategyTest', {
-    experiment: createExperimentConcept<ExperimentState, MuxiumDeck>(createExperimentState(), qualities, [experimentPrinciple])
+    experiment: createExperimentConcept<ExperimentState, typeof qualities, MuxiumDeck>(
+      createExperimentState(),
+      qualities,
+      [
+        experimentPrinciple
+      ])
   }, {logging: true, storeDialog: true});
 });
 /*#>*/

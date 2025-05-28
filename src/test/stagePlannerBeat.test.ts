@@ -59,7 +59,7 @@ test('Stage Planner Beat Test', (done) => {
         });
       }
     }, {beat}),
-    createStage(() => {
+    stage(() => {
       console.log('HIT 4');
       //
     }, {beat})

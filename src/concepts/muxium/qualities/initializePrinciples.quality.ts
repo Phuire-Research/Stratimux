@@ -15,6 +15,7 @@ import { Comparators } from '../../../model/interface';
 import { BundledSelectors } from '../../../model/selector/selector.type';
 import { Action, Actions } from '../../../model/action/action.type';
 import { Planning } from '../../../model/stagePlanner/stagePlanner.type';
+import { Deck, Stratideck } from '../../../model/deck';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({
@@ -37,9 +38,9 @@ export const muxiumInitializePrinciples =
               state.concepts$.next.bind(concepts$),
               state.action$.next.bind(action$),
               semaphore,
-              state.deck,
-              concept.actions as Actions<any>,
-              concept.comparators as Comparators<any>,
+              state.deck.d as Deck<unknown>,
+              concept.actions as Actions<unknown>,
+              concept.comparators as Comparators<unknown>,
               {...concept.keyedSelectors, ...concept.selectors } as BundledSelectors<any>,
             );
             principleSubscribers.push({

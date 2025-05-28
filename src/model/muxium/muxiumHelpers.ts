@@ -11,10 +11,10 @@ import {
   MuxiumDeck,
   MuxiumState,
 } from '../../concepts/muxium/muxium.concept';
-import { createAction } from '../action/action';
-import { Action } from '../action/action.type';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { MuxiumLoad } from './muxium.type';
+import { createAction } from '../action/action';
+import { Action } from '../action/action.type';
 
 export const tailWhip = <Q, C extends LoadConcepts>(muxiumState: MuxiumState<Q, C>) => {
   if (muxiumState.tailTimer.length === 0) {
@@ -108,6 +108,4 @@ export const getMuxiumState = <Q = void, C = void>(concepts: Concepts) =>
 export const accessMuxium = (concepts: Concepts) => (getMuxiumState(concepts).deck.d.muxium);
 
 export const isMuxiumOpen = (concepts: Concepts) => ((concepts[0].state as MuxiumState<MuxiumQualities, MuxiumLoad<any>>).open);
-
-
 /*#>*/

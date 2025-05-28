@@ -38,11 +38,12 @@ export { initializationStrategy } from './strategies/initialization.strategy';
 import { createConcept } from '../../model/concept/concept';
 import { MuxifiedSubject } from '../../model/stagePlanner/stagePlanner';
 import { MuxiumQualities } from './qualities';
-import { Decks } from '../../model/deck';
+import { Stratideck } from '../../model/deck';
 import { MuxiumLoad } from '../../model/muxium/muxium.type';
 import { PrincipleFunction } from '../../model/principle';
 import { Action, AnyAction } from '../../model/action/action.type';
 import { NamedStagePlanner, Plan } from '../../model/stagePlanner/stagePlanner.type';
+import { QualityMap } from '../../model/action/actionSemaphore';
 
 export type SelectorFunction = (obj: Record<string, unknown>) => unknown | undefined;
 export type KeyedSelector = {
@@ -126,18 +127,17 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   lastStrategyData: unknown;
   lastStrategyDialog: string;
   generation: number;
-  cachedSemaphores: Map<string,Map<string,[number,number,number, number]>>
+  cachedSemaphores: Map<string, QualityMap>
   modeIndex: number;
   defaultModeIndex: number;
   modeNames: string[]
   methodSubscribers: NamedSubscription[];
   principleSubscribers: NamedSubscription[];
-  generalSubscribers: NamedSubscription[];
-  stagePlanners: NamedStagePlanner[];
+  generalSubscribers: NamedSubscription[];  stagePlanners: NamedStagePlanner[];
   action$: Subject<Action<unknown>>;
   actionConcepts$: Subject<Concepts>;
-  concepts$: MuxifiedSubject<Q, C>;
-  deck: Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+  concepts$: MuxifiedSubject<Q, C, MuxiumState<Q, C>>;
+  deck: Stratideck<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
   addConceptQue: Record<string, AnyConcept>,
   removeConceptQue: Record<string, AnyConcept>,
   badPlans: Plan<any, any, any>[];
@@ -177,21 +177,20 @@ const muxificationState = <Q, C extends LoadConcepts>(
     lastStrategyData: '',
     lastStrategyDialog: '',
     generation: 0,
-    cachedSemaphores: new Map<string, Map<string, [number, number, number, number]>>(),
+    cachedSemaphores: new Map<string, QualityMap>(),
     modeIndex: 0,
     defaultModeIndex: 1,
     modeNames: [muxiumName, muxiumName],
     methodSubscribers: [] as NamedSubscription[],
     principleSubscribers: [] as NamedSubscription[],
-    generalSubscribers: [] as NamedSubscription[],
-    stagePlanners: [] as NamedStagePlanner[],
+    generalSubscribers: [] as NamedSubscription[],    stagePlanners: [] as NamedStagePlanner[],
     action$: new Subject<Action>(),
     head: [],
     body: [],
     tail: [],
     actionConcepts$: new Subject<Concepts>(),
-    concepts$: new MuxifiedSubject(),
-    deck: {} as Decks<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
+    concepts$: new MuxifiedSubject<Q, C, MuxiumState<Q, C>>(),
+    deck: {} as Stratideck<MuxiumQualities, MuxiumState<Q, C>, MuxiumLoad<C>>,
     addConceptQue: {},
     removeConceptQue: {},
     badPlans: [],
@@ -217,7 +216,7 @@ export const muxiumConcept = <Q, C extends LoadConcepts>(
       muxiumName,
       state,
       muxiumQualities,
-      [muxiumPrinciple, muxiumClosePrinciple] as PrincipleFunction<MuxiumQualities, any, MuxiumState<Q,C>>[],
+      [muxiumPrinciple, muxiumClosePrinciple],
       [blockingMode, permissiveMode]
     );
     return c;
@@ -226,7 +225,7 @@ export const muxiumConcept = <Q, C extends LoadConcepts>(
       muxiumName,
       state,
       muxiumStaticQualities,
-      muxiumStaticPrinciple as PrincipleFunction<MuxiumQualities, any, MuxiumState<Q,C>>[],
+      muxiumStaticPrinciple,
       [blockingMode, permissiveMode]
     );
     return c;

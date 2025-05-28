@@ -4,9 +4,9 @@ the ability to change plan options at runtime.
 $>*/
 /*<#*/
 import { createExperimentConcept } from '../../concepts/experiment/experiment.concept';
-import { experimentPlanOptionsAddValue } from './qualities/addValue.quality';
-import { experimentPlanOptionsIsReady } from './qualities/isReady.quality';
-import { experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
+import { ExperimentPlanOptionsAddValue, experimentPlanOptionsAddValue } from './qualities/addValue.quality';
+import { ExperimentPlanOptionsIsReady, experimentPlanOptionsIsReady } from './qualities/isReady.quality';
+import { ExperimentToggleAllSeven, experimentToggleAllSeven } from './qualities/toggleAllSeven.quality';
 
 export type ExperimentPlanOptionsState = {
   value: number;
@@ -38,7 +38,11 @@ const experimentPlanOptionsQualities = {
   experimentPlanOptionsIsReady
 };
 
-export type ExperimentPlanOptionsQualities = typeof experimentPlanOptionsQualities;
+export type ExperimentPlanOptionsQualities = {
+  experimentToggleAllSeven: ExperimentToggleAllSeven,
+  experimentPlanOptionsAddValue: ExperimentPlanOptionsAddValue,
+  experimentPlanOptionsIsReady: ExperimentPlanOptionsIsReady
+};
 
 export const createExperimentPlanOptionsConcept = () => createExperimentConcept<ExperimentPlanOptionsState, ExperimentPlanOptionsQualities>(
   createExperimentPlanOptionsState(),

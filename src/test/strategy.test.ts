@@ -20,10 +20,6 @@ test('Muxium Counting Strategy Test', (done) => {
   const plan = muxium.plan<DECK>('Counting Strategy Plan',
     ({stage}) => [
       stage(({stagePlanner, dispatch, d, e}) => {
-        console.log('HIT!!!');
-        e.muxiumKick();
-        // Start HERE
-        d.counter.e.counterAdd();
         const str = countingStrategy(d);
         if (str) {
           dispatch(strategyBegin(str), {
@@ -35,11 +31,13 @@ test('Muxium Counting Strategy Test', (done) => {
           setTimeout(() => {done();}, 500);
         }
       }),
-      stage(({concepts}) => {
+      stage(({concepts, d}) => {
         const muxiumState = getMuxiumState(concepts);
         if (muxiumState.lastStrategy === countingTopic) {
           const counter = selectState<CounterState>(concepts, counterName);
           expect(counter?.count).toBe(1);
+          expect(d.counter.k.count.select()).toBe(1);
+          console.log('CHECK FINAL COUNT: ', d.counter.k.count.select());
           setTimeout(() => {done();}, 500);
           plan.conclude();
           muxium.close();

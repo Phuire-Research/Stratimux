@@ -5,10 +5,12 @@ $>*/
 /*<#*/
 import { ExperimentState } from '../experiment.concept';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
-import { createQualityCard } from '../../../model/quality';
+import { createQualityCard, Quality } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
+
+export type ExperimentAsyncIterateIdThenReceiveInMethod = Quality<ExperimentState>;
 export const experimentAsyncIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
   type: 'Experiment asynchronously iterate ID then receive in Method via State',
   reducer: (state) => {

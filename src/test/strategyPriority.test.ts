@@ -21,15 +21,14 @@ import { Deck } from '../model/deck';
 import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers';
 
 test('Muxium Counting Strategy Priority Test', (done) => {
-  const muxium = muxification('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
-
   type DECK = {
     counter: Concept<CounterState, CounterQualities>;
   };
-
+  const muxium = muxification<DECK>('muxiumStrategyTest', {counter: createCounterConcept()}, {logging: true, storeDialog: true});
   const deck = muxium.deck;
 
   const concluded = [false, false, false];
+  deck.d;
   const [count1, strategy1] = generateRandomCountingStrategy(deck.d as Deck<CounterDeck>, 0);
   strategy1.topic += 1;
   strategy1.priority = 100;
@@ -48,7 +47,7 @@ test('Muxium Counting Strategy Priority Test', (done) => {
           console.log('COUNT ONE STRATEGY OUTCOME: ', count1);
           console.log('COUNT TWO STRATEGY OUTCOME: ', count2);
           console.log('COUNT THREE STRATEGY OUTCOME: ', count3);
-          console.log('CHECK 1', d.muxium, 'CHECK 2', d.counter, 'CHECK 3', d);
+          // console.log('CHECK 1', d.muxium, 'CHECK 2', d.counter, 'CHECK 3', d);
           dispatch(d.muxium.e.muxiumKick(), {
             iterateStage: true
           });

@@ -11,13 +11,13 @@ import {
 } from '../concept/concept.type';
 import { muxiumTimeOut } from '../time';
 import { handlePriority, isPriorityValid } from '../priority';
-import { Action } from '../action/action.type';
+import { Action, AnyAction } from '../action/action.type';
 import { accessMuxium, getMuxiumState } from '../muxium/muxiumHelpers';
 import { MuxiumOrigins } from '../muxium/muxium.type';
 
 export const blockingMethodSubscription = (
   concepts: Concepts,
-  tail: Action<unknown>[],
+  tail: AnyAction[],
   action: Action
 ) => {
   if (

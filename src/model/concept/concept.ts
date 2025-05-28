@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Concept model file.
 This file defines the Concept abstraction that the Muxium uses to Transform its functionality.
@@ -9,16 +10,20 @@ import { createDummyKeyedSelectors, createDummySelectors } from '../selector/sel
 import { Comparators, createComparator } from '../interface';
 import { Qualities, Quality } from '../quality';
 import { Actions } from '../action/action.type';
-import { AnyConcept, Mode  } from './concept.type';
+import { AnyConcept, Mode, LoadConcepts, ConceptECK, ConceptDECK, ConceptPrincipleFunction } from './concept.type';
+import { KeyedSelectors, Selectors } from '../selector/selector.type';
 
-export function createConcept<S extends Record<string, unknown>, Q = void>(
+export function createConcept<
+  S extends Record<string, unknown>,
+  Q = void,
+  MuX extends LoadConcepts = Record<string, never>
+>(
   name: string,
   state: S,
   _qualities?: Record<string, unknown>,
-  principles?: PrincipleFunction<Q, any, S>[],
+  principles?: ConceptPrincipleFunction<Q, S>[],
   mode?: Mode[],
   meta?: Record<string,unknown>,
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): AnyConcept {
   if (mode) {
     mode.forEach((m, i) => {
@@ -35,24 +40,37 @@ export function createConcept<S extends Record<string, unknown>, Q = void>(
   const qualities: Quality<Record<string, unknown>>[] = [];
   if (_qualities) {
     Object.keys(_qualities).forEach(q => {
+      const actionSemaphoreBucket: [[number, number, number, number]] = [[-1, -1, -1, -1]];
+      const qualia: Quality<any> = {
+        ..._qualities[q] as Quality<any>,
+        actionSemaphoreBucket
+      };
       try {
-        actions[q] = (_qualities[q] as Quality<any>).actionCreator;
-        comparators[q] = createComparator((_qualities[q] as Quality<any>).actionSemaphoreBucket);
-        qualities.push(_qualities[q] as Quality<Record<string, unknown>>);
+        actions[q] = qualia.bufferedActionCreator(actionSemaphoreBucket, qualia.qualityIdentity);
+        comparators[q] = createComparator(qualia);
+        qualities.push(qualia as Quality<Record<string, unknown>>);
       } catch (error) {
-        console.error('ERROR @: ', q, _qualities[q]);
+        console.error('ERROR @: ', q, qualia);
         // console.warn('Check: ', _qualities);
       }
     });
   }
+  const deck = {
+    d: {} as {
+      [name: string]: ConceptECK<S, Q>
+    },
+    e: actions as Actions<Q extends void ? any : Q>,
+    c: comparators as Comparators<Q extends void ? any : Q>,
+    k: {} as KeyedSelectors<S> & Selectors<S>
+  } as ConceptDECK<S, Q, MuX>;
   return {
     name,
-    muxifiedRecord: {},
+    muxifiedRecord: {}, // Kept for backward compatibility
     state,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    actions: actions as Actions<Q extends void ? any : Q>,
+    actions: deck.e,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    comparators: comparators as Comparators<Q extends void ? any : Q>,
+    comparators: deck.c,
     keyedSelectors: createDummyKeyedSelectors(state),
     selectors: createDummySelectors(),
     qualities: qualities ? qualities : [],
@@ -60,7 +78,9 @@ export function createConcept<S extends Record<string, unknown>, Q = void>(
     semaphore: -1,
     principles,
     mode,
-    meta
+    meta,
+    // Initialize the new deck property as empty object
+    deck,
   };
 }
 

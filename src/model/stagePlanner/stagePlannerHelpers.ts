@@ -12,7 +12,7 @@ import { ownershipSelectInitialized } from '../../concepts/ownership/ownership.s
 import { getMuxiumState, isMuxiumOpen } from '../muxium/muxiumHelpers';
 import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { Action, AnyAction } from '../action/action.type';
-import { dispatchOptions, Plan, Stage, StageDelimiter, Staging } from './stagePlanner.type';
+import { BaseStage, BaseStaging, dispatchOptions, Plan, Stage, StageDelimiter, Staging } from './stagePlanner.type';
 
 export const createPriorityKey = (planId: number, stage: number) => `${planId}${stage}`;
 /**
@@ -26,10 +26,28 @@ export const stageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): Sta
   }
 }, { selectors: [muxiumSelectOpen] }));
 
+export const baseStageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): BaseStaging<Q, C, S> => (
+  createBaseStage(({concepts, dispatch}) => {
+    if (isMuxiumOpen(concepts)) {
+      dispatch(func(), {
+        iterateStage: true
+      });
+    }
+  }, { selectors: [muxiumSelectOpen] }));
+
 export const stageConclude = <Q, C, S>(): Staging<Q, C, S> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
+export const baseStageConclude = <Q, C, S>(): BaseStaging<Q, C, S> => createBaseStage(({stagePlanner}) => {stagePlanner.conclude();});
 
 export const stageWaitForOwnershipThenIterate =
   <Q, C, S>(func: () => Action): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
+    if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
+      dispatch(func(), {
+        iterateStage: true
+      });
+    }
+  }, { selectors: [ownershipSelectInitialized] }));
+export const baseStageWaitForOwnershipThenIterate =
+  <Q, C, S>(func: () => Action): BaseStaging<Q, C, S> => (createBaseStage(({concepts, dispatch}) => {
     if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
       dispatch(func(), {
         iterateStage: true
@@ -65,12 +83,40 @@ export const createStage = <Q = void, C = void, S = void>(
   }
 };
 
+export const createBaseStage = <Q = void, C = void, S = void>(
+  stage: BaseStage<Q, C, S>,
+  options?: { selectors?: KeyedSelector<any>[], priority?: number, beat?: number}
+): BaseStaging<Q, C, S> => {
+  if (options) {
+    return {
+      stage,
+      selectors: options.selectors ? options.selectors : [],
+      firstRun: true,
+      priority: options.priority,
+      beat: options.beat
+    };
+  } else {
+    return {
+      stage,
+      firstRun: true,
+      selectors: []
+    };
+  }
+};
+
 export const createStages = <
   Q = void,
   C = void,
   S = void
   >(cb: () => Staging<Q, C, S>[]):
     Staging<Q, C, S>[] => cb();
+
+export const createBaseStages = <
+  Q = void,
+  C = void,
+  S = void
+  >(cb: () => BaseStaging<Q, C, S>[]):
+    BaseStaging<Q, C, S>[] => cb();
 
 export const handleRun =
   <Q, C, S>(stageDelimiter: StageDelimiter, plan: Plan<Q, C, S>, action: Action, options?: dispatchOptions)

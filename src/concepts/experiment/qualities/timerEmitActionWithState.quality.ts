@@ -6,10 +6,11 @@ $>*/
 import { muxiumConclude } from '../../muxium/qualities/conclude.quality';
 import { strategyData_muxifyData } from '../../../model/action/strategy/actionStrategyData';
 import { ExperimentState } from '../experiment.concept';
-import { createQualityCard, nullReducer } from '../../../model/quality';
+import { createQualityCard, nullReducer, Quality } from '../../../model/quality';
 import { createAsyncMethodWithState } from '../../../model/method/methodAsync';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
+export type ExperimentTimerEmitActionWithState = Quality<ExperimentState>;
 export const experimentTimerEmitActionWithState = createQualityCard<ExperimentState>({
   type: 'Experiment create async method with timer and state, to return action',
   reducer: nullReducer,

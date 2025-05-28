@@ -7,14 +7,16 @@ import { muxiumKick } from '../concepts/muxium/qualities/kick.quality';
 import { CounterDeck, CounterQualities, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
+  ExperimentDebounceAsyncIterateIdThenReceiveInMethod,
   experimentDebounceAsyncIterateIdThenReceiveInMethod
 } from '../concepts/experiment/qualities/debounceAsyncIterateIdThenReceiveInMethod.quality';
-import { experimentAsyncDebounceNextActionNode } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
+import { ExperimentAsyncDebounceNextActionNode, experimentAsyncDebounceNextActionNode } from '../concepts/experiment/qualities/debounceAsyncNextActionNode.quality';
 import {
+  ExperimentDebounceIterateIdThenReceiveInMethod,
   ExperimentDebounceIterateIdThenReceiveInMethodPayload,
   experimentDebounceIterateIdThenReceiveInMethod
 } from '../concepts/experiment/qualities/debounceIterateIdThenReceiveInMethod.quality';
-import { experimentDebounceNextActionNode } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
+import { ExperimentDebounceNextActionNode, experimentDebounceNextActionNode } from '../concepts/experiment/qualities/debounceNextActionNode.quality';
 import { experimentAsyncDebounceAddOneStrategy } from '../concepts/experiment/strategies/asyncDebounceAddOne.strategy';
 import { experimentDebounceAddOneStrategy } from '../concepts/experiment/strategies/debounceAddOne.strategy';
 import {
@@ -34,11 +36,12 @@ jest.setTimeout(30000);
 
 test('Debounce method prevent excess count', (done) => {
   const qualities = {experimentDebounceNextActionNode};
+  type Qualities = {experimentDebounceNextActionNode: ExperimentDebounceNextActionNode};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept(createExperimentState(), qualities) as Concept<typeof initialState, typeof qualities>;
+  const experiment = createExperimentConcept(createExperimentState(), qualities) as Concept<typeof initialState, Qualities>;
   type DECK = {
     counter: Concept<CounterState, CounterQualities>,
-    experiment: Concept<ExperimentState, typeof qualities>
+    experiment: Concept<ExperimentState, Qualities>
   }
   const muxium = muxification('Experiment async method creator with State', {counter: createCounterConcept(), experiment});
   const plan = muxium.plan<DECK>('Experiment debounce add one', ({stage}) => [
@@ -143,10 +146,13 @@ test('Debounce Method Test with State id comparison', (done) => {
   const qualities = {
     experimentDebounceIterateIdThenReceiveInMethod
   };
+  type Qualities = {
+    experimentDebounceIterateIdThenReceiveInMethod: ExperimentDebounceIterateIdThenReceiveInMethod
+  };
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(initialState, qualities);
   type DECK = {
-    experiment: Concept<ExperimentState, typeof qualities>
+    experiment: Concept<ExperimentState, Qualities>
   }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = muxium.plan<DECK>('Debounce Iterate id with concepts', ({stage}) => [
@@ -265,10 +271,11 @@ test('Debounce Method Test with State id comparison', (done) => {
 
 test('Debounce Async Method Test with State id comparison', (done) => {
   const qualities = {experimentDebounceAsyncIterateIdThenReceiveInMethod};
+  type Qualities = {experimentDebounceAsyncIterateIdThenReceiveInMethod: ExperimentDebounceAsyncIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(initialState, qualities);
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = muxium.plan<DECK>('Debounce Async Iterate id with concepts', ({stage}) => [
