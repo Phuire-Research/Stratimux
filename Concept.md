@@ -17,7 +17,7 @@ The above demonstrates the inherit conceptual quality of human language and high
 
 With our technology we may visit the exact logic that allows for this abstraction to exist. But for the majority, all that would matter is access to a developed library of knowledge that would facilitate such conceptualizations into reality for us. The goal is a system that is capable of: Car + Plane = Flying Car. And not only have such be created via some process, but the exact blueprints and the instructions for the rapid assembly to bring such into reality. Even better if we may simulate such before its creation and test to see if it is worthy to brought into reality in the first place.
 
-**Higher Order Conceptual Composition** achieves this through **muxification** - the lossless composition of concepts where Car maintains its identity, Plane maintains its identity, yet Flying Car emerges as a new concept with access to both original concepts' qualities while introducing its own emergent properties. This is **Muxified Logical Programming** - where complex systems provably emerge from simple, proven building blocks.
+**Higher Order Conceptual Composition** achieves this through **muxification** - the lossless composition of concepts where Car maintains its identity, Plane maintains its identity, yet Flying Car emerges as a new concept with access to both original concepts' qualities while introducing its own emergent properties. This is **Muxified Logical Graph Programming** - where complex systems provably emerge from simple, proven building blocks.
 
 The difficulty of constructs. Is that you cannot readily decompose their qualities and how they interact with their parts to make that construct. That there is some information loss in the construction process. As constructs are just concepts, just like everything else. We are merely working with the most simplified terms possible, for the opportunity of greater arrangement of sets. That constructs themselves can have qualities, but likewise using such in this system of study we would determine their decomposed parts. This is the pursuit of the new Muxified Logical Conceptual Science that is being formalized.
 
@@ -325,9 +325,9 @@ The **StratiDECK's** deck system enables runtime discovery and agnostic interact
 
 **Agnostic Development**: Developers can write code that works with any concept containing required qualities.
 
-## The Theoretical Foundation: Logical Programming Extended
+## The Theoretical Foundation: Logical Graph Programming Extended
 
-The **StratiDECK** proves that **Higher Order Conceptual Composition** extends **Logical Programming** beyond traditional functional programming:
+The **StratiDECK** proves that **Higher Order Conceptual Composition** extends **Logical Graph Programming** beyond traditional functional programming:
 
 ### 1. Conceptual Compositional Completeness
 Every complex system can be decomposed into simpler, proven concepts that can be recomposed without loss of functionality or identity.
@@ -385,6 +385,6 @@ The achievement of **lossless functional composition** with **identity preservat
 
 If my Own Work of Concepts gets in your way. Have fun!
 
-**Addendum (v0.3.2)**: The completion of Higher Order Conceptual Composition means that concepts are no longer bound by the limitations of traditional programming paradigms. They are universally composable building blocks that maintain their logical coherence at any level of complexity. This is the realization of true Logical Programming - where correctness emerges from composition rather than construction.
+**Addendum (v0.3.2)**: The completion of Higher Order Conceptual Composition means that concepts are no longer bound by the limitations of traditional programming paradigms. They are universally composable building blocks that maintain their logical coherence at any level of complexity. This is the realization of true Logical Graph Programming - where correctness emerges from composition rather than construction.
 
 *It is interesting to note that there is no common symbol for concepts, but there is a concept for symbols. In Higher Order Conceptual Composition, symbols themselves become muxified concepts that can compose into new forms of meaning.*

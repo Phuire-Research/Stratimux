@@ -1,6 +1,6 @@
 # Stratideck - Higher Order Conceptual Composition
 
-**Higher Order Conceptual Composition** represents a breakthrough in programming paradigms, proven through the Stratideck system in Stratimux v0.3.2. This extends beyond traditional functional programming into **Logical Programming** - where complex systems emerge from the composition of proven, isolated functional units.
+**Higher Order Conceptual Composition** represents a breakthrough in programming paradigms, proven through the Stratideck system in Stratimux v0.3.2. This extends beyond traditional functional programming into **Logical Graph Programming** - where complex systems emerge from the composition of proven, isolated functional units.
 
 ## The Paradigm Shift
 
@@ -9,7 +9,7 @@ Traditional programming approaches face fundamental limitations:
 - **Object-Oriented**: Inherits entire objects to access single features, creating unnecessary coupling
 - **Data Oriented Programming**: Focusing on the direct manipulation of Concept Properties via their Associated Qualities that generate Action Message that route directly to their Governing Concept.
 
-**Higher Order Conceptual Composition** advances Logical Programming Forward with **Full Isolated Conceptual Composition of Concepts** - the architectural completion that Stratimux v0.3.2 achieves.
+**Higher Order Conceptual Composition** advances Logical Graph Programming Forward with **Full Isolated Conceptual Composition of Concepts** - the architectural completion that Stratimux v0.3.2 achieves.
 
 ## Core Principles
 
@@ -129,9 +129,9 @@ systemMuxium.plan<ServiceDeck>('Service Monitoring Plan', ({stage}) => [
 ]);
 ```
 
-## Logical Programming Extension
+## Logical Graph Programming Extension
 
-**Higher Order Conceptual Composition** extends **Logical Programming** by proving that:
+**Higher Order Conceptual Composition** extends **Logical Graph Programming** by proving that:
 
 ### 1. **Conceptual Compositional Completeness**
 Every complex system can be decomposed into simpler, proven concepts that can be recomposed without loss of functionality or identity.

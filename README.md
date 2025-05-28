@@ -42,7 +42,7 @@ When in doubt simplify.
 * [Stage Planner](https://github.com/Phuire-Research/Stratimux/blob/main/StagePlanner.md) - Slices your application into different stages and prevents action overflows. 
 * [Action Controller](https://github.com/Phuire-Research/Stratimux/blob/main/ActionController.md) - Allows methods to be performed asynchronously.
 * [Strategy Data](https://github.com/Phuire-Research/Stratimux/blob/main/StrategyData.md) - Enables the Action Strategy pattern to perform as a "Universal Transformer." 
-* [Higher Order Conceptual Composition](https://github.com/Phuire-Research/Stratimux/blob/main/HigherOrderConceptualComposition.md) - Advancing Logical Programming towards the Unlimited Pursuit of Exploring Conceptual Space.
+* [Higher Order Conceptual Composition](https://github.com/Phuire-Research/Stratimux/blob/main/HigherOrderConceptualComposition.md) - Advancing Logical Graph Programming towards the Unlimited Pursuit of Exploring Conceptual Space.
 * [Spatial Ownership](https://github.com/Phuire-Research/Stratimux/blob/main/SpatialOwnership.md) - A single lock concept that can be within a single process or network of muxiums.
 
 ### Want to learn more?
