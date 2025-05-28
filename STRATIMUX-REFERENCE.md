@@ -12,8 +12,6 @@ Stratimux is an asynchronous graph programming framework that implements a Muxif
 
 ### Critical Breaking Changes
 
-**Package Name Change**: `@phuire/stratimux` → `stratimux`
-
 **Quality Type System Overhaul**: All qualities now require explicit type definitions due to TypeScript limitations at scale.
 
 ```typescript
