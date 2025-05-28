@@ -199,7 +199,7 @@ Conceptual libraries inspired by the original object-oriented style of smalltalk
 Individual concepts can be load-balanced and separated into processes while maintaining composition.
 
 ### 3. **Mapping Conceptual Space**
-Each concept in the Stratideck maintains awareness of its position within the muxified hierarchy, enabling:
+Each concept in the Stratideck maintains awareness of its position within the muxified higher order composition, enabling:
 
 - **Spatial Navigation**: Concepts can be accessed via their position in the compositional graph.
 - **Higher Order Reasoning**: Systems can introspect their own lossless structure and make decisions based on composition similarities.

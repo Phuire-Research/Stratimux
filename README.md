@@ -3,16 +3,16 @@
 
 **Features:**
 * Universal Transformer
-* DECK Interface System
+* StratiDECK Interface System (Higher Order Conceptual Composition)
 * ICE - Intelligently Crystallized Executable
 * Function as an Operating System
 * Halting Complete
-* Concept Libraries
-* Action Oriented
+* Concept Libraries (Deck)
+* Action Oriented (Smalltalk Cellular Messaging)
 * Single Network Lock (Mutex as Ownership)
 * Asynchronous Graph Framework
-* Composable Strategies
-* Stage Planner (Hierarchal Planning/Higher Order Reasoning)
+* Composable Strategies (ActionStrategy)
+* Stage Planner (Higher Order Reasoning)
 * Prioritization
 * Change Detection
 * Plain Text Dialog Output

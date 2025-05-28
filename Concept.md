@@ -209,7 +209,7 @@ Likewise this contrasts other forms of programming. As the principle allows for 
 
 Therefore when one is designing their own concepts. The principle should be treated in the same capacity as the initialization of other programming approaches. The main difference, is to dispatch actions from the principle either via the stage paradigm or the supplied observer. The use of observer.next() is to pass actions during initialization, but should instead stage when observing state to prevent action overflow.
 
-**In Higher Order Conceptual Composition**, principles enable **automatic concept lifecycle management** within muxified hierarchies:
+**In Higher Order Conceptual Composition**, principles enable **automatic concept lifecycle management** within muxified higher order compositions:
 
 ```typescript
 // Principle with Muxified State Access
@@ -224,7 +224,7 @@ export const serviceMonitorPrinciple: ConceptPrinciple = (
   const userSessionState = selectMuxifiedState<CounterState>(concepts, findConceptSemaphore(concepts, 'userSessionCounter'));
   
   if (serviceState?.alertThreshold && userSessionState?.count > serviceState.alertThreshold) {
-    // Principle can dispatch actions to any concept in the muxified hierarchy
+    // Principle can dispatch actions to any concept in the muxified higher order composition
     observer.next(createAction('ALERT_HIGH_USER_SESSIONS', { 
       count: userSessionState.count,
       threshold: serviceState.alertThreshold 
@@ -252,7 +252,7 @@ Later we may create specific types of principles to handle the nuances of repeat
 
 ### Principle Benefits in Higher Order Composition
 
-**Spatial Awareness**: Principles can access their exact position within muxified hierarchies and navigate to related concepts through the DECK system.
+**Spatial Awareness**: Principles can access their exact position within muxified higher order compositions and navigate to related concepts through the StratiDECK system.
 
 **Lifecycle Management**: When concepts are removed from muxified compositions, their principles automatically detect the change and can gracefully disengage hot observables.
 
@@ -305,13 +305,13 @@ This could be accomplished via some middleware approach within the actionStream.
 
 ### Mode Enhancements in Higher Order Composition
 
-**Muxified Concept Support**: Modes now understand the compositional structure of concepts and can route actions through multiple layers of muxified hierarchies.
+**Muxified Concept Support**: Modes now understand the compositional structure of concepts and can route actions through multiple layers of muxified higher order compositions.
 
 **Enhanced Error Handling**: Failed actions in muxified concepts can be traced back to their source concept for better debugging and error correction.
 
 **Performance Optimization**: Modes can skip unnecessary state updates when actions target isolated parts of muxified compositions.
 
-**Spatial Action Routing**: Actions can be routed to specific concepts within a muxified hierarchy based on their spatial position rather than just semaphore indexing.
+**Spatial Action Routing**: Actions can be routed to specific concepts within a muxified higher order composition based on their spatial position rather than just semaphore indexing.
 
 ## Muxified Record System: Enabling Agnostic Quality Selection
 

@@ -95,7 +95,7 @@ Selectors can be dynamically updated using the `setStageSelectors` dispatch opti
 #### Stage Priority
 Of the main issues with utilizing a single point of observation, is that some plans you might devise should take precedence over others. For example the Muxium's own close principle has the highest priority of all observations and will force a shutdown of the entire Muxium upon observation. We have likewise provided the set and new stage options for the priority value to allow some intelligence to be at play, keeping in mind Stratimux is designed to act as a form of logical embodiment for this generation's probabilistic AI.
 
-The priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept hierarchies effectively.
+The priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept higher order conceptual compositions effectively.
 
 #### Stage Beat
 The beat value each stage may have, is a new concept similar to the throttle and debounce found in reactive programming. Except here the first observation will run, and any subsequent observations will be delayed until just after the beat value expires. This ensures a constant stream of observations, while allowing for gaps of time that will instantly resume once the observation becomes relevant again, aggregating all changes that occurred between beats. Think Frames Per Second (FPS).
@@ -244,7 +244,7 @@ This example showcases key v0.3.2 enhancements:
 **1. Enhanced Stage Composition with `staging`:**
 - Scoped stage creation with full type safety
 - Improved readability and maintainability
-- Better integration with muxified concept hierarchies
+- Better integration with muxified concept higher order compositions
 
 **2. Advanced Dispatch Options:**
 - `runOnce`: Prevents action repetition within stage executions
@@ -406,7 +406,7 @@ const outerConcept = createConcept('dataProcessor', createDataProcessorState(), 
 
 ### v0.3.2 Enhanced Priority System
 
-The v0.3.2 priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept hierarchies effectively. When actions are dispatched into the action stream, they enter a sophisticated queuing system that respects both stage priorities and action-specific priorities.
+The v0.3.2 priority system operates across three execution spaces (Inner, Base, Outer) to coordinate complex muxified concept higher order compositions effectively. When actions are dispatched into the action stream, they enter a sophisticated queuing system that respects both stage priorities and action-specific priorities.
 
 ### Priority Inheritance and Overrides
 
@@ -570,7 +570,7 @@ The Stage Planner represents one of Stratimux's most powerful paradigms for mana
 **1. Enhanced Composition Capabilities:**
 - The `staging` helper function enables scoped stage composition
 - Improved type safety and developer experience
-- Better integration with muxified concept hierarchies
+- Better integration with muxified concept higher order compositions
 
 **2. Advanced Flow Control:**
 - Sophisticated dispatch options (`runOnce`, `setStage`, `throttle`)
