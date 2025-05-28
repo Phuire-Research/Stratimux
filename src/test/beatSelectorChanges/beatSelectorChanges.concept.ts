@@ -3,15 +3,15 @@ For the asynchronous graph programming framework Stratimux generate an Experimen
 accumulated for stage that has a beat and selectors
 $>*/
 /*<#*/
-import { beatSelectorChangesAddToCountOne} from './qualities/addToCountOne.quality';
+import { BeatSelectorChangesAddToCountOne, beatSelectorChangesAddToCountOne} from './qualities/addToCountOne.quality';
 import { Concept } from '../../model/concept/concept.type';
 import { createConcept } from '../../model/concept/concept';
-import { beatSelectorChangesAddToCountTwo} from './qualities/addToCountTwo.quality';
-import { beatSelectorChangesAddToCountThree} from './qualities/addToCountThree.quality';
-import { beatSelectorChangesAddToCountFour} from './qualities/addToCountFour.quality';
-import { beatSelectorChangesAddToCountFive} from './qualities/addToCountFive.quality';
-import { beatSelectorChangesAddToCountSix} from './qualities/addToCountSix.quality';
-import { beatSelectorChangesAddToCountSeven } from './qualities/addToCountSeven.quality';
+import { BeatSelectorChangesAddToCountTwo, beatSelectorChangesAddToCountTwo} from './qualities/addToCountTwo.quality';
+import { BeatSelectorChangesAddToCountThree, beatSelectorChangesAddToCountThree} from './qualities/addToCountThree.quality';
+import { BeatSelectorChangesAddToCountFour, beatSelectorChangesAddToCountFour} from './qualities/addToCountFour.quality';
+import { BeatSelectorChangesAddToCountFive, beatSelectorChangesAddToCountFive} from './qualities/addToCountFive.quality';
+import { BeatSelectorChangesAddToCountSix, beatSelectorChangesAddToCountSix} from './qualities/addToCountSix.quality';
+import { BeatSelectorChangesAddToCountSeven, beatSelectorChangesAddToCountSeven } from './qualities/addToCountSeven.quality';
 
 export type BeatSelectorChangesState = {
     countOne: number
@@ -45,7 +45,15 @@ const beatSelectorChangesQualities = {
   beatSelectorChangesAddToCountSeven,
 };
 
-export type BeatSelectorChangesQualities = typeof beatSelectorChangesQualities;
+export type BeatSelectorChangesQualities = {
+  beatSelectorChangesAddToCountOne: BeatSelectorChangesAddToCountOne,
+  beatSelectorChangesAddToCountTwo: BeatSelectorChangesAddToCountTwo,
+  beatSelectorChangesAddToCountThree: BeatSelectorChangesAddToCountThree,
+  beatSelectorChangesAddToCountFour: BeatSelectorChangesAddToCountFour,
+  beatSelectorChangesAddToCountFive: BeatSelectorChangesAddToCountFive,
+  beatSelectorChangesAddToCountSix: BeatSelectorChangesAddToCountSix,
+  beatSelectorChangesAddToCountSeven: BeatSelectorChangesAddToCountSeven,
+};
 
 export type BeatSelectorChangesDeck = {
   beatSelectors: Concept<BeatSelectorChangesState, BeatSelectorChangesQualities>;

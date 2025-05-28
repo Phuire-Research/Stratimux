@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData, muxiumSelectLastStrategyDialog } from '../concepts/muxium/muxium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
-import { experimentRecurseIterateId } from '../concepts/experiment/qualities/recurseIncrementId.quality';
+import { ExperimentRecurseIterateId, experimentRecurseIterateId } from '../concepts/experiment/qualities/recurseIncrementId.quality';
 import {
   experimentRecursivelyIterateId,
   experimentRecursivelyIterateIdTopic
@@ -18,11 +18,12 @@ import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers'
 test('Asynchronous recursion', (done) => {
   const list = ['This', 'list', 'will', 'deplete', 'to', 'control', 'recursion', 'and', 'be', 'halting', 'complete'];
   const qualities = {experimentRecurseIterateId};
+  type Qualities = {experimentRecurseIterateId: ExperimentRecurseIterateId}
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(createExperimentState(), qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>
+    experiment: Concept<typeof initialState, Qualities>
   };
 
   const muxium = muxification('Experiment async method creator with Concepts', {experiment}, {storeDialog: true});

@@ -3,13 +3,14 @@ For the asynchronous graph programming framework Stratimux and based on the Expe
 the incoming action's payload
 $>*/
 /*<#*/
-import { quality } from '../../../model/quality';
+import { Quality, quality } from '../../../model/quality';
 import { ExperimentPriorityState } from '../priority.concept';
 
 export type ExperimentPriorityAddValuePayload = {
   newValue: number
 };
 
+export type ExperimentPriorityAddValue = Quality<ExperimentPriorityState, ExperimentPriorityAddValuePayload>;
 export const experimentPriorityAddValue = quality.createWithPayload<ExperimentPriorityState, ExperimentPriorityAddValuePayload>({
   type: 'experimentPriority Add value',
   reducer: (state, action) => {

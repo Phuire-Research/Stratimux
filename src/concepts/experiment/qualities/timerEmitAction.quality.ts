@@ -3,12 +3,15 @@ For the asynchronous graph programming framework Stratimux and Experiment Concep
 action in the incoming strategy via an inner timer.
 $>*/
 /*<#*/
-import { nullReducer } from '../../../model/quality';
+import { nullReducer, Quality } from '../../../model/quality';
 import { muxiumConclude } from '../../muxium/qualities/conclude.quality';
 import { createQualityCard } from '../../../model/quality';
 import { createAsyncMethod } from '../../../model/method/methodAsync';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
+import { ExperimentState } from '../experiment.concept';
 
+
+export type ExperimentTimerEmitAction = Quality<ExperimentState>
 export const experimentTimerEmitAction = createQualityCard({
   type: 'Experiment create async method with timer, to return action',
   reducer: nullReducer,

@@ -9,7 +9,7 @@ import { selectConcept, selectState } from '../model/selector/selector';
 import { OwnershipDeck, OwnershipState, createOwnershipConcept, ownershipName } from '../concepts/ownership/ownership.concept';
 import { ownershipSetOwnerShipModeTopic } from '../concepts/ownership/strategies/setOwnerShipMode.strategy';
 import { CounterDeck, CounterState, counterName, createCounterConcept } from '../concepts/counter/counter.concept';
-import { createExperimentState, createExperimentConcept } from '../concepts/experiment/experiment.concept';
+import { createExperimentState, createExperimentConcept, ExperimentState } from '../concepts/experiment/experiment.concept';
 import { experimentPuntCountingStrategy } from '../concepts/experiment/strategies/puntCounting.strategy';
 import {
   ExperimentCountingDeck,
@@ -29,7 +29,15 @@ test('Ownership Test', (done) => {
   const deck = {
     ownership: createOwnershipConcept(),
     counter: createCounterConcept(),
-    experiment: createExperimentConcept(experimentState, qualities, [experimentActionQuePrincipleCreator<typeof qualities>()])
+    experiment: createExperimentConcept<ExperimentState, typeof qualities>(
+      experimentState,
+      qualities,
+      [
+        experimentActionQuePrincipleCreator<
+        typeof qualities,
+        ExperimentState
+        >()
+      ])
   };
   type DECK = {
     experiment: Concept<typeof experimentState, typeof qualities>

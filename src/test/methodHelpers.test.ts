@@ -5,12 +5,13 @@ $>*/
 import { muxiumSelectLastStrategy, muxiumSelectLastStrategyData } from '../concepts/muxium/muxium.selector';
 import { ExperimentState, createExperimentConcept, createExperimentState, experimentName } from '../concepts/experiment/experiment.concept';
 import {
+  ExperimentAsyncIterateIdThenReceiveInMethod,
   experimentAsyncIterateIdThenReceiveInMethod,
 } from '../concepts/experiment/qualities/asyncIterateIdThenReceiveInMethod.quality';
-import { experimentIterateIdThenReceiveInMethod } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
-import { experimentMockToTrue } from '../concepts/experiment/qualities/mockToTrue.quality';
-import { experimentTimerEmitAction } from '../concepts/experiment/qualities/timerEmitAction.quality';
-import { experimentTimerEmitActionWithState} from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
+import { ExperimentIterateIdThenReceiveInMethod, experimentIterateIdThenReceiveInMethod } from '../concepts/experiment/qualities/iterateIdThenReceiveInMethod.quality';
+import { ExperimentMockToTrue, experimentMockToTrue } from '../concepts/experiment/qualities/mockToTrue.quality';
+import { ExperimentTimerEmitAction, experimentTimerEmitAction } from '../concepts/experiment/qualities/timerEmitAction.quality';
+import { ExperimentTimerEmitActionWithState, experimentTimerEmitActionWithState} from '../concepts/experiment/qualities/timerEmitActionWithState.quality';
 import {
   experimentAsyncIterateIdThenAddToData,
   experimentAsyncIterateIdThenAddToDataTopic
@@ -31,11 +32,15 @@ import { strategyBegin } from '../model/action/strategy/actionStrategyConsumers'
 
 test('Async Method Test', (done) => {
   const qualities = {experimentTimerEmitAction, experimentMockToTrue};
+  type Qualities = {
+    experimentTimerEmitAction: ExperimentTimerEmitAction,
+    experimentMockToTrue: ExperimentMockToTrue
+  };
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(initialState, qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   }
 
   const muxium = muxification('Experiment async method creator', {experiment});
@@ -61,11 +66,12 @@ test('Async Method Test', (done) => {
 
 test('Async Method Plain Iterate Id Test', (done) => {
   const qualities = {experimentAsyncIterateIdThenReceiveInMethod};
+  type Qualities = {experimentAsyncIterateIdThenReceiveInMethod: ExperimentAsyncIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
-  const experiment = createExperimentConcept<typeof initialState, typeof qualities>(initialState, qualities);
+  const experiment = createExperimentConcept<typeof initialState, Qualities>(initialState, qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   }
 
   const muxium = muxification('Experiment async method creator', {experiment});
@@ -93,11 +99,15 @@ test('Async Method Plain Iterate Id Test', (done) => {
 
 test('Async Method with State Test', (done) => {
   const qualities = {experimentTimerEmitActionWithState, experimentMockToTrue};
+  type Qualities = {
+    experimentTimerEmitActionWithState: ExperimentTimerEmitActionWithState,
+    experimentMockToTrue: ExperimentMockToTrue
+  };
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(initialState, qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   }
 
   const muxium = muxification('Experiment async method creator with State', {experiment});
@@ -129,11 +139,12 @@ test('Async Method with State Test', (done) => {
 
 test('Method Test with State id comparison', (done) => {
   const qualities = {experimentIterateIdThenReceiveInMethod};
+  type Qualities = {experimentIterateIdThenReceiveInMethod: ExperimentIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(createExperimentState(), qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = muxium.plan<DECK>('Iterate id', ({stage, stageO, e__}) => [
@@ -165,12 +176,13 @@ test('Method Test with State id comparison', (done) => {
 });
 
 test('Async Method Test with State id comparison', (done) => {
+  type Qualities = {experimentAsyncIterateIdThenReceiveInMethod: ExperimentAsyncIterateIdThenReceiveInMethod};
   const qualities = {experimentAsyncIterateIdThenReceiveInMethod};
   const initialState = createExperimentState();
   const experiment = createExperimentConcept(initialState, qualities);
 
   type DECK = {
-    experiment: Concept<typeof initialState, typeof qualities>;
+    experiment: Concept<typeof initialState, Qualities>;
   };
 
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});

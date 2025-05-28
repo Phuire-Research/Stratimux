@@ -5,9 +5,10 @@ $>*/
 /*<#*/
 import { muxiumConcludeType } from '../../muxium/qualities/conclude.quality';
 import { ExperimentState } from '../experiment.concept';
-import { createQualityCard } from '../../../model/quality';
+import { createQualityCard, Quality } from '../../../model/quality';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
+export type ExperimentCheckInStrategy = Quality<ExperimentState>;
 export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
   type: 'Experiment check in Action',
   reducer: (state, action) => {

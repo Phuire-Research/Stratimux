@@ -5,9 +5,11 @@ $>*/
 /*<#*/
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 import { createMethodDebounce } from '../../../model/method/methodDebounce';
-import { nullReducer } from '../../../model/quality';
+import { nullReducer, Quality } from '../../../model/quality';
 import { createQualityCard } from '../../../model/quality';
+import { ExperimentState } from '../experiment.concept';
 
+export type ExperimentDebounceNextActionNode = Quality<ExperimentState>;
 export const experimentDebounceNextActionNode = createQualityCard({
   type: 'Experiment will debounce incoming actions within set duration',
   reducer: nullReducer,

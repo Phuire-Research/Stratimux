@@ -3,7 +3,7 @@ For the asynchronous graph programming framework Stratimux generate the Experime
 different configurations of Stratimux to be provably terminating.
 $>*/
 /*<#*/
-import { Mode } from '../../model/concept/concept.type';
+import { LoadConcepts, Mode } from '../../model/concept/concept.type';
 import { createConcept } from '../../model/concept/concept';
 import { Action } from '../../model/action/action.type';
 import { PrincipleFunction } from '../../model/principle';
@@ -24,12 +24,12 @@ export const createExperimentState = (): ExperimentState => {
   };
 };
 
-export const createExperimentConcept = <S extends Record<string, unknown>, T = void>(
+export const createExperimentConcept = <S extends Record<string, unknown>, Q = void, C = void>(
   state: S,
   qualities?: Record<string, unknown>,
-  principles?: PrincipleFunction<any, any, any>[],
+  principles?: PrincipleFunction<Q, C, S>[],
   mode?: Mode[]) => {
-  return createConcept<S, T>(
+  return createConcept<S, Q, C extends void ? LoadConcepts : C extends LoadConcepts ? C : LoadConcepts>(
     experimentName,
     state,
     qualities,
