@@ -4,11 +4,11 @@
 
 Stratimux is an asynchronous graph programming framework that implements a Muxified Turing Machine. This reference guide is **specifically designed for AI agents** and provides a comprehensive overview of the core concepts, patterns, and functionality based on analyzing the codebase and test files.
 
-**Version Coverage**: This guide covers Stratimux v0.3.2 (Stratideck) with complete type system overhaul and DECK interface system.
+**Version Coverage**: This guide covers Stratimux v0.3.21 (Stratideck) with complete type system overhaul and DECK interface system.
 
 **For Agents**: This reference provides drop-in code patterns, type definitions, and implementation examples for effective Stratimux development without requiring deep framework knowledge.
 
-## Version 0.3.2 Key Changes (Stratideck)
+## Version 0.3.21 Key Changes (Stratideck)
 
 ### Critical Breaking Changes
 
@@ -19,7 +19,7 @@ Stratimux is an asynchronous graph programming framework that implements a Muxif
 const qualities = { counterAdd, counterSubtract };
 export type CounterQualities = typeof qualities;
 
-// NEW Pattern (Required for v0.3.2+)
+// NEW Pattern (Required for v0.3.21+)
 export type CounterAdd = Quality<CounterState>;
 export type CounterSubtract = Quality<CounterState>;
 export type CounterQualities = {
@@ -106,7 +106,7 @@ export type ConceptQualities = {
 };
 ```
 
-## Migration Guide for v0.3.2
+## Migration Guide for v0.3.21
 
 ### 1. Package Installation
 
@@ -246,7 +246,7 @@ Key properties:
 A Concept is a fundamental building block composed of state, qualities, principles, and mode.
 
 ```typescript
-// Modern Counter Concept definition (v0.3.2+)
+// Modern Counter Concept definition (v0.3.21+)
 export type CounterState = {
   count: number
 }
@@ -310,7 +310,7 @@ Qualities define actions that can be performed on a concept. They contain:
 #### Quality Without Payload
 
 ```typescript
-// Real example from counter concept (v0.3.2+)
+// Real example from counter concept (v0.3.21+)
 // REQUIRED: Export the quality type
 export type CounterAdd = Quality<CounterState>;
 
@@ -329,7 +329,7 @@ export const counterAdd = createQualityCard<CounterState>({
 #### Quality Without Payload (No Keyed Selectors)
 
 ```typescript
-// Simple quality that doesn't need DECK access (v0.3.2+)
+// Simple quality that doesn't need DECK access (v0.3.21+)
 // REQUIRED: Export the quality type (even for simple qualities)
 export type MuxiumKick = Quality;
 
@@ -348,7 +348,7 @@ export type CounterSetCountPayload = {
   newCount: number
 }
 
-// REQUIRED: Export the quality type (v0.3.2+)
+// REQUIRED: Export the quality type (v0.3.21+)
 export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
 
 export const counterSetCount = createQualityCardWithPayload<CounterState, CounterSetCountPayload>({
@@ -437,10 +437,10 @@ Key components:
 
 ### Stage Planner
 
-Stage Planners divide application functionality into discrete stages and prevent action overflows. **Version 0.3.2** introduces the `createStages` helper (`staging`) for improved stage composition.
+Stage Planners divide application functionality into discrete stages and prevent action overflows. **Version 0.3.21** introduces the `createStages` helper (`staging`) for improved stage composition.
 
 ```typescript
-// NEW v0.3.2 Pattern: Using createStages helper (staging)
+// NEW v0.3.21 Pattern: Using createStages helper (staging)
 const plan = muxium.plan<CounterDeck>('Stage Planner Example', ({staging, stage, stageO, e__}) => 
   staging(() => {
     // Stage composition within a scoped callback
@@ -480,7 +480,7 @@ const legacyPlan = muxium.plan<CounterDeck>('Legacy Pattern', ({stage, stageO, e
 ]);
 ```
 
-**Key Stage Planner Features (v0.3.2):**
+**Key Stage Planner Features (v0.3.21):**
 
 - **`staging` (createStages)**: NEW - Scoped stage composition helper
 - **`stage`**: Create individual stages with options (beat, priority, selectors)
@@ -2985,11 +2985,11 @@ This section provides AI agents with battle-tested patterns for effective Strati
 
 #### Pattern 1: Basic Counter Application
 ```typescript
-// Complete working counter concept (v0.3.2)
+// Complete working counter concept (v0.3.21)
 export type CounterState = { count: number };
 export const counterName = 'counter';
 
-// Required type exports for v0.3.2
+// Required type exports for v0.3.21
 export type CounterAdd = Quality<CounterState>;
 export type CounterSubtract = Quality<CounterState>;
 export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
@@ -3100,7 +3100,7 @@ stage(({dispatch}) => {
 
 ### Agent Development Guidelines
 
-#### 1. Always Use v0.3.2 Patterns
+#### 1. Always Use v0.3.21 Patterns
 ```typescript
 // ✅ Always export quality types
 export type MyQuality = Quality<StateType, PayloadType?>;
@@ -3188,7 +3188,7 @@ test('Operation Failure', (done) => { /* test failure */ });
 
 ### Common Agent Pitfalls to Avoid
 
-#### 1. Missing Type Exports (v0.3.2)
+#### 1. Missing Type Exports (v0.3.21)
 ```typescript
 // ❌ Missing type export
 export const myQuality = createQualityCard({...});
@@ -3203,7 +3203,7 @@ export const myQuality = createQualityCard({...});
 // ❌ Old package name
 import { muxification } from '@phuire/stratimux';
 
-// ✅ New package name (v0.3.2+)
+// ✅ New package name (v0.3.21+)
 import { muxification } from 'stratimux';
 ```
 
@@ -3240,7 +3240,7 @@ export const criticalQuality = createQualityCard({
 
 ### Agent Quick Reference
 
-#### Essential Imports (v0.3.2)
+#### Essential Imports (v0.3.21)
 ```typescript
 import { 
   muxification, 
