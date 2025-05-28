@@ -9,7 +9,7 @@ Traditional programming approaches face fundamental limitations:
 - **Object-Oriented**: Inherits entire objects to access single features, creating unnecessary coupling
 - **Data Oriented Programming**: Focusing on the direct manipulation of Concept Properties via their Associated Qualities that generate Action Message that route directly to their Governing Concept.
 
-**Higher Order Conceptual Composition** advances Logical Programming Forward with **Full Isolated Functional Composition of Concepts** - the architectural completion that Stratimux v0.3.2 achieves.
+**Higher Order Conceptual Composition** advances Logical Programming Forward with **Full Isolated Conceptual Composition of Concepts** - the architectural completion that Stratimux v0.3.2 achieves.
 
 ## Core Principles
 
@@ -218,4 +218,4 @@ This paradigm shift enables:
 - **Logical programming** capabilities in practical applications
 - **Complete architectural paradigm** for modern software development
 
-The Stratideck system doesn't just implement Higher Order Functional Composition—it proves its theoretical foundations and practical viability, establishing a new paradigm for software architecture.
+The Stratideck system doesn't just implement Higher Order Conceptual Composition—it proves its theoretical foundations and practical viability, establishing a new paradigm for software architecture.
