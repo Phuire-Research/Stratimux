@@ -6,12 +6,12 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
+import { MuxiumDeck, muxiumName, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { BundledSelectors, KeyedSelector } from '../selector/selector.type';
 import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxiumHelpers';
 import { Comparators } from '../interface';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { accessDeck } from '../deck';
+import { accessDeck, Deck } from '../deck';
 import { Action, Actions } from '../action/action.type';
 import { Dispatcher, dispatchOptions, MuxifiedSubjectProperties, Plan } from './stagePlanner.type';
 import { handleRun, handleStageDelimiter } from './stagePlannerHelpers';
@@ -20,6 +20,7 @@ import {
 } from './stagePlannerHandlers';
 import { deletePlan } from './stagePlannerPlan';
 import { manageQues } from './stagePlannerQues';
+import { Outer } from './stagePlanner';
 
 // Token to denote ALL, using a selector that utilizes this token should return undefined
 export function _dispatch<Q,C,S>(
@@ -151,7 +152,11 @@ export function execute<Q,C,S>(properties: MuxifiedSubjectProperties, plan: Plan
       },
       // [TODO WHY? BACK HERE AGAIN!?!?!?
       // Triggered by ownership test, for some reason the muxium was the sole concept available here mid way through test]
-      d: accessDeck(properties.concepts),
+      d: plan.space === Outer ?
+        accessDeck(properties.concepts)
+        :
+        // (properties.concepts[plan.conceptSemaphore as any] as any).deck,
+        properties.concepts[plan.conceptSemaphore].deck.d as unknown as Deck<C>,
       e: properties.concepts[plan.conceptSemaphore].actions as Actions<any>,
       c: properties.concepts[plan.conceptSemaphore].comparators as Comparators<any>,
       k: {

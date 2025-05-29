@@ -22,7 +22,7 @@
 ### Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
-* [v0.3.21 Migration Guide](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.21.md) - **Required for v0.3.21 upgrade**
+* [v0.3.22 Migration Guide](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md) - **Required for v0.3.22 upgrade**
 * [Stratimux Agent Reference](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md) - Drop in reference sheet for utilization of Stratimux for Agent Environments Unfamiliar with Stratimux.
 
 ### What is Muxification?
@@ -51,18 +51,18 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-# Stratimux 0.3.21: Stratideck - Complete Architecture
+# Stratimux 0.3.22: Stratideck - Complete Architecture
 
-**[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.21)**
+**[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.22)**
 
-> **⚠️ BREAKING CHANGES**: v0.3.21 introduces major type system changes requiring migration. 
+> **⚠️ BREAKING CHANGES**: v0.3.22 introduces major type system changes requiring migration. 
 > 
-> **📋 [Complete Migration Guide →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.21.md)**
+> **📋 [Complete Migration Guide →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.22.md)**
 
 # Summary: Day One of Stratimux - The Design Intent Realized
 
 ## Core Achievement
-**v0.3.21 represents Day One of Stratimux** - the moment when the framework's architectural vision becomes reality through the Stratideck system.
+**v0.3.22 represents Day One of Stratimux** - the moment when the framework's architectural vision becomes reality through the Stratideck system.
 
 ## The Problem Solved
 - **Semaphore limitations**: All qualities of same type shared identical semaphores limited comparisons to in concept.
@@ -130,7 +130,7 @@ export type CounterQualities = {
 - **All concepts**: Require explicit quality type interfaces
 - **All tests**: Updated for new type patterns
 
-**[Complete migration details and examples →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.21.md)**
+**[Complete migration details and examples →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.22.md)**
 
 
 Other typescript projects
@@ -174,7 +174,7 @@ export const createMUXState = (): MUXState => {
   };
 };
 
-// v0.3.21 REQUIRED: Explicit quality type mapping for type safety at scale
+// v0.3.22 REQUIRED: Explicit quality type mapping for type safety at scale
 export type MUXQualities = {
   muXqOfMux: MuXqOfMux;
 };
@@ -225,7 +225,7 @@ function getRandomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-// v0.3.21 REQUIRED: Export explicit quality type for concept type mapping
+// v0.3.22 REQUIRED: Export explicit quality type for concept type mapping
 export type MuXqOfMux = Quality<MUXState, muXOfMuxPayload>;
 
 export const muXqOfMux = createQualityCardWithPayload<MUXState, muXOfMuxPayload, MUXDeck>({
@@ -295,7 +295,7 @@ export const muXPrinciple: MUXPrinciple = ({
         stagePlanner.conclude();
       }
     })
-  ]);  // v0.3.21 Advanced: Using createStages helper for improved scoped composition
+  ]);  // v0.3.22 Advanced: Using createStages helper for improved scoped composition
   // *Note* when accessing your deck from outside of Stratimux, you will need to supply your Deck Type Interface to the plan to access such. This is a QoL Decision allowing for Stratimux to be adapted to any number of environments.
   const muxPlanWithStages = plan<MUXDeck>('muX Plan with createStages', ({d__}) => 
     createStages(({stageO, stage}) => {

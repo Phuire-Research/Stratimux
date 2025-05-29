@@ -48,6 +48,7 @@ test('Muxium Counting Strategy Priority Test', (done) => {
           console.log('COUNT TWO STRATEGY OUTCOME: ', count2);
           console.log('COUNT THREE STRATEGY OUTCOME: ', count3);
           // console.log('CHECK 1', d.muxium, 'CHECK 2', d.counter, 'CHECK 3', d);
+          console.log(d);
           dispatch(d.muxium.e.muxiumKick(), {
             iterateStage: true
           });

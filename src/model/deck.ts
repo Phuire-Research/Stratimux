@@ -66,33 +66,4 @@ export const accessECK = <S = Record<string, unknown>, Q = void>(concept: AnyCon
     } as BundledSelectors<S>,
   };
 };
-
-// Extract flat ECK structures from the new deck system
-// This provides access to muxified concept qualities through the deck composition
-export const demuxifyDeck = <S = Record<string, unknown>, Q = void>(
-  concept: AnyConcept
-): {name: string, eck: ECK<S, Q>}[] => {
-  const final: {name: string, eck: ECK<S, Q>}[] = [];
-
-  // Use the deck system instead of muxifiedRecord
-  if (concept.deck && concept.deck.d) {
-    const deckKeys = Object.keys(concept.deck.d);
-    deckKeys.forEach(name => {
-      const conceptECK = concept.deck.d[name];
-      if (conceptECK) {
-        const eck: ECK<S, Q> = {
-          e: conceptECK.e as Actions<Q>,
-          c: conceptECK.c as Comparators<Q>,
-          k: conceptECK.k as BundledSelectors<S>
-        };
-        final.push({
-          name,
-          eck
-        });
-      }
-    });
-  }
-
-  return final;
-};
 /*#>*/

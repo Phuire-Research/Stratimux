@@ -152,6 +152,7 @@ test('Test Dispatch Override', (done) => {
         return d__.muxium.e.muxiumKick();
       }),
       stage(({dispatch, d}) => {
+        console.log('CHECK D', Object.keys(d));
         new Array(10).fill('').forEach((_, i) => {
           body.push(d.experiment.e.counterAdd({
             origin: createOrigin([stageName, i + ''])

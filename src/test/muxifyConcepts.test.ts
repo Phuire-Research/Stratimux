@@ -1,6 +1,5 @@
 import { createConcept } from '../model/concept/concept';
 import { muxifyConcepts } from '../model/concept/conceptAdvanced';
-import { demuxifyDeck } from '../model/deck';
 import { muxification } from '../model/muxium/muxium';
 import { createQualityCard, defaultReducer } from '../model/quality';
 
@@ -32,25 +31,16 @@ test('Concepts exists', (done) => {
   const muxified = muxifyConcepts([one, two, three], createConcept('ONEtwoTHREE', {
     fin: true
   }));
-  const demuxifed = demuxifyDeck(muxified);
-  demuxifed.forEach(u => {
-    console.log(u.eck);
-  });
-  console.log(demuxifed);
   console.log(muxified.muxifiedRecord);
-  expect(demuxifed.length).toBe(3);  const secondEck = demuxifed[1].eck;
-  const comparatorKeys = Object.keys(secondEck.c as any || {});
-  if (comparatorKeys.length > 0) {
-    expect(comparatorKeys[0]).toBe('twoSomething');
-  }
   const muxium = muxification('some muxium', {
-    somethingRandom: muxified
+    muxified: muxified
   });
   muxium.plan('some plan', ({stage}) => [
     stage(({concepts, d}) => {
-      console.log(Object.keys(d));
+      // console.log('CHECK', d);
       expect(Object.keys(d).length).toBe(2);
-      expect(Object.keys(d.somethingRandom.d).length).toBe(3);
+      // Muxified Concepts + Base Muxified Concept + Muxium
+      expect(Object.keys(d.muxified.d).length).toBe(5);
       setTimeout(() => {
         done();
       }, 50);

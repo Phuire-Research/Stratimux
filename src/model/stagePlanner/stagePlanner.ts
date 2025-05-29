@@ -24,7 +24,7 @@ import { handleChange } from './stagePlannerHandleChange';
 
 const Inner = 0;
 const Base = 1;
-const Outer = 2;
+export const Outer = 2;
 
 export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Concepts> {
   private properties: MuxifiedSubjectProperties;
@@ -67,7 +67,7 @@ export class MuxifiedSubject<Q = void, C = void, S = void> extends Subject<Conce
     space: number,
     conceptSemaphore: number
   ): Plan<Q, C, S> => createPlan(this.properties, title, planner, space, conceptSemaphore);
-  protected initPlan = (plan: Plan<Q, C, S>): StagePlanner => initPlan(this.properties, plan, this.next.bind(this));  innerPlan: Planning<Q, C, S> = (title: string, planner: Planner<Q, C, S>) => 
+  protected initPlan = (plan: Plan<Q, C, S>): StagePlanner => initPlan(this.properties, plan, this.next.bind(this));  innerPlan: Planning<Q, C, S> = (title: string, planner: Planner<Q, C, S>) =>
     this.initPlan(this.createPlan(title, planner, Inner, 0));
 
   outerPlan: Planning<Q, C, S> = (title: string, planner: Planner<Q, C, S>) => 
