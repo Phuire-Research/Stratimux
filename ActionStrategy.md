@@ -24,7 +24,7 @@ This represents the intelligence of doing directly. Versus the classical attempt
 Intelligence is a complex beast. And while there may be some additional helper functions or abstractions. This release represents a minimum viable product. As it is a genuine new form of programming and an entire field of study on its own. The ActionStrategy pattern merely relays to some pattern of dynamic decision making that a computer may perform without the probabilistic limitation of classical non-deterministic Turing Machines. And would be viewed as "Logically Deterministic" by categorization. And enable to creation of "Autonomous Baseline Intelligence," which would function like clockwork with a defined conclusion.
 
 ## The Anatomy of an ActionNode
-ActionNode represents some node that is capable of being turned into some action when initialized by the ActionStrategy consumer functions. In v0.3.21, these functions work seamlessly with **Deck typing** and **muxified concepts** to enable off-premise interaction. As we could write such as a program by way of a series of functions to be called on some tree or graph, but these functions would have to be serialized. We take advantage of the semaphore pattern throughout to reduce the total size of each message and time till their discovery of functionality at runtime.
+ActionNode represents some node that is capable of being turned into some action when initialized by the ActionStrategy consumer functions. In v0.3.22, these functions work seamlessly with **Deck typing** and **muxified concepts** to enable off-premise interaction. As we could write such as a program by way of a series of functions to be called on some tree or graph, but these functions would have to be serialized. We take advantage of the semaphore pattern throughout to reduce the total size of each message and time till their discovery of functionality at runtime.
 
 ```typescript
 export interface ActionNode {
@@ -45,7 +45,7 @@ export interface ActionNode {
   lastActionNode?: ActionNode;
 }
 
-// Enhanced v0.3.21 ActionNodeOptions with Deck typing support
+// Enhanced v0.3.22 ActionNodeOptions with Deck typing support
 export interface ActionNodeOptions {
   keyedSelectors?: KeyedSelector[];
   conceptSemaphore?: number;
@@ -90,7 +90,7 @@ The strategy for short as the pattern that inspired this was the original strate
 As this is an enhancement to the traditional understanding of higher order functions working within **Higher Order Conceptual Composition**. If such needs that specific flow, you may recall the LastActionNode or use such explicitly within a reducer, method, or principle. Noting that the method is already composed to transform the handling of the ActionStrategy itself. The difference here is the direct blunt nature. As even with higher order functions, the nesting is the same structure at run time, but likewise lacks the exponential quality of decision making of this pattern.
 
 ```typescript
-// Enhanced v0.3.21 ActionStrategy with Deck integration
+// Enhanced v0.3.22 ActionStrategy with Deck integration
 export interface ActionStrategyParameters {
   topic: string;
   data?: Record<string, unknown>;
@@ -120,7 +120,7 @@ export interface ActionStrategy {
 * step - Mainly for trouble shooting purposes, but likewise may be used via some analytics for insight.
 
 ## Consumer Functions
-The v0.3.21 consumer functions provide enhanced integration with **Deck typing**, **muxified concepts**, and **Stage Planner** systems:
+The v0.3.22 consumer functions provide enhanced integration with **Deck typing**, **muxified concepts**, and **Stage Planner** systems:
 
 ```typescript
 // Core strategy creation and management
@@ -128,13 +128,13 @@ function createStrategy(params: ActionStrategyParameters): ActionStrategy;
 function createActionNode(action: Action, options?: ActionNodeOptions): ActionNode;
 function createActionNodeFromStrategy(strategy: ActionStrategy): ActionNode; 
 
-// Enhanced v0.3.21 strategy execution functions
+// Enhanced v0.3.22 strategy execution functions
 function strategyBegin(strategy: ActionStrategy, data?: unknown): Action;
 function strategySuccess(strategy: ActionStrategy, data?: unknown): Action;
 function strategyFailed(strategy: ActionStrategy, data?: unknown): Action;
 function strategyDecide(strategy: ActionStrategy, decideKey: string, data?: unknown): Action;
 
-// Modern v0.3.21 strategy composition with Deck typing
+// Modern v0.3.22 strategy composition with Deck typing
 function strategyDetermine<T extends Record<string, unknown>>(
   action: Action,
   options?: {
@@ -153,7 +153,7 @@ function strategyRecurse(
 ): Action;
 function strategyBackTrack(strategy: ActionStrategy): Action;
 
-// v0.3.21 Stage Planner integration
+// v0.3.22 Stage Planner integration
 function strategyStitch<T extends Deck>(
   deck: T,
   stitches: ActionStrategyStitch[]
@@ -164,7 +164,7 @@ function strategyStitch<T extends Deck>(
 
 **Modern Strategy Creation with Deck Integration:**
 ```typescript
-// v0.3.21 pattern with muxified concept integration within stage context
+// v0.3.22 pattern with muxified concept integration within stage context
 const createUserLoginStrategy = (deck: Deck<UserDeck>) => createStrategy({
   topic: 'Authenticate user with enhanced validation',
   initialNode: createActionNode(deck.d.userAuth.e.userLoginBeginAction(), {
@@ -186,19 +186,19 @@ const planStage = createStage<UserDeck>((concepts, dispatch, deck) => {
 ```
 **Enhanced Consumer Function Descriptions:**
 
-* **createStrategy** - Creates a new strategy with full v0.3.21 Deck typing support and returns such to be activated by the strategyBegin consumer function. Data of strategy may be set explicitly and will be type-checked against the provided Deck.
-* **createActionNode** - Used in conjunction with createStrategy, leveraging enhanced v0.3.21 type safety. Keep in mind that ActionNodes must be defined in reversed order due to the dependency chain. Creates a new ActionNode that decomposes the supplied Action, ensuring payload type safety. ActionNodeOptions assigns which ActionNodes will be next within the final ActionStrategy.
+* **createStrategy** - Creates a new strategy with full v0.3.22 Deck typing support and returns such to be activated by the strategyBegin consumer function. Data of strategy may be set explicitly and will be type-checked against the provided Deck.
+* **createActionNode** - Used in conjunction with createStrategy, leveraging enhanced v0.3.22 type safety. Keep in mind that ActionNodes must be defined in reversed order due to the dependency chain. Creates a new ActionNode that decomposes the supplied Action, ensuring payload type safety. ActionNodeOptions assigns which ActionNodes will be next within the final ActionStrategy.
 * **createActionNodeFromStrategy** - Enables sophisticated composition of strategies beyond "strategySequence" and "strategyPunt" with full Deck typing preservation. Note that the returned ActionNode will be freshly recomposed based on the passed strategy's currentNode and will lose the current ActionList. ActionLists may be extracted manually for integration into your current strategy.
-* **strategyBegin** - Returns the initial action of the strategy, updates the ActionList with enhanced v0.3.21 sentence structure, and creates a union binding between the ActionStrategy and newly created action. Integrates seamlessly with Stage Planner execution contexts.
+* **strategyBegin** - Returns the initial action of the strategy, updates the ActionList with enhanced v0.3.22 sentence structure, and creates a union binding between the ActionStrategy and newly created action. Integrates seamlessly with Stage Planner execution contexts.
 * **strategySuccess** - Initializes the successNode action with enhanced type safety, otherwise if null will conclude the Strategy by returning the conclude action. If ActionNode or Strategy's currentNode does not set its preposition, will set such to "Success with".
-* **strategyFailed** - Same as strategySuccess, but with failure semantics. If the preposition is not set, will set such to "Failed With". This is the default ActionNode called if a lock is detected while ownership is loaded, with enhanced v0.3.21 error reporting.
+* **strategyFailed** - Same as strategySuccess, but with failure semantics. If the preposition is not set, will set such to "Failed With". This is the default ActionNode called if a lock is detected while ownership is loaded, with enhanced v0.3.22 error reporting.
 * **strategyDecide** - Decision key will override or be placed after the preposition if set, enabling sophisticated branching logic. Will be used to return the next ActionNode that the key corresponds to. If null, conclude action will be returned. Integrates with Stage Planner's decision-making capabilities.
-* **strategyDetermine** - Enhanced v0.3.21 helper function that returns an action with a strategy attached, with full Deck typing support. This reduces boilerplate when handling actions in methods while ensuring type safety. Forces all actions returned by methods to have a strategy attached to ensure halting.
+* **strategyDetermine** - Enhanced v0.3.22 helper function that returns an action with a strategy attached, with full Deck typing support. This reduces boilerplate when handling actions in methods while ensuring type safety. Forces all actions returned by methods to have a strategy attached to ensure halting.
 * **strategyPunt** - Returns a new strategy with the old strategy within the puntedStrategy field, enabling sophisticated strategy chaining. The punted strategy will execute once the new strategy concludes via the consuming functions, calling strategyBegin on first index of puntedStrategies if present.
-* **strategySequence** - Takes a list of ActionStrategies and returns the first strategy with the rest placed in order in the puntedStrategy property. These will fire upon each possible conclusion of the included strategies, with enhanced v0.3.21 error handling.
-* **strategyRecurse** - Used within specified qualities that have controlling mechanisms such as self-depleting lists to allow halting recursion. Enables asynchronous recursion with enhanced v0.3.21 ownership management. Maintains current action expiration upon each successive recursion and will fail the action if that expiration passes.
+* **strategySequence** - Takes a list of ActionStrategies and returns the first strategy with the rest placed in order in the puntedStrategy property. These will fire upon each possible conclusion of the included strategies, with enhanced v0.3.22 error handling.
+* **strategyRecurse** - Used within specified qualities that have controlling mechanisms such as self-depleting lists to allow halting recursion. Enables asynchronous recursion with enhanced v0.3.22 ownership management. Maintains current action expiration upon each successive recursion and will fail the action if that expiration passes.
 * **strategyBackTrack** - Designed for use within failure states of ActionStrategies and the functional part of the ownershipBackTrackQuality. Use with care as this functionality can create indefinite recursion if not handled properly. Returns the previous lastActionNode as a new Action with associated ActionStrategy and ActionNode without appending itself to the ActionList.
-* **strategyStitch** - **New in v0.3.21** - Advanced composition function that enables weaving multiple ActionStrategyStitch patterns into complex execution graphs. Provides enhanced error handling and recovery mechanisms while maintaining type safety through Deck integration.
+* **strategyStitch** - **New in v0.3.22** - Advanced composition function that enables weaving multiple ActionStrategyStitch patterns into complex execution graphs. Provides enhanced error handling and recovery mechanisms while maintaining type safety through Deck integration.
 
 *Note: The data field sets only the data of the strategy, if one wants to edit or set the payload. It should be done explicitly the createActionNode function and set by that specific action creator. Do note you may edit the payload once the new ActionNode is created.*
 The same is true when accessing the payload from a reducer, method, or principle. As this system is purposefully designed to not function by way of nested types such as:
@@ -261,21 +261,21 @@ Tje ActionStrategy creator functions integrate seamlessly with **Deck typing**, 
 
 ```typescript
 /**
- * Enhanced v0.3.21 standard creator function with Deck typing support
+ * Enhanced v0.3.22 standard creator function with Deck typing support
  * Use this as an argument, as we lose type checking of your functions arguments,
  * due to the current implementation of Typescript argument generics.
  */
 export type ActionStrategyCreator<T extends Deck = Deck> = (...args: unknown[]) => ActionStrategy;
 
 /**
- * Advanced v0.3.21 creator function with StratiDECK integration
+ * Advanced v0.3.22 creator function with StratiDECK integration
  * Use this as an argument, this should be a "Curried Function" with your arguments carried over.
  * Enhanced to work with Stage Planner and muxified concepts.
  */
 export type ActionStrategyStitch<T extends Deck = Deck> = () => [ActionNode, ActionStrategy];
 
 /**
- * Modern v0.3.21 stage-aware strategy creator for enhanced composition
+ * Modern v0.3.22 stage-aware strategy creator for enhanced composition
  */
 export type StageAwareStrategyCreator<T extends Deck = Deck> = (
   stage: Stage<T>,
@@ -283,7 +283,7 @@ export type StageAwareStrategyCreator<T extends Deck = Deck> = (
 ) => ActionStrategy;
 ```
 
-### Enhanced v0.3.21 Creator Function Usage
+### Enhanced v0.3.22 Creator Function Usage
 
 **ActionStrategyCreator with Deck Integration:**
 ```typescript
@@ -312,7 +312,7 @@ export const createUserAuthStrategy: ActionStrategyCreator<UserDeck> = (
 
 **ActionStrategyStitch with Enhanced Composition:**
 ```typescript
-// Enhanced v0.3.21 ActionStrategy Stitch with Stage Planner integration
+// Enhanced v0.3.22 ActionStrategy Stitch with Stage Planner integration
 function muxium_createStitchNode(options?: ActionNodeOptions): ActionNode;
 
 export const dataValidationStitch: ActionStrategyStitch<DataDeck> = (deck: Deck<DataDeck>) => {
@@ -385,7 +385,7 @@ const executeComposedProcessing = createStage<DataDeck>((concepts, dispatch, dec
 
 **Advanced Composition with Error Handling:**
 ```typescript
-// Enhanced v0.3.21 strategy composition with comprehensive error handling
+// Enhanced v0.3.22 strategy composition with comprehensive error handling
 export const createRobustDataPipeline: ActionStrategyCreator<DataDeck> = (
   deck: Deck<DataDeck>,
   inputData: unknown[],
@@ -418,7 +418,7 @@ export const createRobustDataPipeline: ActionStrategyCreator<DataDeck> = (
 };
 ```
 
-### Real-World v0.3.21 ActionStrategy Examples
+### Real-World v0.3.22 ActionStrategy Examples
 
 Drawing from actual implementation patterns in the Stratimux codebase, here are proven ActionStrategy patterns:
 
@@ -566,16 +566,16 @@ stage(({dispatch, d}) => {
 })
 ```
 
-These examples demonstrate the mature v0.3.21 ActionStrategy patterns in production use, showcasing error handling, stage integration, priority management, and sophisticated state transformations within the enhanced Deck typing system.
+These examples demonstrate the mature v0.3.22 ActionStrategy patterns in production use, showcasing error handling, stage integration, priority management, and sophisticated state transformations within the enhanced Deck typing system.
 
-## Conclusion: ActionStrategy in the v0.3.21 Ecosystem
+## Conclusion: ActionStrategy in the v0.3.22 Ecosystem
 
-If you are using this approach to compose strategies into greater graphs of functionality, each strategy should be composed with a final goal in mind that is returned as the tail. In v0.3.21, we compose strategies first with the sequence necessary to accomplish some objective, then provide different failureNodes and/or decisionNodes to afford for error correcting to obtain that final goal. Therefore each strategy when composed in this manner will still only return a head and tail, with enhanced **Deck typing** ensuring type safety throughout the composition.
+If you are using this approach to compose strategies into greater graphs of functionality, each strategy should be composed with a final goal in mind that is returned as the tail. In v0.3.22, we compose strategies first with the sequence necessary to accomplish some objective, then provide different failureNodes and/or decisionNodes to afford for error correcting to obtain that final goal. Therefore each strategy when composed in this manner will still only return a head and tail, with enhanced **Deck typing** ensuring type safety throughout the composition.
 
 ### Integration with Modern Stratimux Patterns
 
 **Higher Order Conceptual Composition Integration:**
-ActionStrategies in v0.3.21 serve as the executable backbone of Higher Order Conceptual Composition, enabling the dynamic orchestration of muxified concepts within comprehensive business logic flows. The enhanced typing system ensures that complex strategy compositions maintain type safety while allowing for sophisticated decision trees.
+ActionStrategies in v0.3.22 serve as the executable backbone of Higher Order Conceptual Composition, enabling the dynamic orchestration of muxified concepts within comprehensive business logic flows. The enhanced typing system ensures that complex strategy compositions maintain type safety while allowing for sophisticated decision trees.
 
 **Stage Planner Synergy:**
 The integration between ActionStrategies and the Stage Planner creates a powerful paradigm for managing complex application workflows. Strategies can be executed within stages, providing:
@@ -585,13 +585,13 @@ The integration between ActionStrategies and the Stage Planner creates a powerfu
 - **Composable Workflow Design**: Stages can orchestrate multiple strategies in sequence or parallel
 
 **StratiDECK Architecture Benefits:**
-The v0.3.21 ActionStrategy pattern leverages StratiDECK's type-safe architecture to provide:
+The v0.3.22 ActionStrategy pattern leverages StratiDECK's type-safe architecture to provide:
 - **Compile-time Strategy Validation**: Deck typing catches strategy composition errors early
 - **Enhanced Developer Experience**: Full IntelliSense support for strategy creation and consumption
 - **Predictable State Transformations**: Type-safe payload handling throughout strategy execution
 - **Scalable Architecture**: Strategies can be composed into arbitrarily complex graphs while maintaining clarity
 
-### Best Practices for v0.3.21 ActionStrategy Development
+### Best Practices for v0.3.22 ActionStrategy Development
 
 1. **Embrace Deck Typing**: Always specify generic types for your strategies to leverage full type safety
 2. **Leverage Stage Integration**: Use stages to provide clear boundaries and execution contexts for your strategies
@@ -601,7 +601,7 @@ The v0.3.21 ActionStrategy pattern leverages StratiDECK's type-safe architecture
 
 ### The Future of ActionStrategy Patterns
 
-The v0.3.21 ActionStrategy pattern represents a mature approach to describing complex, asynchronous decision-making processes in a type-safe, composable manner. As the framework continues to evolve, ActionStrategies will remain the fundamental building blocks for:
+The v0.3.22 ActionStrategy pattern represents a mature approach to describing complex, asynchronous decision-making processes in a type-safe, composable manner. As the framework continues to evolve, ActionStrategies will remain the fundamental building blocks for:
 
 - **Autonomous System Behavior**: Enabling systems to make complex decisions without human intervention
 - **Explainable AI Integration**: Providing clear audit trails for AI-driven decision processes  

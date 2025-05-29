@@ -22,6 +22,8 @@ test('Muxium Strategy Determine', (done) => {
         // Ensure that the entry is assigned to the Muxium for the sake of testing.
         e.muxiumKick();
         // Specified test starts here.
+        console.log(d);
+        console.log(Object.keys(d));
         dispatch(strategyDetermine(d.counter.e.counterAdd()), {
           iterateStage: true
         });

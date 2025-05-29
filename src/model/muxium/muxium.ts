@@ -80,7 +80,7 @@ export function muxification<C extends LoadConcepts>(
     concepts[semaphore].selectors = createSelectors(semaphore);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-    (baseDeck as any).d[key] = {
+    const assembled = {
       d: concepts[semaphore].deck.d,
       e: concepts[semaphore].actions,
       c: concepts[semaphore].comparators,
@@ -89,6 +89,15 @@ export function muxification<C extends LoadConcepts>(
         :
         {...concepts[semaphore].keyedSelectors, ...concepts[semaphore].selectors},
     };
+    (assembled.d as any) ?
+      (assembled.d as any)[key] = assembled
+      :
+      (assembled.d as any)[key] = {
+        [key]: assembled
+      };
+    (assembled.d as any).muxium = baseDeck;
+    (baseDeck as any).d[key] = assembled;
+    (concepts[semaphore].deck as any) = assembled;
     if (i !== 0) {
       (baseDeck as any).d[key].muxium = muxium.deck.d;
     }

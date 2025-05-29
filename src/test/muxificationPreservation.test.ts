@@ -6,7 +6,6 @@ import { CounterDeck, CounterQualities, CounterState, createCounterConcept } fro
 import { createConcept } from '../model/concept/concept';
 import { AnyConcept, Concept } from '../model/concept/concept.type';
 import { muxifyConcepts } from '../model/concept/conceptAdvanced';
-import { demuxifyDeck } from '../model/deck';
 import { muxification } from '../model/muxium/muxium';
 import { Muxium } from '../model/muxium/muxium.type';
 
@@ -21,10 +20,10 @@ const noise = (muxium: Muxium<any>, final: boolean, done: jest.DoneCallback) => 
         const stages = new Array(10).fill(stage(() => {
           //
         })).map((_, i) => stage(({d, e, dispatch, concepts}) => {
-          console.log('CHECK', d);
-          console.log(`${i}: ${ID} One`, d.muxified.d.one.k.state(concepts));
-          console.log(`${i}: ${ID} Counter`, d.muxified.d.counter.k.count.select());
-          console.log(`${i}: ${ID} Muxified`, d.muxified.k.count.select());
+          // console.log('CHECK', d);
+          // console.log(`${i}: ${ID} One`, d.muxified.d.one.k.state(concepts));
+          // console.log(`${i}: ${ID} Counter`, d.muxified.d.counter.k.count.select());
+          // console.log(`${i}: ${ID} Muxified`, d.muxified.k.count.select());
           dispatch(d.muxified.d.counter.e.counterAdd(), {
             iterateStage: true
           });
