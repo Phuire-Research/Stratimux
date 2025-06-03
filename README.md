@@ -52,31 +52,18 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-# Stratimux 0.3.23: Keyed Selector Update - Breaking Changes
+# Stratimux 0.3.24: Keyed Selector Update - Breaking Changes
 
-> **🚨 BREAKING CHANGES**: v0.3.23 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality.
+> **🚨 BREAKING CHANGES**: v0.3.24 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality.
 
 ## Core Selector Renaming
 
-To support advanced muxified concept composition, we've renamed core base selectors to reserve important property names (`state`, `concept`, `create`) for the muxification system.
+To support advanced muxified concept composition, we've renamed core base selectors assessed by DECK k to reserve important property names (`state`, `concept`, `create`) for the muxification system. As well added in a getConcept variant.
+
+Note k.create<C>(concept) will properly type the return Concept specifically. We cannot have the C cascade through due to limitations in Typescripts Type system in massively recursive systems.
 
 ### Impact Assessment
-- **Low Impact**: Most applications use DECK interface (`d.concept.k.selector.select()`)
-- **Medium Impact**: Applications using legacy `select.*` patterns
-- **High Impact**: Applications with heavy `select.state`/`select.concept` usage
-
-### Automated Migration
-```bash
-# Find usage (review before replacing)
-grep -r "select\.state" src/
-grep -r "select\.concept" src/  
-grep -r "select\.create" src/
-
-# Replace (backup first!)
-find src/ -name "*.ts" -exec sed -i 's/select\.state/select.getState/g' {} \;
-find src/ -name "*.ts" -exec sed -i 's/select\.concept/select.getConcept/g' {} \;
-find src/ -name "*.ts" -exec sed -i 's/select\.create(/select.createSelector(/g' {} \;
-```
+- **High Impact**: Applications with heavy `k.name`, `k.state`, `k.create` usage
 
 # Stratimux 0.3.22: Stratideck - Complete Architecture (Major Release - Hot Fixed)
 
