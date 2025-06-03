@@ -21,7 +21,14 @@ import { MuxifiedSubject } from '../stagePlanner/stagePlanner';
 import { handlePriority, isPriorityValid } from '../priority';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { Deck, Stratideck } from '../deck';
-import { createSelectors, updateKeyedSelectors } from '../selector/selectorAdvanced';
+import {
+  createBufferedConceptSelector,
+  createBufferedMuxifiedKeyedSelector,
+  createBufferedMuxifiedNameSelector,
+  createBufferedStateSelector,
+  createSelectors,
+  updateKeyedSelectors
+} from '../selector/selectorAdvanced';
 import { BundledSelectors } from '../selector/selector.type';
 import { Action, Actions } from '../action/action.type';
 import { createCachedSemaphores } from '../action/actionSemaphore';
@@ -79,7 +86,6 @@ export function muxification<C extends LoadConcepts>(
     updateKeyedSelectors(concepts, concepts[semaphore].keyedSelectors, semaphore);
     concepts[semaphore].selectors = createSelectors(semaphore);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
     const assembled = {
       d: concepts[semaphore].deck.d,
       e: concepts[semaphore].actions,
@@ -103,6 +109,39 @@ export function muxification<C extends LoadConcepts>(
     }
   });
 
+  const experimentStash: any[] = [];
+  const muxified = Object.keys(baseDeck.d);
+  muxified.forEach((muX) => {
+    // console.log('muX', muX);
+    const mU = Object.keys((baseDeck.d as any)[muX].d);
+    mU.forEach((mu) => {
+      // console.log('mu', mu);
+      if ((baseDeck.d as any)[muX].d[mu].d) {
+        const M = Object.keys((baseDeck.d as any)[muX].d[mu].d);
+        M.forEach(m => {
+          const semaphore = deckLoad[muX].semaphore;
+          // console.log('m', m, semaphore);
+          if ((baseDeck.d as any)[muX].d[mu].d[m] && m !== 'muxium' && mu !== 'muxium') {
+            if (m === 'experiment') {
+              experimentStash.push((baseDeck.d as any)[muX].d[mu].d[m].k);
+            }
+            console.log('\nset', 'muX: ', muX, 'mu', mu, 'm', m, '\n',
+              'set', 'muxified: ', muxified, 'mU: ', mU, 'M', M, '\n',
+              'set semaphore: ', semaphore
+            );
+            // (baseDeck.d as any)[muX].d[mu].d[m].k = (baseDeck.d as any)[muX].k;
+            // (baseDeck.d as any)[muX].d[mu].d[m].k.state = createBufferedStateSelector(semaphore);
+            (baseDeck.d as any)[muX].d[mu].d[m].k.createSelector = createBufferedMuxifiedKeyedSelector(semaphore);
+            (baseDeck.d as any)[muX].d[mu].d[m].k.getName = createBufferedMuxifiedNameSelector(semaphore);
+            (baseDeck.d as any)[muX].d[mu].d[m].k.getState = createBufferedStateSelector(semaphore);
+            (baseDeck.d as any)[muX].d[mu].d[m].k.getConcept = createBufferedConceptSelector(semaphore);
+            // (baseDeck.d as any)[muX].d[mu].d[m].k.create = createBufferedMuxifiedKeyedSelector(semaphore);
+            // console.log(muX, mu, m, muX);
+          }
+        });
+      }
+    });
+  });
   const deck = baseDeck;
   baseDeck.d.muxium.c.muxiumAddConceptsFromQue;
   let muxiumState = concepts[0].state as MuxiumState<MaybeEnhancedMuxiumQualities, C>;

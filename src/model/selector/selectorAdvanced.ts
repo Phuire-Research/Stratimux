@@ -68,7 +68,7 @@ export const createBufferedStateSelector: CreateBufferedStateSelector =
   };
 
 export const createBufferedConceptSelector: CreateBufferedConceptSelector =
-  <C extends AnyConcept>(semaphore: number): ConceptSelector<C> => (concepts: Concepts) => {
+  (semaphore: number): ConceptSelector => <C extends AnyConcept>(concepts: Concepts) => {
     const concept = concepts[semaphore];
     if (concept) {
       return concept as C;
@@ -82,18 +82,20 @@ export const createBufferedMuxifiedNameSelector: CreateBufferedMuxifiedNameSelec
 export const createSelectors = <S = void>(
   semaphore: number
 ): Selectors<S> => ({
-    create: createBufferedMuxifiedKeyedSelector<S>(semaphore),
-    state: createBufferedStateSelector<S>(semaphore),
-    name: createBufferedMuxifiedNameSelector(semaphore)
+    createSelector: createBufferedMuxifiedKeyedSelector<S>(semaphore),
+    getState: createBufferedStateSelector<S>(semaphore),
+    getName: createBufferedMuxifiedNameSelector(semaphore),
+    getConcept: createBufferedConceptSelector(semaphore)
   });
 
 export const createDummySelectors = <S = void>(
 ): Selectors<S>   => {
   return {
-    create: createBufferedMuxifiedKeyedSelector<S>(-1),
+    createSelector: createBufferedMuxifiedKeyedSelector<S>(-1),
     // concept: createBufferedConceptSelector<C>(semaphore),
-    state: createBufferedStateSelector<S>(-1),
-    name: createBufferedMuxifiedNameSelector(-1)
+    getState: createBufferedStateSelector<S>(-1),
+    getName: createBufferedMuxifiedNameSelector(-1),
+    getConcept: createBufferedConceptSelector(-1)
   };
 };
 
