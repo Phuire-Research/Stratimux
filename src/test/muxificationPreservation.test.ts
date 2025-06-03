@@ -31,7 +31,7 @@ const noise = (muxium: Muxium<any>, final: boolean, done: jest.DoneCallback) => 
         return stages;
       })(),
       stage(({d, stagePlanner, concepts}) => {
-        console.log(`FINAL: ${ID} One`, d.muxified.d.one.k.state(concepts));
+        console.log(`FINAL: ${ID} One`, d.muxified.d.one.k.getState(concepts));
         console.log(`FINAL: ${ID} Counter`, d.muxified.d.counter.k.count.select());
         console.log(`FINAL: ${ID} Muxified`, d.muxified.k.count.select());
         console.log('CHECK FINAL: ', d.muxified.d.counter);

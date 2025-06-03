@@ -41,19 +41,19 @@ export type CreateBufferedStateSelector = <S = void>(semaphore: number) =>
   StateSelector<S>;
 export type StateSelector<S = void> = (concepts: Concepts) => StateValidator<S> | undefined;
 
-export type CreateBufferedConceptSelector = <C extends AnyConcept>(semaphore: number) =>
-  ConceptSelector<C>;
-export type ConceptSelector<C extends AnyConcept> = (concepts: Concepts) => C | undefined;
+export type CreateBufferedConceptSelector = (semaphore: number) =>
+  ConceptSelector;
+export type ConceptSelector = <C extends AnyConcept>(concepts: Concepts) => C | undefined;
 
 export type MuxifiedNameSelector = (concepts: Concepts) => string | undefined;
 export type CreateBufferedMuxifiedNameSelector = (semaphore: number) => MuxifiedNameSelector;
 
 // export type Selectors<S = void, C = void> = {
 export type Selectors<S = void> = {
-  create: MuxifiedKeyedSelector<S>,
-  state: StateSelector<S>,
-  name: MuxifiedNameSelector
-  // concept: ConceptSelector<C>
+  createSelector: MuxifiedKeyedSelector<S>,
+  getState: StateSelector<S>,
+  getName: MuxifiedNameSelector
+  getConcept: ConceptSelector
 }
 
 export type BundledSelectors<S = void> = KeyedSelectors<S> & Selectors<S>
