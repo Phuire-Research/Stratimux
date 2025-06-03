@@ -51,7 +51,34 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-# Stratimux 0.3.22: Stratideck - Complete Architecture
+
+# Stratimux 0.3.23: Keyed Selector Update - Breaking Changes
+
+> **🚨 BREAKING CHANGES**: v0.3.23 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality.
+
+## Core Selector Renaming
+
+To support advanced muxified concept composition, we've renamed core base selectors to reserve important property names (`state`, `concept`, `create`) for the muxification system.
+
+### Impact Assessment
+- **Low Impact**: Most applications use DECK interface (`d.concept.k.selector.select()`)
+- **Medium Impact**: Applications using legacy `select.*` patterns
+- **High Impact**: Applications with heavy `select.state`/`select.concept` usage
+
+### Automated Migration
+```bash
+# Find usage (review before replacing)
+grep -r "select\.state" src/
+grep -r "select\.concept" src/  
+grep -r "select\.create" src/
+
+# Replace (backup first!)
+find src/ -name "*.ts" -exec sed -i 's/select\.state/select.getState/g' {} \;
+find src/ -name "*.ts" -exec sed -i 's/select\.concept/select.getConcept/g' {} \;
+find src/ -name "*.ts" -exec sed -i 's/select\.create(/select.createSelector(/g' {} \;
+```
+
+# Stratimux 0.3.22: Stratideck - Complete Architecture (Major Release - Hot Fixed)
 
 **[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.22)**
 
