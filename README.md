@@ -52,6 +52,7 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
+## Refinement 0.3.242: Cleaned Console Output
 # Stratimux 0.3.241: Keyed Selector Update - Breaking Changes
 
 > **🚨 BREAKING CHANGES**: v0.3.241 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality
