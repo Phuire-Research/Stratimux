@@ -125,10 +125,10 @@ export function muxification<C extends LoadConcepts>(
             if (m === 'experiment') {
               experimentStash.push((baseDeck.d as any)[muX].d[mu].d[m].k);
             }
-            console.log('\nset', 'muX: ', muX, 'mu', mu, 'm', m, '\n',
-              'set', 'muxified: ', muxified, 'mU: ', mU, 'M', M, '\n',
-              'set semaphore: ', semaphore
-            );
+            // console.log('\nset', 'muX: ', muX, 'mu', mu, 'm', m, '\n',
+            //   'set', 'muxified: ', muxified, 'mU: ', mU, 'M', M, '\n',
+            //   'set semaphore: ', semaphore
+            // );
             // (baseDeck.d as any)[muX].d[mu].d[m].k = (baseDeck.d as any)[muX].k;
             // (baseDeck.d as any)[muX].d[mu].d[m].k.state = createBufferedStateSelector(semaphore);
             (baseDeck.d as any)[muX].d[mu].d[m].k.createSelector = createBufferedMuxifiedKeyedSelector(semaphore);
