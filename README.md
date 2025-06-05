@@ -52,14 +52,17 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-## Refinement 0.3.242: Cleaned Console Output
+# Refinement 0.3.242: Cleaned Console Output
+1. Removed debugging console logs from latest stable release: `0.3.242`
+2. Updated the STRATIMUX-REFERENCE.md document for utilization in Agentic Workflows.
+
 # Stratimux 0.3.241: Keyed Selector Update - Breaking Changes
 
 > **🚨 BREAKING CHANGES**: v0.3.241 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality
 
 ## Core Selector Renaming
 
-To support advanced muxified concept composition, we've renamed core base selectors assessed by DECK k to reserve important property names (`state`, `concept`, `create`) for the muxification system. As well added in a getConcept variant.
+To support advanced muxified concept composition, we've renamed core base selectors assessed by DECK k to reserve important property names (`state`, `concept`, `create`, `name`) for the muxification system. Replace such with `getState`, `getConcept`, `getName`, and finally included a `getConcept` variant.
 
 Note k.getConcept<C>(concept) will properly type the return Concept specifically. We cannot have the C cascade through due to limitations in Typescripts Type system in massively recursive systems.
 
