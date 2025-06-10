@@ -41,7 +41,7 @@ test('Quality Actions', (done) => {
     });
     return actions.something();
   };
-  const c = createConcept<typeof initialState, typeof qs>('Some', initialState, qs, [
+  const c = createConcept<typeof initialState, typeof qs>('someConcept', initialState, qs, [
     ({e_}) => {
       console.log('HIT PRINCIPLE', e_.some({
         here: 2
