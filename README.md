@@ -52,7 +52,8 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-# Refinement 0.3.25: Properly Cited Muxified Concept Principle Interfaces
+# Refinement 0.3.251: Properly Cited Muxified Concept Principle Interfaces
+**Breaking** Concept Names and their Listen Name in the Concept Load, Must Now be Paired.
 # Refinement 0.3.242: Cleaned Console Output
 1. Removed debugging console logs from latest stable release: `0.3.242`
 2. Updated the STRATIMUX-REFERENCE.md document for utilization in Agentic Workflows.
