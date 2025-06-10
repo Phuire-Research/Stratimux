@@ -38,10 +38,12 @@ export const muxiumInitializePrinciples =
               state.concepts$.next.bind(concepts$),
               state.action$.next.bind(action$),
               semaphore,
-              state.deck.d as Deck<unknown>,
+              // concept.deck as unknown as Deck<unknown>,
+
+              (state.deck.d as any)[concept.name].d as Deck<unknown>,
               concept.actions as Actions<unknown>,
               concept.comparators as Comparators<unknown>,
-              {...concept.keyedSelectors, ...concept.selectors } as BundledSelectors<any>,
+              (state.deck.d as any)[concept.name].k as BundledSelectors<any>,
             );
             principleSubscribers.push({
               name: concept.name,
