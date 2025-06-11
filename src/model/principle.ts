@@ -6,7 +6,7 @@ $>*/
 /*<#*/
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { Concepts, ConceptsSubscriber, LoadConcepts } from './concept/concept.type';
-import { Action, Actions } from './action/action.type';
+import { Action, Actions, AnyAction } from './action/action.type';
 import { BundledSelectors, KeyedSelectors, Selectors } from './selector/selector.type';
 import { BInterface, Comparators } from './interface';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
@@ -21,7 +21,7 @@ export type PrincipleInterface<Q = void, C = void, S = void> = {
   subscribe: ConceptsSubscriber,
   plan: Planning<Q, C, S>,
   nextC: (concepts: Concepts) => void,
-  nextA: (action: Action) => void,
+  nextA: (action: AnyAction) => void,
   conceptSemaphore: number,
 } & BInterface<Q, C, S>;
 
@@ -35,7 +35,7 @@ export function createPrinciple$<Q = void, C = void, S = void>(
   plan: Planning<Q, C, S>,
   subscribe: ConceptsSubscriber,
   nextC: (concepts: Concepts) => void,
-  nextA: (action: Action) => void,
+  nextA: (action: AnyAction) => void,
   conceptSemaphore: number,
   d_: Deck<C>,
   e_: Actions<Q extends Qualities ? Q : Qualities>,
