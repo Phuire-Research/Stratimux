@@ -55,32 +55,38 @@ export type ConceptECK<S = any, Q = any> = {
   k: BundledSelectors<S> & Selectors<S>;
 };
 
-// Helper type to recursively extract deck types while preserving their structure
-type ExtractNestedDecks<T> = T extends Concept<any, any, infer D>
-  ? D extends LoadConcepts
-    ? D & {
-        [K in keyof D]: ExtractNestedDecks<D[K]>
-      }
-    : Record<string, never>
-  : Record<string, never>;
+// Union type to collect all concepts from nested LoadConcepts
+type UnionToIntersection<U> = 
+  (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 
-// Flatten all decks from MuX recursively
-type FlattenAllDecks<MuX extends LoadConcepts> = MuX & {
-  [K in keyof MuX]: ExtractNestedDecks<MuX[K]>
-}[keyof MuX];
+// Extract all concepts from the deck hierarchy
+type CollectConcepts<T extends LoadConcepts> = T & (
+  T extends LoadConcepts
+    ? UnionToIntersection<{
+        [K in keyof T]: T[K] extends Concept<any, any, infer D>
+          ? D extends LoadConcepts
+            ? CollectConcepts<D>
+            : Record<string, never>
+          : Record<string, never>
+      }[keyof T]>
+    : Record<string, never>
+);
+
+// Create the flattened deck structure with proper type preservation
+type FlattenMuxifiedConcepts<MuX extends LoadConcepts> = {
+  [K in keyof CollectConcepts<MuX>]: CollectConcepts<MuX>[K] extends Concept<infer S, infer Q, any>
+    ? ConceptECK<S, Q>
+    : never
+};
 
 // Functional composition for Concept-level deck: { d: { e, c, k }, e, c, k }
-// The 'd' contains flattened access to muxified qualities/properties (halting API)
+// The 'd' contains flattened access to all muxified concepts in a single level
 export type ConceptDECK<
   S extends Record<string, unknown>,
   Q = void,
   MuX extends LoadConcepts = Record<string, never>
 > = {
-    d: {
-      [K in keyof FlattenAllDecks<MuX>]: FlattenAllDecks<MuX>[K] extends Concept<infer CS, infer CQ> ?
-        ConceptECK<CS, CQ> // Halting API - only e, c, k from muxified concepts
-        : never
-    }
+    d: FlattenMuxifiedConcepts<MuX>,
     e: Actions<Q>,
     c: Comparators<Q>,
     k: BundledSelectors<S> & Selectors<S>

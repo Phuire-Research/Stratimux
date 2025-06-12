@@ -112,31 +112,21 @@ export function muxification<C extends LoadConcepts>(
   const experimentStash: any[] = [];
   const muxified = Object.keys(baseDeck.d);
   muxified.forEach((muX) => {
-    // console.log('muX', muX);
     const mU = Object.keys((baseDeck.d as any)[muX].d);
     mU.forEach((mu) => {
-      // console.log('mu', mu);
       if ((baseDeck.d as any)[muX].d[mu].d) {
         const M = Object.keys((baseDeck.d as any)[muX].d[mu].d);
         M.forEach(m => {
           const semaphore = deckLoad[muX].semaphore;
-          // console.log('m', m, semaphore);
           if ((baseDeck.d as any)[muX].d[mu].d[m] && m !== 'muxium' && mu !== 'muxium') {
             if (m === 'experiment') {
               experimentStash.push((baseDeck.d as any)[muX].d[mu].d[m].k);
             }
-            // console.log('\nset', 'muX: ', muX, 'mu', mu, 'm', m, '\n',
-            //   'set', 'muxified: ', muxified, 'mU: ', mU, 'M', M, '\n',
-            //   'set semaphore: ', semaphore
-            // );
-            // (baseDeck.d as any)[muX].d[mu].d[m].k = (baseDeck.d as any)[muX].k;
-            // (baseDeck.d as any)[muX].d[mu].d[m].k.state = createBufferedStateSelector(semaphore);
+            (baseDeck.d as any)[muX].d[mu].d[m].k = (baseDeck.d as any)[muX].k;
             (baseDeck.d as any)[muX].d[mu].d[m].k.createSelector = createBufferedMuxifiedKeyedSelector(semaphore);
             (baseDeck.d as any)[muX].d[mu].d[m].k.getName = createBufferedMuxifiedNameSelector(semaphore);
             (baseDeck.d as any)[muX].d[mu].d[m].k.getState = createBufferedStateSelector(semaphore);
             (baseDeck.d as any)[muX].d[mu].d[m].k.getConcept = createBufferedConceptSelector(semaphore);
-            // (baseDeck.d as any)[muX].d[mu].d[m].k.create = createBufferedMuxifiedKeyedSelector(semaphore);
-            // console.log(muX, mu, m, muX);
           }
         });
       }

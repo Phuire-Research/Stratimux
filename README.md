@@ -51,11 +51,14 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-# Refinement 0.3.252: Principle nextA now properly accepts AnyAction without Type Casting.
+# StratiDECK Muxified Parts Refinement 0.3.253
+1. Updated StratiDECK Type System to properly handle all Muxified Parts.
+2. Ensured that Muxified Selectors in Complex Compositions are properly Updated.
+## Refinement 0.3.252: Principle nextA now properly accepts AnyAction without Type Casting.
 Updated STRATIMUX-REFERENCE.md
-# Refinement 0.3.251: Properly Cited Muxified Concept Principle Interfaces
+## Refinement 0.3.251: Properly Cited Muxified Concept Principle Interfaces
 **🚨 Breaking** Concept Names and their Listen Name in the Concept Load, Must Now be Paired.
-# Refinement 0.3.242: Cleaned Console Output
+## Refinement 0.3.242: Cleaned Console Output
 1. Removed debugging console logs from latest stable release: `0.3.242`
 2. Updated the STRATIMUX-REFERENCE.md document for utilization in Agentic Workflows.
 
