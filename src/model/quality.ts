@@ -124,7 +124,7 @@ export function createQualityCard<S extends Record<string, unknown>, C = void>(q
   analytics?: Record<string,unknown>
 }): Quality<S, void, any> {
   const bucket: [number, number, number, number][] = [[-1, -Infinity, -1, -1]];
-  const qualityIdentity = generateQualityIdentity()
+  const qualityIdentity = generateQualityIdentity();
   const actionCreator = prepareActionCreator(q.type, bucket, qualityIdentity);
   if (q.methodCreator) {
     return createQuality<S, void, C>(
@@ -171,7 +171,7 @@ export function createQualityCardWithPayload<
   analytics?: Record<string,unknown>
 }): Quality<S, T, any> {
   const bucket: [number, number, number, number][] = [[-1, -1, -1, -1]];
-  const qualityIdentity = generateQualityIdentity()
+  const qualityIdentity = generateQualityIdentity();
   const actionCreatorWithPayload = prepareActionWithPayloadCreator<T>(q.type, bucket, qualityIdentity);
   if (q.methodCreator) {
     return createQuality<S, T, C>(

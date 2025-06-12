@@ -52,6 +52,7 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 # Refinement 0.3.252: Principle nextA now properly accepts AnyAction without Type Casting.
+Updated STRATIMUX-REFERENCE.md
 # Refinement 0.3.251: Properly Cited Muxified Concept Principle Interfaces
 **🚨 Breaking** Concept Names and their Listen Name in the Concept Load, Must Now be Paired.
 # Refinement 0.3.242: Cleaned Console Output
