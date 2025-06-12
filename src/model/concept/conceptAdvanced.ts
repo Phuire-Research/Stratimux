@@ -230,7 +230,7 @@ export function muxifyConcepts<S extends Record<string, unknown>, T extends Qual
   newConcept.deck.d = {
     ...finalDeckComposition,
     ...allDecks
-  };
+  } as any;
 
   // Populate muxifiedRecord from the tracked concepts
   const muxifiedRecord: Record<string, Muxified> = {};

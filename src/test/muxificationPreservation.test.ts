@@ -11,7 +11,9 @@ import { Muxium } from '../model/muxium/muxium.type';
 
 const noise = (muxium: Muxium<any>, final: boolean, done: jest.DoneCallback) => {
   type Deck = {
-    muxified: Concept<CounterState, CounterQualities, CounterDeck>,
+    muxified: Concept<CounterState, CounterQualities, CounterDeck & {
+      one: Concept<any, any, any>
+    }>,
   }
   const ID = Math.random();
   muxium.plan<Deck>('Demuxification Preserveration' + ID, ({stage, staging}) => staging(() => {
