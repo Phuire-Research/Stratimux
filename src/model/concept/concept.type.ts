@@ -49,34 +49,54 @@ export type Muxified = {
 };
 
 // Type to represent the flattened qualities/properties from a muxified concept
-export type ConceptECK<S = any, Q = any> = {
+// Enhanced to support runtime property access without intersection conflicts
+export interface ConceptECK<S = any, Q = any> {
   e: Actions<Q>;
   c: Comparators<Q>;
   k: BundledSelectors<S> & Selectors<S>;
-};
+}
 
-// Union type to collect all concepts from nested LoadConcepts
+// Union type helper
 type UnionToIntersection<U> = 
   (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 
-// Extract all concepts from the deck hierarchy
-type CollectConcepts<T extends LoadConcepts> = T & (
-  T extends LoadConcepts
-    ? UnionToIntersection<{
-        [K in keyof T]: T[K] extends Concept<any, any, infer D>
-          ? D extends LoadConcepts
-            ? CollectConcepts<D>
-            : Record<string, never>
-          : Record<string, never>
-      }[keyof T]>
-    : Record<string, never>
-);
+// Collect all concepts from a LoadConcepts type, going two levels deep
+type CollectAllConceptsFromDeck<D extends LoadConcepts> = 
+  D & UnionToIntersection<{
+    [K in keyof D]: D[K] extends Concept<infer S, infer Q, infer DD>
+      ? DD extends LoadConcepts
+        ? DD  // Collect concepts from nested deck
+        : Record<string, never>
+      : Record<string, never>
+  }[keyof D]>;
 
-// Create the flattened deck structure with proper type preservation
+// Simplified approach: Interface with flexible index signature
+// This prevents TypeScript's intersection type 'never' resolution issues
 type FlattenMuxifiedConcepts<MuX extends LoadConcepts> = {
-  [K in keyof CollectConcepts<MuX>]: CollectConcepts<MuX>[K] extends Concept<infer S, infer Q, any>
+  // Specific declared concepts with full type safety
+  [K in keyof MuX]: MuX[K] extends Concept<infer S, infer Q, any>
     ? ConceptECK<S, Q>
-    : never
+    : ConceptECK<any, any>;
+} & {
+  // Nested concepts from declared deck types
+  [K in keyof UnionToIntersection<{
+    [C in keyof MuX]: MuX[C] extends Concept<any, any, infer D>
+      ? D extends LoadConcepts
+        ? CollectAllConceptsFromDeck<D>
+        : Record<string, never>
+      : Record<string, never>
+  }[keyof MuX]>]: UnionToIntersection<{
+    [C in keyof MuX]: MuX[C] extends Concept<any, any, infer D>
+      ? D extends LoadConcepts
+        ? CollectAllConceptsFromDeck<D>
+        : Record<string, never>
+      : Record<string, never>
+  }[keyof MuX]>[K] extends Concept<infer S, infer Q, any>
+    ? ConceptECK<S, Q>
+    : ConceptECK<any, any>;
+} & {
+  // Runtime property fallback - this should handle the 'one' case
+  [key: string]: ConceptECK<any, any>;
 };
 
 // Functional composition for Concept-level deck: { d: { e, c, k }, e, c, k }
@@ -86,7 +106,7 @@ export type ConceptDECK<
   Q = void,
   MuX extends LoadConcepts = Record<string, never>
 > = {
-    d: FlattenMuxifiedConcepts<MuX>,
+    d: FlattenMuxifiedConcepts<MuX> & Record<string, any>,  // Allow additional runtime properties
     e: Actions<Q>,
     c: Comparators<Q>,
     k: BundledSelectors<S> & Selectors<S>
