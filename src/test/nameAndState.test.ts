@@ -5,7 +5,7 @@ $>*/
 import { CounterAdd, counterAdd } from '../concepts/counter/qualities/add.quality';
 import { muxification } from '../model/muxium/muxium';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
-import { CounterDeck, CounterState } from '../concepts/counter/counter.concept';
+import { CounterDeck, CounterState, createCounterConcept } from '../concepts/counter/counter.concept';
 import { CounterSetCount, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { Concept } from '../model/concept/concept.type';
 import { Quality } from '../model/quality';
@@ -68,7 +68,7 @@ test('Muxified Name and State Access', (done) => {
   type ExperimentDECK = {
     experiment: Concept<CounterState, ExperimentCounterQualities, CounterDeck>
   }
-  const experiment = () => createExperimentConcept<CounterState, ExperimentCounterQualities>({
+  const experiment = () => muxifyConcepts([createCounterConcept()], createExperimentConcept<CounterState, ExperimentCounterQualities>({
     count: 0,
   } as CounterState,
   experimentCounterQualities, [
@@ -87,17 +87,26 @@ test('Muxified Name and State Access', (done) => {
         }),
       ]);
     }
-  ]);
+  ]));
 
   type DECK = {
     experiment: Concept<CounterState, ExperimentCounterQualities, CounterDeck>
     client: Concept<CounterState, ExperimentCounterQualities, ExperimentDECK>
+    server: Concept<CounterState, ExperimentCounterQualities, {
+      client:
+      Concept<CounterState, ExperimentCounterQualities, ExperimentDECK>
+    }>
   }
+  const client = muxifyConcepts([experiment(), createCounterConcept()], createConcept('client', {
+    //
+  }));
+  const server = muxifyConcepts([client], createConcept('client', {
+    //
+  }));
   const muxium = muxification<DECK>('Override actions based on Plan and Stage', {
     experiment: experiment(),
-    client: muxifyConcepts([experiment()], createConcept('client', {
-      //
-    }))
+    client,
+    server
   }, {
   });
   muxium.plan<DECK>('Outer Name and State', ({stage, conclude}) => [
@@ -121,8 +130,8 @@ test('Muxified Name and State Access', (done) => {
       expect(d.experiment.k.getName(concepts)).toBe(experimentName);
       expect(d.experiment.k.getState(concepts) !== undefined).toBe(true);
       expect(d.client.d.experiment.k.getName(concepts)).toBe('client');
-      console.log(d.client.k.getName);
-      console.log(Object.is(d.experiment, d.client.d.experiment));
+      expect(d.client.d.counter.k.count.select()).toBe(0);
+      expect(d.server.d.counter.k.count.select()).toBe(0);
       expect(d.client.d.experiment.k.getState(concepts) !== undefined).toBe(true);
       dispatch(d.muxium.e.muxiumKick(), {
         iterateStage: true
