@@ -65,7 +65,7 @@ The StratiDECK Higher Order Conceptual Compositional Architecture is now product
 - Renamed selectors: `k.state()` → `k.getState()`, `k.name()` → `k.getName()`, `k.create()` → `k.getConcept()`
 - Concept-listen name pairing now enforced
 
-**[Full Release Notes →](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.6)**
+**[Full Release Notes →](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.26)**
 
 ```typescript
 // OLD (breaks at scale)
