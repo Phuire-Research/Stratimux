@@ -51,88 +51,21 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
-# StratiDECK Muxified Parts Refinement 0.3.254
-1. Updated StratiDECK Type System to properly handle all Muxified Parts.
-2. Ensured that Muxified Selectors in Complex Compositions are properly Updated.
-## Refinement 0.3.252: Principle nextA now properly accepts AnyAction without Type Casting.
-Updated STRATIMUX-REFERENCE.md
-## Refinement 0.3.251: Properly Cited Muxified Concept Principle Interfaces
-**🚨 Breaking** Concept Names and their Listen Name in the Concept Load, Must Now be Paired.
-## Refinement 0.3.242: Cleaned Console Output
-1. Removed debugging console logs from latest stable release: `0.3.242`
-2. Updated the STRATIMUX-REFERENCE.md document for utilization in Agentic Workflows.
+# Stratimux v0.3.26: StratiDECK
 
-# Stratimux 0.3.241: Keyed Selector Update - Breaking Changes
+The StratiDECK Higher Order Conceptual Compositional Architecture is now production-ready with enhanced type safety and refined APIs.
 
-> **🚨 BREAKING CHANGES**: v0.3.241 renames base selector functions to free up property names for enhanced `muxifyConcepts` functionality
+## What's New
+- **🎯 Enhanced Selectors**: `k.getState()`, `k.getName()`, `k.getConcept<T>()` - clearer naming, better types
+- **🔒 Type System**: Complete coverage for all muxified concept compositions  
+- **🚀 Developer Experience**: No type casting needed for `nextA`, cleaner console output
+- **📋 Stricter Requirements**: Concept names must match their listen names in concept load
 
-## Core Selector Renaming
+## Breaking Changes
+- Renamed selectors: `k.state()` → `k.getState()`, `k.name()` → `k.getName()`, `k.create()` → `k.getConcept()`
+- Concept-listen name pairing now enforced
 
-To support advanced muxified concept composition, we've renamed core base selectors assessed by DECK k to reserve important property names (`state`, `concept`, `create`, `name`) for the muxification system. Replace such with `getState`, `getConcept`, `getName`, and finally included a `getConcept` variant.
-
-Note k.getConcept<C>(concept) will properly type the return Concept specifically. We cannot have the C cascade through due to limitations in Typescripts Type system in massively recursive systems.
-
-### Impact Assessment
-- **High Impact**: Applications with heavy `k.name`, `k.state`, `k.create` usage
-
-# Stratimux 0.3.22: Stratideck - Complete Architecture (Major Release - Hot Fixed)
-
-**[View Full Release Notes](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.22)**
-
-> **⚠️ BREAKING CHANGES**: v0.3.22 introduces major type system changes requiring migration. 
-> 
-> **📋 [Complete Migration Guide →](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.22.md)**
-
-# Summary: Day One of Stratimux - The Design Intent Realized
-
-## Core Achievement
-**v0.3.22 represents Day One of Stratimux** - the moment when the framework's architectural vision becomes reality through the Stratideck system.
-
-## The Problem Solved
-- **Semaphore limitations**: All qualities of same type shared identical semaphores limited comparisons to in concept.
-- **No concept individualization**: `playerCounter.add()` and `sessionCounter.add()` were indistinguishable
-- **Single origin constraint**: Could only have one source per quality type
-
-## The Identity Solution
-- **Simple function comparators**: `c.playerScore.add(action)` - just a function call
-- **Unique identities**: Same quality patterns, different identities per concept instance
-- **Cross-concept distinction**: Multiple counters/timers with individual identities
-
-## Higher Order Composition Principle
-**Proven**: All complex concepts are compositions of simpler concepts
-- Reuse concept patterns (Counter, Timer, Toggle) across different muxified concepts
-- Maintain unique identities through the DECK interface system
-- Build sophisticated applications from proven building blocks
-
-## The Stratideck Design Intent
-- **Concept sharing**: Reuse patterns while preserving distinctness
-- **Muxified interface**: StratiDECK system {d:.. {d:.. {e, c, k} e, c, k}, e, c, k} ease of higher order composition access
-- **Type safety**: Full inference across concept boundaries
-- **Compositional architecture**: Complexity through composition, not complication
-
-## Architectural Impact
-1. **True concept portability** with identity preservation
-2. **Scalable complexity** through proven patterns
-3. **Effective mapping** - distinguish between same quality types
-4. **Foundational completion** - enables Stratimux's designed potential
-
-## Day One Significance
-This release completes the foundational architecture that enables the compositional future Stratimux was designed for - transforming from technical framework to **complete architectural paradigm**.
-
-## Key Features & Changes
-
-### 🎯 **Complete STRATIDECK (Deck of Decks) Interface System**
-- **No imports needed**: Direct access to actions, selectors, and semaphores via deck interface
-- **Entry points**: `d` (decks), `e` (actions), `c` (comparators), `k` (selectors)
-- **Type safety**: Full TypeScript inference throughout the system
-
-### 🔧 **Enhanced Quality-of-Life Features**
-- **Debug improvements**: `lastStrategyActionList` automatically stored without performance overhead
-- **Stage composition**: New `createStages` helper for scoped, readable stage planning
-- **Better development experience**: Improved error handling and development tooling
-
-### ⚠️ **Breaking Changes - Migration Required**
-This release introduces a **major type system overhaul** requiring explicit quality type definitions:
+**[Full Release Notes →](https://github.com/Phuire-Research/Stratimux/releases/tag/v0.3.6)**
 
 ```typescript
 // OLD (breaks at scale)
