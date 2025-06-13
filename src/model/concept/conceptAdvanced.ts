@@ -82,6 +82,10 @@ function muxify<T extends Qualities, K extends Qualities>(
     ...base.state,
     ...target.state,
   };
+  base.q = {
+    ...base.q,
+    ...target.q
+  };
   base.qualities = [
     ...base.qualities,
     ...target.qualities,
