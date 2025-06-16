@@ -109,7 +109,6 @@ export function muxification<C extends LoadConcepts>(
     }
   });
 
-  const experimentStash: any[] = [];
   const muxified = Object.keys(baseDeck.d);
   muxified.forEach((muX) => {
     const mU = Object.keys((baseDeck.d as any)[muX].d);
@@ -119,9 +118,7 @@ export function muxification<C extends LoadConcepts>(
         M.forEach(m => {
           const semaphore = deckLoad[muX].semaphore;
           if ((baseDeck.d as any)[muX].d[mu].d[m] && m !== 'muxium' && mu !== 'muxium') {
-            if (m === 'experiment') {
-              experimentStash.push((baseDeck.d as any)[muX].d[mu].d[m].k);
-            }
+            (baseDeck.d as any)[muX].d[mu].d[m].d = (baseDeck.d as any)[muX].d;
             (baseDeck.d as any)[muX].d[mu].d[m].k = (baseDeck.d as any)[muX].k;
             (baseDeck.d as any)[muX].d[mu].d[m].k.createSelector = createBufferedMuxifiedKeyedSelector(semaphore);
             (baseDeck.d as any)[muX].d[mu].d[m].k.getName = createBufferedMuxifiedNameSelector(semaphore);
