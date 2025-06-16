@@ -52,10 +52,9 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-## (Breaking & In Progress) Raised Tier on Decks Emitted to Quality Parts v0.3.262
-Elevated the deck supplied to Methods and Reducers. However the change comes with a coveat, decks supplied to these sections will be at ECK. This change is to support how the tiered muxification is operating. However there is a type issue that needs to be ironed out to just allow access to a flat muxified eck deck list accessible via their keys.
+## (Roll Back & In Progress) Raised Tier on Decks Emitted to Quality Parts v0.3.264
+Plan is to elevate the deck supplied to Methods and Reducers. However the change comes with a coveat, decks supplied to these sections will be at ECK. This change is to support how the tiered muxification is operating. However there is a type issue that needs to be ironed out to just allow access to a flat muxified eck deck list accessible via their keys.
 
-To use the desired format we have included the selectDeck function that takes a Concept Type with it's Name to select the first instance of a Deck based on the Name. Since the Deck that is supplied to Methods and Reducers is an a Flattened Tier 2 ECK series of Decks. The function will pull such out of the list, but he typescript dot walking needs a work around.
 ### Refinement Muxify Concepts Q Property v0.3.261
 # Stratimux v0.3.26: StratiDECK
 
