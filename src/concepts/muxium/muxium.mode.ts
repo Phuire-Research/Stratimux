@@ -31,7 +31,10 @@ export const permissiveMode: Mode = (
   if (isActionable(muxiumState, action)) {
     // Logical Determination: muxiumSetBlockingModeType
     if (action.semaphore[3] !== 4) {
-      const deck = muxiumState.deck.d as unknown as Deck<void>;
+      const deck = (muxiumState.deck.d as any)[concepts[action.semaphore[0]].name] ?
+        (muxiumState.deck.d as any)[concepts[action.semaphore[0]].name].d as Deck<void>
+        :
+        (muxiumState.deck.d as any) as Deck<void>;
       if (action.semaphore[2] === muxiumState.generation && action.expiration > Date.now()) {
         const self = concepts[action.semaphore[0]].qualities[action.semaphore[1]].actionCreator;
         let subject: Subject<ActionDeck>;
@@ -88,7 +91,11 @@ export const blockingMode: Mode = (
     if (action.semaphore[2] === muxiumState.generation && action.expiration > Date.now()) {
       const reduce = concepts[action.semaphore[0]].qualities[action.semaphore[1]].reducer;
       const state = {...concepts[action.semaphore[0]].state};
-      const deck = muxiumState.deck.d as unknown as Deck<void>;
+      const deck = (muxiumState.deck.d as any)[concepts[action.semaphore[0]].name] ?
+        (muxiumState.deck.d as any)[concepts[action.semaphore[0]].name].d as Deck<void>
+        :
+        (muxiumState.deck.d as any) as Deck<void>;
+
       const self = concepts[action.semaphore[0]].qualities[action.semaphore[1]].actionCreator;
       const newState = reduce(state, action, deck);
       if (newState !== null) {
