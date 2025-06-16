@@ -188,7 +188,7 @@ export function selectMuxifiedState<T>(concepts: Concepts, semaphore: number): T
     return undefined;
   }
 }
-
+// Commented out for the project to build in it's current v4 variant of typescript
 // /**
 //  * Select a concept from the deck using shortest path calculation (first found)
 //  * Based on Higher-Order Composition principle and ECK limitation (2-tier max)
