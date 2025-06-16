@@ -17,7 +17,23 @@
 - [Critical Breaking Changes](#critical-breaking-changes)
 - [🚀 Higher-Order Programming Paradigm](#-higher-order-programming-paradigm)
   - [Flat Programming (Traditional - What NOT to do)](#flat-programming-traditional---what-not-to-do)
-  - [Higher-Order Programming (Stratimux Way)](#higher-order-programming-stratimux-way)
+  - [Logically Conceptual Higher-Order Programming](#higher-order-programming-stratimux-way)
+
+### 🏛️ [StratiDECK: Tiered Higher-Order Conceptual Composition System](#️-stratideck-tiered-higher-order-conceptual-composition-system)
+- [Overview](#overview-1)
+- [Architectural Layers](#architectural-layers)
+  - [Base Level: Muxium (Tier 0)](#base-level-muxium-tier-0)
+  - [First Level: Concept Composition (Tier 1)](#first-level-concept-composition-tier-1)
+  - [Second Level: Flattened Muxified Access (Tier 2)](#second-level-flattened-muxified-access-tier-2)
+- [The ECK Limitation Strategy](#the-eck-limitation-strategy)
+  - [Problem Addressed](#problem-addressed)
+  - [Solution: ECK Flattening](#solution-eck-flattening)
+  - [Type System Implementation](#type-system-implementation)
+- [Conceptual Composition Benefits](#conceptual-composition-benefits)
+- [Usage Patterns](#usage-patterns)
+- [Runtime Muxification Integration](#runtime-muxification-integration)
+- [Technical Implementation Details](#technical-implementation-details)
+- [Design Principles](#design-principles)
 
 ### 🎯 [Critical Planning Context Patterns](#-critical-planning-context-patterns)
 - [**Outer Plan Context vs Principle Context**](#outer-plan-context-vs-principle-context)
@@ -205,9 +221,9 @@ state.myConcept.someProperty = 'new value'; // Direct mutation (BAD)
 muxium.dispatch(myAction()); // Base-level dispatch (BAD)
 ```
 
-#### Higher-Order Programming (Stratimux Way)
+#### Logically Conceptual Higher-Order Programming 
 ```typescript
-// ✅ HIGHER-ORDER APPROACH (Correct for Stratimux)
+// ✅ HIGHER-ORDER APPROACH
 const muxium = muxification('My App', { myConcept: createMyConcept() });
 
 // All logic happens within planning scope
@@ -237,6 +253,192 @@ muxium.plan<MyConceptDeck>('my application logic', ({ stage, conclude, d__, k__ 
 - **Compositional**: Plans can be combined and reused
 
 This paradigm shift from imperative to higher-order reactive programming is what makes Stratimux unique and powerful.
+
+## 🏛️ StratiDECK: Tiered Higher-Order Conceptual Composition System
+
+### Overview
+
+StratiDECK represents Stratimux's architectural approach to conceptual composition through a tiered system that prevents infinite nesting while maintaining composability. The system implements **logically conceptual higher-order reasoning** that operates through controlled access tiers.
+
+### Architectural Layers
+
+#### Base Level: Muxium (Tier 0)
+The foundation muxium instance that coordinates all conceptual compositions:
+
+```typescript
+const muxium = muxification('ApplicationName', {
+  concept1: createConcept1(),
+  concept2: createConcept2(),
+  concept3: createConcept3()
+});
+```
+
+#### First Level: Base Concept Composition (Tier 1)
+Independent concepts that can be composed together through muxification:
+
+```typescript
+// Each concept maintains logical independence as Base Concept
+const authConcept = createConcept(/* auth logic */);
+const dataConcept = createConcept(/* data logic */);
+const uiConcept = createConcept(/* ui logic */);
+
+// Composed through muxifyConcepts to create Muxified Concepts
+const composedDeck = muxifyConcepts({
+  authentication: authConcept,
+  dataLayer: dataConcept,
+  userInterface: uiConcept
+});
+```
+
+#### Second Level: Flattened Muxified Access (Tier 2)
+All muxified concepts become accessible at the second tier through the 'd' property:
+
+```typescript
+// Access pattern through 'd' property to reach Muxified Concepts
+d.baseConcept.d.muxifiedConcept.k.someProperty.select()
+//            ^-- Second tier access to Muxified Concept
+```
+
+### The ECK Limitation Strategy
+
+#### Problem Addressed
+Without tier limitations, conceptual composition could create infinite nesting:
+```typescript
+// Potential infinite nesting without ECK limitation
+d.concept1.d.concept2.d.concept3.d.concept4.d.concept5... // Goes on forever
+```
+
+#### Solution: ECK Flattening
+StratiDECK caps conceptual access at the **2nd tier** using the ECK (E-ntities, C-oncepts, K-onstants) pattern:
+
+```typescript
+// CORRECT: 2nd tier access (Base → Muxified)
+d.baseConcept.d.muxifiedConcept.k.property.select()
+
+// WRONG: 3rd tier access (prevented by design)
+d.base.d.muxified.d.furtherMuxified.k.property.select() // This pattern is blocked
+```
+
+#### Type System Implementation
+The TypeScript type system enforces the ECK limitation:
+
+```typescript
+interface StratiDECK {
+  [conceptName: string]: {
+    e: ConceptActions;    // Entities (action creators)
+    c: ConceptState;      // Concepts (state structure)  
+    k: ConceptSelectors;  // Constants (reactive selectors)
+    d: MuxifiedConcepts;  // Decks (2nd tier only)
+  }
+}
+```
+
+### Conceptual Composition Benefits
+
+1. **Logical Independence**: Each concept maintains its reasoning boundaries
+2. **Controlled Composition**: Prevents unmanageable nesting through tier limits
+3. **Higher-Order Access**: Direct composition without dependency chains
+4. **Concept Individuation**: Muxified concepts can become Base concepts independently
+5. **Type Safety**: Full TypeScript support through flattened structure
+6. **Reactive Consistency**: Uniform access patterns across all concepts
+
+### Usage Patterns
+
+#### Within Planning Scope (Outer Context)
+```typescript
+muxium.plan<CompositeDeck>('operation', ({ stage, conclude }) => [
+  stage(({ d, dispatch }) => {
+    // Access Base concept state
+    const baseValue = d.baseConcept.k.someValue.select();
+    
+    // Access Muxified concept state at 2nd tier
+    const muxifiedValue = d.baseConcept.d.muxifiedConcept.k.value.select();
+    
+    // Dispatch to Muxified concept
+    dispatch(d.baseConcept.d.muxifiedConcept.e.action({ 
+      data: baseValue 
+    }), { iterateStage: true });
+  }),
+  conclude()
+]);
+```
+
+#### Within Principle Context
+```typescript
+export const compositePrinciple: BaseConceptPrinciple = ({ d_, k_, plan }) => {
+  return plan('composite operation', ({ stage, conclude }) => [
+    stage(({ d, k, dispatch }) => {
+      // Direct access to own Base concept state
+      const ownValue = k.property.select();
+      
+      // Access to Muxified concept at 2nd tier
+      const muxifiedValue = d.baseConcept.d.muxifiedConcept.k.value.select();
+      
+      dispatch(d_.baseConcept.e.updateWithMuxified({ 
+        base: ownValue, 
+        muxified: muxifiedValue 
+      }), { iterateStage: true });
+    }),
+    conclude()
+  ]);
+};
+```
+
+### Runtime Muxification Integration
+
+StratiDECK integrates with runtime muxification for dynamic concept composition:
+
+```typescript
+// Base concept with muxification capability
+const baseConcept = createConcept({
+  name: 'baseConcept',
+  state: initialState,
+  qualities: baseQualities,
+  concepts: muxifyConcepts({
+    muxifiedConcept: createMuxifiedConcept(),
+    utilityConept: createUtilityConcept()
+  })
+});
+```
+
+### Technical Implementation Details
+
+#### Deck Structure
+```typescript
+interface ConceptDeck {
+  [conceptName: string]: {
+    e: ActionCreators;      // Action creators for this concept
+    c: ConceptDefinition;   // Concept definition and metadata
+    k: ReactiveSelectors;   // DECK K Constant pattern selectors
+    d: {                    // 2nd tier Muxified concepts
+      [muxifiedName: string]: {
+        e: ActionCreators;
+        c: ConceptDefinition;  
+        k: ReactiveSelectors;
+        // Note: No nested 'd' property (ECK limitation)
+      }
+    }
+  }
+}
+```
+
+#### Access Path Resolution
+The system resolves concept access through controlled path traversal:
+
+1. **Tier 1**: `d.conceptName` → Direct Base concept access
+2. **Tier 2**: `d.conceptName.d.muxifiedConcept` → Muxified concept access  
+3. **Tier 3+**: Blocked by type system and runtime limitations
+
+### Design Principles
+
+1. **Logically Conceptual**: Each tier represents a logical reasoning boundary
+2. **Higher-Order Composition**: Concepts compose through muxification
+3. **Controlled Complexity**: ECK limitation prevents runaway nesting
+4. **Concept Individuation**: Muxified concepts can individuate as Base concepts
+5. **Functional Coherence**: Maintains functional programming principles
+6. **Type System Harmony**: Full integration with TypeScript for safety
+
+The StratiDECK system demonstrates how higher-order conceptual reasoning can be implemented as code structure, providing both logical clarity and practical implementation benefits through controlled compositional architecture.
 
 ## 🎯 Critical Planning Context Patterns
 
@@ -397,7 +599,38 @@ This understanding prevents the most common Stratimux planning errors and ensure
 
 ### 🏗️ ActionStrategy Architecture
 
-#### Creating an ActionStrategy
+**ActionStrategies are explicit data structures** that define orchestrated action sequences. They are **consumed with no active parts** - pure data that describes what should happen when executed.
+
+#### Key Concept: Functions Compose Strategies
+ActionStrategies use **function composition** to build explicit data structures that Stratimux can execute. The strategy itself is immutable data; functions are used to compose and construct these data structures.
+
+#### Creating ActionStrategies - Multiple Approaches
+
+**Approach 1: Inline Strategy Creation**
+```typescript
+// In a principle or quality - direct inline creation
+const setRootDeckAction = d_.commandDeckInterface.e.commandDeckInterfaceSetRootDeck({
+  rootDeckName: deckName
+});
+const switchDeckContextAction = d_.commandDeckInterface.e.commandDeckInterfaceSwitchDeckContext({
+  deckName: deckName,
+  availableDecks: allDiscoveredDecks,
+  deckQualities: commandsInfo.flatList
+});
+
+// Create explicit data structure using composition functions
+const strategy = createStrategy({
+  topic: 'Initializing Deck Discovery Sequence',
+  initialNode: createActionNode(setRootDeckAction, {
+    successNode: createActionNode(switchDeckContextAction)
+  })
+});
+
+// Execute the explicit data structure
+dispatch(strategyBegin(strategy), { iterateStage: true });
+```
+
+**Approach 2: Function-Composed Strategy Builder**
 ```typescript
 // strategies/exampleStrategy.ts
 import { createActionNode, createStrategy, ActionStrategy, ActionStrategyParameters } from 'stratimux';
@@ -406,6 +639,7 @@ import type { MyConceptDeck } from '../myConcept.concept';
 
 export const myStrategyTopic = 'My Strategy Topic';
 
+// Function that composes an ActionStrategy data structure
 export function myStrategy<T extends Deck<MyConceptDeck>>(
   deck: Partial<T>,  // Partial to handle unloaded concepts
   param1: string,
@@ -419,7 +653,7 @@ export function myStrategy<T extends Deck<MyConceptDeck>>(
   // Extract actions from deck
   const { actionOne, actionTwo, actionThree } = deck.myConcept.e;
   
-  // Build strategy in reverse order (last to first)
+  // Build strategy in reverse order (last to first) using composition functions
   const stepThree = createActionNode(actionThree({ 
     data: 'complete' 
   }), {
@@ -449,14 +683,35 @@ export function myStrategy<T extends Deck<MyConceptDeck>>(
     },
   });
   
-  // Create the strategy
+  // Create the explicit ActionStrategy data structure
   const params: ActionStrategyParameters = {
     topic: myStrategyTopic,
     initialNode: stepOne,
   };
   
+  // Return immutable data structure (not a function)
   return createStrategy(params);
 }
+```
+
+**Approach 3: Simple Sequential Strategy**
+```typescript
+// For simple sequential actions
+const actions = [actionOne(), actionTwo(), actionThree()];
+const strategy = createStrategy({
+  topic: 'Simple Sequential Actions',
+  initialNode: actions.reduce((next, action, index) => 
+    createActionNode(action, index < actions.length - 1 ? { successNode: next } : {})
+  )
+});
+```
+
+#### Core Architecture Principles
+
+1. **Explicit Data Structures**: ActionStrategies are pure data, not executable code
+2. **Function Composition**: Use functions like `createStrategy()` and `createActionNode()` to build data structures
+3. **Immutable**: Once created, strategies are immutable data that can be safely passed around
+4. **Consumed by Execution**: `strategyBegin()` consumes the data structure and creates executable runtime behavior
 ```
 
 ### 🔧 Using ActionStrategies in Qualities
@@ -2623,7 +2878,7 @@ return {
   ...state,                                           // ALL listeners notified
   htmlTapeBuffer: [...state.htmlTapeBuffer, newEntry]
 };
-```
+
 
 ### 🎯 Composition Integration Patterns
 
