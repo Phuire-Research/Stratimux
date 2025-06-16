@@ -52,7 +52,9 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-## Raised Tier on Decks Emitted to Quality Parts v0.3.262
+## (Roll Back & In Progress) Raised Tier on Decks Emitted to Quality Parts v0.3.264
+Plan is to elevate the deck supplied to Methods and Reducers. However the change comes with a coveat, decks supplied to these sections will be at ECK. This change is to support how the tiered muxification is operating. However there is a type issue that needs to be ironed out to just allow access to a flat muxified eck deck list accessible via their keys.
+
 ### Refinement Muxify Concepts Q Property v0.3.261
 # Stratimux v0.3.26: StratiDECK
 
