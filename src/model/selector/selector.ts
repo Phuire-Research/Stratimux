@@ -5,6 +5,7 @@ $>*/
 /*<#*/
 import { Action } from '../action/action.type';
 import { AnyConcept, Concept, Concepts } from '../concept/concept.type';
+import { Deck } from '../deck';
 import { DotPath } from '../dotPath';
 import { KeyedSelector, SelectorFunction } from './selector.type';
 import { creation, setCreation } from './selectorHelpers';
@@ -186,5 +187,51 @@ export function selectMuxifiedState<T>(concepts: Concepts, semaphore: number): T
   } else {
     return undefined;
   }
+}
+
+/**
+ * Select a concept from the deck using shortest path calculation (first found)
+ * Based on Higher-Order Composition principle and ECK limitation (2-tier max)
+ * Following the internal recursive select pattern from Stratimux's selectState function
+ * CRITICAL: Capped at 2 tiers to prevent infinite recursion from circular base concept references
+ * 
+ * @param deck - The Stratideck to search in
+ * @param conceptName - The name of the concept to find
+ * @returns The first matching concept if found, undefined otherwise
+ */
+export function selectDeck<ConceptType extends AnyConcept>(
+  deck: Deck<any>,
+  conceptName: string
+): Deck<{[conceptName]: ConceptType}> | undefined {
+  if (!deck || !conceptName) {
+    return undefined;
+  }
+  // Get all available concept keys from the deck
+  const deckKeys = Object.keys(deck);
+  const length = deckKeys.length;
+  // Internal recursive select function following Stratimux pattern with tier capping
+  const select = (index: number, tier = 0): Deck<{[conceptName]: ConceptType}> | undefined => {
+    // CRITICAL: Cap at 2 tiers to prevent infinite recursion
+    if (index >= length || tier > 1)
+    {
+      return undefined;
+    }
+    const key = deckKeys[index];
+    const targetDeck = (deck as any)[key];
+    // Check if this is the concept we're looking for
+    if (key === conceptName && targetDeck) {
+      return targetDeck as Deck<{[conceptName]: ConceptType}>;
+    }
+    // Check in the concept's 'd' property (2nd tier - ECK limitation)
+    if (targetDeck && typeof targetDeck === 'object' && 'd' in targetDeck && tier < 1) {
+      const muxifiedConcepts = targetDeck.d;
+      if (muxifiedConcepts && muxifiedConcepts[conceptName]) {
+        return muxifiedConcepts[conceptName] as Deck<{[conceptName]: ConceptType}>;
+      }
+    }
+    // Continue to next concept
+    return select(index + 1, tier);
+  };
+  return select(0);
 }
 /*#>*/

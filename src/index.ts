@@ -151,6 +151,7 @@ export {
 export type { KeyedSelector } from './model/selector/selector.type';
 export {
   selectState,
+  selectDeck,
   selectConcept,
   selectSlice,
   selectPayload,
