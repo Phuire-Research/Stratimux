@@ -56,7 +56,8 @@ When in doubt simplify.
 1. Qualities now receive their own deck.d to allow for proper muxification.
 2. Stratidecks are now a Complete Circular Reference with Muxium returning to Root via it's own d.
   - Note that the Type System will cap this Circular Reference as Tier 2 and constrain the parameters to ECK
-3. Added a `selectStratiDECK<D>(deck: unknown, conceptName: string): StratiDECK<D> | undefined` Function that returns the desired stratideck if found that is further enhanced via the circular Stratideck Reference. Will stop only after exploring the first base tier and it's potential muxified parts. Only truly useful at Root in a Dynamic Setting.
+  - Likewise the Muxium that is Accessible as part of All Conceptual Decks will always supply Access to the Root of the Application.
+3. Added a `selectStratiDECK<C>(deck: unknown, conceptName: string): StratiDECK<C> | undefined` Function that returns the desired stratideck if found that is further enhanced via the circular Stratideck Reference. Will stop only after exploring the first base tier and it's potential muxified parts. Only truly useful at Root in a Dynamic Setting.
 
 Specific note about working with the new selectStratiDECK System is this strange nuance demonstrates the fundamental limitations of hierarchically informed type systems.
 
@@ -70,7 +71,7 @@ export type SomeDeck = {
 ```
 Versus attempting to do Higher Order Composition in this Hierarchical Type System. 
 ```typescript
-// Will Not Build when Utilizing Entry Actions Derived from D with Payloads.
+// Will Not Build when Utilizing, Pure Entry Actions will be Assumed to have Payloads.
 export type SomeConcept = Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
 export type SomeDeck = {
   someConcept: SomeConcept
