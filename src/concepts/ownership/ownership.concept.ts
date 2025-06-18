@@ -63,6 +63,7 @@ export type OwnershipQualities = {
   ownershipResetOwnershipLedger: OwnershipResetOwnershipLedger
 };
 
+export type OwnershipConcept = Concept<OwnershipState, OwnershipQualities>;
 export type OwnershipDeck = {
   ownership: Concept<OwnershipState, OwnershipQualities>,
 }

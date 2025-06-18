@@ -34,6 +34,7 @@ export type CounterQualities = {
   counterMultiply: CounterMultiply
 };
 
+export type CounterConcept = Concept<CounterState, CounterQualities>;
 export type CounterDeck = {
   counter: Concept<CounterState, CounterQualities>,
 };

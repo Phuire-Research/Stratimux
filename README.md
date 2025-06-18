@@ -52,11 +52,32 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-## Decks Emitted to Quality Parts are Based on Concept v0.3.27
+## Decks Emitted to Quality Parts are Based on Concept v0.3.271
 1. Qualities now receive their own deck.d to allow for proper muxification.
 2. Stratidecks are now a Complete Circular Reference with Muxium returning to Root via it's own d.
   - Note that the Type System will cap this Circular Reference as Tier 2 and constrain the parameters to ECK
-3. Added a `selectDeck<D>(deck: unknown, conceptName: string): Deck<D> | undefined` Function that returns the desired deck if found that is further enhanced via the circular Stratideck Reference. Will stop only after exploring the first base tier and it's potential muxified parts. Only truly useful at Root in a Dynamic Setting.
+3. Added a `selectStratiDECK<D>(deck: unknown, conceptName: string): StratiDECK<D> | undefined` Function that returns the desired stratideck if found that is further enhanced via the circular Stratideck Reference. Will stop only after exploring the first base tier and it's potential muxified parts. Only truly useful at Root in a Dynamic Setting.
+
+Specific note about working with the new selectStratiDECK System is this strange nuance demonstrates the fundamental limitations of hierarchically informed type systems.
+
+Wherein you have to declare our new SomeConcept Type as such:
+```typescript
+// Will Build
+export type SomeConcept = Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
+export type SomeDeck = {
+  someConcept: Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
+}
+```
+Versus attempting to do Higher Order Composition in this Hierarchical Type System. 
+```typescript
+// Will Not Build when Utilizing Entry Actions Derived from D with Payloads.
+export type SomeConcept = Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
+export type SomeDeck = {
+  someConcept: SomeConcept
+}
+```
+This will compile, but due to how the Parent Child Relationship in these Systems are not Interoperable. You can't do the Common Sense Composition without losing Information.
+
 ### Refinement Muxify Concepts Q Property v0.3.261
 # Stratimux v0.3.26: StratiDECK
 
