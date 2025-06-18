@@ -5,7 +5,7 @@ $>*/
 /*<#*/
 import { Action } from '../action/action.type';
 import { AnyConcept, Concept, Concepts, LoadConcepts } from '../concept/concept.type';
-import { Deck } from '../deck';
+import { StratiDECK } from '../deck';
 import { DotPath } from '../dotPath';
 import { KeyedSelector, SelectorFunction } from './selector.type';
 import { creation, setCreation } from './selectorHelpers';
@@ -199,10 +199,10 @@ export function selectMuxifiedState<T>(concepts: Concepts, semaphore: number): T
 //  * @param conceptName - The name of the concept to find
 //  * @returns The first matching concept if found, undefined otherwise
 //  */
-export function selectDeck<D extends LoadConcepts>(
+export function selectStratiDECK<C extends AnyConcept>(
   deck: unknown,
   conceptName: string
-): Deck<D> | undefined {
+): StratiDECK<C> | undefined {
   if (!deck || !conceptName) {
     return undefined;
   }
@@ -210,7 +210,7 @@ export function selectDeck<D extends LoadConcepts>(
   const deckKeys = Object.keys(deck);
   const length = deckKeys.length;
   // Internal recursive select function following Stratimux pattern with tier capping
-  const select = (index: number): Deck<D> | undefined => {
+  const select = (index: number): StratiDECK<C> | undefined => {
     // CRITICAL: Cap at 2 tiers to prevent infinite recursion
     if (index >= length)
     {
@@ -220,13 +220,13 @@ export function selectDeck<D extends LoadConcepts>(
     const targetDeck = (deck as any)[key];
     // Check if this is the concept we're looking for
     if (key === conceptName && targetDeck) {
-      return targetDeck as Deck<D>;
+      return targetDeck as StratiDECK<C>;
     }
     // Check in the concept's 'd' property (2nd tier - ECK limitation)
     if (targetDeck && typeof targetDeck === 'object' && 'd' in targetDeck) {
       const muxifiedConcepts = targetDeck.d;
       if (muxifiedConcepts && muxifiedConcepts[conceptName]) {
-        return muxifiedConcepts[conceptName] as Deck<D>;
+        return muxifiedConcepts[conceptName] as StratiDECK<C>;
       }
     }
     // Continue to next concept

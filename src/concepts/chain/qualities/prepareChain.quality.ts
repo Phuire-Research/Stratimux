@@ -4,13 +4,14 @@ generate a quality will add actions into the Chain's actionQue state property.
 $>*/
 /*<#*/
 import { AnyAction } from '../../../model/action/action.type';
-import { createQualityCardWithPayload } from '../../../model/quality';
+import { createQualityCardWithPayload, Quality } from '../../../model/quality';
 import { ChainState } from '../chain.concept';
 
 export type ChainPrepareChainPayload = {
     actions: AnyAction[]
 }
 
+export type ChainPrepareChain = Quality<ChainState, ChainPrepareChainPayload>;
 export const chainPrepareChain = createQualityCardWithPayload<ChainState, ChainPrepareChainPayload>({
   type: 'dispatch Actions from Action Que via Payload to be Chained',
   reducer: (state, {payload}) => {

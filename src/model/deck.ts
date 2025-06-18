@@ -33,6 +33,12 @@ export type Stratideck<BaseQ, BaseS, Extended> = {
   k: BundledSelectors<BaseS>;
 };
 
+export type StratiDECK<C extends AnyConcept> =
+  C extends Concept<infer S, infer Q, infer D> ?
+  Stratideck<Q, S, D>
+  :
+  Stratideck<void, void, void>
+
 // Functional Deck type - each concept has its own d, e, c, k without hierarchy as such loses compositional information.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Deck<C> = C extends LoadConcepts

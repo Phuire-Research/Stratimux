@@ -150,6 +150,7 @@ export type MuxiumState<Q, C extends LoadConcepts> = {
   tailTimer: NodeJS.Timeout[];
 }
 
+export type MuxiumConcept = Concept<MuxiumState<MuxiumQualities, LoadConcepts>, MuxiumQualities>;
 export type MuxiumDeck = {
   muxium: Concept<MuxiumState<MuxiumQualities, LoadConcepts>, MuxiumQualities>
 };

@@ -151,7 +151,7 @@ export {
 export type { KeyedSelector } from './model/selector/selector.type';
 export {
   selectState,
-  selectDeck,
+  selectStratiDECK,
   selectConcept,
   selectSlice,
   selectPayload,
@@ -195,7 +195,7 @@ export { muxiumTimeOut } from './model/time';
 
 //** Concept Exports */
 // Muxium
-export { MuxiumState, muxiumName, muxiumConcept, MuxiumDeck } from './concepts/muxium/muxium.concept';
+export { MuxiumState, muxiumName, muxiumConcept, MuxiumDeck, MuxiumConcept } from './concepts/muxium/muxium.concept';
 export { blockingMode, permissiveMode } from './concepts/muxium/muxium.mode';
 export {
   muxiumSelectOpen,
@@ -253,7 +253,14 @@ export {
   addConceptsToRemovalQueThenBlockTopic
 } from './concepts/muxium/strategies/removeConcept.strategy';
 // Counter
-export { CounterState, counterName, createCounterConcept, CounterDeck, CounterQualities } from './concepts/counter/counter.concept';
+export {
+  CounterState,
+  counterName,
+  createCounterConcept,
+  CounterConcept,
+  CounterDeck,
+  CounterQualities
+} from './concepts/counter/counter.concept';
 export { counterSelectCount } from './concepts/counter/counter.selector';
 // Qualities
 export { counterAdd } from './concepts/counter/qualities/add.quality';
@@ -266,7 +273,15 @@ export {
 } from './concepts/counter/strategies/counting.strategy';
 
 // Chain
-export { ChainState, chainName, createChainConcept, ChainQualities } from './concepts/chain/chain.concept';
+export {
+  ChainState,
+  chainName,
+  createChainConcept,
+  ChainQualities,
+  ChainConcept,
+  ChainDeck
+} from './concepts/chain/chain.concept';
+
 // Qualities
 export {
   chainPrepareChain,
@@ -279,6 +294,7 @@ export {
   OwnershipState,
   ownershipName,
   createOwnershipConcept,
+  OwnershipConcept,
   OwnershipDeck,
   OwnershipQualities
 } from './concepts/ownership/ownership.concept';
