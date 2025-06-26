@@ -70,7 +70,9 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
     if (!this.closed) {
       if (!this.expired && this.timer) {
         clearTimeout(this.timer);
-        this.timer.unref();
+        if (this.timer.unref) {
+          this.timer.unref();
+        }
       }
       const { observers } = this;
       const len = observers.length;

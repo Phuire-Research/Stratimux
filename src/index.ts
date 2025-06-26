@@ -18,6 +18,7 @@ export type {
 export {
   Deck,
   Stratideck,
+  StratiDECK
 } from './model/deck';
 export {
   createStrategy,

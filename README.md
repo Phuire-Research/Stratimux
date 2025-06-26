@@ -79,7 +79,8 @@ export type SomeDeck = {
 ```
 This will compile, but due to how the Parent Child Relationship in these Systems are not Interoperable. You can't do the Common Sense Composition without losing Information.
 
-### Refinement Muxify Concepts Q Property v0.3.261
+### Patched Async Method Unref and Export StratiDECK v0.3.272
+### Refinement Muxify Concepts Q Property v0.3.271
 # Stratimux v0.3.26: StratiDECK
 
 The StratiDECK Higher Order Conceptual Compositional Architecture is now production-ready with enhanced type safety and refined APIs.
