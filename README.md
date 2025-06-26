@@ -52,6 +52,7 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
+### Patched Async Method Unref and Export StratiDECK v0.3.272
 ## Decks Emitted to Quality Parts are Based on Concept v0.3.271
 1. Qualities now receive their own deck.d to allow for proper muxification.
 2. Stratidecks are now a Complete Circular Reference with Muxium returning to Root via it's own d.
@@ -79,8 +80,7 @@ export type SomeDeck = {
 ```
 This will compile, but due to how the Parent Child Relationship in these Systems are not Interoperable. You can't do the Common Sense Composition without losing Information.
 
-### Patched Async Method Unref and Export StratiDECK v0.3.272
-### Refinement Muxify Concepts Q Property v0.3.271
+### Refinement Muxify Concepts Q Property v0.3.261
 # Stratimux v0.3.26: StratiDECK
 
 The StratiDECK Higher Order Conceptual Compositional Architecture is now production-ready with enhanced type safety and refined APIs.
