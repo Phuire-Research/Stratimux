@@ -42,12 +42,14 @@
 - [🔑 Single Dispatch Pattern (CRITICAL RULE)](#-single-dispatch-pattern-critical-rule)
 - [📋 Stage Options Reference](#-stage-options-reference)
 - [🔄 Planning Flow Control](#-planning-flow-control)
+- [🔄 Synchronizing Principle Pattern with setStage](#-synchronizing-principle-pattern-with-setstage)
 
 ### 🎬 [ActionStrategies - Orchestrated Action Sequences](#-actionstrategies---orchestrated-action-sequences)
 - [🎯 Understanding ActionStrategies vs Plans](#-understanding-actionstrategies-vs-plans)
 - [🏗️ ActionStrategy Architecture](#️-actionstrategy-architecture)
 - [🔧 Using ActionStrategies in Qualities](#-using-actionstrategies-in-qualities)
 - [🚨 Critical TypeScript Pattern - Deck Type Parameter](#-critical-typescript-pattern---deck-type-parameter)
+- [🔧 selectStratiDECK Pattern for Strategy Creator Functions](#-selectstratideck-pattern-for-strategy-creator-functions)
 - [📋 ActionStrategy Best Practices](#-actionstrategy-best-practices)
 - [🎯 When to Use ActionStrategies vs Plans](#-when-to-use-actionstrategies-vs-plans)
 - [🔄 ActionStrategy Execution Flow](#-actionstrategy-execution-flow)
@@ -144,6 +146,7 @@
 - All operations occur within planning scope using `muxium.plan<DECK>()`
 - State access through DECK K Constant pattern: `k.property.select()` or `d.concept.k.property.select()`
 - No base-level operations (no `getState()`, direct mutations, or imperative dispatches)
+- **Recursive Function Composition**: Stratimux is fundamentally a Higher Order Composition of Functions that executes recursively based on the Muxium mode, using RxJS for syntactic sugar
 
 #### 3. **Compositional Quality Design** 🧩
 - Each quality represents a single, atomic state transformation
@@ -557,7 +560,7 @@ stage(({ dispatch, d }) => {
 })
 ```
 
-#### Pattern: Stage Looping
+#### Pattern: Stage Recursion
 ```typescript
 stage(({ dispatch, d }) => {
   const items = d.myConcept.k.itemsToProcess.select();
@@ -565,7 +568,7 @@ stage(({ dispatch, d }) => {
   if (items.length > 0) {
     // Process one item, stay on this stage
     dispatch(d.myConcept.e.processNextItem(), { 
-      iterateStage: false // Loop on this stage
+      iterateStage: false // Recurse on this stage
     });
     return;
   }
@@ -586,6 +589,154 @@ stage(({ dispatch, d }) => {
 
 This understanding prevents the most common Stratimux planning errors and ensures proper reactive behavior.
 
+### 🔄 Synchronizing Principle Pattern with setStage
+
+**Critical Pattern**: For continuous monitoring principles that need to recursively monitor and synchronize state changes while preventing recursion overflow.
+
+#### 🎯 The setStage Pattern Architecture
+
+The `setStage` dispatch option enables **non-linear stage progression**, essential for synchronizing principles:
+
+```typescript
+// Stage flow with setStage control
+dispatch(d.concept.e.action(), { setStage: 0 }); // Jump to stage 0 (monitoring recursion)
+dispatch(d.concept.e.action(), { setStage: 2 }); // Jump to stage 2 (update stage)
+```
+
+#### 🔧 Complete Synchronizing Principle Implementation
+
+```typescript
+export const synchronizingPrinciple: PrincipleFunction = ({ d_, k_, plan }) => {
+  return plan('Synchronizing Principle', ({ stage, conclude }) => [
+    // Stage 0: Primary monitoring recursion - watches for changes
+    stage(({ dispatch, d, k }) => {
+      // Check prerequisites
+      if (!k.isActive.select()) {
+        dispatch(d.concept.e.activate(), { setStage: 0 }); // Return to monitoring
+        return;
+      }
+      
+      if (!k.isInitialized.select()) {
+        dispatch(d_.muxium.e.muxiumKick(), { setStage: 3 }); // Go to initialization
+        return;
+      }
+      
+      // Monitor for changes
+      const currentData = d.externalConcept.k.monitoredProperty.select();
+      const lastKnownData = k.lastKnownData.select();
+      
+      if (hasChanges(currentData, lastKnownData)) {
+        console.log('Changes detected, proceeding to process stage');
+        dispatch(d_.muxium.e.muxiumKick(), { setStage: 1 }); // Go to process stage
+      } else {
+        dispatch(d_.muxium.e.muxiumKick(), { setStage: 0 }); // Stay in monitoring recursion
+      }
+    }, {
+      beat: 300, // Check every 300ms - reasonable monitoring frequency
+      selectors: [
+        d_.externalConcept.k.monitoredProperty,  // External state to monitor
+        k_.isActive,                            // Internal state flags
+        k_.lastKnownData,
+        k_.isInitialized
+      ]
+    }),
+    
+    // Stage 1: Process detected changes
+    stage(({ dispatch, d, k }) => {
+      const currentData = d.externalConcept.k.monitoredProperty.select();
+      
+      console.log('Processing changes in stage 1');
+      
+      dispatch(d.concept.e.updateWithChanges({
+        newData: currentData,
+        timestamp: Date.now()
+      }), { setStage: 2 }); // Go to update tracking stage
+    }, {
+      beat: 100, // Execute quickly when reached
+      selectors: [
+        d_.externalConcept.k.monitoredProperty,
+        k_.isActive
+      ]
+    }),
+    
+    // Stage 2: Update tracking and return to monitoring
+    stage(({ dispatch, d, k }) => {
+      const currentData = d.externalConcept.k.monitoredProperty.select();
+      
+      console.log('Updating tracking in stage 2');
+      
+      dispatch(d.concept.e.setLastKnownData({ 
+        data: currentData 
+      }), { setStage: 0 }); // Return to monitoring recursion
+    }, {
+      beat: 100, // Execute quickly when reached
+      selectors: [
+        d_.externalConcept.k.monitoredProperty
+      ]
+    }),
+    
+    // Stage 3: Initialization stage
+    stage(({ dispatch, d, k }) => {
+      if (!k.isInitialized.select()) {
+        console.log('Initializing principle');
+        dispatch(d.concept.e.setInitialized({ initialized: true }), { setStage: 0 });
+      } else {
+        dispatch(d_.muxium.e.muxiumKick(), { setStage: 0 }); // Return to monitoring
+      }
+    }, {
+      beat: 100, // Execute quickly when reached
+      selectors: [
+        k_.isInitialized
+      ]
+    }),
+    
+    conclude()
+  ]);
+};
+```
+
+#### 🔑 Critical Pattern Elements
+
+1. **setStage for Non-Linear Flow**:
+   ```typescript
+   { setStage: 0 }  // Jump to monitoring recursion (Stage 0)
+   { setStage: 1 }  // Jump to processing stage (Stage 1)
+   { setStage: 2 }  // Jump to update stage (Stage 2)
+   ```
+
+2. **Beat Timing for Recursion Prevention**:
+   ```typescript
+   beat: 300,  // Monitoring stage - reasonable frequency
+   beat: 100,  // Processing stages - quick execution
+   ```
+
+3. **Selectors with k_ and d_ References**:
+   ```typescript
+   selectors: [
+     d_.externalConcept.k.monitoredProperty,  // External concept state
+     k_.internalProperty,                     // This concept's state
+     k_.flags
+   ]
+   ```
+
+#### 🚨 Critical Benefits
+
+- **Prevents Recursion Overflow**: `selectors` ensure stages only execute when relevant state changes
+- **Controlled Timing**: `beat` prevents excessive execution frequency  
+- **Non-Linear Flow**: `setStage` enables flexible stage jumping for recursive monitoring
+- **Selective Notifications**: Stages activate only on meaningful state changes
+- **Resource Efficient**: No unnecessary re-executions
+
+#### 🎯 When to Use This Pattern
+
+- **Continuous Monitoring**: Watching external state for changes
+- **Synchronization Tasks**: Keeping multiple states in sync
+- **Background Processing**: Ongoing operations that need recursive execution
+- **State Validation**: Continuously checking consistency
+- **Event Detection**: Monitoring for specific conditions
+
+This pattern is essential for building robust, efficient principles that can monitor and synchronize state changes without overwhelming the system through controlled recursive execution.
+
 ## 🎬 ActionStrategies - Orchestrated Action Sequences
 
 **ActionStrategies are the foundation of complex action orchestration in Stratimux, providing reusable, composable sequences of actions.**
@@ -594,7 +745,7 @@ This understanding prevents the most common Stratimux planning errors and ensure
 
 **Critical Distinction**: ActionStrategies are **NOT** the same as planning within qualities:
 - **ActionStrategies**: Pre-defined sequences of actions that can be reused across different contexts
-- **Plans**: Dynamic, reactive stages that respond to state changes in real-time
+- **Plans**: Dynamic, recursive stages that respond to state changes in real-time
 - **Usage**: ActionStrategies are ideal for fixed workflows; Plans are ideal for reactive logic
 
 ### 🏗️ ActionStrategy Architecture
@@ -633,8 +784,8 @@ dispatch(strategyBegin(strategy), { iterateStage: true });
 **Approach 2: Function-Composed Strategy Builder**
 ```typescript
 // strategies/exampleStrategy.ts
-import { createActionNode, createStrategy, ActionStrategy, ActionStrategyParameters } from 'stratimux';
-import type { Deck } from 'stratimux';
+import { createActionNode, createStrategy, ActionStrategy, ActionStrategyParameters } from '@phuire/stratimux';
+import type { Deck } from '@phuire/stratimux';
 import type { MyConceptDeck } from '../myConcept.concept';
 
 export const myStrategyTopic = 'My Strategy Topic';
@@ -719,7 +870,7 @@ const strategy = createStrategy({
 #### Method Creator Pattern with Deck Loading
 ```typescript
 // qualities/myQuality.quality.ts
-import { createMethodWithState, strategyBegin } from 'stratimux';
+import { createMethodWithState, strategyBegin } from '@phuire/stratimux';
 import { myStrategy } from '../strategies/myStrategy';
 
 export const myQuality = createQualityCardWithPayload<
@@ -771,6 +922,164 @@ methodCreator: () => createMethodWithState<
   // deck now has full muxified concept access
 })
 ```
+
+### 🔧 selectStratiDECK Pattern for Strategy Creator Functions
+
+**Critical Pattern**: Strategy Creator Functions should always return `ActionStrategy | undefined` and accept `deck: unknown` due to TypeScript's design limitations with type parameter constraints.
+
+#### 🎯 The Problem: TypeScript Type Parameter Constraints
+
+TypeScript's design creates unavoidable issues when dealing with complex muxified concept access in ActionStrategy functions:
+
+```typescript
+// ❌ PROBLEMATIC: TypeScript constraint issues with complex deck types
+export function myStrategy<T extends Deck<ComplexDeck>>(
+  deck: Partial<T>,  // TypeScript struggles with complex type constraints
+  payload: MyPayload
+): ActionStrategy | undefined {
+  // Type inference breaks down
+}
+```
+
+#### ✅ The Solution: Strategy Creator Function Pattern
+
+**CRITICAL RULE**: All Strategy Creator Functions must follow this exact pattern:
+
+```typescript
+import { 
+  createActionNode, 
+  createStrategy, 
+  selectStratiDECK,
+  type ActionStrategy,
+  type StratiDECK
+} from 'stratimux';
+
+// ✅ CORRECT: Strategy Creator Function Pattern
+export function sessionSwitchStrategy(
+  deck: unknown,  // ALWAYS use unknown type due to TypeScript design limitations
+  sessionSwitchPayload: SessionSwitchPayload
+): ActionStrategy | undefined {  // ALWAYS return ActionStrategy | undefined
+  
+  // Access muxified concepts using selectStratiDECK with explicit Concept types
+  const sessionDeck: StratiDECK<SessionConcept> | undefined = selectStratiDECK<SessionConcept>(
+    deck, 
+    sessionName
+  );
+  
+  const cdiDeck: StratiDECK<CommandDeckInterfaceConcept> | undefined = selectStratiDECK<CommandDeckInterfaceConcept>(
+    deck, 
+    commandDeckInterfaceName
+  );
+  
+  // Guard clause: Return undefined if concepts unavailable
+  if (!sessionDeck || !cdiDeck) {
+    console.warn('Strategy: Cannot create strategy - missing required concepts');
+    return undefined;
+  }
+  
+  // Access state safely after selectStratiDECK verification
+  const currentSessionId = sessionDeck.k.currentSessionId.select();
+  const sessions = sessionDeck.k.sessions.select();
+  const currentBuffer = cdiDeck.k.htmlTapeBuffer.select();
+  const targetSession = sessions[sessionSwitchPayload.sessionId];
+  
+  // Build action chain in reverse order (last action first)
+  const finalAction = createActionNode(
+    sessionDeck.e.setLastKnownBuffer({ buffer: targetSession?.entries || [] }),
+    {
+      successNotes: { 
+        preposition: 'Finally', 
+        denoter: 'strategy completed successfully.' 
+      }
+    }
+  );
+  
+  const middleAction = createActionNode(
+    cdiDeck.e.replaceBuffer({
+      buffer: targetSession?.entries || [],
+      sessionId: sessionSwitchPayload.sessionId
+    }),
+    {
+      successNode: finalAction,
+      successNotes: { 
+        preposition: 'then', 
+        denoter: 'buffer replaced;' 
+      }
+    }
+  );
+  
+  const initialAction = createActionNode(
+    sessionDeck.e.updateSession({
+      sessionId: currentSessionId,
+      newBuffer: currentBuffer || []
+    }),
+    {
+      successNode: middleAction,
+      successNotes: { 
+        preposition: 'First', 
+        denoter: 'current session saved;' 
+      }
+    }
+  );
+  
+  // Create and return ActionStrategy
+  return createStrategy({
+    topic: `Coordinated Session Switch to ${sessionSwitchPayload.sessionId}`,
+    initialNode: initialAction
+  });
+}
+```
+
+#### 🔑 Critical Pattern Requirements
+
+1. **Function Signature**:
+   ```typescript
+   export function strategyName(
+     deck: unknown,  // ALWAYS unknown due to TypeScript limitations
+     payload: PayloadType
+   ): ActionStrategy | undefined  // ALWAYS this return type
+   ```
+
+2. **selectStratiDECK Usage**:
+   ```typescript
+   const conceptDeck: StratiDECK<ConceptType> | undefined = selectStratiDECK<ConceptType>(
+     deck, 
+     conceptName
+   );
+   ```
+
+3. **Guard Clause Pattern**:
+   ```typescript
+   if (!requiredDeck1 || !requiredDeck2) {
+     return undefined; // Graceful failure when concepts unavailable
+   }
+   ```
+
+4. **Explicit Deck Usage**:
+   ```typescript
+   // In vast majority of cases, use the explicit deck as 'd'
+   const state = conceptDeck.k.property.select();
+   const action = conceptDeck.e.action({ data });
+   ```
+
+#### 🚨 Why This Pattern is Mandatory
+
+- **TypeScript Design Limitation**: Complex type constraints cause compilation failures
+- **Muxified Concept Access**: Only way to safely access composed concepts
+- **Type Safety**: Provides full type safety after selectStratiDECK verification
+- **Graceful Degradation**: Returns undefined when concepts unavailable
+- **Consistency**: Standardized pattern across all Strategy Creator Functions
+
+#### 🎯 Strategy Creator Function Checklist
+
+- [ ] Function accepts `deck: unknown`
+- [ ] Function returns `ActionStrategy | undefined`
+- [ ] Uses `selectStratiDECK<ConceptType>()` for concept access
+- [ ] Includes guard clause returning `undefined` for missing concepts
+- [ ] Accesses state/actions through verified deck references
+- [ ] Creates strategy with `createStrategy()` and returns it
+
+This pattern is the **only reliable way** to create Strategy Creator Functions that work with muxified concepts while avoiding TypeScript's type parameter limitations.
 
 ### 📋 ActionStrategy Best Practices
 
@@ -851,7 +1160,7 @@ import {
   strategyData_clearFailureCondition,  // Remove failure condition
   strategyData_select,          // Extract typed data from strategy
   strategyData_muxifyData      // Merge new data with existing data
-} from 'stratimux';
+} from '@phuire/stratimux';
 
 // Usage in quality method creators
 const data = strategyData_select<MyDataField>(strategy);
@@ -1163,7 +1472,7 @@ stage(({ dispatch, d }) => {
 #### ❌ Wrong: Uncontrolled Stage Dispatch
 ```typescript
 stage(({ dispatch, d }) => {
-  // DANGER: Missing stage options can cause infinite dispatch loops
+  // DANGER: Missing stage options can cause infinite dispatch recursion
   dispatch(d.concept.e.processItem()); // System lockup risk!
 });
 ```
@@ -1187,7 +1496,7 @@ stage(({ dispatch, d }) => {
 **Your dispatch pattern is correct when:**
 - ✅ No "Cannot read properties of undefined" errors
 - ✅ Actions execute in expected sequence
-- ✅ No infinite loops or system lockups
+- ✅ No infinite recursion or system lockups
 - ✅ Proper flow control between planning stages
 - ✅ Clean separation between one-shot and flow-controlled operations
 
@@ -1679,7 +1988,7 @@ stage(({ d }) => {
 
 ```typescript
 // File: /concept/qualities/simpleAction.quality.ts
-import { createQualityCard, defaultMethodCreator, type Quality } from 'stratimux';
+import { createQualityCard, defaultMethodCreator, type Quality } from '@phuire/stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 
 export type MyConceptSimpleAction = Quality<MyConceptState>;
@@ -1700,7 +2009,7 @@ export const myConceptSimpleAction = createQualityCard<MyConceptState>({
 
 ```typescript
 // File: /concept/qualities/updateProperty.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from 'stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from '@phuire/stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptUpdatePropertyPayload } from './types.js';
 
@@ -1728,7 +2037,7 @@ export const myConceptUpdateProperty = createQualityCardWithPayload<
 
 ```typescript
 // File: /concept/qualities/setData.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, type Quality } from 'stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, type Quality } from '@phuire/stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptSetDataPayload } from './types.js';
 
@@ -1756,7 +2065,7 @@ export const myConceptSetData = createQualityCardWithPayload<
 
 ```typescript
 // File: /concept/qualities/updateBuffer.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from 'stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from '@phuire/stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptUpdateBufferPayload } from './types.js';
 
@@ -1809,7 +2118,7 @@ import {
   strategySuccess,
   strategyFailed,
   type Quality 
-} from 'stratimux';
+} from '@phuire/stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptDeck } from '../myConcept.concept.js';
 import type { MyConceptComplexOperationPayload } from './types.js';
@@ -1888,7 +2197,7 @@ export type MyConceptQualities = typeof qualities;
 #### ❌ WRONG: Incorrect API Usage
 ```typescript
 // DON'T DO THIS (not public API)
-import { createQuality } from 'stratimux';
+import { createQuality } from '@phuire/stratimux';
 
 // DON'T DO THIS (wrong type parameter order)
 export type MyQuality = Quality<Payload, State>; // ❌ Should be <State, Payload>
@@ -2135,7 +2444,7 @@ muxium.plan<ConceptDeck>('complex state management test', ({ stage, conclude }) 
 ```typescript
 // File: src/concepts/myConcept/test/myConcept.test.ts
 import { createMyConceptConcept, type MyConceptDeck } from '../myConcept.concept.js';
-import { muxification } from 'stratimux';
+import { muxification } from '@phuire/stratimux';
 
 describe('My Concept', () => {
   let muxium: ReturnType<typeof muxification>;
