@@ -784,8 +784,8 @@ dispatch(strategyBegin(strategy), { iterateStage: true });
 **Approach 2: Function-Composed Strategy Builder**
 ```typescript
 // strategies/exampleStrategy.ts
-import { createActionNode, createStrategy, ActionStrategy, ActionStrategyParameters } from '@phuire/stratimux';
-import type { Deck } from '@phuire/stratimux';
+import { createActionNode, createStrategy, ActionStrategy, ActionStrategyParameters } from 'stratimux';
+import type { Deck } from 'stratimux';
 import type { MyConceptDeck } from '../myConcept.concept';
 
 export const myStrategyTopic = 'My Strategy Topic';
@@ -870,7 +870,7 @@ const strategy = createStrategy({
 #### Method Creator Pattern with Deck Loading
 ```typescript
 // qualities/myQuality.quality.ts
-import { createMethodWithState, strategyBegin } from '@phuire/stratimux';
+import { createMethodWithState, strategyBegin } from 'stratimux';
 import { myStrategy } from '../strategies/myStrategy';
 
 export const myQuality = createQualityCardWithPayload<
@@ -1160,7 +1160,7 @@ import {
   strategyData_clearFailureCondition,  // Remove failure condition
   strategyData_select,          // Extract typed data from strategy
   strategyData_muxifyData      // Merge new data with existing data
-} from '@phuire/stratimux';
+} from 'stratimux';
 
 // Usage in quality method creators
 const data = strategyData_select<MyDataField>(strategy);
@@ -1988,7 +1988,7 @@ stage(({ d }) => {
 
 ```typescript
 // File: /concept/qualities/simpleAction.quality.ts
-import { createQualityCard, defaultMethodCreator, type Quality } from '@phuire/stratimux';
+import { createQualityCard, defaultMethodCreator, type Quality } from 'stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 
 export type MyConceptSimpleAction = Quality<MyConceptState>;
@@ -2009,7 +2009,7 @@ export const myConceptSimpleAction = createQualityCard<MyConceptState>({
 
 ```typescript
 // File: /concept/qualities/updateProperty.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from '@phuire/stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from 'stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptUpdatePropertyPayload } from './types.js';
 
@@ -2037,7 +2037,7 @@ export const myConceptUpdateProperty = createQualityCardWithPayload<
 
 ```typescript
 // File: /concept/qualities/setData.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, type Quality } from '@phuire/stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, type Quality } from 'stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptSetDataPayload } from './types.js';
 
@@ -2065,7 +2065,7 @@ export const myConceptSetData = createQualityCardWithPayload<
 
 ```typescript
 // File: /concept/qualities/updateBuffer.quality.ts
-import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from '@phuire/stratimux';
+import { createQualityCardWithPayload, defaultMethodCreator, selectPayload, type Quality } from 'stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptUpdateBufferPayload } from './types.js';
 
@@ -2118,7 +2118,7 @@ import {
   strategySuccess,
   strategyFailed,
   type Quality 
-} from '@phuire/stratimux';
+} from 'stratimux';
 import type { MyConceptState } from '../myConcept.concept.js';
 import type { MyConceptDeck } from '../myConcept.concept.js';
 import type { MyConceptComplexOperationPayload } from './types.js';
@@ -2197,7 +2197,7 @@ export type MyConceptQualities = typeof qualities;
 #### ❌ WRONG: Incorrect API Usage
 ```typescript
 // DON'T DO THIS (not public API)
-import { createQuality } from '@phuire/stratimux';
+import { createQuality } from 'stratimux';
 
 // DON'T DO THIS (wrong type parameter order)
 export type MyQuality = Quality<Payload, State>; // ❌ Should be <State, Payload>
@@ -2444,7 +2444,7 @@ muxium.plan<ConceptDeck>('complex state management test', ({ stage, conclude }) 
 ```typescript
 // File: src/concepts/myConcept/test/myConcept.test.ts
 import { createMyConceptConcept, type MyConceptDeck } from '../myConcept.concept.js';
-import { muxification } from '@phuire/stratimux';
+import { muxification } from 'stratimux';
 
 describe('My Concept', () => {
   let muxium: ReturnType<typeof muxification>;
