@@ -52,6 +52,7 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
+### Patched strategyPunt and updated Stratimux Reference v0.3.273
 ### Patched Async Method Unref and Export StratiDECK v0.3.272
 ## Decks Emitted to Quality Parts are Based on Concept v0.3.271
 1. Qualities now receive their own deck.d to allow for proper muxification.
