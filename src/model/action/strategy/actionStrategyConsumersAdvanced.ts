@@ -16,7 +16,7 @@ export const strategyPunt = (
   newStrategy: ActionStrategy,
 ) => {
   let puntList: ActionStrategy[] = [];
-  if (puntedStrategy.puntedStrategy !== undefined) {
+  if (puntedStrategy.puntedStrategy && puntedStrategy.puntedStrategy.length > 0) {
     puntList = [...puntedStrategy.puntedStrategy, puntedStrategy];
   } else {
     puntList.push(puntedStrategy);

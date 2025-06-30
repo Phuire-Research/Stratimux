@@ -1,7 +1,7 @@
 {
   "name": "stratimux",
   "license": "GPL-3.0",
-  "version": "0.3.272",
+  "version": "0.3.273",
   "description": "Muxified Turing Machine",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
