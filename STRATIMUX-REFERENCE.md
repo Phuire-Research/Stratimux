@@ -47,6 +47,9 @@
 ### 🎬 [ActionStrategies - Orchestrated Action Sequences](#-actionstrategies---orchestrated-action-sequences)
 - [🎯 Understanding ActionStrategies vs Plans](#-understanding-actionstrategies-vs-plans)
 - [🏗️ ActionStrategy Architecture](#️-actionstrategy-architecture)
+  - [Approach 1: Inline Strategy Creation](#approach-1-inline-strategy-creation)
+  - [Approach 1b: Inline ActionStrategy with Functional Composition](#approach-1b-inline-actionstrategy-with-functional-composition)
+  - [Approach 2: Function-Composed Strategy Builder](#approach-2-function-composed-strategy-builder)
 - [🔧 Using ActionStrategies in Qualities](#-using-actionstrategies-in-qualities)
 - [🚨 Critical TypeScript Pattern - Deck Type Parameter](#-critical-typescript-pattern---deck-type-parameter)
 - [🔧 selectStratiDECK Pattern for Strategy Creator Functions](#-selectstratideck-pattern-for-strategy-creator-functions)
@@ -760,25 +763,53 @@ ActionStrategies use **function composition** to build explicit data structures 
 **Approach 1: Inline Strategy Creation**
 ```typescript
 // In a principle or quality - direct inline creation
-const setRootDeckAction = d_.commandDeckInterface.e.commandDeckInterfaceSetRootDeck({
-  rootDeckName: deckName
+const initializeAction = d_.myConcept.e.initialize({
+  configName: configName
 });
-const switchDeckContextAction = d_.commandDeckInterface.e.commandDeckInterfaceSwitchDeckContext({
-  deckName: deckName,
-  availableDecks: allDiscoveredDecks,
-  deckQualities: commandsInfo.flatList
+const contextSwitchAction = d_.myConcept.e.switchContext({
+  contextName: contextName,
+  availableContexts: allAvailableContexts,
+  contextData: configInfo.flatList
 });
 
 // Create explicit data structure using composition functions
 const strategy = createStrategy({
-  topic: 'Initializing Deck Discovery Sequence',
-  initialNode: createActionNode(setRootDeckAction, {
-    successNode: createActionNode(switchDeckContextAction)
+  topic: 'Initializing Configuration Sequence', 
+  initialNode: createActionNode(initializeAction, {
+    successNode: createActionNode(contextSwitchAction)
   })
 });
 
 // Execute the explicit data structure
 dispatch(strategyBegin(strategy), { iterateStage: true });
+```
+
+**Approach 1b: Inline ActionStrategy with Functional Composition**
+```typescript
+// Direct inline functional composition - perfect for principles
+dispatch(strategyBegin(
+  createStrategy({
+    topic: 'Register Data Sources for Sync',
+    initialNode: createActionNode(d.syncConcept.e.registerDataSource({
+      key: 'primary_data_source',
+      keyedSelector: k_.primaryData,
+      encrypted: false
+    }), {
+      successNode: createActionNode(d.syncConcept.e.registerDataSource({
+        key: 'secondary_data_source',  
+        keyedSelector: k_.secondaryData,
+        encrypted: false
+      }))
+    })
+  })
+), { setStage: 1 });
+
+// Key Benefits:
+// ✅ No separate function definition needed
+// ✅ Functional composition creates explicit data structure
+// ✅ Immediate execution with strategyBegin()
+// ✅ Perfect for principles that need action sequences
+// ✅ Maintains reactive recursion flow with stage control
 ```
 
 **Approach 2: Function-Composed Strategy Builder**
@@ -955,37 +986,37 @@ import {
 } from 'stratimux';
 
 // ✅ CORRECT: Strategy Creator Function Pattern
-export function sessionSwitchStrategy(
+export function dataTransferStrategy(
   deck: unknown,  // ALWAYS use unknown type due to TypeScript design limitations
-  sessionSwitchPayload: SessionSwitchPayload
+  transferPayload: DataTransferPayload
 ): ActionStrategy | undefined {  // ALWAYS return ActionStrategy | undefined
   
   // Access muxified concepts using selectStratiDECK with explicit Concept types
-  const sessionDeck: StratiDECK<SessionConcept> | undefined = selectStratiDECK<SessionConcept>(
+  const sourceDeck: StratiDECK<SourceConcept> | undefined = selectStratiDECK<SourceConcept>(
     deck, 
-    sessionName
+    sourceConceptName
   );
   
-  const cdiDeck: StratiDECK<CommandDeckInterfaceConcept> | undefined = selectStratiDECK<CommandDeckInterfaceConcept>(
+  const targetDeck: StratiDECK<TargetConcept> | undefined = selectStratiDECK<TargetConcept>(
     deck, 
-    commandDeckInterfaceName
+    targetConceptName
   );
   
   // Guard clause: Return undefined if concepts unavailable
-  if (!sessionDeck || !cdiDeck) {
+  if (!sourceDeck || !targetDeck) {
     console.warn('Strategy: Cannot create strategy - missing required concepts');
     return undefined;
   }
   
   // Access state safely after selectStratiDECK verification
-  const currentSessionId = sessionDeck.k.currentSessionId.select();
-  const sessions = sessionDeck.k.sessions.select();
-  const currentBuffer = cdiDeck.k.htmlTapeBuffer.select();
-  const targetSession = sessions[sessionSwitchPayload.sessionId];
+  const currentSourceId = sourceDeck.k.currentSourceId.select();
+  const sourceData = sourceDeck.k.sourceData.select();
+  const currentBuffer = targetDeck.k.dataBuffer.select();
+  const targetData = sourceData[transferPayload.targetId];
   
   // Build action chain in reverse order (last action first)
   const finalAction = createActionNode(
-    sessionDeck.e.setLastKnownBuffer({ buffer: targetSession?.entries || [] }),
+    sourceDeck.e.updateTrackingState({ buffer: targetData?.entries || [] }),
     {
       successNotes: { 
         preposition: 'Finally', 
@@ -995,36 +1026,36 @@ export function sessionSwitchStrategy(
   );
   
   const middleAction = createActionNode(
-    cdiDeck.e.replaceBuffer({
-      buffer: targetSession?.entries || [],
-      sessionId: sessionSwitchPayload.sessionId
+    targetDeck.e.replaceDataBuffer({
+      buffer: targetData?.entries || [],
+      sourceId: transferPayload.targetId
     }),
     {
       successNode: finalAction,
       successNotes: { 
         preposition: 'then', 
-        denoter: 'buffer replaced;' 
+        denoter: 'data buffer replaced;' 
       }
     }
   );
   
   const initialAction = createActionNode(
-    sessionDeck.e.updateSession({
-      sessionId: currentSessionId,
+    sourceDeck.e.saveCurrentData({
+      sourceId: currentSourceId,
       newBuffer: currentBuffer || []
     }),
     {
       successNode: middleAction,
       successNotes: { 
         preposition: 'First', 
-        denoter: 'current session saved;' 
+        denoter: 'current data saved;' 
       }
     }
   );
   
   // Create and return ActionStrategy
   return createStrategy({
-    topic: `Coordinated Session Switch to ${sessionSwitchPayload.sessionId}`,
+    topic: `Coordinated Data Transfer to ${transferPayload.targetId}`,
     initialNode: initialAction
   });
 }
@@ -2864,16 +2895,16 @@ const addToCartBad = createQualityCardWithPayload<ExampleState, AddToCartPayload
 
 ```typescript
 // ✅ CORRECT: Multiple related property updates
-const updateUserSession = createQualityCardWithPayload<UserState, SessionPayload>({
-  type: 'update user session',
+const updateUserData = createQualityCardWithPayload<UserState, UserDataPayload>({
+  type: 'update user data',
   reducer: (state, { payload }) => {
-    const { userId, sessionToken, expiresAt } = payload;
+    const { userId, dataToken, expiresAt } = payload;
     
     // ✅ Return only the properties that actually changed
     return {
       userId,
-      sessionToken, 
-      sessionExpiresAt: expiresAt,
+      dataToken, 
+      dataExpiresAt: expiresAt,
       lastLoginAt: Date.now()
     };
     // Notice: Not spreading the entire state
