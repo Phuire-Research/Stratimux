@@ -189,7 +189,7 @@ export function muxification<C extends LoadConcepts>(
       }
       const _muxiumState = _concepts[0].state as MuxiumState<MaybeEnhancedMuxiumQualities, C>;
       if (_muxiumState.head.length === 0) {
-        action.origin = MuxiumOrigins.muxiumHead;
+        // action.origin = MuxiumOrigins.muxiumHead;
         _muxiumState.head.push(action);
         if (_muxiumState.tailTimer.length > 0) {
           const timer = _muxiumState.tailTimer.shift();
