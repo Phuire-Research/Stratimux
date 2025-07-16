@@ -52,8 +52,9 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-### Patched strategyPunt and updated Stratimux Reference v0.3.273
-### Patched Async Method Unref and Export StratiDECK v0.3.272
+### *Patch* Muxium no longer sets Origin that move to the Muxium's Head to that Origin v0.3.274
+### *Patch* strategyPunt and updated Stratimux Reference v0.3.273
+### *Patch* Async Method Unref and Export StratiDECK v0.3.272
 ## Decks Emitted to Quality Parts are Based on Concept v0.3.271
 1. Qualities now receive their own deck.d to allow for proper muxification.
 2. Stratidecks are now a Complete Circular Reference with Muxium returning to Root via it's own d.
