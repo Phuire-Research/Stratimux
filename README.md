@@ -52,9 +52,11 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-## Renewed Action Origin v0.3.8
+## Renewed Action Origin v0.3.8 (Breaking)
 
 Action origins have been renewed from array-based to structured object composition, providing more granular override control and automatic origin assignment for principles:
+
+This renewed approach removes the **hardOverride** in favor of `conceptOverride`, `planOverride`, and `specificOverride`.
 
 ```typescript
 // Before v0.3.8
