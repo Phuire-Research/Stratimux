@@ -52,35 +52,95 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 
-### *Patch* Muxium no longer sets Origin that move to the Muxium's Head to that Origin v0.3.274
-### *Patch* strategyPunt and updated Stratimux Reference v0.3.273
-### *Patch* Async Method Unref and Export StratiDECK v0.3.272
-## Decks Emitted to Quality Parts are Based on Concept v0.3.271
-1. Qualities now receive their own deck.d to allow for proper muxification.
-2. Stratidecks are now a Complete Circular Reference with Muxium returning to Root via it's own d.
-  - Note that the Type System will cap this Circular Reference as Tier 2 and constrain the parameters to ECK
-  - Likewise the Muxium that is Accessible as part of All Conceptual Decks will always supply Access to the Root of the Application.
-3. Added a `selectStratiDECK<C>(deck: unknown, conceptName: string): StratiDECK<C> | undefined` Function that returns the desired stratideck if found that is further enhanced via the circular Stratideck Reference. Will stop only after exploring the first base tier and it's potential muxified parts. Only truly useful at Root in a Dynamic Setting.
+## Renewed Action Origin v0.3.8
 
-Specific note about working with the new selectStratiDECK System is this strange nuance demonstrates the fundamental limitations of hierarchically informed type systems.
+Action origins have been renewed from array-based to structured object composition, providing more granular override control and automatic origin assignment for principles:
 
-Wherein you have to declare our new SomeConcept Type as such:
+```typescript
+// Before v0.3.8
+const origin = createOrigin(['somePlan', 0]);
+dispatch(action, { hardOverride: true });
+
+// After v0.3.8
+const origin = createOrigin({
+  conceptName: 'someConcept',
+  originType: 'somePlan', 
+  specificType: 0
+});
+
+// Now with targeted override options
+dispatch(action, { conceptOverride: true });   // Override by concept
+dispatch(action, { planOverride: true });      // Override by plan type
+dispatch(action, { specificOverride: 3 });     // Override the 3rd specific stage from 0
+
+// Direct origin access in stages
+stage(({ dispatch, origin, d }) => {
+  const [concept, plan, stage] = origin.split('+');
+  dispatch(d.concept.e.action(), { iterateStage: true });
+});
+
+// Automatic principle origin tracking
+action.origin = createOrigin({
+  conceptName: concept.name,
+  originType: 'principle-' + concept.semaphore + '-' + i
+});
+```
+
+# Stratimux v0.3.27: Circular StratiDECK Architecture
+
+The v0.3.27 series introduces complete circular reference support in StratiDECK, enabling qualities to receive their own deck references and establishing the Muxium means of accessing the base set of Conceptual Decks throughout the Application.
+
+## What's New
+**📊 Type System Boundaries**: ECK constraint at Tier 2 for circular references
+
+0. **🔄 Circular StratiDECK**: Complete circular reference system with Muxium returning to the Base Set via its own `d`, enabling all subsequent features
+1. **🎯 Quality Deck Access**: Qualities now receive their current muxified deck while retaining their singleton functionality
+2. **🔍 Dynamic Deck Selection**: `selectStratiDECK<C>()` takes advantage of the complete circular reference to enable ease of concept traversal outside of muxified decks
+
+## Breaking Changes
+- Quality signatures now include deck parameter for muxification
+- Origin handling refined for head actions
+
+**Key Features:**
+
+### Complete Circular Reference Architecture
+```typescript
+// Qualities receive their own deck.d
+const someQuality = createQuality({
+  reducer: (state, action, deck) => {
+    // muxium concept always contains the base deck of concepts without the muxified parts
+    const muxifiedCircularKeyedSelectors = deck.d.someConcept.d.muxium.d.someConcept.d.partOfConcept.k;
+    // It's important to note that functionally the deck passed has access to each concept that is muxified for the given deck.
+    // But due to Typescript Restrictions and poor handling of this new Higher Order Associative Dynamic we have to break the reference via our eck system. This allows for concepts to be muxified into any other concept while retaining that concept's scope within the muxium.
+    const muxifiedKeyedSelectors = deck.d.someConcept.d.partOfConcept.k;
+    return { updated: true };
+  }
+});
+```
+
+### Type System Limitation with Higher-Order Composition
+Specific note about working with the new selectStratiDECK System - this demonstrates the fundamental limitations of hierarchically informed type systems:
+
 ```typescript
 // Will Build
 export type SomeConcept = Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
 export type SomeDeck = {
   someConcept: Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
 }
-```
-Versus attempting to do Higher Order Composition in this Hierarchical Type System. 
-```typescript
-// Will Not Build when Utilizing, Pure Entry Actions will be Assumed to have Payloads.
+
+// Will NOT Build when Utilizing - Pure Entry Actions will be Assumed to have Payloads
 export type SomeConcept = Concept<SomeState, SomeQualities, SomeMuxifiedDecks>
 export type SomeDeck = {
   someConcept: SomeConcept
 }
 ```
-This will compile, but due to how the Parent Child Relationship in these Systems are not Interoperable. You can't do the Common Sense Composition without losing Information.
+This will compile, but due to how the Parent-Child Relationship in these Systems are not Interoperable, you can't do the Common Sense Composition without losing Information.
+
+### 📈 **v0.3.27 Series Updates**
+- **v0.3.274**: Muxium no longer sets Origin that move to the Muxium's Head to that Origin
+- **v0.3.273**: Strategy punt mechanism and updated Stratimux Reference
+- **v0.3.272**: Async method unreferencing and StratiDECK export
+- **v0.3.271**: Base implementation of deck emission to quality parts
 
 ### Refinement Muxify Concepts Q Property v0.3.261
 # Stratimux v0.3.26: StratiDECK

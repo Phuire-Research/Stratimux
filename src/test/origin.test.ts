@@ -16,9 +16,8 @@ import { Deck } from '../model/deck';
 import { Quality } from '../model/quality';
 
 test('Origin Creation', (done) => {
-  expect(createOrigin(['one'])).toBe('one');
-  expect(createOrigin(['one', 'two'])).toBe('one+two');
-  expect(createOrigin(['one', 'two', 'three'])).toBe('one+two+three');
+  expect(createOrigin({conceptName: 'one', originType: 'two'})).toBe('one+two');
+  expect(createOrigin({conceptName: 'one', originType: 'two', specificType: 'three'})).toBe('one+two+three');
   done();
 });
 
@@ -49,17 +48,20 @@ test('Test Dispatch Override', (done) => {
         const stageName = 'Test Override';
         const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
           stageO(() => d__.muxium.e.muxiumKick()),
-          stage(({dispatch, e, d}) => {
-            // new Array(10).fill('').forEach(() => body.push()));
+          stage(({dispatch, e, origin}) => {
             new Array(10).fill('').forEach((_, i) => {
+              const alteredOrigin = origin.split('+');
+              alteredOrigin[2] = i + '';
               body.push(e.counterAdd({
-                origin: createOrigin([stageName, i + ''])
+                origin: alteredOrigin.join('+')
               }));
             });
+            const alteredOrigin = origin.split('+');
+            alteredOrigin[2] = 3 + '';
             body.push(e.counterSetCount({
               newCount: Infinity
             }, {
-              origin: createOrigin([stageName, 3])
+              origin: alteredOrigin.join('+')
             }));
             dispatch(e.counterAdd(), {
               iterateStage: true
@@ -151,17 +153,21 @@ test('Test Dispatch Override', (done) => {
       stageO(() => {
         return d__.muxium.e.muxiumKick();
       }),
-      stage(({dispatch, d}) => {
+      stage(({dispatch, d, origin}) => {
         console.log('CHECK D', Object.keys(d));
         new Array(10).fill('').forEach((_, i) => {
+          const alteredOrigin = origin.split('+');
+          alteredOrigin[2] = i + '';
           body.push(d.experiment.e.counterAdd({
-            origin: createOrigin([stageName, i + ''])
+            origin: alteredOrigin.join('+')
           }));
         });
+        const alteredOrigin = origin.split('+');
+        alteredOrigin[2] = 0 + '';
         body.push(d.experiment.e.counterSetCount({
           newCount: Infinity
         }, {
-          origin: createOrigin([stageName, 0])
+          origin: alteredOrigin.join('+')
         }));
         dispatch(d.experiment.e.counterAdd(), {
           iterateStage: true
@@ -183,7 +189,7 @@ test('Test Dispatch Override', (done) => {
           }), {
             // iterateStage: true,
             throttle: 0,
-            hardOverride: true,
+            planOverride: true,
           });
         } else {
           dispatch(d.muxium.e.muxiumKick(), {

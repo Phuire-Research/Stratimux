@@ -55,7 +55,9 @@ export type Plan<Q = void, C = void, S = void> = {
 ```typescript
 export type dispatchOptions = {
   override?: boolean;
-  hardOverride?: boolean;
+  specificOverride?: number;
+  conceptOverride?: boolean;
+  planOverride?: boolean;
   runOnce?: boolean;
   throttle?: number;
   iterateStage?: boolean;
@@ -79,7 +81,7 @@ export type dispatchOptions = {
 ```
 
 * **dispatchOptions**
-  * **override/hardOverride** - Control action priority handling and origin management for complex dispatching scenarios
+  * **override/s** - Control action priority handling and origin management for complex dispatching scenarios
   * **runOnce** - If enabled on the dispatch options, this will permit only one dispatch of that action within its stage
   * **throttle** - Required to prevent the stage to be considered bad if rerunning the same action within the same stage, specific use case is tracking some position over time. If enabled, this will only come into play after that action is first dispatched
   * **iterateStage** - Will increment to the next stage index, this should be your default option for dispatching actions or strategies to prevent action overflow
