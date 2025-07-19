@@ -6,9 +6,16 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { Subject } from 'rxjs';
-import { MuxiumDeck, muxiumName, MuxiumState } from '../../concepts/muxium/muxium.concept';
+import { MuxiumDeck, MuxiumState } from '../../concepts/muxium/muxium.concept';
 import { BundledSelectors, KeyedSelector } from '../selector/selector.type';
-import { HandleHardOrigin, HandleOrigin, createOrigin, getMuxiumState } from '../muxium/muxiumHelpers';
+import {
+  HandleOrigin,
+  HandleOverrideConcept,
+  HandleOverrideOriginType,
+  HandleOverrideSpecificType,
+  createOrigin,
+  getMuxiumState
+} from '../muxium/muxiumHelpers';
 import { Comparators } from '../interface';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
 import { accessDeck, Deck } from '../deck';
@@ -28,7 +35,8 @@ export function _dispatch<Q,C,S>(
   muxiumState: MuxiumState<MuxiumQualities, MuxiumDeck>,
   plan: Plan<Q, C, S>,
   action: Action,
-  options: dispatchOptions): void {
+  options: dispatchOptions
+): void {
   let stageDelimiter = properties.stageDelimiters.get(plan.id);
   let throttle = false;
   let goodAction = true;
@@ -95,10 +103,18 @@ export function _dispatch<Q,C,S>(
       // Keep in place, this prevents branch prediction from creating ghost actions if there is an action overflow.
       if (plan.stageFailed === -1) {
         // Will set a the current stage's priority if no priority is set.
-        action.origin = createOrigin([plan.title, plan.stage]);
+        action.origin = createOrigin({
+          conceptName: plan.conceptName,
+          originType: plan.title,
+          specificType: plan.stage + ''
+        });
         const settleOrigin = () => {
-          if (options.hardOverride) {
-            HandleHardOrigin(muxiumState, action);
+          if (options.conceptOverride) {
+            HandleOverrideConcept(muxiumState, action);
+          } else if (options.planOverride) {
+            HandleOverrideOriginType(muxiumState, action);
+          } else if (options.specificOverride) {
+            HandleOverrideSpecificType(muxiumState, action, plan.title, plan.stage);
           } else if (options.override) {
             console.log('CHECK ACTION WITH OVERRIDE, action', action);
             console.log('CHECK STATE', muxiumState.body);
@@ -150,6 +166,11 @@ export function execute<Q,C,S>(properties: MuxifiedSubjectProperties, plan: Plan
         planId: plan.id,
         conclude: conclude
       },
+      origin: createOrigin({
+        conceptName: plan.conceptName,
+        originType: plan.title,
+        specificType: plan.stage + ''
+      }),
       // [TODO WHY? BACK HERE AGAIN!?!?!?
       // Triggered by ownership test, for some reason the muxium was the sole concept available here mid way through test]
       d: plan.space === Outer ?

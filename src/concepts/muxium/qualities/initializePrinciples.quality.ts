@@ -13,9 +13,10 @@ import { createQualityCardWithPayload, defaultMethodCreator } from '../../../mod
 import { MuxiumInitializePrinciplesPayload } from '.';
 import { Comparators } from '../../../model/interface';
 import { BundledSelectors } from '../../../model/selector/selector.type';
-import { Action, Actions } from '../../../model/action/action.type';
+import { Action, Actions, AnyAction } from '../../../model/action/action.type';
 import { Planning } from '../../../model/stagePlanner/stagePlanner.type';
 import { Deck, Stratideck } from '../../../model/deck';
+import { createOrigin } from '../../../model/muxium/muxiumHelpers';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({
@@ -29,14 +30,20 @@ export const muxiumInitializePrinciples =
       const principleSubscribers = state.generalSubscribers;
       forEachConcept(concepts ,((concept, semaphore) => {
         if (concept.name === muxiumName && concept.principles) {
-          concept.principles.forEach(principle => {
+          concept.principles.forEach((principle, i) => {
             const observable = createPrinciple$<unknown, unknown, unknown>(
               principle as PrincipleFunction<unknown, unknown, unknown>,
               concepts,
               state.concepts$.innerPlan.bind(concepts$) as Planning<any, any, any>,
               state.concepts$.subscribe.bind(concepts$),
               state.concepts$.next.bind(concepts$),
-              state.action$.next.bind(action$),
+              (action: AnyAction) => {
+                action.origin = createOrigin({
+                  conceptName: concept.name,
+                  originType: 'principle-' + concept.semaphore + '-' + i
+                });
+                state.action$.next(action);
+              },
               semaphore,
               // concept.deck as unknown as Deck<unknown>,
 
@@ -52,14 +59,20 @@ export const muxiumInitializePrinciples =
           });
           conceptCounter += 1;
         } else if (concept.principles) {
-          concept.principles.forEach(principle => {
+          concept.principles.forEach((principle, i) => {
             const observable = createPrinciple$<any, any, any>(
               principle,
               concepts,
               concepts$.plan(concept.semaphore).bind(concepts$) as Planning<any, any, any>,
               concepts$.subscribe.bind(concepts$),
               concepts$.next.bind(concepts$),
-              action$.next.bind(action$),
+              (action: AnyAction) => {
+                action.origin = createOrigin({
+                  conceptName: concept.name,
+                  originType: 'principle-' + concept.semaphore + '-' + i
+                });
+                state.action$.next(action);
+              },
               semaphore,
               (state.deck.d as any)[concept.name].d as Deck<unknown>,
               concept.actions as Actions<any>,

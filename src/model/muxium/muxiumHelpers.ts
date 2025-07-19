@@ -24,17 +24,16 @@ export const tailWhip = <Q, C extends LoadConcepts>(muxiumState: MuxiumState<Q, 
   }
 };
 
-export const createOrigin = (location: unknown[]): string => {
-  let origin = '';
-  let addSign = false;
-  location.forEach(l => {
-    if (addSign) {
-      origin += '+' + l;
-    } else {
-      origin += l;
-      addSign = true;
-    }
-  });
+export type ActionOriginComposition = {
+  conceptName: string;
+  originType: string;
+  specificType?: string;
+}
+export const createOrigin = ({conceptName, originType, specificType}: ActionOriginComposition ): string => {
+  let origin = conceptName + '+' + originType;
+  if (specificType) {
+    origin += '+' + specificType;
+  }
   return origin;
 };
 
@@ -67,7 +66,42 @@ export const HandleOrigin = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>
   tailWhip(state);
 };
 
-export const HandleHardOrigin = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>, action: Action) => {
+export const HandleOverrideOriginType = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>, action: Action) => {
+  // Fill Bucket
+  // Empty Bucket
+  // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
+  const {
+    body,
+    tail
+  } = state;
+  let found = false;
+  const origin = action.origin?.split('+')[1];
+  for (const [i, a] of body.entries()) {
+    const aOrigin = a.origin?.split('+')[1];
+    if (aOrigin !== undefined && aOrigin === origin) {
+      body[i] = action;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    for (const [i, a] of tail.entries()) {
+      const aOrigin = a.origin?.split('+')[0];
+      if (aOrigin !== undefined && aOrigin === action.origin) {
+        body[i] = action;
+        found = true;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
+    body.push(action);
+  }
+  tailWhip(state);
+};
+
+export const HandleOverrideConcept = <Q, C extends LoadConcepts>(state: MuxiumState<Q, C>, action: Action) => {
   // Fill Bucket
   // Empty Bucket
   // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
@@ -90,6 +124,57 @@ export const HandleHardOrigin = <Q, C extends LoadConcepts>(state: MuxiumState<Q
       const aOrigin = a.origin?.split('+')[0];
       if (aOrigin !== undefined && aOrigin === action.origin) {
         body[i] = action;
+        found = true;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
+    body.push(action);
+  }
+  tailWhip(state);
+};
+
+export const HandleOverrideSpecificType = <Q, C extends LoadConcepts>(
+  state: MuxiumState<Q, C>,
+  action: Action,
+  planTitle: string,
+  specificStage: number
+) => {
+  // Fill Bucket
+  // Empty Bucket
+  // Issue is I need to remove all origins and replace with hard overriding action at the earliest slot
+  const {
+    body,
+    tail
+  } = state;
+  let found = false;
+  for (const [i, a] of body.entries()) {
+    const originType = a.origin?.split('+')[1];
+    const specificType = Number(a.origin?.split('+')[2]);
+    if (
+      originType !== undefined &&
+      specificType !== undefined &&
+      originType === planTitle &&
+      specificType === specificStage
+    ) {
+      body[i] = action;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    for (const [i, a] of tail.entries()) {
+      const originType = a.origin?.split('+')[1];
+      const specificType = Number(a.origin?.split('+')[2]);
+      if (
+        originType !== undefined &&
+        specificType !== undefined &&
+        originType === planTitle &&
+        specificType === specificStage
+      ) {
+        tail[i] = action;
         found = true;
         break;
       }

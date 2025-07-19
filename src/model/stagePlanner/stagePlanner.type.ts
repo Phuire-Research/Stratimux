@@ -50,14 +50,16 @@ export type StageParams<Q = void, C = void, S = void> = {
   concepts: Concepts,
   dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
   changes: KeyedSelector[],
-  stagePlanner: StagePlanner
+  stagePlanner: StagePlanner,
+  origin: string,
 } & UInterface<Q, C, S>
 
 export type BaseStageParams<Q = void, C = void, S = void> = {
   concepts: Concepts,
   dispatch: (action: Action<any>, options: dispatchOptions, ) => void,
   changes: KeyedSelector[],
-  stagePlanner: StagePlanner
+  stagePlanner: StagePlanner,
+  origin: string,
 } & OInterface<Q, C, S>
 
 export type Planning<Q = void, C = void, S = void> = (title: string, planner: Planner<Q, C, S>) => StagePlanner;
@@ -121,7 +123,9 @@ export type NamedStagePlanner = {
 
 export type dispatchOptions = {
   override?: boolean;
-  hardOverride?: boolean;
+  conceptOverride?: boolean;
+  planOverride?: boolean;
+  specificOverride?: number;
   runOnce?: boolean;
   throttle?: number;
   iterateStage?: boolean;
