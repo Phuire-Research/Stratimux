@@ -102,6 +102,8 @@
 - [✅ Quality Implementation Checklist](#-quality-implementation-checklist)
 - [🎯 Quality Type Definition Pattern](#-quality-type-definition-pattern)
 
+### 🚀 [Advanced Pattern: Two-Stage KeyedSelector Routing for Parameter Observation](#-advanced-pattern-two-stage-keyedselector-routing-for-parameter-observation)
+
 ### 🧪 [Stratimux Testing Patterns & Asynchronous State Management](#-stratimux-testing-patterns--asynchronous-state-management)
 - [🎯 Essential Testing Principles](#-essential-testing-principles)
 - [⚡ Asynchronous State Management (CRITICAL)](#-asynchronous-state-management-critical)
@@ -592,6 +594,175 @@ stage(({ dispatch, d }) => {
 - **Flow control**: Use `iterateStage` boolean to control plan progression
 
 This understanding prevents the most common Stratimux planning errors and ensures proper reactive behavior.
+
+### 🚀 Advanced Pattern: Two-Stage KeyedSelector Routing for Parameter Observation
+
+This advanced pattern provides an efficient routing mechanism for any system requiring parameter observation and change-based reactions. It's an enhancement of the standard planned subscription pattern.
+
+#### 🎯 Pattern Overview
+
+The pattern uses a two-stage approach:
+1. **Activation Stage**: Creates a routing record and performs initial parameter binding
+2. **Subscription Stage**: Uses the routing record to efficiently handle parameter changes
+
+#### 🏗️ Architecture
+
+```typescript
+// General implementation for any parameter observation system
+let routingRecord: Record<string, (selector: any) => void> = {};
+
+muxium.plan<ConceptDeck>('parameterObservation', ({ stage, d__ }) => [
+  // Stage 1: Activation - Create routing infrastructure
+  stage(({ d, dispatch }) => {
+    console.log('🚀 Activation stage - creating routing record')
+    
+    // Access the concept containing parameters to observe
+    const targetConcept = d.myConcept;
+    if (!targetConcept) {
+      console.warn('Target concept not found in deck');
+      return;
+    }
+
+    // Extract KeyedSelectors for parameters
+    const param1Selector = targetConcept.k.parameter1;
+    const param2Selector = targetConcept.k.parameter2;
+    const param3Selector = targetConcept.k.parameter3;
+
+    // Create routing record using KeyedSelector keys property
+    // Each binding function accepts the KeyedSelector for type safety
+    routingRecord = {
+      [param1Selector.keys]: (selector: any) => {
+        const newValue = selector.select();
+        if (newValue !== undefined) {
+          // Handle parameter1 change
+          handleParameter1Change(newValue);
+          console.log('📊 Updated parameter1:', newValue);
+        }
+      },
+      [param2Selector.keys]: (selector: any) => {
+        const newValue = selector.select();
+        if (newValue !== undefined) {
+          // Handle parameter2 change
+          handleParameter2Change(newValue);
+          console.log('📊 Updated parameter2:', newValue);
+        }
+      },
+      [param3Selector.keys]: (selector: any) => {
+        const newValue = selector.select();
+        if (newValue !== undefined) {
+          // Handle parameter3 change
+          handleParameter3Change(newValue);
+          console.log('📊 Updated parameter3:', newValue);
+        }
+      }
+    };
+
+    // Initial binding: Pass selectors to their binding functions
+    console.log('🎯 Performing initial parameter binding');
+    routingRecord[param1Selector.keys](param1Selector);
+    routingRecord[param2Selector.keys](param2Selector);
+    routingRecord[param3Selector.keys](param3Selector);
+
+    // Proceed to subscription stage
+    dispatch(d.muxium.e.muxiumKick(),
+    {
+      iterateStage: true
+    });
+  }),
+
+  // Stage 2: Subscription - Handle changes via routing
+  stage(({ d, changes }) => {
+    console.log('🔄 Subscription stage - processing changes:', changes);
+
+    if (changes.length > 0) {
+      // Enhanced routing: Changes array provides KeyedSelectors
+      changes.forEach((change) => {
+        // Direct indexing into routing record using change.keys
+        const bindingFn = routingRecord[change.keys];
+        if (bindingFn) {
+          console.log('🎯 Routing change to binding:', change.keys);
+          bindingFn(change); // Pass the KeyedSelector from the change
+        }
+      });
+    }
+  }, {
+    // Specify selectors to observe
+    selectors: [
+      d__.myConcept.k.parameter1,
+      d__.myConcept.k.parameter2,
+      d__.myConcept.k.parameter3
+    ]
+  }),
+]);
+```
+
+#### 🔑 Key Benefits
+
+1. **Type Safety**: Routing record ensures type-safe KeyedSelector handling
+2. **Performance**: O(1) change routing without if/else chains
+3. **Separation of Concerns**: Clean separation between setup and observation logic
+4. **Scalability**: Easy to add/remove parameter observations
+5. **Framework Agnostic**: Works with any system requiring parameter observation
+
+#### 🎯 Use Cases
+
+This pattern is ideal for:
+- **Frontend Framework Integration**: React, Vue, Angular, Svelte state synchronization
+- **Backend Services**: Monitoring configuration parameters or system metrics
+- **Game Engines**: Observing game state changes for physics/rendering updates
+- **Data Processing**: Reacting to data pipeline parameter changes
+- **IoT Systems**: Monitoring sensor readings and triggering responses
+- **Real-time Systems**: Efficient routing of time-critical parameter updates
+
+#### 📊 Comparison with Standard Pattern
+
+**Standard Planned Subscription**:
+```typescript
+stage(({ d }) => {
+  // Direct property updates
+  property1 = d.concept.k.property1.select();
+  property2 = d.concept.k.property2.select();
+}, { selectors: [d__.concept.k.property1, d__.concept.k.property2] })
+```
+
+**Advanced Two-Stage Routing**:
+- Activation stage for infrastructure setup
+- Routing record for O(1) change handling
+- KeyedSelector passing maintains type safety
+- More scalable for many parameters
+
+#### 🚨 Implementation Considerations
+
+1. **Memory Usage**: Routing record persists between stages
+2. **Closure Scope**: Handler functions capture activation stage scope
+3. **Type Safety**: Use TypeScript generics for full type safety
+4. **Error Handling**: Add try/catch in binding functions for robustness
+5. **Cleanup**: Ensure proper plan conclusion for memory management
+
+#### 🔧 Advanced Variations
+
+**Dynamic Parameter Registration**:
+```typescript
+// Allow runtime parameter registration
+const registerParameter = (selector: KeyedSelector, handler: (value: any) => void) => {
+  routingRecord[selector.keys] = (sel: typeof selector) => {
+    const value = sel.select();
+    if (value !== undefined) handler(value);
+  };
+};
+```
+
+**Batched Updates**:
+```typescript
+// Batch multiple parameter changes
+const batchedChanges: Record<string, any> = {};
+changes.forEach((change) => {
+  batchedChanges[change.keys] = change.select();
+});
+processBatchedUpdates(batchedChanges);
+```
+
+This advanced pattern represents a significant evolution in parameter observation, providing a robust foundation for any system requiring efficient change-based routing.
 
 ### 🔄 Synchronizing Principle Pattern with setStage
 
@@ -2016,6 +2187,91 @@ const value = d.concept.k.property.select(); // ✅ Reactive, type-safe
 - **IntelliSense Support**: Full auto-completion for state properties
 - **Refactoring Safety**: Automated updates when state structure changes
 
+### 🎯 createMethodWithConcepts Deck K Usage Pattern
+
+**Critical Pattern**: For ActionStrategy qualities that need dynamic concept name resolution, use `createMethodWithConcepts` with the DECK K pattern to access both concept state and metadata.
+
+#### 🏗️ Dynamic Concept Name Resolution
+```typescript
+import { createMethodWithConcepts, strategyBegin, muxiumConclude } from 'stratimux';
+
+// ✅ CORRECT: createMethodWithConcepts with DECK K pattern
+export const actionStrategyQuality = createQualityCardWithPayload<
+  ConceptState,
+  PayloadType,
+  ConceptDeck  // CRITICAL: Include deck type parameter
+>({
+  type: 'concept action strategy',
+  reducer: nullReducer, // No immediate state change - handled by ActionStrategy
+  methodCreator: () => createMethodWithConcepts(({ action, concepts_, deck }) => {
+    const { param1, param2 } = action.payload;
+    
+    // Get dynamic concept name using DECK K pattern
+    const conceptName = deck.conceptName.k.getName(concepts_) || 'defaultConceptName';
+    
+    // Get state using DECK K pattern with undefined check
+    const state = deck.conceptName.k.getState(concepts_);
+    if (state === undefined) {
+      return muxiumConclude(); // Exit early if state unavailable
+    }
+    
+    // Access state properties safely
+    const someProperty = state.someProperty;
+    const anotherProperty = state.anotherProperty;
+    
+    // Perform logic with state data
+    const targetItem = Object.values(state.items).find(item => 
+      item.name === param1 || item.id === param1
+    );
+    
+    // Early exit if required data not found
+    if (targetItem?.id === undefined) {
+      return muxiumConclude();
+    }
+    
+    // Create strategy with dynamic concept name and state data
+    const strategy = createActionStrategy(
+      deck,
+      conceptName,
+      param1,
+      param2,
+      targetItem.id,
+      someProperty
+    );
+    
+    if (strategy) {
+      return strategyBegin(strategy);
+    }
+    
+    return muxiumConclude();
+  })
+}) as ActionStrategyQuality;
+```
+
+#### 🔑 Key Pattern Elements
+
+1. **`createMethodWithConcepts`**: Provides access to `concepts_` parameter for dynamic resolution
+2. **`deck.conceptName.k.getName(concepts_)`**: Gets dynamic concept name at runtime
+3. **`deck.conceptName.k.getState(concepts_)`**: Gets full concept state safely
+4. **State validation**: Always check for `undefined` state before proceeding
+5. **Early returns**: Use `muxiumConclude()` for invalid states or missing data
+6. **Type safety**: Include proper deck type parameter in quality definition
+
+#### 🚨 Critical Requirements
+
+- **Always check state for `undefined`** before accessing properties
+- **Use `muxiumConclude()` for early exits** instead of throwing errors
+- **Include full deck type parameter** in quality type definition
+- **Provide fallback concept names** with `|| 'defaultName'` pattern
+- **Validate required data existence** before creating strategies
+
+#### 🎯 Usage Context
+
+This pattern is essential for:
+- **ActionStrategy qualities** that access muxified concept state
+- **Cross-concept operations** requiring runtime concept identification
+- **Composable qualities** that work across different concept configurations
+
 ### 🔧 Debugging & Troubleshooting
 
 #### Common State Access Issues
@@ -2026,6 +2282,10 @@ const value = k.property.select();
 
 // In planning scope:
 const value = d.conceptName.k.property.select();
+
+// In createMethodWithConcepts context:
+const state = deck.conceptName.k.getState(concepts_);
+const conceptName = deck.conceptName.k.getName(concepts_);
 ```
 
 #### Type Inference Problems
@@ -2038,6 +2298,13 @@ muxium.plan<MyConceptDeck>('operation', ({ stage, conclude }) => [
   }),
   conclude()
 ]);
+
+// For createMethodWithConcepts, include deck type parameter:
+createQualityCardWithPayload<State, Payload, ConceptDeck>({
+  methodCreator: () => createMethodWithConcepts(({ concepts_, deck }) => {
+    // Full type inference available
+  })
+})
 ```
 
 ### 🎯 Migration Guide from Legacy Patterns
