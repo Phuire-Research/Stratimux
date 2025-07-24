@@ -51,7 +51,8 @@ When in doubt simplify.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
 ### Updated Stratimux Reference Document
-* Added Advanced Two-Stage KeyedSelector Routing Pattern * createMethodWithConcepts Deck K Usage Pattern
+1. Added Advanced Two-Stage KeyedSelector Routing Pattern
+2. `createMethodWithConcepts` Deck K Usage Pattern
 ## Renewed Action Origin v0.3.8 (Breaking)
 
 Action origins have been renewed from array-based to structured object composition, providing more granular override control and automatic origin assignment for principles:
