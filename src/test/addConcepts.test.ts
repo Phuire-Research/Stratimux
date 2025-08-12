@@ -17,7 +17,7 @@ import { getMuxiumState } from '../model/muxium/muxiumHelpers';
 test('Muxium add Concepts Strategy Test', (done) => {
   const muxium = muxification('muxiumAddConceptTest', {}, {logging: true, storeDialog: true, dynamic: true});
   const plan = muxium.plan('Add Concepts Stage', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({concepts, dispatch, d, e}) => {
       console.log('Add Counter Concept');
       expect(Object.keys(d).length).toBe(1);

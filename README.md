@@ -50,6 +50,31 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+### **BREAKING** v0.3.281 - Dynamic Concept Management Foundation
+This update refines stage lifecycle management with a curried architecture, preparing Stratimux for runtime concept modifications while improving performance.
+
+#### Breaking Changes
+* **`stageO()` API Change**: Moved from optional concepts parameter to explicit ownership control
+  ```typescript
+  // Before v0.3.281
+  stageWaitForOwnershipThenIterate(() => AnyAction)
+  stageO(() => AnyAction)  // Dispatch and Iterate the Provided Action
+  
+  // After v0.3.281
+  stageO()           // Default: wait for ownership initialization no need for additional handling for Concpets if Ownership is Loaded.
+  stageO(true)       // Explicitly skip ownership check
+  ```
+
+#### Enhanced Stage Lifecycle
+* **Automatic Registration**: Stage planners self-register via StratiDECK integration
+* **Dual Conclusion Patterns**: 
+  - `conclude()` - Declarative cleanup with automatic unregister
+  - `stagePlanner.conclude()` - Imperative control for complex flows
+* **Proper Cleanup**: Both conclusion methods dispatch `muxiumUnregisterStagePlanner` for consistent lifecycle management
+
+#### Foundation for Dynamic Concepts
+This architectural refinement prepares the framework for re-enabling runtime concept addition/removal compatible with the StratiDECK system.
+
 ### Updated Stratimux Reference Document
 1. Added Advanced Two-Stage KeyedSelector Routing Pattern
 2. `createMethodWithConcepts` Deck K Usage Pattern

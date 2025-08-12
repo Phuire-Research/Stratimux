@@ -89,8 +89,8 @@ test('Muxium Muxified Selector Test', (done) => {
 test('Muxium Deck Selector Test', (done) => {
   const ax = muxification('Test Base Selectors', {});
   ax.plan('Test Base Selectors', ({stageO, stage, e__}) => [
-    stageO(() => e__.muxiumKick()),
-    stage(({k, e, stagePlanner}) => {
+    stageO(),
+    stage(({stagePlanner}) => {
       stagePlanner.conclude();
       ax.close();
       done();

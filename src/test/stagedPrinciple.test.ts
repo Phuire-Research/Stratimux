@@ -7,8 +7,9 @@ import { selectState } from '../model/selector/selector';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { PrincipleFunction } from '../model/principle';
 import { Action } from '../model/action/action.type';
-import { createQualityCard } from '../model/quality';
+import { createQualityCard, Quality } from '../model/quality';
 import { MuxiumDeck } from '../concepts/muxium/muxium.concept';
+import { Concept } from '../model/concept/concept.type';
 
 type ExperimentState = {
   mock: boolean;
@@ -25,30 +26,45 @@ const experimentMockToTrue = createQualityCard({type: 'Experiment set mock to Tr
 
 test('Muxium Principle Stage', (done) => {
   const qualities = {experimentMockToTrue};
-  const experimentPrinciple: PrincipleFunction<typeof qualities, MuxiumDeck, ExperimentState> = ({plan}) => {
-    const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude, e__}) => [
-      stageO(() => e__.experimentMockToTrue()),
-      stage(({concepts, dispatch, d}) => {
-        const experimentState = selectState<ExperimentState>(concepts, experimentName);
-        if (experimentState?.mock) {
-          expect(experimentState.mock).toBe(true);
-          setTimeout(() => done(), 1000);
-          dispatch(d.muxium.e.muxiumPreClose({exit: false}), {
+  const experimentPrinciple: PrincipleFunction<
+    typeof qualities,
+    MuxiumDeck & {
+      experiment: Concept<
+        ExperimentState,
+        typeof qualities
+      > },
+      ExperimentState
+    > = ({plan}) => {
+      const planExperiment = plan('Experiment Principle', ({stage, stageO, conclude, e__}) => [
+        stageO(),
+        stage(({dispatch, d}) => {
+          dispatch(d.experiment.e.experimentMockToTrue(), {
             iterateStage: true
           });
-          planExperiment.conclude();
-        }
-      }),
-      conclude()
-    ]);
-  };
+        }),
+        stage(({concepts, dispatch, d}) => {
+          const experimentState = selectState<ExperimentState>(concepts, experimentName);
+          console.log('HIT', experimentState, concepts[Object.keys(concepts)[1] as any]);
+          if (experimentState?.mock) {
+            console.log('Mock HIT');
+            expect(experimentState.mock).toBe(true);
+            setTimeout(() => done(), 1000);
+            dispatch(d.muxium.e.muxiumPreClose({exit: false}), {
+              iterateStage: true
+            });
+            planExperiment.conclude();
+          }
+        }),
+        conclude()
+      ]);
+    };
   muxification('muxiumStrategyTest', {
     experiment: createExperimentConcept<ExperimentState, typeof qualities, MuxiumDeck>(
       createExperimentState(),
       qualities,
       [
-        experimentPrinciple
+        experimentPrinciple as any
       ])
-  }, {logging: true, storeDialog: true});
+  }, {logging: true, storeDialog: true, logActionStream: true});
 });
 /*#>*/

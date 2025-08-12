@@ -19,8 +19,8 @@ test('Muxium Counting Strategy Test', (done) => {
   const repeat = 10;
   let steps = 0;
   const plan = muxium.plan<CounterDeck>('Counting Strategy Stage',
-    ({e__, stage, stageO}) => [
-      stageO(() => e__.muxiumKick()),
+    ({stage, stageO}) => [
+      stageO(),
       stage(({dispatch, d}) => {
         const [shouldBe, strategy] = generateRandomCountingStrategy(d, count);
         strategyTopic = strategy.topic;

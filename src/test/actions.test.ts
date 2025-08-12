@@ -61,7 +61,7 @@ test('Quality Actions', (done) => {
     someConcept: c
   });
   const p = muxium.plan('outer plan', ({e__, stage, stageO}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({e, stagePlanner}) => {
       const log = e.muxiumLog();
       console.log('CHECK LOG', log);

@@ -52,6 +52,11 @@ export type MuxiumRegisterStagePlannerPayload = {
   conceptName: string;
 }
 
+export type MuxiumUnregisterStagePlannerPayload = {
+  conceptName: string;
+  title: string;
+}
+
 export type MuxiumInitializePrinciplesPayload = {
   concepts: Concepts;
 }
@@ -109,6 +114,7 @@ export type MuxiumQualities = {
   muxiumLog: Quality<Record<string, unknown>, void>,
   muxiumRegisterSubscriber: Quality<MuxiumState<unknown, any>, MuxiumRegisterSubscriberPayload>,
   muxiumRegisterStagePlanner: Quality<MuxiumState<unknown, any>, MuxiumRegisterStagePlannerPayload>,
+  muxiumUnregisterStagePlanner: Quality<MuxiumState<unknown, any>, MuxiumUnregisterStagePlannerPayload>,
   muxiumInitializePrinciples: Quality<MuxiumState<unknown, any>, MuxiumInitializePrinciplesPayload>,
   muxiumSetBlockingMode: Quality<MuxiumState<unknown, any>, MuxiumSetBlockingModePayload>,
   muxiumSetDefaultMode: Quality<MuxiumState<unknown, any>, MuxiumSetDefaultModePayload>,

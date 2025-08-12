@@ -9,7 +9,14 @@ import { Concepts } from '../concept/concept.type';
 import { KeyedSelector } from '../selector/selector.type';
 import { HInterface, OInterface, UInterface } from '../interface';
 import { Action, ActionType } from '../action/action.type';
-import { baseStageConclude, baseStageWaitForOpenThenIterate, createBaseStage, createBaseStages, createStage, createStages, stageConclude, stageWaitForOpenThenIterate } from './stagePlannerHelpers';
+import {
+  baseStageConclude,
+  createBaseStage,
+  createBaseStages,
+  createStage,
+  createStages,
+  stageConclude
+} from './stagePlannerHelpers';
 
 export type MuxifiedSubjectProperties = {
   planId: number;
@@ -64,16 +71,23 @@ export type BaseStageParams<Q = void, C = void, S = void> = {
 
 export type Planning<Q = void, C = void, S = void> = (title: string, planner: Planner<Q, C, S>) => StagePlanner;
 
+// Post-curry types for stageO after concepts are bound
+export type StageOCurried<Q = void, C = void, S = void> =
+  (skipOwnershipInit?: true) => Staging<Q, C, S>;
+
+export type BaseStageOCurried<Q = void, C = void, S = void> =
+  (skipOwnershipInit?: true) => BaseStaging<Q, C, S>;
+
 export type Planner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
   stage: typeof createStage<Q, C, S>
-  stageO: typeof stageWaitForOpenThenIterate,
+  stageO: StageOCurried<Q, C, S>,
   conclude: typeof stageConclude,
   staging: typeof createStages<Q, C, S>
 }) => PartialStaging<Q, C, S>[];
 
 export type BasePlanner<Q = void, C = void, S = void> = (uI: HInterface<Q, C, S> & {
   stage: typeof createBaseStage<Q, C, S>
-  stageO: typeof baseStageWaitForOpenThenIterate,
+  stageO: BaseStageOCurried<Q, C, S>,
   conclude: typeof baseStageConclude,
   staging: typeof createBaseStages<Q, C, S>
 }) => BasePartialStaging<Q, C, S>[];

@@ -36,7 +36,7 @@ test('Action Throttle Method Test with Concepts id comparison', (done) => {
   }
 
   const plan = muxium.plan<DECK>('Throttle Iterate id with Concepts', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({concepts, dispatch, d}) => {
       const experimentState = selectState<ExperimentState>(concepts, experimentName);
       if (experimentState) {

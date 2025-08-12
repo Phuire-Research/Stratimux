@@ -25,6 +25,7 @@ import { muxiumClearBadActionTypeFromBadActionList } from './qualities/clearBadA
 import { muxiumClearBadStrategyTopicFromBadActionList } from './qualities/clearBadStrategyTopicFromBadActionList.quality';
 import { muxiumClearBadPlanFromBadPlanList } from './qualities/clearBadPlanFromBadPlanList.quality';
 import { muxiumRegisterStagePlanner } from './qualities/registerStagePlanner.quality';
+import { muxiumUnregisterStagePlanner } from './qualities/unregisterStagePlanner.quality';
 import { muxiumKick } from './qualities/kick.quality';
 import { muxiumPreClose } from './qualities/preClose.quality';
 import { muxiumStitch } from './qualities/stitch.quality';
@@ -67,6 +68,7 @@ export const muxiumQualities = {
   muxiumLog,
   muxiumRegisterSubscriber,
   muxiumRegisterStagePlanner,
+  muxiumUnregisterStagePlanner,
   muxiumInitializePrinciples,
   muxiumSetBlockingMode,
   muxiumSetDefaultMode,
@@ -94,6 +96,7 @@ export const muxiumStaticQualities = {
   muxiumLog,
   muxiumRegisterSubscriber,
   muxiumRegisterStagePlanner,
+  muxiumUnregisterStagePlanner,
   muxiumInitializePrinciples,
   muxiumSetBlockingMode,
   muxiumSetDefaultMode,

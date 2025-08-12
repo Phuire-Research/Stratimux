@@ -47,7 +47,7 @@ test('Test Dispatch Override', (done) => {
         } = getMuxiumState(concepts_);
         const stageName = 'Test Override';
         const planTestOverride = plan(stageName, ({stage, stageO, d__}) => [
-          stageO(() => d__.muxium.e.muxiumKick()),
+          stageO(),
           stage(({dispatch, e, origin}) => {
             new Array(10).fill('').forEach((_, i) => {
               const alteredOrigin = origin.split('+');
@@ -150,9 +150,7 @@ test('Test Dispatch Override', (done) => {
     } = getMuxiumState(concepts_);
     const stageName = 'Test Hard Override';
     plan(stageName, ({stage, stageO, d__}) => [
-      stageO(() => {
-        return d__.muxium.e.muxiumKick();
-      }),
+      stageO(),
       stage(({dispatch, d, origin}) => {
         console.log('CHECK D', Object.keys(d));
         new Array(10).fill('').forEach((_, i) => {
@@ -210,7 +208,7 @@ test('Test Dispatch Override', (done) => {
   ])}, {
     // storeDialog: true,
     // logging: true,
-    logActionStream: true
+    // logActionStream: true
   });
   const sub = muxium.subscribe(concepts => {
     const count = selectState<CounterState>(concepts, experimentName)?.count;

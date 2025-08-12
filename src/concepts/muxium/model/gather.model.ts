@@ -54,7 +54,7 @@ export const muxium_createGatherNode = (deck: Deck<MuxiumDeck>, props: MuxiumGat
     return first;
   } else {
     const log = deck.muxium.e.muxiumLog() as AnyAction;
-    log.payload = {message: 'NO ACTIONS WERE GATHERED VIA AXIUM_CREATE_GATHER_NODE'};
+    log.payload = {message: 'NO ACTIONS WERE GATHERED VIA MUXIUM_CREATE_GATHER_NODE'};
     return createActionNode(log, {
       successNode: null,
       failureNode: null

@@ -28,7 +28,7 @@ test('Asynchronous recursion', (done) => {
 
   const muxium = muxification('Experiment async method creator with Concepts', {experiment}, {storeDialog: true});
   const plan = muxium.plan<DECK>('Experiment debounce add one', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentRecursivelyIterateId(d, [...list])), {
         iterateStage: true

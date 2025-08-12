@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /*<$
 For the asynchronous graph programming framework Stratimux, define the Stage Planner Helpers model file.
 This file defines a series of helper functions used internally in a Muxified Subject to ensure smooth
@@ -6,54 +7,106 @@ $>*/
 /*<#*/
 /* eslint-disable complexity */
 import { KeyedSelector } from '../selector/selector.type';
-import { selectSlice } from '../selector/selector';
+import { selectStratiDECK } from '../selector/selector';
 import { muxiumSelectOpen } from '../../concepts/muxium/muxium.selector';
-import { ownershipSelectInitialized } from '../../concepts/ownership/ownership.selector';
-import { getMuxiumState, isMuxiumOpen } from '../muxium/muxiumHelpers';
-import { ownershipSetOwnerShipModeTopic } from '../../concepts/ownership/strategies/setOwnerShipMode.strategy';
-import { Action, AnyAction } from '../action/action.type';
+import { getMuxiumState } from '../muxium/muxiumHelpers';
+import { Action } from '../action/action.type';
 import { BaseStage, BaseStaging, dispatchOptions, Plan, Stage, StageDelimiter, Staging } from './stagePlanner.type';
+import { OwnershipConcept, ownershipName } from '../../concepts/ownership/ownership.concept';
+import { Concepts } from '../concept/concept.type';
 
 export const createPriorityKey = (planId: number, stage: number) => `${planId}${stage}`;
 /**
  * Used in principle plans that are loaded during muxium initialization
  */
-export const stageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-  if (isMuxiumOpen(concepts)) {
-    dispatch(func(), {
-      iterateStage: true
-    });
-  }
-}, { selectors: [muxiumSelectOpen] }));
-
-export const baseStageWaitForOpenThenIterate = <Q, C, S>(func: () => AnyAction): BaseStaging<Q, C, S> => (
-  createBaseStage(({concepts, dispatch}) => {
-    if (isMuxiumOpen(concepts)) {
-      dispatch(func(), {
-        iterateStage: true
-      });
+export const stageWaitForOpenThenIterate = (concepts_: Concepts) => <Q, C, S>(skipOwnershipInit?: true): Staging<Q, C, S> => {
+  const _muxiumState = getMuxiumState(concepts_);
+  const ownershipDeck = selectStratiDECK<OwnershipConcept>(
+    _muxiumState.deck.d,
+    ownershipName
+  );
+  return (createStage(({concepts, dispatch, k, stagePlanner}) => {
+    const conceptName = k.getName(concepts);
+    const muxiumState = getMuxiumState(concepts);
+    const isOpen = muxiumState.open;
+    const muxiumDeck = _muxiumState ? _muxiumState.deck : getMuxiumState(concepts).deck;
+    // Check ownership from current concepts if not explicitly handled
+    // If handleOwnership passed, skip ownership check
+    // If not passed, check if ownership exists and is initialized
+    if (skipOwnershipInit || ownershipDeck === undefined) {
+      if (isOpen) {
+        dispatch(
+          muxiumDeck.e.muxiumRegisterStagePlanner({
+            conceptName: conceptName as string,
+            stagePlanner,
+          }), {
+            iterateStage: true
+          });
+      }
+    } else if (isOpen && ownershipDeck.k.initialized.select()) {
+      dispatch(
+        muxiumDeck.e.muxiumRegisterStagePlanner({
+          conceptName: conceptName as string,
+          stagePlanner,
+        }), {
+          iterateStage: true
+        });
     }
-  }, { selectors: [muxiumSelectOpen] }));
+  }, {
+    selectors: skipOwnershipInit === undefined  && ownershipDeck ?
+      [
+        muxiumSelectOpen,
+        ownershipDeck.k.initialized as KeyedSelector
+      ]
+      : [muxiumSelectOpen]
+  }));
+};
+
+export const baseStageWaitForOpenThenIterate = (concepts_: Concepts) => <Q, C, S>(skipOwnershipInit?: true): BaseStaging<Q, C, S> => {
+  const _muxiumState = getMuxiumState(concepts_);
+  const ownershipDeck = selectStratiDECK<OwnershipConcept>(
+    _muxiumState.deck.d,
+    ownershipName
+  );
+  return createBaseStage(({concepts, dispatch, k, stagePlanner}) => {
+    const conceptName = k.getName(concepts);
+    const muxiumState = getMuxiumState(concepts);
+    const isOpen = muxiumState.open;
+    const muxiumDeck = _muxiumState ? _muxiumState.deck : getMuxiumState(concepts).deck;
+    // Check ownership from current concepts if not explicitly handled
+    // If skipOwnershipInit passed, skip ownership check
+    // If not passed, check if ownership exists and is initialized
+    if (skipOwnershipInit || ownershipDeck === undefined) {
+      if (isOpen) {
+        dispatch(
+          muxiumDeck.e.muxiumRegisterStagePlanner({
+            conceptName: conceptName as string,
+            stagePlanner,
+          }), {
+            iterateStage: true
+          });
+      }
+    } else if (isOpen && ownershipDeck.k.initialized.select()) {
+      dispatch(
+        muxiumDeck.e.muxiumRegisterStagePlanner({
+          conceptName: conceptName as string,
+          stagePlanner,
+        }), {
+          iterateStage: true
+        });
+    }
+  }, {
+    selectors: skipOwnershipInit === undefined && ownershipDeck ?
+      [
+        muxiumSelectOpen,
+        ownershipDeck.k.initialized as KeyedSelector
+      ]
+      : [muxiumSelectOpen]
+  });
+};
 
 export const stageConclude = <Q, C, S>(): Staging<Q, C, S> => createStage(({stagePlanner}) => {stagePlanner.conclude();});
 export const baseStageConclude = <Q, C, S>(): BaseStaging<Q, C, S> => createBaseStage(({stagePlanner}) => {stagePlanner.conclude();});
-
-export const stageWaitForOwnershipThenIterate =
-  <Q, C, S>(func: () => Action): Staging<Q, C, S> => (createStage(({concepts, dispatch}) => {
-    if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
-      dispatch(func(), {
-        iterateStage: true
-      });
-    }
-  }, { selectors: [ownershipSelectInitialized] }));
-export const baseStageWaitForOwnershipThenIterate =
-  <Q, C, S>(func: () => Action): BaseStaging<Q, C, S> => (createBaseStage(({concepts, dispatch}) => {
-    if (selectSlice(concepts, ownershipSelectInitialized) && getMuxiumState(concepts).lastStrategy === ownershipSetOwnerShipModeTopic) {
-      dispatch(func(), {
-        iterateStage: true
-      });
-    }
-  }, { selectors: [ownershipSelectInitialized] }));
 /**
  * <Qualities, Concepts> Helper function to aid readability of composing plans, otherwise you may directly create a Staging Entity, selectors non optional
  * @param stage - (concepts, dispatch) => {}

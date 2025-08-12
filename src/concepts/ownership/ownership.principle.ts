@@ -28,12 +28,13 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
   observer,
   plan,
   nextC,
-  conceptSemaphore
+  conceptSemaphore,
+  concepts_
 }) => {
   let initDispatch = false;
   let finalCheck = true;
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => d__.muxium.e.muxiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership})),
+    stageO(true),
     stage(({concepts, d}) => {
       let newConcepts = concepts;
       let ownershipState = selectMuxifiedState<OwnershipState>(newConcepts, conceptSemaphore);
@@ -112,10 +113,11 @@ $>*/
 export const ownershipExpirationPrinciple: OwnershipPrinciple = ({
   plan,
   nextC,
-  conceptSemaphore
+  conceptSemaphore,
+  concepts_
 }) => {
   const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
-    stageO(() => (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: ownershipName, stagePlanner: planOwnership}))),
+    stageO(true),
     stage(({concepts}) => {
       const ownershipState = selectMuxifiedState<OwnershipState>(concepts, conceptSemaphore);
       if (ownershipState?.initialized) {

@@ -44,31 +44,28 @@ test('Ownership Test', (done) => {
   } & OwnershipDeck & CounterDeck;
   const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true});
   const plan = muxium.plan<DECK>(
-    'Testing Ownership Staging', ({stage}) => [
+    'Testing Ownership Staging', ({stage, stageO}) => [
+      stageO(),
       stage(({stagePlanner, concepts, dispatch, d, k}) => {
         console.log('CHECK SEMAPHORE', d.counter.e.counterAdd().semaphore);
         console.log('CHECK SEMAPHORE 2', d.muxium.e.muxiumKick().semaphore);
-        const muxiumState = getMuxiumState(concepts);
-        console.log(muxiumState.lastStrategy);
-        if (muxiumState.lastStrategy === ownershipSetOwnerShipModeTopic) {
-          const ownership = selectState<OwnershipState>(concepts, ownershipName);
-          if (ownership) {
-            console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
-            console.log('CHECK CONCEPTS', Object.keys(concepts).map(key => concepts[Number(key)].name));
-            const counter = selectState<CounterState>(concepts, counterName);
-            console.log('Count: ', counter?.count);
-            // This will place a counting strategy in the experiment actionQue to be later dispatched.
-            //    Via its principle, to simulate an action moving off premise.
-            const str = experimentPuntCountingStrategy(d as unknown as ExperimentCountingDeck);
-            if (str) {
-              dispatch(strategyBegin(str), {
-                iterateStage: true
-              });
-            } else {
-              stagePlanner.conclude();
-              expect(false).toBe(true);
-              setTimeout(() => {done();}, 500);
-            }
+        const ownership = selectState<OwnershipState>(concepts, ownershipName);
+        if (ownership) {
+          console.log('Stage 1', ownership.ownershipLedger, ownership.pendingActions);
+          console.log('CHECK CONCEPTS', Object.keys(concepts).map(key => concepts[Number(key)].name));
+          const counter = selectState<CounterState>(concepts, counterName);
+          console.log('Count: ', counter?.count);
+          // This will place a counting strategy in the experiment actionQue to be later dispatched.
+          //    Via its principle, to simulate an action moving off premise.
+          const str = experimentPuntCountingStrategy(d as unknown as ExperimentCountingDeck);
+          if (str) {
+            dispatch(strategyBegin(str), {
+              iterateStage: true
+            });
+          } else {
+            stagePlanner.conclude();
+            expect(false).toBe(true);
+            setTimeout(() => {done();}, 500);
           }
         }
       }),
@@ -144,6 +141,7 @@ test('Ownership Test', (done) => {
       }
       const counter = selectState<CounterState>(concepts, counterName);
       // This will run last, despite setCount being the second staged dispatch.
+      console.log('Monitor Count', counter?.count);
       if (counter && counter.count >= 1000) {
         console.log('Subscription, Final Count: ', counter.count, orderOfTopics);
         expect(counter.count).toBe(1000);
