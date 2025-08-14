@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /*<$
 For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate a principle will manage the ownership's pendingActions based upon the current
@@ -15,6 +16,7 @@ import { MuxiumBadActionPayload } from '../muxium/qualities';
 import { Action, AnyAction } from '../../model/action/action.type';
 import { areSemaphoresEqual } from '../../model/action/actionSemaphore';
 import { strategyBegin } from '../../model/action/strategy/actionStrategyConsumers';
+import { ownershipSemaphoreBucket } from './ownership.singleton';
 
 function denoteExpiredPending(action: Action): Action {
   if (action.strategy) {
@@ -31,18 +33,20 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
   conceptSemaphore,
   concepts_
 }) => {
+  ownershipSemaphoreBucket.pop();
+  ownershipSemaphoreBucket.push(conceptSemaphore);
   let initDispatch = false;
   let finalCheck = true;
-  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO}) => [
+  const planOwnership: StagePlanner = plan('ownership Principle Plan', ({d__, stage, stageO }) => [
     stageO(true),
-    stage(({concepts, d}) => {
+    stage(({concepts, d, dispatch}) => {
       let newConcepts = concepts;
       let ownershipState = selectMuxifiedState<OwnershipState>(newConcepts, conceptSemaphore);
       if (ownershipState?.initialized) {
         // This will be the point of dispatch of Qued Actions
         let newAction;
         if (ownershipState.pendingActions.length > 0) {
-          // One Action at a Time
+            // One Action at a Time
           for (const action of ownershipState.pendingActions) {
             let readyToGo = false;
             [newConcepts, readyToGo] = isActionReady(newConcepts, action);
@@ -63,7 +67,8 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
             }
             ownershipState.pendingActions = [...newPendingActions];
             nextC(newConcepts);
-            observer.next(newAction);
+            // Use stage dispatch with iterateStage to continue processing
+            dispatch(newAction, { throttle: 0 });
           } else if (!newAction && ownershipState.pendingActions.length !== 0) {
             const payload: MuxiumBadActionPayload = {
               badActions: []
@@ -79,14 +84,12 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
             if (payload.badActions.length > 0) {
               newAction = d.muxium.e.muxiumBadAction(payload) as AnyAction;
               ownershipState.pendingActions = newPending;
-              console.error('CHECK OWNERSHIP 1', Object.keys(concepts));
               nextC(newConcepts);
-              observer.next(newAction);
+              dispatch(newAction, { throttle: 0 });
             } else if (finalCheck) {
               finalCheck = false;
               setTimeout(() => {
                 finalCheck = true;
-                console.error('CHECK OWNERSHIP 2', Object.keys(concepts));
                 nextC(newConcepts);
               }, 200);
             }
@@ -94,10 +97,11 @@ export const ownershipPrinciple: OwnershipPrinciple = ({
         }
       } else if (!initDispatch && !ownershipState?.initialized && ownershipState?.isResponsibleForMode) {
         initDispatch = true;
-        observer.next(
+        dispatch(
           strategyBegin(
             ownershipSetOwnershipModeStrategy(d, newConcepts, 'Ownership')
-          )
+          ),
+          { throttle: 0 }
         );
       }
     })

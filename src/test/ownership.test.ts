@@ -42,7 +42,7 @@ test('Ownership Test', (done) => {
   type DECK = {
     experiment: Concept<typeof experimentState, typeof qualities>
   } & OwnershipDeck & CounterDeck;
-  const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true});
+  const muxium = muxification('ownershipTest', deck, {logging: true, storeDialog: true, logActionStream: false});
   const plan = muxium.plan<DECK>(
     'Testing Ownership Staging', ({stage, stageO}) => [
       stageO(),

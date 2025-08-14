@@ -1,0 +1,1 @@
+export const ownershipSemaphoreBucket: number[] = [-1];

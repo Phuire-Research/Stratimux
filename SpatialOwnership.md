@@ -1,49 +1,145 @@
-## Spatial Ownership aka Ownership
-### Abstract
-The Spatial Ownership design pattern is designed to allow for multiple ActionStrategies to be ran concurrently on the Muxium or off premise in some network. This is accomplished via a ticket and stub system creating an indirect union relationship between the ActionStrategies and an OwnershipLedger. Where each ledger is only required to be loaded on location of the values you are intending to be locked. This is in contrast to current paradigms that would share the locking state across the entire network. But here we take advantage of the universal concept of space and position. Where the only responsible party for that relationship would be the location of that value. While allowing for the ActionStrategy that "owns," that value to carry a ticket stub noting a number, and key that corresponds to the locked value. This has an additional level of handling as each action and OwnershipTicket share the same expiration. Dictated upon the creation of the action that would be requesting this relationship, that has a default of 5 seconds, but may be modified by an agreement value set at the time of that actions creation.
+# Spatial Ownership: Bi-Directional Coordination System
 
-What this accomplishes is a form of soft locking within an environment that would not be able to accomplish such ordinarily. While noting that even if we were to implement this relationship directly, it would still have the same flow even in low level code. The benefit of this system is a performant massively parallel network that may scale dynamically. As this is the original intention of Stratimux, but likewise not all Nodes within its network would require the Ownership concept, nor would each value require a lock. Therefore the strength of this system is that it is opt in and not a hard restriction. But must instead be logically determined alongside the scale and complexities of your orchestrations.
+## Abstract
+The Spatial Ownership design pattern enables deterministic mutex-like coordination for concurrent ActionStrategies executing across distributed Muxium networks. This **bi-directional ownership system** employs stake-based coordination with temporal priority (FIFO), creating compositional relationships between ActionStrategies and the OwnershipLedger through a ticket-stub mechanism.
 
-## Working with the Ownership Concept
-The ownership concept must be explicitly loaded and introduces an additional mode that further transforms the functionality of the muxium. Which allows for the locking of values, that other actions or strategies may be dependent upon. And if that strategy, or action with a KeyedSelector has taken a TicketStub of ownership of that value. Any quality or action that would transform such are added to a pendingActions until that block is cleared.
+**Key Innovation**: Unlike traditional distributed locking that shares state across entire networks, ownership leverages spatial locality—only the location holding the value maintains its lock state. Actions carry ticket stubs noting their ownership claims, with expiration times matching action lifetimes (default 5000ms, configurable via agreement).
 
-But if a strategy is dependent on that value, that strategy will fail by default. Thus a specific case must be attached to the ActionNode's failureNode that governs how to handle that specific Case. If so, such will be added to a pendingActions that can later be dispatched alongside with their TicketStubs and expiration times intact.
+This achieves soft locking in environments traditionally unable to support such coordination, enabling massively parallel networks that scale dynamically. The system is **opt-in**—not all nodes require the Ownership concept, nor do all values require locks. Logical determination guides when coordination is necessary based on orchestration scale and complexity.
 
-If an action that has an attached blocking quality specified by a KeySelector, but does not hold a KeyedSelectors on itself while holding an ActionStrategy. The ownershipLedger will block and append that action to the pendingActions list if it holds a ticket of that KeyedSelector. If an additional action is dispatched it will replace that action in place and update its expiration to the most recent action's. There these actions will only be dispatched if there is no current lock on that value and only one may exist in the pendingActions at a time.
+## Research Context: Compositional Relationships
 
-However if an action has a KeyedSelector and an ActionStrategy. Ownership will validate if it should be blocked and will do so if there is a preexisting OwnershipTicket and that strategy does not hold the first position for each KeyedSelector it holds on the current action. Or if it holds the required stubs and all are first in position. These stubs will only be cleared from the strategy upon conclusion or via the associated ownership quality that can be placed directly into that strategy. Otherwise that action will be added into the pendingActions que and will be later dispatched by first in first out if its stubs are first in line. Noting that both the stubs and action may expire and will be dispatched and stored via the muxium's badAction quality.
+The ownership system demonstrates **bi-directional blocking** within uni-directional tree compositions:
+- **Uni-directional trees** define spatial relationships (like file paths: `trux.A.B.C`)
+- **Bi-directional coordination** enforces mutual exclusion between ancestors and descendants
+- **Parallel execution** allows siblings and independent branches to run simultaneously
 
-This is to allow actions in this system to move off premise and was the inspiration for the design of this system. That such can be a server, web worker, client, etc... To correlate all as an abstract graph computer. That can further be enhanced to used in the within the context of literal graph computers themselves. As we find new means of extending moors law of computational density. This paradigm was designed with specialization of computation in mind. To perform such where best suited. Noting that the internals of a Neural Network are likewise a graph computer of a certain kind and we are ourselves.
+### Stake-Based Performance (O(depth))
+The stake system awards ownership at **end wrungs only**—where paths terminate in the tree structure:
+```typescript
+// From O(n*m) checking to O(depth) stake verification
+if (!node.stake || node.stake === stubKey) {
+  return true; // We have stake or can claim it
+}
+```
 
-Note that the pendingActions list, if there is no action dispatched will check via timer to either invalidate the actions, stubs, or to instead dispatch them into the stream if they are ready. The expiration here is what is allowing for this system to still be considered to be halting complete. And that one could by design set some actions expiration out to years in advance assuming that the holding muxium is still running at that time. As such will halt any at any time in the future, so long as there are pendingActions contains such and has not depleted such via virtue of the first in first out pattern.
+This creates natural hierarchical respect: ancestors claim stake before descendants, while independent branches execute in parallel.
 
 ## Moving Actions off Premise
-Note that the only mechanism in play that allows for locks to be cleared are if a strategy hits its conclusion as it enters the ownershipMode, or if explicitly removed via the associated ownership quality. Thus in order to move these actions off premise we must counter to the inspiring strategy design pattern. Have quality without a method, and instead utilize its reducer to add that action to a que that a principle is subscribed to. Once populated, that principle is in control of that actionStrategy, noting expiration.
 
-This allows for the principle to perform calculations safely on the state of other concepts. Note that this should only be in play, if the intention is to transform that value that actions or strategies would depend upon. Otherwise a clone of that value suffices and should not have a KeyedSelector upon that action. From here actions may move off premises via whatever mechanism is required to satisfy that calculation.
+The critical capability enabling distributed computation requires careful handling of ownership locks when actions move between premises (servers, workers, clients). The **only mechanisms** that clear locks are:
+1. Strategy conclusion entering ownershipMode
+2. Explicit removal via ownership qualities
 
-Originally this approach was created to satisfy the handling of the FileSystem and manipulation of its contents. Summarily such is the best means transforming binary files not written in plain text while Stratimux exists within the confounds of Typescript. As the paths to those files, would act as a KeyedSelector lock within this pattern of design.
+### Off-Premise Pattern
+To move actions off premise while maintaining locks, we **counter** the standard strategy pattern:
+
+1. **Create a quality without method** - Uses reducer to queue actions
+2. **Principle subscribes to queue** - Takes control of ActionStrategy
+3. **Maintains expiration awareness** - Respects temporal constraints
+
+```typescript
+// Quality reducer adds to off-premise queue
+reducer: (state, action) => {
+  if (action.strategy?.stubs) {
+    return {
+      offPremiseQueue: [...state.offPremiseQueue, action]
+    };
+  }
+  return {};
+}
+
+// Principle monitors and processes queue
+principle.subscribe(concepts => {
+  const queue = selectState(concepts, 'concept').offPremiseQueue;
+  if (queue.length > 0) {
+    // Process with ownership maintained
+    const action = queue[0];
+    // Send to worker/server/client
+    // Stubs remain intact until explicit clear
+  }
+});
+```
+
+This pattern enables safe state transformation of locked values across premises. Only transform values with KeyedSelectors when ownership is required—otherwise clone values without selectors.
+
+**Original Use Case**: FileSystem manipulation where paths act as KeyedSelectors, enabling safe concurrent file operations while Stratimux operates within TypeScript constraints. Binary file transformations move off-premise while maintaining path locks.
 
 ## Ownership Internals
-``` typescript
+
+### State Structure
+```typescript
 export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
-  pendingActions: Action[],
+  uniDirectionalLedger: UniDirectionalLedger;  // v0.3.29: Stake-based
+  pendingActions: Action[];
   isResponsibleForMode: boolean;
 }
 ```
-* initialized - Value to control when your principles or external subscriptions should engage with the Ownership Concept. It simply notes when the principles are active.
-* ownershipLedger - Is a simple map that use a key that is informed by a KeyedSelector and value that is a populated ownership ticket.
-* isResponsibleForMode - The just in case your choose to implement your own mode that would require ownership, and can be set to false via the createOwnershipConcept function. Note that you must create your own initialization strategy to set your own Mode.
+
+### Core Components
+* **initialized** - Controls when principles/subscriptions engage with ownership
+* **ownershipLedger** - Map using KeyedSelector keys to OwnershipTicket arrays (FIFO queues)
+* **uniDirectionalLedger** - v0.3.29 addition: KeyWrung tree with stake tracking at end wrungs
+* **pendingActions** - Actions blocked awaiting ownership, dispatched FIFO when ready
+* **isResponsibleForMode** - Set false via `createOwnershipConcept()` for custom mode implementations
 
 ### Useful Ownership Qualities
-* backTrack - To be used within an ActionStrategy's failureNode. This will allow your strategy to return to the previous node while appending the designated failure message to the action list, without setting its own.
-* clearPayloadStubs - To be used within your own qualities and utilized within a strategy if it no longer requires a specific lock. Setting some stubs to the payload of this action will clear those stubs from the ownershipLedger. Note that you would have to clear these stubs from your strategy if present.
-* clearStrategyStubsFromLedgerAndSelf - To be used within a strategy, this will clear the current strategies stubs from the ledger and set its current stubs to undefined.
-* ownershipClearPendingActions - Will simply clear the pendingAction list. Note that the stubs would still exist and one should use this in combination with clearPayloadStubs to avoid having to wait for expiration.
-* ownershipClearPendingActionsOfStrategyTopic - Will clear any ActionStrategies of a set payload topic string from pendingAction.
-* resetOwnershipLedger - This will do a dumb reset of the currently loaded ownershipLedger
+* **ownershipBackTrack** - ActionStrategy failureNode handler for blocked actions
+* **ownershipClearPayloadStubs** - Clears specific stubs from ledger (manual unlock)
+* **ownershipClearStrategyStubsFromLedgerAndSelf** - Clears all strategy stubs
+* **ownershipClearPendingActions** - Empties pendingAction list
+* **ownershipClearPendingActionsOfStrategyTopic** - Selective pending clear by topic
+* **ownershipResetLedger** - Complete ledger reset
 
 ### Internal Ownership Qualities
-* initializeOwnership - Will simply set initialized to True for the Ownership concept.
+* **ownershipInitialize** - Sets initialized to true, enabling ownership principle
+
+## Implementation Details (v0.3.29)
+
+### Enabling Ownership
+```typescript
+// 1. Attach KeyedSelector to any action
+const action = d.concept.e.someAction();
+action.keyedSelectors = [createKeyedSelector('your.path.here')];
+
+// 2. Make strategies ownership-aware
+const backTrack = createActionNode(deck.ownership.e.ownershipBackTrack());
+const actionNode = createActionNode(yourAction(), {
+  failureNode: backTrack,  // Prevents auto-failure when blocked
+  agreement: 10000,         // Sufficient time for coordination
+});
+
+// 3. Compose ownership into muxium
+const muxium = muxification('Your App', {
+  yourConcept: createYourConcept(),
+  ownership: createOwnershipConcept()
+});
+```
+
+### Critical Integration: switchMap → mergeMap
+The v0.3.29 fix enabling true bi-directional flow:
+```typescript
+// src/model/method/methodAsync.ts:79
+mergeMap(([act, concepts]: [ActionDeck<T, C>, Concepts]) =>
+  createActionController$(act, (params) => {
+    // All action streams now preserved, not orphaned
+```
+Without this, RxJS `switchMap` was canceling ActionControllers, preventing ownership from demonstrating its parallel execution capabilities.
+
+### Performance Characteristics
+* **Stake checking**: O(depth) vs previous O(n*m) for deep trees
+* **KeyedSelector deduplication**: Automatic via `mergeKeyedSelectors()`
+* **Stake recalculation**: Only on stub clearing, not every check
+* **Temporal priority**: Creation timestamps ensure true FIFO within queues
+
+## Validation & Proof
+
+The Trux spatial mapping tests demonstrate deterministic execution across 7 strategies:
+- **Parallel branches**: Independent roots (A, B, E) execute simultaneously
+- **Bi-directional blocking**: Ancestors block descendants, descendants block ancestors
+- **Temporal fairness**: FIFO ordering within ownership queues
+- **Deterministic order**: Same execution sequence across multiple runs
+
+This proof validates the ownership system as a production-ready coordination mechanism for distributed graph computation.

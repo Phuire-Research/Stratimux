@@ -7,7 +7,7 @@ import { muxiumConclude } from '../../../concepts/muxium/qualities/conclude.qual
 import { Action, AnyAction, nullActionType } from '../action.type';
 import { ActionNode, ActionStrategy } from './actionStrategy.type';
 import { createActionNode, createStrategy } from './actionStrategy';
-import { createSentence } from './actionStrategyHelpers';
+import { createSentence, mergeKeyedSelectors } from './actionStrategyHelpers';
 import { strategyBegin } from './actionStrategyConsumers';
 
 // Remember Water Boy
@@ -22,6 +22,7 @@ export const strategyPunt = (
     puntList.push(puntedStrategy);
   }
   newStrategy.puntedStrategy = puntList;
+  
   return newStrategy;
 };
 
@@ -50,7 +51,16 @@ export const strategyBackTrack = (_strategy: ActionStrategy): Action => {
       ];
       strategy.step = strategy.step ? strategy.step + 1 : 1;
     }
-    return {...newNode.action} as Action;
+    // Preserve KeyedSelectors when backtracking
+    const backTrackAction = {...newNode.action} as Action;
+    
+    // Merge KeyedSelectors from current action (if any) with the backtrack action
+    backTrackAction.keyedSelectors = mergeKeyedSelectors(
+      backTrackAction.keyedSelectors,
+      strategy.currentNode.action?.keyedSelectors
+    );
+    
+    return backTrackAction;
   } else {
     return muxiumConclude({origin: _strategy.currentNode.action?.origin});
   }

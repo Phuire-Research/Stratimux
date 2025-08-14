@@ -116,8 +116,6 @@ export function _dispatch<Q,C,S>(
           } else if (options.specificOverride) {
             HandleOverrideSpecificType(muxiumState, action, plan.title, plan.stage);
           } else if (options.override) {
-            console.log('CHECK ACTION WITH OVERRIDE, action', action);
-            console.log('CHECK STATE', muxiumState.body);
             HandleOrigin(muxiumState, action);
           } else {
             action$.next(action);

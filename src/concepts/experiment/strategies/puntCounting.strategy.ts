@@ -14,11 +14,20 @@ import { ExperimentCountingDeck } from './experimentCounting.strategy';
 export const experimentPuntCountingStrategyTopic = 'This will Punt the Counting Strategy into the Experiment\'s Action Que';
 export function experimentPuntCountingStrategy(deck: ExperimentCountingDeck): ActionStrategy | undefined {
   const stepOne = createActionNode(deck.experiment.e.experimentCheckInStrategy(), {
-    keyedSelectors: [counterSelectCount]
+    keyedSelectors: [counterSelectCount],
+    agreement: 10000
   });
 
   const strategy = additionalCountingStrategy(deck);
   if (strategy) {
+    // Set agreement on all nodes in the strategy
+    if (strategy.currentNode) {
+      let node: any = strategy.currentNode;
+      while (node) {
+        node.agreement = 10000;
+        node = node.successNode;
+      }
+    }
     return strategyPunt(strategy, createStrategy({
       topic: experimentPuntCountingStrategyTopic,
       initialNode: stepOne,

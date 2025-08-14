@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /*<$
 For the asynchronous graph programming framework Stratimux and Ownership Concept,
 generate mode that will govern the ownership system.
@@ -19,16 +20,20 @@ import { failureConditions, strategyData_appendFailure } from '../../model/actio
 import { getMuxiumState } from '../../model/muxium/muxiumHelpers';
 import { strategyFailed } from '../../model/action/strategy/actionStrategyConsumers';
 import { ActionStrategy } from '../../model/action/strategy/actionStrategy.type';
+import { ownershipSemaphoreBucket } from './ownership.singleton';
 
 export const ownershipMode: Mode = (
   [_action, _concepts, action$, concepts$] : [Action, Concepts, Subject<Action>, MuxifiedSubject]
 ) => {
+  // If this is -1 the Ownership is not Loaded as the Order of Loading is Principles Prior to Mode Shift.
+  const ownershipSemaphore = ownershipSemaphoreBucket[0];
   let action = _action;
   let concepts = _concepts;
   const conceptsSize = Object.keys(concepts).length;
   let finalMode: Mode = permissiveMode;
   const muxiumState = getMuxiumState(concepts);
-  const deck = muxiumState.deck;  // Logical Determination: setBlockingModeType
+  const deck = muxiumState.deck;
+  // Logical Determination: setBlockingModeType
   if (action.semaphore[3] === 4) {
     finalMode = blockingMode;
   } else {
@@ -40,7 +45,24 @@ export const ownershipMode: Mode = (
   //  Therefore we pass straight to finalMode which will recall this Mode after priming the action.
   //  This guarantees that action beyond this function will have a semaphore not set to [0, 0, -1, 0]
   if (conceptsSize > 1) {
-    if (action.semaphore[3] !== 3 && action.semaphore[3] !== 1 && action.semaphore[2] !== muxiumState.generation) {
+    // OWNERSHIP BYPASS - Ownership actions should never be blocked by ownership
+    if (ownershipSemaphore !== -1 && action.semaphore[0] === ownershipSemaphore) {
+      finalMode([action, concepts, action$, concepts$]);
+      return;
+    }
+
+    // GENERATION GUARD - Handle unprimed or mismatched generation for security
+    if (
+      action.semaphore[3] !== 3 &&
+      action.semaphore[3] !== 1 &&
+      (action.semaphore[2] === -1 || action.semaphore[2] !== muxiumState.generation)
+    ) {
+      finalMode([action, concepts, action$, concepts$]);
+      return;
+    }
+
+    // OWNERSHIP PROCESSING - Handle actions with matching generation
+    if (action.semaphore[3] !== 3 && action.semaphore[3] !== 1) {
     // Check In Logic
       const shouldBlock = ownershipShouldBlock(concepts, action);
       if (shouldBlock) {
@@ -86,18 +108,14 @@ export const ownershipMode: Mode = (
       // Free to Run
         finalMode([action, concepts, action$, concepts$]);
       }
-    // Logical Determination: muxiumConcludeType
-    } else if (action.semaphore[3] !== 3 && action.semaphore[1] !== 1) {
-      finalMode([action, concepts, action$, concepts$]);
-
-    // Logical Determination: muxiumConcludeType, muxiumBadActionType
+    // Logical Determination: muxiumConcludeType, muxiumBadActionType with stubs
+    // CHECK STUBS FIRST to ensure they get cleared before general conclude/bad handling
     } else if (action.strategy?.stubs && (action.semaphore[3] === 3 || action.semaphore[3] === 1)) {
       concepts = clearStubs(concepts, action.strategy);
       concepts$.next(concepts);
-      if (action.semaphore[3] === 1) {
-        finalMode([action, concepts, action$, concepts$]);
-      }
-    } else if (action.semaphore[3] === 1) {
+      finalMode([action, concepts, action$, concepts$]);
+    // Logical Determination: muxiumConcludeType or Bad Action (no stubs)
+    } else if (action.semaphore[3] === 3 || action.semaphore[3] === 1) {
       finalMode([action, concepts, action$, concepts$]);
     }
   } else {
