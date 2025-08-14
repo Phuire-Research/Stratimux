@@ -50,6 +50,66 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+# **MAJOR** v0.3.29 - Bi-Directional Ownership System & Stage Integration
+This major update completes the ownership system architecture initiated in v0.3.281, introducing **deterministic concurrency control** through stake-based coordination while finalizing the stage lifecycle management for ownership-aware applications.
+
+## Breaking Changes
+* **`stageO()` API Evolution**: Building on v0.3.281's foundation, now fully integrated with ownership
+  ```typescript
+  // v0.3.281 introduced
+  stageO()           // Wait for ownership initialization (default)
+  stageO(true)       // Explicitly skip ownership check
+  
+  // v0.3.29 completes the integration
+  // Stages using ownership MUST use stageO() to ensure proper coordination
+  ```
+
+* **Terminology Alignment**: Framework-wide shift to compositional language
+  - "Hierarchical" → "Uni-directional tree composition"
+  - "Parent-child relationships" → "Uni-directional relationships"
+  - Reflects the true nature of Stratimux's higher-order composition
+
+## Key Features
+
+### Bi-Directional Ownership System
+* **Stake-Based Coordination**: Actions claim "stakes" at terminal positions with temporal priority (FIFO)
+* **Opt-In Via KeyedSelectors**: Any action becomes ownership-aware by attaching selectors
+* **Automatic Cascading**: KeyedSelectors propagate through entire ActionStrategy chains
+* **O(depth) Performance**: ~10x improvement over naive checking algorithms
+* **Deterministic Execution**: Same order across multiple runs, parallel branch support
+
+### Critical Stream Preservation Fix
+* **`switchMap` → `mergeMap`**: All async methods now preserve action streams
+  - Enables true bi-directional action flow
+  - Prevents orphaning of concurrent actions
+  - Essential for ownership system's parallel execution
+
+### Enhanced Stage Lifecycle (from v0.3.281)
+* **Automatic Registration**: Stage planners self-register via StratiDECK
+* **Dual Conclusion Patterns**: `conclude()` and `stagePlanner.conclude()`
+* **Proper Cleanup**: Consistent lifecycle management with `muxiumUnregisterStagePlanner`
+
+## Quick Start
+```typescript
+// 1. Opt actions into ownership
+action.keyedSelectors = [createKeyedSelector('your.path')];
+
+// 2. Make strategies ownership-aware
+const actionNode = createActionNode(yourAction(), {
+  failureNode: createActionNode(deck.ownership.e.ownershipBackTrack()),
+  agreement: 10000,  // Time for coordination
+  keyedSelectors: [selector]
+});
+
+// 3. Compose ownership into your muxium
+const muxium = muxification('App', {
+  yourConcept: createYourConcept(),
+  ownership: createOwnershipConcept()  // Just add this
+});
+```
+
+**[Full Documentation →](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-0.3.29-CHANGELOG.md)**
+
 ### Updated Stratimux Reference Document
 1. Added Advanced Two-Stage KeyedSelector Routing Pattern
 2. `createMethodWithConcepts` Deck K Usage Pattern
@@ -122,7 +182,7 @@ const someQuality = createQuality({
 ```
 
 ### Type System Limitation with Higher-Order Composition
-Specific note about working with the new selectStratiDECK System - this demonstrates the fundamental limitations of hierarchically informed type systems:
+Specific note about working with the new selectStratiDECK System - this demonstrates the fundamental limitations of compositionally informed type systems:
 
 ```typescript
 // Will Build

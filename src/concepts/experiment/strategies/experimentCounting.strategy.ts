@@ -32,7 +32,7 @@ export function experimentCountingStrategy(deck: ExperimentCountingDeck): Action
       denoter: 'One.',
     },
     failureNode: backTrack,
-    agreement: 1000,
+    agreement: 10000,
     keyedSelectors: [counterSelectCount]
   });
   const stepFour = createActionNode(counterAdd(), {
@@ -42,7 +42,7 @@ export function experimentCountingStrategy(deck: ExperimentCountingDeck): Action
       denoter: 'One;',
     },
     failureNode: backTrack,
-    agreement: 1000,
+    agreement: 10000,
     keyedSelectors: [counterSelectCount]
   });
   const stepThree = createActionNode(counterAdd(), {
@@ -52,7 +52,7 @@ export function experimentCountingStrategy(deck: ExperimentCountingDeck): Action
       denoter: 'One;',
     },
     failureNode: backTrack,
-    agreement: 1000,
+    agreement: 10000,
     keyedSelectors: [counterSelectCount]
   });
   const stepTwo = createActionNode(counterSubtract(), {
@@ -62,7 +62,7 @@ export function experimentCountingStrategy(deck: ExperimentCountingDeck): Action
       denoter: 'One;',
     },
     failureNode: backTrack,
-    agreement: 1000,
+    agreement: 10000,
     keyedSelectors: [counterSelectCount]
   });
   const stepOne = createActionNode(counterAdd(), {
@@ -72,7 +72,7 @@ export function experimentCountingStrategy(deck: ExperimentCountingDeck): Action
       denoter: 'One;',
     },
     failureNode: backTrack,
-    agreement: 1000,
+    agreement: 10000,
     keyedSelectors: [counterSelectCount]
   });
 

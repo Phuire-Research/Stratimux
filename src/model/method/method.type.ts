@@ -120,7 +120,6 @@ export type MethodAsyncWithConceptsParams<T = void, C = void> = {
 
 export type MethodCreatorAsyncWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(
   asyncMethodWithConcepts: (params: MethodAsyncWithConceptsParams<T,C>) => void,
-  duration: number
 ) => MethodCreator<S, T, C>;
 
 export type MethodCreatorBaseThrottleWithConcepts= <S extends Record<string, unknown>, T = void, C = void>(

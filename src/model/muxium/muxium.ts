@@ -183,7 +183,7 @@ export function muxification<C extends LoadConcepts>(
       // Would be notifying methods
       if (getMuxiumState(_concepts).logActionStream) {
         console.log(
-          'ACTION STREAM: ', action,
+          '[ACTION STREAM]: ', action,
           ' topic: ', action.strategy?.topic
         );
       }

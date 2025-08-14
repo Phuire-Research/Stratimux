@@ -18,7 +18,7 @@ test('Muxium remove Concepts Strategy Test', (done) => {
     { logging: true, storeDialog: true, dynamic: true }
   );
   const plan = muxium.plan('Remove Concepts Stage', ({stage, stageO, e__, k__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({concepts, dispatch, e, k}) => {
       console.log('REMOVE', e,k);
       dispatch(

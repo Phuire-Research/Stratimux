@@ -8,7 +8,7 @@ import { muxiumConclude, muxiumConcludeType } from '../../../concepts/muxium/qua
 import { createAction } from '../action';
 import { Action } from '../action.type';
 import { ActionNode, ActionNotes, ActionStrategy } from './actionStrategy.type';
-import { createSentence } from './actionStrategyHelpers';
+import { createSentence, mergeKeyedSelectors } from './actionStrategyHelpers';
 
 export const strategyBegin = (strategy: ActionStrategy, data?: Record<string, unknown>): Action => {
   const currentNode = strategy.currentNode;
@@ -72,11 +72,17 @@ const strategyConsumer = (
     } else if (strategy.priority) {
       priority = strategy.priority;
     }
+    // Merge KeyedSelectors: carry forward from current action and add any from next node
+    const keyedSelectors = mergeKeyedSelectors(
+      strategy.currentNode.action?.keyedSelectors,
+      nextNode.keyedSelectors
+    );
+    
     nextAction = createAction(
       nextNode.actionType,
       {
         payload: nextNode.payload,
-        keyedSelectors: nextNode.keyedSelectors,
+        keyedSelectors,
         agreement: nextNode.agreement,
         semaphore: nextNode.semaphore,
         conceptSemaphore: nextNode.conceptSemaphore,
@@ -101,6 +107,7 @@ const strategyConsumer = (
       strategy.puntedStrategy !== undefined &&
             strategy.puntedStrategy?.length !== 0
     ) {
+      // Punted strategy transition
       const nextStrategy =
                 strategy.puntedStrategy.shift() as ActionStrategy;
       nextStrategy.puntedStrategy = strategy.puntedStrategy;

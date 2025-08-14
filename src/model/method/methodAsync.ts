@@ -4,7 +4,7 @@ This file holds the base asynchronous helper functions that enable users to quic
 within their own defined qualities.
 $>*/
 /*<#*/
-import { map, Subject, switchMap, withLatestFrom } from 'rxjs';
+import { map, Subject, mergeMap, withLatestFrom } from 'rxjs';
 import { ActionDeck, Concepts, MethodCreator } from '../concept/concept.type';
 import {
   Method,
@@ -27,7 +27,7 @@ export const createAsyncMethod: MethodCreatorAsync =
   ) : [Method<T>, Subject<ActionDeck<T, C>>] => {
     const defaultSubject = new Subject<ActionDeck<T, C>>();
     const defaultMethod: Method<T> = defaultSubject.pipe(
-      switchMap((act: ActionDeck<T, C>) => createActionController$(act, (
+      mergeMap((act: ActionDeck<T, C>) => createActionController$(act, (
         params
       ) => {
         defaultMethod.toString = () => ('Async Method: ' + act.action.type);
@@ -52,7 +52,7 @@ export const createAsyncMethodWithState: MethodCreatorAsyncWithState =
         ([act, concepts] : [ActionDeck<T,C>, Concepts]): [ActionDeck<T,C>, S] =>
           ([act, selectMuxifiedState<S>(concepts, semaphore) as S])
       ),
-      switchMap(
+      mergeMap(
         ([act, state] : [ActionDeck<T, C>, S]) => {
           return createActionController$(act, (params) => {
             defaultMethod.toString = () => ('Async Method with State: ' + params.action.type);
@@ -76,7 +76,7 @@ export const createAsyncMethodWithConcepts: MethodCreatorAsyncWithConcepts =
     const defaultSubject = new Subject<ActionDeck<T, C>>();
     const defaultMethod: Method<T> = defaultSubject.pipe(
       withLatestFrom(concepts$),
-      switchMap(([act, concepts]: [ActionDeck<T, C>, Concepts]) =>
+      mergeMap(([act, concepts]: [ActionDeck<T, C>, Concepts]) =>
         createActionController$(act, (params) => {
           defaultMethod.toString = () => ('Async Method with Concepts: ' + act.action.type);
           asyncMethodWithConcepts({...params, concepts_: concepts, semaphore});

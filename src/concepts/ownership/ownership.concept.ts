@@ -11,7 +11,13 @@ import { Action } from '../../model/action/action.type';
 import { ownershipMode } from './ownership.mode';
 import { OwnershipInitializeOwnership, ownershipInitializeOwnership } from './qualities/initializeOwnership.quality';
 import { ownershipExpirationPrinciple, ownershipPrinciple } from './ownership.principle';
-import { OwnershipLedger, createOwnershipLedger } from '../../model/ownership';
+import { 
+  OwnershipLedger, 
+  createOwnershipLedger,
+  UniDirectionalLedger,
+  createUniDirectionalLedger,
+  HigherOrderLedger
+} from '../../model/ownership';
 import { OwnershipBackTrack, ownershipBackTrack } from './qualities/backTrack.quality';
 import { OwnershipClearPayloadStubs, ownershipClearPayloadStubs } from './qualities/clearPayloadStubs.quality';
 import { OwnershipClearStrategyStubsFromLedgerAndSelf, ownershipClearStrategyStubsFromLedgerAndSelf } from './qualities/clearStrategyStubsFromLedgerAndSelf.quality';
@@ -24,6 +30,13 @@ import { PrincipleFunction } from '../../model/principle';
 export type OwnershipState = {
   initialized: boolean;
   ownershipLedger: OwnershipLedger;
+  uniDirectionalLedger: UniDirectionalLedger;
+  higherOrderLedger: HigherOrderLedger;
+  // Stop Gap Measure: higherOrdered toggle pending Future Development
+  // When false (default): Uses uniDirectionalLedger for uni-directional blocking
+  // When true (future): Would use higherOrderLedger for bi-directional relationships
+  // Currently no qualities support toggling this property
+  higherOrdered: boolean;
   pendingActions: Action[],
   isResponsibleForMode: boolean;
 }
@@ -38,6 +51,9 @@ const createOwnershipState = (isResponsibleForMode?: boolean): OwnershipState =>
   return {
     initialized: false,
     ownershipLedger: createOwnershipLedger(),
+    uniDirectionalLedger: createUniDirectionalLedger(),
+    higherOrderLedger: {}, // Placeholder for future higher-order implementation
+    higherOrdered: false,  // Default to uni-directional paradigm
     pendingActions: [],
     isResponsibleForMode: isResponsibleForMode ? isResponsibleForMode : true
   };

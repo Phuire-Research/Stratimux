@@ -5,6 +5,7 @@ Noting that this is an additional degree of abstraction with associated computat
 $>*/
 /*<#*/
 import { ActionNode, ActionNotes, ActionStrategy, ActionStrategyParameters } from './actionStrategy.type';
+import { KeyedSelector } from '../../selector/selector.type';
 
 export function isNotPunctuated(str: string): boolean {
   const punctuatedList = ['.', ',', '?', '!', ';'];
@@ -31,5 +32,53 @@ export function createSentence(actionNode: ActionNode, actionNotes?: ActionNotes
   }
   return preposition + body + denoter;
 }
+
+/**
+ * Merges KeyedSelectors from current and next arrays, removing duplicates based on keys.
+ * Preserves the first occurrence of each unique key.
+ * @param currentSelectors - Existing KeyedSelectors (may be undefined)
+ * @param nextSelectors - New KeyedSelectors to merge (may be undefined)
+ * @returns Array with unique selectors (first occurrence of each key), or undefined if both inputs are undefined
+ */
+export const mergeKeyedSelectors = <T>(
+  currentSelectors?: KeyedSelector<T>[],
+  nextSelectors?: KeyedSelector<T>[]
+): KeyedSelector<T>[] | undefined => {
+  // If neither has selectors, return undefined
+  if (!currentSelectors && !nextSelectors) {
+    return undefined;
+  }
+  
+  // If only one has selectors, return that one
+  if (!currentSelectors) {
+    return nextSelectors;
+  }
+  if (!nextSelectors) {
+    return currentSelectors;
+  }
+  
+  // Combine both arrays
+  const combined = [...currentSelectors, ...nextSelectors];
+  
+  // Track which keys we've seen
+  const seenKeys: Record<string, number> = {};
+  const uniqueSelectors: KeyedSelector<T>[] = [];
+  
+  // Iterate through combined array
+  for (const selector of combined) {
+    const key = selector.keys;
+    
+    // If we haven't seen this key yet, add it
+    if (!seenKeys[key]) {
+      seenKeys[key] = 1;
+      uniqueSelectors.push(selector);
+    } else {
+      // We've seen it, just increment the count
+      seenKeys[key]++;
+    }
+  }
+  
+  return uniqueSelectors;
+};
 
 /*#>*/

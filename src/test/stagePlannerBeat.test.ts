@@ -21,7 +21,7 @@ test('Stage Planner Beat Test', (done) => {
   }, {logging: true, storeDialog: true});
   const beat = 105;
   const plan = muxium.plan<CounterDeck>('Stage Planner Beat Test', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({concepts, dispatch, e}) => {
       console.log('HIT 1');
       timerActive = true;

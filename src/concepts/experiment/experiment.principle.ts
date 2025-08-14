@@ -19,9 +19,7 @@ export const experimentActionQuePrincipleCreator = <Q, S>() => {
   }) => {
     let readyToGo = false;
     const planExperiment: StagePlanner = plan('Experiment Principle Plan', ({d__, stage, stageO}) => [
-      stageO(() =>
-        (d__.muxium.e.muxiumRegisterStagePlanner({conceptName: experimentName, stagePlanner: planExperiment}))
-      ),
+      stageO(),
       stage(({concepts}) => {
         const experimentState = selectMuxifiedState<ExperimentState>(concepts, conceptSemaphore);
         if (experimentState && experimentState.actionQue.length > 0) {

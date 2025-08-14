@@ -64,7 +64,7 @@ test('Muxium advanced usage: StrategyStitch', (done) => {
         const muxium = muxification('Test advanced usage', {counter: createCounterConcept()});
         const strategy = yourComposingStrategy(yourStrategyStitch);
         const plan = muxium.plan('Test Stitch', ({e__, stage, stageO}) => [
-          stageO(() => e__.muxiumKick()),
+          stageO(),
           stage(({dispatch}) => {
             dispatch(strategyBegin(strategy), {
               iterateStage: true

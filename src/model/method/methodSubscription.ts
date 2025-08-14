@@ -12,7 +12,7 @@ import {
 import { muxiumTimeOut } from '../time';
 import { handlePriority, isPriorityValid } from '../priority';
 import { Action, AnyAction } from '../action/action.type';
-import { accessMuxium, getMuxiumState } from '../muxium/muxiumHelpers';
+import { accessMuxium, getMuxiumState, tailWhip } from '../muxium/muxiumHelpers';
 import { MuxiumOrigins } from '../muxium/muxium.type';
 
 export const blockingMethodSubscription = (
@@ -61,6 +61,7 @@ export const defaultMethodSubscription = (
   action: Action,
   async: boolean
 ) => {
+  const muxiumState = getMuxiumState(concepts);
   if (
     action.strategy &&
     // Logical Determination: muxiumConcludeType
@@ -74,7 +75,7 @@ export const defaultMethodSubscription = (
     });
     // setTimeout(() => {
     if (isPriorityValid(action)) {
-      const state = getMuxiumState(concepts);
+      const state = muxiumState;
       handlePriority(state, action);
       appendToDialog.priority = action.priority;
       handlePriority(state, appendToDialog);
@@ -86,6 +87,8 @@ export const defaultMethodSubscription = (
       muxiumTimeOut(concepts, () => {
         return accessMuxium(concepts).e.muxiumKick();
       }, 0);
+    } else {
+      tailWhip(muxiumState);
     }
     // }, 0);
   } else if (
@@ -94,7 +97,7 @@ export const defaultMethodSubscription = (
     action.semaphore[3] !== 1
   ) {
     if (isPriorityValid(action)) {
-      handlePriority(getMuxiumState(concepts), action);
+      handlePriority(muxiumState, action);
     } else {
       tail.push(action);
     }
@@ -102,6 +105,8 @@ export const defaultMethodSubscription = (
       muxiumTimeOut(concepts, () => {
         return accessMuxium(concepts).e.muxiumKick();
       }, 0);
+    } else {
+      tailWhip(muxiumState);
     }
   }
 };

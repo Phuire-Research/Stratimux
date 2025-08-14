@@ -9,9 +9,11 @@ import { muxification } from '../../model/muxium/muxium';
 import { selectState } from '../../model/selector/selector';
 
 test('Muxium Register Time Out', (done) => {
-  const muxium = muxification('timeout defer actions', {counter: createCounterConcept()});
+  const muxium = muxification('timeout defer actions', {counter: createCounterConcept()}, {
+    // logActionStream: true
+  });
   muxium.plan<CounterDeck>('timeout add 4 after 10ms', ({stage, stageO, e__, conclude}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
         act: d.counter.e.counterAdd(),

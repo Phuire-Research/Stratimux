@@ -46,7 +46,7 @@ test('Async Method Test', (done) => {
   const muxium = muxification('Experiment async method creator', {experiment});
   const plan = muxium.plan<DECK>('timed mock to true', ({e__, stage, stageO}) => [
     // Noting that the muxiumKickQuality here is temporary until the type and action creators are removed entirely
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentTimedMockToTrue(d)), {
         iterateStage: true
@@ -76,7 +76,7 @@ test('Async Method Plain Iterate Id Test', (done) => {
 
   const muxium = muxification('Experiment async method creator', {experiment});
   const plan = muxium.plan<DECK>('timed mock to true', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(d.experiment.e.experimentAsyncIterateIdThenReceiveInMethod(), {
         iterateStage: true
@@ -112,7 +112,7 @@ test('Async Method with State Test', (done) => {
 
   const muxium = muxification('Experiment async method creator with State', {experiment});
   const plan = muxium.plan<DECK>('timed mock to true', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(timedMockToTrueWithState(d)), {
         iterateStage: true
@@ -148,7 +148,7 @@ test('Method Test with State id comparison', (done) => {
   }
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = muxium.plan<DECK>('Iterate id', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(iterateIdThenAddToData(d)), {
         iterateStage: true
@@ -187,7 +187,7 @@ test('Async Method Test with State id comparison', (done) => {
 
   const muxium = muxification('Experiment observe how concepts updates via reducer and method', {experiment});
   const plan = muxium.plan<DECK>('Iterate id', ({stage, stageO, e__}) => [
-    stageO(() => e__.muxiumKick()),
+    stageO(),
     stage(({dispatch, d}) => {
       dispatch(strategyBegin(experimentAsyncIterateIdThenAddToData(d)), {
         iterateStage: true

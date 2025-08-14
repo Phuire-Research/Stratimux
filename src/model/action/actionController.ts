@@ -29,6 +29,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
   constructor(act: ActionDeck<any, any>) {
     super();
     const {action, deck} = act;
+    
     this.expiration = action.expiration;
     this.expired = false;
     this.action = action;
@@ -67,6 +68,7 @@ export class ActionController extends Subject<[Action<any>, boolean]> {
    * Fires once and then completes.
    */
   fire(action: Action<any>) {
+    
     if (!this.closed) {
       if (!this.expired && this.timer) {
         clearTimeout(this.timer);

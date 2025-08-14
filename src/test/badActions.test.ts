@@ -11,13 +11,13 @@ test('Test bad actions functionality', (done) => {
     logging: true
   });
   muxium.plan('Check Concepts', ({stage, stageO, d__}) => [
-    stageO(() => d__.muxium.e.muxiumKick()),
+    stageO(),
     stage(({dispatch}) => {
       dispatch(createAction('Will be a bad action'), {
         iterateStage: true
       });
     }),
-    stage(({concepts, k, stagePlanner}) => {
+    stage(({k, stagePlanner}) => {
       expect(k.badActions.select().length).toBe(1);
       stagePlanner.conclude();
       setTimeout(() => {

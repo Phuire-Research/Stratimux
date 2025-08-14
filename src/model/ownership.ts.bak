@@ -17,12 +17,12 @@ export type OwnershipLedger = Map<string, OwnershipTicket[]>;
 export type OwnershipTicket = {
   ticket: string;
   expiration: number;
-  created: number; // Timestamp when ticket was created for fair FIFO ordering
+  created: number;  // Timestamp when ticket was created for fair FIFO ordering
 }
 
 export type OwnershipTicketStub = {
-  key: string;
-  ticket: string;
+  key: string,
+  ticket: string,
 }
 
 // Future Note: Higher-Order Ledger for Bi-Directional and Multi-Dimensional Systems
@@ -30,29 +30,29 @@ export type OwnershipTicketStub = {
 // preventing information loss. This contrasts with uni-directional systems where orphaned
 // nodes lose their contextual relationships. This ledger will enable:
 // - Bi-directional traversal (child → parent, parent → child)
-// - Bi-directional relationships beyond uni-directional trees
+// - bi-drectional relationships beyond uni-drectional trees
 // - Automatic orphan recategorization to prevent context loss
 // Stop Gap Measure pending Future Development of Higher-Order Strong Fast Systems
 export type HigherOrderLedger = Record<string, unknown>; // Placeholder for future implementation
 
 // UniDirectional Ledger for current filesystem/object paradigm
-// Tracks uni-directional ownership where parent paths block descendant paths
+// Tracks uni-drectional ownership where parent paths block descendant paths
 // Reflects the reality that both filesystems and JavaScript objects follow
 // uni-directional relationships where nodes can become orphaned
 export type Wrung = Record<string, unknown>; // Set as KeyWrung
 export type KeyWrung = Record<string, {
-  wrung: Wrung;
-  registeredKeys: string[];
-  stake?: string; // Path that holds stake at this END WRUNG only
+  wrung: Wrung, 
+  registeredKeys: string[],
+  stake?: string  // Path that holds stake at this END WRUNG only
 }>; // Bi-directional associative structure with stake tracking
 
 export type UniDirectionalLedger = {
-  pathSegments: Map<string, Set<string>>; // Maps each segment to full paths containing it
-  keyWrungs: Map<string, KeyWrung>; // Maps full paths to their wrungs
-  depthIndex: Map<number, Set<string>>; // Maps depth levels to paths at that depth
+  pathSegments: Map<string, Set<string>>;  // Maps each segment to full paths containing it
+  keyWrungs: Map<string, KeyWrung>;        // Maps full paths to their wrungs
+  depthIndex: Map<number, Set<string>>;    // Maps depth levels to paths at that depth
 };
 
-export const createOwnershipLedger = (): OwnershipLedger => new Map<string, OwnershipTicket[]>();
+export const createOwnershipLedger = (): OwnershipLedger => ( new Map<string, OwnershipTicket[]>());
 
 export const createUniDirectionalLedger = (): UniDirectionalLedger => ({
   pathSegments: new Map(),
@@ -160,11 +160,11 @@ export const recalculateStakeAtWrung = (
   // Iterate through all nodes at this wrung level
   for (const [segment, node] of Object.entries(wrung)) {
     const currentPath = wrungPath ? `${wrungPath}.${segment}` : segment;
-
+    
     // Check if this is an end wrung (has registered keys)
     const hasRegisteredKeys = node.registeredKeys.length > 0;
     const hasDeepWrungs = Object.keys(node.wrung).length > 0;
-
+    
     if (hasRegisteredKeys) {
       // Only award stake at END wrungs for paths that terminate here
       // Filter to only keys that END at this level
@@ -172,35 +172,39 @@ export const recalculateStakeAtWrung = (
         // A key ends here if it matches the current path exactly
         return key === currentPath;
       });
-
+      
       if (endingKeys.length > 0) {
         // Find the earliest creation time among keys ending at this wrung
         let earliestPath: string | undefined;
         let earliestCreation = Infinity;
-
+        
         for (const registeredKey of endingKeys) {
           const tickets = ownershipLedger.get(registeredKey);
           if (tickets && tickets.length > 0) {
             const firstTicket = tickets[0];
             const creationTime = firstTicket.created || firstTicket.expiration;
-
+            
             if (creationTime < earliestCreation) {
               earliestCreation = creationTime;
               earliestPath = registeredKey;
             }
           }
         }
-
+        
         // Award stake to the earliest path (or clear if no tickets remain)
         node.stake = earliestPath;
-
-        // Stake has been set to earliestPath or undefined
+        
+        if (earliestPath) {
+          console.log(`   🏆 Stake at END wrung "${currentPath}" awarded to: ${earliestPath}`);
+        } else {
+          console.log(`   🧹 Stake at END wrung "${currentPath}" cleared (no tickets)`);
+        }
       } else {
         // This is not an end wrung for any registered keys, clear stake
         node.stake = undefined;
       }
     }
-
+    
     // Recursively process child wrungs
     if (hasDeepWrungs) {
       recalculateStakeAtWrung(node.wrung as KeyWrung, currentPath, ownershipLedger);
@@ -224,7 +228,7 @@ export const recalculateAllStakes = (
       // Save the updated wrung back
       ledger.pathSegments.set('origin', new Set([JSON.stringify(originWrung)]));
     } catch (error) {
-      // Error recalculating stakes
+      console.log('   ⚠️ Error recalculating stakes:', error);
     }
   }
 };
@@ -248,12 +252,12 @@ export const addToUniDirectionalLedger = (
 
   const origin = JSON.parse(Array.from(originWrung)[0]) as KeyWrung;
   addToKeyWrung(origin, key.split('.'), key);
-
+  
   // After adding, recalculate stakes if we have the ownership ledger
   if (ownershipLedger) {
     recalculateStakeAtWrung(origin, '', ownershipLedger);
   }
-
+  
   ledger.pathSegments.set('origin', new Set([JSON.stringify(origin)]));
 
   // Track depth for optimization
@@ -289,7 +293,7 @@ export const hasOwnedAncestor = (
           // Check if this path has tickets in the ownershipLedger
           const tickets = ownershipLedger.get(currentPath);
           if (tickets && tickets.length > 0) {
-            // Ancestor owns via KeyWrung, blocking
+            console.log(`   🚫 Ancestor "${currentPath}" owns (via KeyWrung), blocking "${key}"`);
             return true;
           }
 
@@ -302,7 +306,7 @@ export const hasOwnedAncestor = (
           }
         }
       } catch (error) {
-        // KeyWrung parse error, falling back to direct check
+        console.log('   ⚠️ KeyWrung parse error, falling back to direct check');
       }
     }
   }
@@ -313,7 +317,7 @@ export const hasOwnedAncestor = (
     currentPath = i === 0 ? segments[0] : `${currentPath}.${segments[i]}`;
     const tickets = ownershipLedger.get(currentPath);
     if (tickets && tickets.length > 0) {
-      // Ancestor owns, blocking
+      console.log(`   🚫 Ancestor "${currentPath}" owns, blocking "${key}"`);
       return true;
     }
   }
@@ -349,7 +353,7 @@ export const hasOwnedDescendants = (
                 // Check if this descendant has tickets
                 const tickets = ownershipLedger.get(registeredPath);
                 if (tickets && tickets.length > 0) {
-                  // Descendant owns via KeyWrung, blocking
+                  console.log(`   🚫 Descendant "${registeredPath}" owns (via KeyWrung), blocking "${key}"`);
                   return true;
                 }
               }
@@ -363,7 +367,7 @@ export const hasOwnedDescendants = (
                 // Check if this path has tickets
                 const tickets = ownershipLedger.get(childPath);
                 if (tickets && tickets.length > 0) {
-                  // Descendant owns via KeyWrung, blocking
+                  console.log(`   🚫 Descendant "${childPath}" owns (via KeyWrung), blocking "${key}"`);
                   return true;
                 }
 
@@ -390,7 +394,7 @@ export const hasOwnedDescendants = (
         }
       }
     } catch (error) {
-      // KeyWrung parse error in hasOwnedDescendants
+      console.log('   ⚠️ KeyWrung parse error in hasOwnedDescendants');
     }
   }
 
@@ -398,7 +402,7 @@ export const hasOwnedDescendants = (
   const keyPrefix = key + '.';
   for (const [path, tickets] of ownershipLedger.entries()) {
     if (path.startsWith(keyPrefix) && tickets.length > 0) {
-      // Descendant owns, blocking parent
+      console.log(`   🚫 Descendant "${path}" owns, blocking "${key}"`);
       return true;
     }
   }
@@ -440,7 +444,7 @@ export const checkStakeOwnership = (
         if (!node.stake || node.stake === stubKey) {
           return true; // We have stake or can claim it
         }
-        // Blocked by stake holder at end wrung
+        console.log(`   🚫 Blocked by stake holder: "${node.stake}" at end wrung`);
         return false;
       }
 
@@ -451,9 +455,9 @@ export const checkStakeOwnership = (
         const isUnderStakeHolder = stubKey.startsWith(node.stake + '.');
         // Check if we're the ancestor of the stake holder (they're under us)
         const stakeHolderIsUnderUs = node.stake.startsWith(stubKey + '.');
-
+        
         if (isUnderStakeHolder || stakeHolderIsUnderUs) {
-          // Blocked by uni-directional stake
+          console.log(`   🚫 Blocked by uni-directional stake: "${node.stake}"`);
           return false;
         }
         // Different branches can proceed in parallel
@@ -467,7 +471,7 @@ export const checkStakeOwnership = (
 
     return true; // We can proceed
   } catch (error) {
-    // KeyWrung parse error in stake check
+    console.log('   ⚠️ KeyWrung parse error in stake check');
     return true; // On error, allow to proceed
   }
 };
@@ -531,12 +535,19 @@ const generateUUID = (): string => {
 
 // eslint-disable-next-line complexity
 export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolean => {
-  // Check if action should be blocked
+  // Debug logging for Trux test
+  console.log(`\n🔍 ownershipShouldBlock checking: ${action.type}`);
+  console.log(`   Strategy: ${action.strategy?.topic || 'none'}`);
+  console.log(`   Has KeyedSelectors: ${!!action.keyedSelectors}`);
+  console.log(`   Selector count: ${action.keyedSelectors?.length || 0}`);
   let qualityKeys;
   try {
     qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   } catch (error) {
-    // Error accessing quality keyedSelectors
+    console.log('----');
+    console.error(error);
+    console.error(JSON.stringify(action.semaphore), action.type, action.origin, Object.keys(concepts));
+    console.log('----');
   }
   const actionSelectors = action.keyedSelectors;
   const ownershipState = selectState(concepts, ownershipName) as OwnershipState;
@@ -566,9 +577,10 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
     }
   // ActionStrategy, with Keys
   } else if (actionSelectors && action.strategy && action.strategy.stubs === undefined) {
-    // Check ActionStrategy with keys
+    console.log('   Checking ActionStrategy with keys...');
     for (let i = 0; i < actionSelectors.length; i++) {
       const key = actionSelectors[i].keys;
+      console.log(`     Checking key: "${key}"`);
 
       // Check for direct ownership conflict
       const directConflict = ownershipLedger.has(key) && (ownershipLedger.get(key)?.length ?? 0) > 0;
@@ -584,7 +596,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
       if (directConflict || hasAncestor || hasDescendant) {
         shouldBlock = true;
         if (directConflict) {
-          // Direct conflict detected
+          console.log(`       ❌ Direct conflict on "${key}"`);
         }
         break;
       }
@@ -610,7 +622,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
 
       // Step 1: Must be first in our own direct queue
       if (!line || line.length === 0 || line[0].ticket !== stubTicket) {
-        // Not first in direct queue
+        console.log(`   ⏱️ Not first in direct queue for "${stubKey}"`);
         canProceed = false;
         shouldBlock = true;
         break;
@@ -637,7 +649,11 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
       shouldBlock = true;
     }
   }
-  // Return blocking decision
+  // Debug logging for Trux test
+  console.log(`   ➤ shouldBlock result: ${shouldBlock}`);
+  if (shouldBlock) {
+    console.log('     Reason: Conflict detected or ancestor owned');
+  }
   return shouldBlock;
 };
 
@@ -646,11 +662,11 @@ export const clearStubs = (concepts: Concepts, strategy: ActionStrategy): Concep
   const stubs = strategy.stubs;
   const ownershipState = selectState(newConcepts, ownershipName) as OwnershipState;
   const ownershipLedger = ownershipState.ownershipLedger;
-
+  
   if (stubs) {
     // Track which paths need stake recalculation
     const pathsToRemove: string[] = [];
-
+    
     // First pass: Remove tickets from ownership ledger
     stubs.forEach(ticketStub => {
       const line = ownershipLedger.get(ticketStub.key);
@@ -669,19 +685,19 @@ export const clearStubs = (concepts: Concepts, strategy: ActionStrategy): Concep
         }
       }
     });
-
+    
     // Second pass: Remove from KeyWrung for paths with no tickets
     if (!ownershipState.higherOrdered) {
       pathsToRemove.forEach(path => {
         removeFromUniDirectionalLedger(ownershipState.uniDirectionalLedger, path, ownershipLedger);
       });
-
+      
       // Third pass: Recalculate stakes for the entire tree
       // This ensures proper stake ownership based on remaining tickets
       recalculateAllStakes(ownershipState.uniDirectionalLedger, ownershipLedger);
     }
   }
-
+  
   return newConcepts;
 };
 
@@ -711,7 +727,15 @@ export const editStubs = (_concepts: Concepts, oldAction: Action, newAction: Act
   return [concepts, newAction];
 };
 
-export const checkIn = (concepts: Concepts, action: Action): [Concepts, Action] => {
+export const checkIn =
+(concepts: Concepts, action: Action): [Concepts, Action] => {
+  // Temporary debug logging for Trux test
+  if (action.type.includes('trux')) {
+    console.log(`\n📋 CHECK IN called for: ${action.type}`);
+    console.log(`   Strategy: ${action.strategy?.topic || 'none'}`);
+    console.log(`   KeyedSelectors: ${action.keyedSelectors?.length || 0}`);
+  }
+
   const newConcepts = concepts;
   const ownershipState = selectState(newConcepts, ownershipName) as OwnershipState;
   const ownershipLedger = ownershipState.ownershipLedger;
@@ -747,13 +771,21 @@ export const checkIn = (concepts: Concepts, action: Action): [Concepts, Action] 
         const newTicket = {
           ticket,
           expiration,
-          created: Date.now() // Capture exact creation time for priority
+          created: Date.now()  // Capture exact creation time for priority
         };
         strategy.stubs?.push(newTicketStub);
         if (entry) {
           entry.push(newTicket);
+          if (action.type.includes('trux')) {
+            console.log(`   🎫 Added ticket to existing queue for: ${key}`);
+            console.log(`      Queue length now: ${entry.length}`);
+          }
         } else {
           ownershipLedger.set(key, [newTicket]);
+          if (action.type.includes('trux')) {
+            console.log(`   🎫 Created NEW ticket queue for: ${key}`);
+            console.log(`      Ticket: ${ticket.substring(0, 8)}...`);
+          }
           // Add to uni-directional ledger when first ticket is created
           // Pass ownershipLedger to calculate initial stake
           if (!ownershipState.higherOrdered) {
@@ -762,8 +794,14 @@ export const checkIn = (concepts: Concepts, action: Action): [Concepts, Action] 
         }
       }
     });
+    if (action.type.includes('trux')) {
+      console.log(`   📊 Final ownership ledger size: ${ownershipLedger.size}`);
+    }
   }
-  return [newConcepts, action];
+  return  [
+    newConcepts,
+    action
+  ];
 };
 
 export const isActionReady = (concepts: Concepts, _action: Action): [Concepts, boolean] => {
@@ -834,7 +872,7 @@ const areSameDepth = (first: ActionNode, second: ActionNode, count: [number, num
   return false;
 };
 
-export const areEqual = (first: Action, second: Action) => {
+export const areEqual = (first: Action, second: Action ) => {
   let equal = false;
   const firstStrategy = first.strategy;
   const secondStrategy = second.strategy;
@@ -891,7 +929,7 @@ export const updateAddToPendingActions = (_concepts: Concepts, _action: Action) 
   return concepts;
 };
 
-export const ownership = {
+export const ownership = ({
   createOwnershipLedger,
   ownershipShouldBlock,
   clearStubs,
@@ -899,6 +937,6 @@ export const ownership = {
   checkIn,
   isActionReady,
   areEqual,
-  updateAddToPendingActions
-};
+  updateAddToPendingActions,
+});
 /*#>*/

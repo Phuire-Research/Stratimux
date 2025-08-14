@@ -184,7 +184,6 @@ export type {
 } from './model/stagePlanner/stagePlanner.type';
 export {
   stageWaitForOpenThenIterate,
-  stageWaitForOwnershipThenIterate,
   createStage,
   createBaseStage,
   createBaseStages

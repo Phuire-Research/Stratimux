@@ -289,7 +289,7 @@ export const hasOwnedAncestor = (
           // Check if this path has tickets in the ownershipLedger
           const tickets = ownershipLedger.get(currentPath);
           if (tickets && tickets.length > 0) {
-            // Ancestor owns via KeyWrung, blocking
+            console.log(`   🚫 Ancestor "${currentPath}" owns (via KeyWrung), blocking "${key}"`);
             return true;
           }
 
@@ -302,7 +302,7 @@ export const hasOwnedAncestor = (
           }
         }
       } catch (error) {
-        // KeyWrung parse error, falling back to direct check
+        console.log('   ⚠️ KeyWrung parse error, falling back to direct check');
       }
     }
   }
@@ -313,7 +313,7 @@ export const hasOwnedAncestor = (
     currentPath = i === 0 ? segments[0] : `${currentPath}.${segments[i]}`;
     const tickets = ownershipLedger.get(currentPath);
     if (tickets && tickets.length > 0) {
-      // Ancestor owns, blocking
+      console.log(`   🚫 Ancestor "${currentPath}" owns, blocking "${key}"`);
       return true;
     }
   }
@@ -349,7 +349,7 @@ export const hasOwnedDescendants = (
                 // Check if this descendant has tickets
                 const tickets = ownershipLedger.get(registeredPath);
                 if (tickets && tickets.length > 0) {
-                  // Descendant owns via KeyWrung, blocking
+                  console.log(`   🚫 Descendant "${registeredPath}" owns (via KeyWrung), blocking "${key}"`);
                   return true;
                 }
               }
@@ -363,7 +363,7 @@ export const hasOwnedDescendants = (
                 // Check if this path has tickets
                 const tickets = ownershipLedger.get(childPath);
                 if (tickets && tickets.length > 0) {
-                  // Descendant owns via KeyWrung, blocking
+                  console.log(`   🚫 Descendant "${childPath}" owns (via KeyWrung), blocking "${key}"`);
                   return true;
                 }
 
@@ -467,7 +467,7 @@ export const checkStakeOwnership = (
 
     return true; // We can proceed
   } catch (error) {
-    // KeyWrung parse error in stake check
+    console.log('   ⚠️ KeyWrung parse error in stake check');
     return true; // On error, allow to proceed
   }
 };
@@ -536,7 +536,10 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
   try {
     qualityKeys = concepts[action.semaphore[0]].qualities[action.semaphore[1]].keyedSelectors;
   } catch (error) {
-    // Error accessing quality keyedSelectors
+    console.log('----');
+    console.error(error);
+    console.error(JSON.stringify(action.semaphore), action.type, action.origin, Object.keys(concepts));
+    console.log('----');
   }
   const actionSelectors = action.keyedSelectors;
   const ownershipState = selectState(concepts, ownershipName) as OwnershipState;
@@ -566,9 +569,10 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
     }
   // ActionStrategy, with Keys
   } else if (actionSelectors && action.strategy && action.strategy.stubs === undefined) {
-    // Check ActionStrategy with keys
+    console.log('   Checking ActionStrategy with keys...');
     for (let i = 0; i < actionSelectors.length; i++) {
       const key = actionSelectors[i].keys;
+      console.log(`     Checking key: "${key}"`);
 
       // Check for direct ownership conflict
       const directConflict = ownershipLedger.has(key) && (ownershipLedger.get(key)?.length ?? 0) > 0;
@@ -584,7 +588,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
       if (directConflict || hasAncestor || hasDescendant) {
         shouldBlock = true;
         if (directConflict) {
-          // Direct conflict detected
+          console.log(`       ❌ Direct conflict on "${key}"`);
         }
         break;
       }
@@ -610,7 +614,7 @@ export const ownershipShouldBlock = (concepts: Concepts, action: Action): boolea
 
       // Step 1: Must be first in our own direct queue
       if (!line || line.length === 0 || line[0].ticket !== stubTicket) {
-        // Not first in direct queue
+        console.log(`   ⏱️ Not first in direct queue for "${stubKey}"`);
         canProceed = false;
         shouldBlock = true;
         break;
@@ -712,6 +716,13 @@ export const editStubs = (_concepts: Concepts, oldAction: Action, newAction: Act
 };
 
 export const checkIn = (concepts: Concepts, action: Action): [Concepts, Action] => {
+  // Temporary debug logging for Trux test
+  if (action.type.includes('trux')) {
+    console.log(`\n📋 CHECK IN called for: ${action.type}`);
+    console.log(`   Strategy: ${action.strategy?.topic || 'none'}`);
+    console.log(`   KeyedSelectors: ${action.keyedSelectors?.length || 0}`);
+  }
+
   const newConcepts = concepts;
   const ownershipState = selectState(newConcepts, ownershipName) as OwnershipState;
   const ownershipLedger = ownershipState.ownershipLedger;

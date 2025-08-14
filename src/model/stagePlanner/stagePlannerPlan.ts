@@ -16,6 +16,7 @@ import { createStage, createStages, stageConclude, stageWaitForOpenThenIterate }
 import { handleAddSelector, handleRemoveSelector } from './stagePlannerHandlers';
 import { manageQues } from './stagePlannerQues';
 import { execute } from './stagePlannerEntropy';
+import { getMuxiumState } from '../muxium/muxiumHelpers';
 
 export function createPlan<Q,C,S>(
   properties: MuxifiedSubjectProperties,
@@ -33,7 +34,7 @@ export function createPlan<Q,C,S>(
       ...properties.concepts[conceptSemaphore].selectors,
     } as BundledSelectors<any>,
     stage: createStage,
-    stageO: stageWaitForOpenThenIterate,
+    stageO: stageWaitForOpenThenIterate(properties.concepts),
     conclude: stageConclude,
     staging: createStages
   });
@@ -76,7 +77,14 @@ export function initPlan<Q,C,S>(
   handleAddSelector(properties, plan.stages[plan.stage].selectors, plan.id);
   manageQues(properties);
   const conclude = () => {
+    const muxiumState = getMuxiumState(properties.concepts);
     deletePlan(properties, plan.id);
+    muxiumState.action$.next(
+      muxiumState.deck.e.muxiumUnregisterStagePlanner({
+        conceptName: plan.conceptName,
+        title: plan.title
+      })
+    );
   };
   muxiumTimeOut(properties.concepts, () => {
     next(properties.concepts);

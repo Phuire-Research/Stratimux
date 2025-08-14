@@ -33,7 +33,11 @@ test('Priority Action Test', (done) => {
   };
   const priorityTest = muxification('Priority Test', {
     experiment
-  }, {logging: true, storeDialog: true, logActionStream: true});
+  }, {
+    logging: true,
+    storeDialog: true,
+    // logActionStream: true
+  });
 
   const firstStage = (name: string, priority: number) => createBaseStage<unknown, ExperimentDeck, MuxiumState<MuxiumQualities, any>>(({concepts, dispatch, changes, d}) => {
     const priorityState = select.state<ExperimentPriorityState>(concepts, experimentName);
