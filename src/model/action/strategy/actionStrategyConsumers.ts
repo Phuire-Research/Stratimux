@@ -119,8 +119,12 @@ const strategyConsumer = (
 
       nextStrategy.stubs = strategy.stubs;
       nextStrategy.currentNode.lastActionNode = strategy.currentNode;
-
       const act = strategyBegin(nextStrategy);
+      const keyedSelectors = mergeKeyedSelectors(
+        strategy.currentNode.action?.keyedSelectors,
+        act.keyedSelectors
+      );
+      act.keyedSelectors = keyedSelectors;
       act.origin = strategy.currentNode.action?.origin;
       return act;
     }
