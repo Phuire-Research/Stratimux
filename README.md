@@ -50,6 +50,34 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+## v0.3.291 - KeyedSelector Propagation Enhancement
+**Patch Release**: Critical enhancement for ownership system's stake persistence through ActionStrategy chains.
+
+### Key Change
+* **KeyedSelector Cascade**: Actions now inherit and merge KeyedSelectors through all strategy transitions
+  - Preserves ownership stakes across success/failure/decision branches
+  - Maintains selector context through punted strategies and sequences
+  - Ensures deterministic stake ordering throughout strategy execution
+
+### Development Note
+**⚠️ Ownership Individualization Requirement**: The Ownership concept must exist independently as a baseline concept on Muxiums requiring ownership coordination. Do not muxify ownership into other concepts.
+
+```typescript
+// Correct: Ownership as independent baseline concept
+const muxium = muxification('YourApp', {
+  yourConcept: createYourConcept(),
+  ownership: createOwnershipConcept()  // ← Independent baseline
+});
+
+// Access ownership qualities from any concept via selectStratiDECK
+const ownershipDeck = selectStratiDECK<OwnershipDeck>(deck, ownershipName);
+const backtrackAction = ownershipDeck.e.ownershipBackTrack();
+```
+
+The StratiDECK system enables access to baseline concepts and their parts from anywhere in the composition hierarchy.
+
+---
+
 # **MAJOR** v0.3.29 - Bi-Directional Ownership System & Stage Integration
 This major update completes the ownership system architecture initiated in v0.3.281, introducing **deterministic concurrency control** through stake-based coordination while finalizing the stage lifecycle management for ownership-aware applications.
 
