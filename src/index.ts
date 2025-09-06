@@ -170,6 +170,11 @@ export type {
   DotPath
 } from './model/dotPath';
 export { PrincipleFunction, principle } from './model/principle';
+export { 
+  LocalPrincipleInterface,
+  LocalPrincipleFunction,
+  createLocalPrinciple
+} from './model/localPrinciple';
 export { createActionController$, actionController } from './model/action/actionController';
 export type {
   dispatchOptions,

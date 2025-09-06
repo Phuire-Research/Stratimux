@@ -50,6 +50,25 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+## v0.3.292 - LocalPrinciple Pattern Introduction
+**Minor Update**: Enables components to create local principles with bidirectional separation of concerns.
+
+### New Helper Function
+* **LocalPrinciple**: Components can now derive the PrincipleFunction interface from a Muxium instance
+  - Maintains same programming model as global principles
+  - Bidirectional separation prevents GC issues
+  - Enables local stage planners within components
+  ```typescript
+  createLocalPrinciple('ComponentName', muxium, ({plan}) => {
+    plan('Local Plan', ({stage}) => [/* stages */]);
+  });
+  ```
+
+Note the usage of this extends the Utilization of our Principle Functions so that what we assign to our Concepts are our Global Principles. Wherein we may use this helper function to establish the same pattern in our components.
+
+*Noting we can access the stage planner and more directly via the muxium already. This approach is designed to aid the organization of Stratimux in your Projects via it's specific pattern of design.*
+---
+
 ## v0.3.291 - KeyedSelector Propagation Enhancement
 **Patch Release**: Critical enhancement for ownership system's stake persistence through ActionStrategy chains.
 
