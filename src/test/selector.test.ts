@@ -140,7 +140,7 @@ test('Deck K createAdvancedKeys Planned Subscription Test', (done) => {
 
   // Use planned subscription to access deck.k
   muxium.plan<DECK>('Test createAdvancedKeys with deck.k', ({ stage, conclude }) => [
-    stage(({ concepts, d }) => {
+    stage(({ concepts, d, stagePlanner }) => {
       console.log('[TEST] Starting deck.k advanced keys test');
 
       // Access through deck.d.testAdvancedKeys.k (muxified concept pattern)
@@ -192,6 +192,8 @@ test('Deck K createAdvancedKeys Planned Subscription Test', (done) => {
         console.error('[TEST] d.testAdvancedKeys.k not found');
       }
 
+      stagePlanner.conclude();
+      muxium.close();
       done();
     }),
     conclude()
