@@ -14,7 +14,7 @@ import { MuxiumSetDefaultModePayload } from '.';
 import { defaultMethodSubscription } from '../../../model/method/methodSubscription';
 
 export const muxiumSetDefaultMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModePayload>({
-  type: 'set Muxium to its current Default Mode Index',
+  type: 'Muxium Set Default Mode',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;
     methodSubscribers.forEach(named => named.subscription.unsubscribe());

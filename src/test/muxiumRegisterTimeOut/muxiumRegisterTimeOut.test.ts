@@ -15,7 +15,7 @@ test('Muxium Register Time Out', (done) => {
   muxium.plan<CounterDeck>('timeout add 4 after 10ms', ({stage, stageO, e__, conclude}) => [
     stageO(),
     stage(({dispatch, d}) => {
-      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+      dispatch(createAction('Muxium Register Time Out', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -25,7 +25,7 @@ test('Muxium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+      dispatch(createAction('Muxium Register Time Out', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -35,7 +35,7 @@ test('Muxium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+      dispatch(createAction('Muxium Register Time Out', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {
@@ -45,7 +45,7 @@ test('Muxium Register Time Out', (done) => {
     stage(({concepts, dispatch, d}) => {
       const counterState = selectState<CounterState>(concepts, counterName);
       expect(counterState?.count).toBe(0);
-      dispatch(createAction('register an Action to Muxium\'s timerLedger', { payload: {
+      dispatch(createAction('Muxium Register Time Out', { payload: {
         act: d.counter.e.counterAdd(),
         timeOut: 50
       }}), {

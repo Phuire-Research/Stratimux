@@ -19,7 +19,7 @@ import {
 } from './method.type';
 
 const muxiumConclude = () => {
-  return createAction('Conclude');
+  return createAction('Muxium Conclude');
 };
 
 // DETERMINED IMPORT OF ACTION FROM action.ts

@@ -11,7 +11,7 @@ import { ExperimentState } from '../experiment.concept';
 
 export type ExperimentAsyncDebounceNextActionNode = Quality<ExperimentState>;
 export const experimentAsyncDebounceNextActionNode = createQualityCard({
-  type: 'Experiment will debounce incoming actions within set duration asynchronously',
+  type: 'Experiment Async Debounce Next Action Node',
   reducer: defaultReducer,
   methodCreator: () => createAsyncMethodDebounce(({controller, action}) => {
     setTimeout(() => {

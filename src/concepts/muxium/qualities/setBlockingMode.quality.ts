@@ -14,7 +14,7 @@ import { createQualityCardWithPayload, defaultMethodCreator } from '../../../mod
 import { MuxiumSetBlockingModePayload } from '.';
 
 export const muxiumSetBlockingMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetBlockingModePayload>({
-  type: 'set Muxium to Blocking Mode',
+  type: 'Muxium Set Blocking Mode',
   reducer: (state, _action) => {
     let methodSubscribers = state.methodSubscribers;
     methodSubscribers.forEach(named => named.subscription.unsubscribe());

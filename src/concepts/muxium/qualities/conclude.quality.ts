@@ -95,9 +95,9 @@ type ActionWithPayloadOptions<T = void> = {
 const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
 //   Logical determinations such as these will be determined in the future via generation over hand placement.
-export const muxiumConcludeType: ActionType = 'Conclude';
-const muxiumBadActionType: ActionType = 'Muxium received a Bad Action';
-const muxiumSetBlockingModeType: ActionType = 'set Muxium to Blocking Mode';
+export const muxiumConcludeType: ActionType = 'Muxium Conclude';
+const muxiumBadActionType: ActionType = 'Muxium Bad Action';
+const muxiumSetBlockingModeType: ActionType = 'Muxium Set Blocking Mode';
 export function getSpecialSemaphore(type: ActionType) {
   switch (type) {
   case muxiumBadActionType: {

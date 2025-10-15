@@ -12,7 +12,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumUnregisterStagePlanner =
 createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumUnregisterStagePlannerPayload>({
-  type: 'unregister Stage Planner from Muxium\'s Named Stage Planner list',
+  type: 'Muxium Unregister Stage Planner',
   reducer: (state, action) => {
     const { conceptName, title } = action.payload;
     return {

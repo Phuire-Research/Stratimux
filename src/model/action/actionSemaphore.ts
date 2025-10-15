@@ -11,9 +11,9 @@ import { Action, ActionType } from './action.type';
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
 //   Logical determinations such as these will be determined in the future via generation over hand placement.
-const muxiumConcludeType: ActionType = 'Conclude';
-const muxiumBadActionType: ActionType = 'Muxium received a Bad Action';
-const muxiumSetBlockingModeType: ActionType = 'set Muxium to Blocking Mode';
+const muxiumConcludeType: ActionType = 'Muxium Conclude';
+const muxiumBadActionType: ActionType = 'Muxium Bad Action';
+const muxiumSetBlockingModeType: ActionType = 'Muxium Set Blocking Mode';
 
 export function getSemaphore(concepts: Concepts, conceptName: string, actionType: ActionType): [number, number, number, number] {
   const muxiumState = concepts[0].state as MuxiumState<MuxiumQualities, LoadConcepts>;

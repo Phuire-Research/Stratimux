@@ -10,7 +10,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumAppendConceptsToRemoveQue =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumAppendConceptsToRemoveQuePayload>({
-    type: 'append Concepts to Muxium\'s Remove Concept Que',
+    type: 'Muxium Append Concepts To Remove Que',
     reducer: (state, action) => {
       const payload = action.payload;
       let removeQue = state.removeConceptQue;

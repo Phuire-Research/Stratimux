@@ -9,7 +9,7 @@ import { createQualityCard } from '../../../model/quality';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClearDialog = createQualityCard<MuxiumState<unknown, LoadConcepts>>({
-  type: 'clear Muxium Dialog',
+  type: 'Muxium Clear Dialog',
   reducer: () => {
     return {
       dialog: '',

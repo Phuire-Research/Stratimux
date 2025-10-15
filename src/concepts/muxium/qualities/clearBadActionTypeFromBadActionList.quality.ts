@@ -12,7 +12,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClearBadActionTypeFromBadActionList =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClearBadActionTypeFromBadActionListPayload>({
-    type: 'clear ActionType from Muxium\'s badAction list',
+    type: 'Muxium Clear Bad Action Type From Bad Action List',
     reducer: (state, action) => {
       const {actionType} = action.payload;
       return {

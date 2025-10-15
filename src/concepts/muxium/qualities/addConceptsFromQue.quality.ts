@@ -10,7 +10,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumAddConceptsFromQue =
   createQualityCard<MuxiumState<unknown, LoadConcepts>>({
-    type: 'Add Concepts from Muxium Concept Que',
+    type: 'Muxium Add Concepts From Que',
     reducer: () => {
       return {
         addConceptQue: {}

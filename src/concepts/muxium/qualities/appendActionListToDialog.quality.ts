@@ -10,7 +10,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumAppendActionListToDialog =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, AppendActionListToDialogPayload>({
-    type: 'append Action List to Muxium\'s Dialog',
+    type: 'Muxium Append Action List To Dialog',
     reducer: (state, action) => {
       const payload = action.payload;
       let newDialog = '';

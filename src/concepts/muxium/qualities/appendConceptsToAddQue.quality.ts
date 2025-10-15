@@ -10,7 +10,7 @@ import { MuxiumAppendConceptsToAddQuePayload } from '.';
 
 export const muxiumAppendConceptsToAddQue =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumAppendConceptsToAddQuePayload>({
-    type: 'append Concepts to Muxium\'s Add Concept Que',
+    type: 'Muxium Append Concepts To Add Que',
     reducer: (state, action) => {
       const payload = action.payload;
       const addConceptQue = {

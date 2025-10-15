@@ -11,7 +11,7 @@ import { strategySuccess } from '../../../model/action/strategy/actionStrategyCo
 
 export type ExperimentIterateIdThenReceiveInMethod = Quality<ExperimentState>;
 export const experimentIterateIdThenReceiveInMethod = createQualityCard<ExperimentState>({
-  type: 'Experiment iterate ID then receive in Method via State',
+  type: 'Experiment Iterate Id Then Receive In Method',
   reducer: (state) => {
     return {
       id: state.id + 1

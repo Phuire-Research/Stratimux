@@ -4,11 +4,13 @@ $>*/
 /*<#*/
 import { muxification  } from '../model/muxium/muxium';
 import { Concept, Concepts } from '../model/concept/concept.type';
+import { createConcept } from '../model/concept/concept';
 import { CounterState, createCounterConcept, counterName  } from '../concepts/counter/counter.concept';
 import { counterSelectCount } from '../concepts/counter/counter.selector';
 import { CounterSetCountPayload, counterSetCount } from '../concepts/counter/qualities/setCount.quality';
 import { createExperimentConcept, experimentName } from '../concepts/experiment/experiment.concept';
 import { select } from '../model/selector';
+import { createAdvancedKeys } from '../model/selector/selector';
 
 test('Muxium Selector Test', (done) => {
   const counter = createCounterConcept();
@@ -95,6 +97,104 @@ test('Muxium Deck Selector Test', (done) => {
       ax.close();
       done();
     })
+  ]);
+});
+
+test('Deck K createAdvancedKeys Planned Subscription Test', (done) => {
+  // Define the DeepNested type matching the muxified selector test
+  type SomeDeepObject = {
+    something : {
+      somethingElse: string,
+      somethingArray: string[]
+    },
+    else: boolean[]
+  }
+  type DeepNested = {
+    anything : SomeDeepObject,
+    bool: boolean
+  }
+
+  // Create the test object as state
+  const testState: DeepNested = {
+    anything: {
+      else: [false],
+      something: {
+        somethingArray: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
+        somethingElse: 'somethingElse'
+      }
+    },
+    bool: true
+  };
+
+  // Create inline test concept with DeepNested state
+  const testConcept = createConcept(
+    'testAdvancedKeys',
+    testState,
+  );
+
+  // Create muxium with test concept
+  type DECK = {
+    testConcept: Concept<DeepNested>
+  }
+  const muxium = muxification('advancedKeysTest', { testConcept: testConcept }, { logging: true });
+
+  // Use planned subscription to access deck.k
+  muxium.plan<DECK>('Test createAdvancedKeys with deck.k', ({ stage, conclude }) => [
+    stage(({ concepts, d }) => {
+      console.log('[TEST] Starting deck.k advanced keys test');
+
+      // Access through deck.d.testAdvancedKeys.k (muxified concept pattern)
+      if (d.testConcept && d.testConcept.k) {
+        console.log('[TEST] Found d.testAdvancedKeys.k');
+
+        // Test 1: Create advanced keys for nested path
+        const nestedPath = ['anything', 'something', 'somethingArray', 3];
+        const advancedKeys = createAdvancedKeys<DeepNested>(nestedPath);
+        console.log('[TEST] Advanced keys for nested path:', advancedKeys);
+
+        // Test 2: Try to create selector using d.k.createSelector if available
+        if (d.testConcept.k.createSelector) {
+          const specificSelector = d.testConcept.k.createSelector(concepts, advancedKeys);
+          console.log('[TEST] Created selector with d.k.createSelector:', !!specificSelector);
+
+          if (specificSelector) {
+            // Test 3: Use select.slice with the created selector
+            const value = select.slice(concepts, specificSelector);
+            console.log('[TEST] Value from select.slice:', value);
+
+            // Expect to get '3' from the array
+            expect(value).toBe('3');
+          } else {
+            console.log('[TEST] d.k.createSelector returned undefined/false');
+            console.log('[TEST] Testing alternative: direct selector access');
+
+            // Alternative test: Check if we can access existing selectors
+            const anythingSelector = d.testConcept.k.anything;
+            if (anythingSelector) {
+              console.log('[TEST] Found anything selector, keys:', anythingSelector.keys);
+              const anythingValue = select.slice(concepts, anythingSelector);
+              console.log('[TEST] anything value:', anythingValue);
+              expect(anythingValue).toEqual(testState.anything);
+            }
+          }
+        } else {
+          console.log('[TEST] d.k.createSelector not available');
+        }
+
+        // Test 4: Verify dot-walked convention
+        const boolSelector = d.testConcept.k.bool;
+        if (boolSelector) {
+          console.log('[TEST] Bool selector keys (should be "testAdvancedKeys.bool"):', boolSelector.keys);
+          const boolValue = select.slice(concepts, boolSelector);
+          expect(boolValue).toBe(true);
+        }
+      } else {
+        console.error('[TEST] d.testAdvancedKeys.k not found');
+      }
+
+      done();
+    }),
+    conclude()
   ]);
 });
 

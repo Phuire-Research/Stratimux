@@ -12,7 +12,7 @@ import { strategySuccess } from '../../../model/action/strategy/actionStrategyCo
 
 export type ExperimentTimerEmitActionWithState = Quality<ExperimentState>;
 export const experimentTimerEmitActionWithState = createQualityCard<ExperimentState>({
-  type: 'Experiment create async method with timer and state, to return action',
+  type: 'Experiment Timer Emit Action With State',
   reducer: nullReducer,
   methodCreator: () => createAsyncMethodWithState(({controller, action, state}) => {
     setTimeout(() => {

@@ -88,7 +88,7 @@ export function initPlan<Q,C,S>(
   };
   muxiumTimeOut(properties.concepts, () => {
     next(properties.concepts);
-    return createAction('Conclude');
+    return createAction('Muxium Conclude');
   }, 0);
   return {
     title: plan.title,

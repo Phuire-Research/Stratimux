@@ -7,7 +7,7 @@ $>*/
 import { createQualityCard, defaultMethodCreator, defaultReducer } from '../../../model/quality';
 
 export const muxiumKick = createQualityCard({
-  type: 'Kick Muxium',
+  type: 'Muxium Kick',
   reducer: defaultReducer,
   methodCreator: defaultMethodCreator
 });

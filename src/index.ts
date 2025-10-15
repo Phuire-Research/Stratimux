@@ -107,6 +107,11 @@ export {
   getSemaphore
 } from './model/action/actionSemaphore';
 export {
+  validateAndRecreateAction,
+  validateActionBatch,
+  isBadAction
+} from './model/action/validateAndRecreateAction';
+export {
   act
 } from './model/action';
 export {

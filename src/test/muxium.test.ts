@@ -23,7 +23,7 @@ test('Muxium advanced usage: StrategyStitch', (done) => {
     (({d_}) => {
       const yourStrategyStitch: ActionStrategyStitch = () => {
         const stepStitch = muxium_createStitchNode(d_);
-        const stepOne = createActionNode(createAction('logged a message passed to Muxium'), {
+        const stepOne = createActionNode(createAction('Muxium Log'), {
           successNode: stepStitch,
           failureNode: null
         });
@@ -35,7 +35,7 @@ test('Muxium advanced usage: StrategyStitch', (done) => {
       };
 
       const yourComposingStrategy = (stitch: ActionStrategyStitch): ActionStrategy => {
-        const stepFinal = createActionNode(createAction('logged a message passed to Muxium'), {
+        const stepFinal = createActionNode(createAction('Muxium Log'), {
           successNode: null,
           failureNode: null
         });
@@ -48,7 +48,7 @@ test('Muxium advanced usage: StrategyStitch', (done) => {
         stitchEnd.successNode = stepFinal;
         const stitchHead = createActionNodeFromStrategy(stitchStrategy);
 
-        const stepOne = createActionNode(createAction('logged a message passed to Muxium'), {
+        const stepOne = createActionNode(createAction('Muxium Log'), {
           successNode: stitchHead,
           failureNode: null
         });

@@ -9,7 +9,7 @@ import { createQualityCard } from '../../../model/quality';
 
 export type OwnershipResetOwnershipLedger = Quality<OwnershipState>;
 export const ownershipResetOwnershipLedger = createQualityCard<OwnershipState>({
-  type: 'reset Ownership Ledger',
+  type: 'Ownership Reset Ownership Ledger',
   reducer: () => ({ownershipLedger: createOwnershipLedger()}),
   methodCreator: defaultMethodCreator
 });
