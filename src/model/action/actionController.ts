@@ -16,7 +16,7 @@ import { strategyFailed } from './strategy/actionStrategyConsumers';
 
 const badAction = (payload: {
   badActions: AnyAction[]
-}) => createAction('Muxium received a Bad Action', {
+}) => createAction('Muxium Bad Action', {
   payload
 });
 

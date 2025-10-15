@@ -10,7 +10,7 @@ import { MuxiumClosePayload } from '.';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClose = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClosePayload>({
-  type: 'Close Muxium',
+  type: 'Muxium Close',
   reducer: (state, action) => {
     const {exit} = action.payload;
     state.generalSubscribers.forEach(named => named.subscription.unsubscribe());

@@ -17,7 +17,7 @@ export type ExperimentRecurseIterateIdPayload = {
 
 export type ExperimentRecurseIterateId = Quality<ExperimentState, ExperimentRecurseIterateIdPayload>;
 export const experimentRecurseIterateId = createQualityCardWithPayload<ExperimentState, ExperimentRecurseIterateIdPayload>({
-  type: 'Asynchronous experiment, recursively iterate ID and receive in Method via State',
+  type: 'Experiment Recurse Iterate Id',
   reducer: (state) => {
     return {
       id: state.id + 1

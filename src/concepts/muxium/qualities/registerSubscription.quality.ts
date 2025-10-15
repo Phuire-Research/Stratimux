@@ -11,7 +11,7 @@ import { MuxiumRegisterSubscriberPayload } from '.';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumRegisterSubscriber = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumRegisterSubscriberPayload>({
-  type: 'register Subscriber to Muxium\'s General Subscriber list',
+  type: 'Muxium Register Subscriber',
   reducer: (state, action) => {
     const payload = action.payload;
     const generalSubscribers = state.generalSubscribers;

@@ -16,7 +16,7 @@ export type OwnershipClearPendingActionsOfStrategyPayload = {
 export type OwnershipClearPendingActionsOfStrategy = Quality<OwnershipState, OwnershipClearPendingActionsOfStrategyPayload>
 export const ownershipClearPendingActionsOfStrategy =
   createQualityCardWithPayload<OwnershipState, OwnershipClearPendingActionsOfStrategyPayload>({
-    type: 'clear Ownership\'s Pending Actions of Strategy Topic',
+    type: 'Ownership Clear Pending Actions Of Strategy',
     reducer: (state, action) => {
       const {topic} = selectPayload<OwnershipClearPendingActionsOfStrategyPayload>(action);
       const newPendingActions: Action[] = [];

@@ -12,7 +12,7 @@ import { OpenPayload } from '.';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumOpen = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, OpenPayload>({
-  type: 'Open Muxium',
+  type: 'Muxium Open',
   reducer: (_, action) => {
     const {open} = action.payload;
     return {

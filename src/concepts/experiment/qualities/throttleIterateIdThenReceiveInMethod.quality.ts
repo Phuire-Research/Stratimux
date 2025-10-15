@@ -19,7 +19,7 @@ export type ExperimentThrottleIterateIdThenReceiveInMethod =
   Quality<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>;
 export const experimentThrottleIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentThrottleIterateIdThenReceiveInMethodPayload>({
-    type: 'Experiment throttle iterate ID then receive in Method via State',
+    type: 'Experiment Throttle Iterate Id Then Receive In Method',
     reducer: (state) => {
       return {
         id: state.id + 1

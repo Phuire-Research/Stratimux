@@ -8,7 +8,7 @@ import { createQualityCard } from '../../../model/quality';
 
 export type ExperimentMockToTrue = Quality<ExperimentState>;
 export const experimentMockToTrue = createQualityCard<ExperimentState>({
-  type: 'Experiment mock set to True',
+  type: 'Experiment Mock To True',
   reducer: (state) => {
     return {
       mock: true

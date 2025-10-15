@@ -19,7 +19,7 @@ import { Action } from '../action/action.type';
 export const tailWhip = <Q, C extends LoadConcepts>(muxiumState: MuxiumState<Q, C>) => {
   if (muxiumState.tailTimer.length === 0) {
     muxiumState.tailTimer.push(setTimeout(() => {
-      muxiumState.action$.next(createAction('Kick Muxium'));
+      muxiumState.action$.next(createAction('Muxium Kick'));
     }, 3));
   }
 };

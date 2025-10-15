@@ -10,7 +10,7 @@ import { strategyBackTrack } from '../../../model/action/strategy/actionStrategy
 
 export type OwnershipBackTrack = Quality<OwnershipState>
 export const ownershipBackTrack = createQualityCard<OwnershipState>({
-  type: 'backtracking to previous ActionNode',
+  type: 'Ownership Back Track',
   reducer: nullReducer,
   methodCreator: () => createMethod(({action}) => {
     if (action.strategy) {

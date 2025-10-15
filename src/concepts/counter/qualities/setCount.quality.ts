@@ -16,7 +16,7 @@ export type CounterSetCountPayload = {
 
 export type CounterSetCount = Quality<CounterState, CounterSetCountPayload>;
 export const counterSetCount = createQualityCardWithPayload<CounterState, CounterSetCountPayload>({
-  type: 'Counter set Count',
+  type: 'Counter Set Count',
   reducer: (state, {payload}) => {
     const {newCount} = payload;
     return {

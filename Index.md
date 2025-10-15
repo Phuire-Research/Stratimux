@@ -167,7 +167,7 @@ Example:
 Muxium Initialization Strategy. +
 Begin with register Muxium Action and Concept Streams. +
 Then initialize Principles and set new Subscribers to General Subscribers list. +
-Next set Muxium to its current Default Mode Index. +
+Next Muxium Set Default Mode. +
 Finally Open Muxium to Notify Subscribers of State changes.
 ```
 

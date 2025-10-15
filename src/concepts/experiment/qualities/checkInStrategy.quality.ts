@@ -10,7 +10,7 @@ import { strategySuccess } from '../../../model/action/strategy/actionStrategyCo
 
 export type ExperimentCheckInStrategy = Quality<ExperimentState>;
 export const experimentCheckInStrategy = createQualityCard<ExperimentState>({
-  type: 'Experiment check in Action',
+  type: 'Experiment Check In Strategy',
   reducer: (state, action) => {
     if (action.strategy) {
       const nextAction = strategySuccess(action.strategy);

@@ -9,7 +9,7 @@ import { createQualityCard } from '../../../model/quality';
 import { strategySuccess } from '../../../model/action/strategy/actionStrategyConsumers';
 
 export const muxiumLog = createQualityCard({
-  type: 'logged a message passed to Muxium',
+  type: 'Muxium Log',
   reducer: nullReducer,
   methodCreator: () => createMethod(({action}) => {
     console.log('Logging: ', action);

@@ -10,7 +10,7 @@ import { MuxiumSetModePayload } from '.';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumSetMode = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetModePayload>({
-  type: 'set Muxium Mode',
+  type: 'Muxium Set Mode',
   reducer: (_, action) => {
     const payload = action.payload;
     return {

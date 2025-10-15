@@ -7,7 +7,7 @@ import { ChainState } from '../chain.concept';
 
 export type ChainEnd = Quality<ChainState>;
 export const chainEnd = createQualityCard<ChainState>({
-  type: 'set chain end property to true',
+  type: 'Chain End',
   reducer: (state) => {
     return {
       end: true

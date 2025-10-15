@@ -9,7 +9,7 @@ import { MuxiumPreClosePayload } from '.';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumPreClose = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumPreClosePayload>({
-  type: 'Prepare Close Muxium',
+  type: 'Muxium Pre Close',
   reducer: (state, action) => ({
     prepareClose: true,
     exit: action.payload.exit

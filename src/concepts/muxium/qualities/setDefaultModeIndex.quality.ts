@@ -12,7 +12,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumSetDefaultModeIndex =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumSetDefaultModeIndexPayload>({
-    type: 'set Muxium\'s Default Mode Index',
+    type: 'Muxium Set Default Mode Index',
     reducer: (_, action) => {
       const payload = action.payload;
       return {

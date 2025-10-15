@@ -11,7 +11,7 @@ import { createQualityCardWithPayload } from '../../../model/quality';
 import { MuxiumState } from '../muxium.concept';
 
 export const muxiumBadAction = createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumBadActionPayload>({
-  type: 'Muxium received a Bad Action',
+  type: 'Muxium Bad Action',
   reducer: (state, action) => {
     const payload = action.payload.badActions;
     if (state.logging) {

@@ -17,7 +17,7 @@ export type ExperimentDebounceAsyncIterateIdThenReceiveInMethod =
   Quality<ExperimentState, ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>;
 export const experimentDebounceAsyncIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentDebounceAsyncIterateIdThenReceiveInMethodPayload>({
-    type: 'Debounce Experiment asynchronously iterate ID then receive in Method via State',
+    type: 'Experiment Debounce Async Iterate Id Then Receive In Method',
     reducer: (state: ExperimentState) => {
       return {
         id: state.id + 1

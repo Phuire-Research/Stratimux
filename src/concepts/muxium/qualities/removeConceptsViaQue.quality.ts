@@ -12,7 +12,7 @@ import { createQualityCard } from '../../../model/quality';
 import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumRemoveConceptsViaQue = createQualityCard<MuxiumState<unknown, LoadConcepts>>({
-  type: 'remove Concepts via Muxium\'s Removal Concept Que',
+  type: 'Muxium Remove Concepts Via Que',
   reducer: (state) => {
     const principleSubscribers = state.methodSubscribers;
     const newPrincipleSubscribers = [] as NamedSubscription[];

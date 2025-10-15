@@ -12,7 +12,7 @@ import { strategySuccess } from '../../../model/action/strategy/actionStrategyCo
 
 export type OwnershipClearStrategyStubsFromLedgerAndSelf = Quality<OwnershipState>;
 export const ownershipClearStrategyStubsFromLedgerAndSelf = createQualityCard<OwnershipState>({
-  type: 'clear current Strategy Stubs from Ownership Ledger and Itself',
+  type: 'Ownership Clear Strategy Stubs From Ledger And Self',
   reducer: (state, action) => {
     const stubs = action?.strategy?.stubs;
     const ownershipLedger = state.ownershipLedger;

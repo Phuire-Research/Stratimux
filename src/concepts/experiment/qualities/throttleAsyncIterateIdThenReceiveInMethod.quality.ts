@@ -18,7 +18,7 @@ export type ExperimentThrottleAsyncIterateIdThenReceiveInMethod =
   Quality<ExperimentState, ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload>;
 export const experimentThrottleAsyncIterateIdThenReceiveInMethod =
   createQualityCardWithPayload<ExperimentState, ExperimentThrottleAsyncIterateIdThenReceiveInMethodPayload>({
-    type: 'Action Debounce Experiment asynchronously iterate ID then receive in Method via State',
+    type: 'Experiment Throttle Async Iterate Id Then Receive In Method',
     reducer: (state: ExperimentState) => {
       return {
         id: state.id + 1

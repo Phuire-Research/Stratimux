@@ -11,7 +11,7 @@ import { ExperimentState } from '../experiment.concept';
 
 export type ExperimentDebounceNextActionNode = Quality<ExperimentState>;
 export const experimentDebounceNextActionNode = createQualityCard({
-  type: 'Experiment will debounce incoming actions within set duration',
+  type: 'Experiment Debounce Next Action Node',
   reducer: nullReducer,
   methodCreator: () => createMethodDebounce(({action}) => {
     if (action.strategy) {

@@ -16,7 +16,7 @@ export type OwnershipClearPayloadStubsPayload = {
 
 export type OwnershipClearPayloadStubs = Quality<OwnershipState, OwnershipClearPayloadStubsPayload>;
 export const ownershipClearPayloadStubs = createQualityCardWithPayload<OwnershipState, OwnershipClearPayloadStubsPayload, OwnershipDeck>({
-  type: 'clear payload Stubs from Ownership Ledger',
+  type: 'Ownership Clear Payload Stubs',
   reducer: (state, action) => {
     const stubs = selectPayload<OwnershipClearPayloadStubsPayload>(action).stubs;
     const ownershipLedger = state.ownershipLedger;

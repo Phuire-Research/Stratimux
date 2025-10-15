@@ -15,7 +15,7 @@ import { muxiumBadAction } from '../../concepts/muxium/qualities/badAction.quali
 export const nullActionType: ActionType = 'null';
 // These need to be logical determined ahead of time.
 //   Logical determinations such as these will be determined in the future via generation over hand placement.
-const muxiumBadActionType: ActionType = 'Muxium received a Bad Action';
+const muxiumBadActionType: ActionType = 'Muxium Bad Action';
 
 const createPayload = <T extends Record<string, unknown>>(payload: T) => payload;
 

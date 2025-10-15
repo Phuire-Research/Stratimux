@@ -21,7 +21,7 @@ import { createAction } from '../action/action';
 import { selectMuxifiedState } from '../selector/selector';
 
 const muxiumConclude = () => {
-  return createAction('Conclude');
+  return createAction('Muxium Conclude');
 };
 
 export const createMethodThrottle: MethodCreatorBaseThrottle =

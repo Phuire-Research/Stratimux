@@ -20,7 +20,7 @@ import { createOrigin } from '../../../model/muxium/muxiumHelpers';
 
 export const muxiumInitializePrinciples =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumInitializePrinciplesPayload>({
-    type: 'initialize Principles and set new Subscribers to General Subscribers list',
+    type: 'Muxium Initialize Principles',
     reducer: (state, act) => {
       const payload = act.payload;
       const concepts = payload.concepts;

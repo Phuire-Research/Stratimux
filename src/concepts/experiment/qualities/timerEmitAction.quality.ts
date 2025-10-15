@@ -13,7 +13,7 @@ import { ExperimentState } from '../experiment.concept';
 
 export type ExperimentTimerEmitAction = Quality<ExperimentState>
 export const experimentTimerEmitAction = createQualityCard({
-  type: 'Experiment create async method with timer, to return action',
+  type: 'Experiment Timer Emit Action',
   reducer: nullReducer,
   methodCreator: () => createAsyncMethod(({controller, action}) => {
     setTimeout(() => {

@@ -13,7 +13,7 @@ export type ChainPrepareChainPayload = {
 
 export type ChainPrepareChain = Quality<ChainState, ChainPrepareChainPayload>;
 export const chainPrepareChain = createQualityCardWithPayload<ChainState, ChainPrepareChainPayload>({
-  type: 'dispatch Actions from Action Que via Payload to be Chained',
+  type: 'Chain Prepare Chain',
   reducer: (state, {payload}) => {
     return {
       actionQue: [

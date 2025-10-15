@@ -11,7 +11,7 @@ import { LoadConcepts } from '../../../model/concept/concept.type';
 
 export const muxiumClearBadPlanFromBadPlanList =
   createQualityCardWithPayload<MuxiumState<unknown, LoadConcepts>, MuxiumClearBadPlanFromBadPlanListPayload>({
-    type: 'clear Plan Topic from Muxium\'s badPlan list',
+    type: 'Muxium Clear Bad Plan From Bad Plan List',
     reducer: (state, action) => {
       const {title} = action.payload;
       return {
