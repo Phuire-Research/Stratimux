@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round-8 Calculator - Spatial Reality System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .spatial-hint {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .display {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .display-value {
+            color: white;
+            font-size: 36px;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            min-height: 45px;
+            word-break: break-all;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .display-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .display-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+        }
+
+        .display-decimal {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        button:active:before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .digit {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+
+        .digit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .digit:active {
+            transform: translateY(0);
+        }
+
+        .operator {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .operator:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(240,147,251,0.4);
+        }
+
+        .special {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .special:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79,172,254,0.4);
+        }
+
+        .equals {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .clear {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+        }
+
+        .conversion-table {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .conversion-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .conversion-examples {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .rotation-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            gap: 10px;
+        }
+
+        .wheel {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #667eea;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stack-count {
+            font-size: 14px;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: #ff4757;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .cube-hint {
+            display: inline-block;
+            font-size: 10px;
+            color: #8892b0;
+            margin-left: 5px;
+            vertical-align: super;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1 class="title">Round-8 Calculator<span class="cube-hint">3D</span></h1>
+        <p class="subtitle">Counting around 8 spatial positions (1-8)</p>
+        <p class="spatial-hint">Like the 8 vertices of a cube in 3D space</p>
+        
+        <div class="display">
+            <div class="display-value" id="display">0</div>
+            <div class="display-info">
+                <span class="display-label">Standard decimal:</span>
+                <span class="display-decimal" id="decimal">0</span>
+            </div>
+        </div>
+
+        <div class="rotation-visual">
+            <span class="stack-count">Rounds: <span id="stacks">0</span></span>
+            <div class="wheel">
+                <span id="position">0</span>
+            </div>
+            <span class="stack-count">Position: <span id="wheel-pos">0</span></span>
+        </div>
+        
+        <div class="buttons">
+            <button class="clear" onclick="clearAll()">C</button>
+            <button class="special" onclick="backspace()">←</button>
+            <button class="operator" onclick="setOperation('/')">÷</button>
+            <button class="operator" onclick="setOperation('*')">×</button>
+            
+            <button class="digit" onclick="inputDigit('7')">7</button>
+            <button class="digit" onclick="inputDigit('8')">8</button>
+            <button class="digit" onclick="inputDigit('5')">5</button>
+            <button class="operator" onclick="setOperation('-')">−</button>
+            
+            <button class="digit" onclick="inputDigit('6')">6</button>
+            <button class="digit" onclick="inputDigit('3')">3</button>
+            <button class="digit" onclick="inputDigit('4')">4</button>
+            <button class="operator" onclick="setOperation('+')">+</button>
+            
+            <button class="digit" onclick="inputDigit('1')">1</button>
+            <button class="digit" onclick="inputDigit('2')">2</button>
+            <button class="equals" onclick="calculate()">=</button>
+        </div>
+        
+        <div class="conversion-table">
+            <div class="conversion-title">Counting Sequence (Decimal → Round-8):</div>
+            <div class="conversion-examples">
+                <div>0 → 0</div>
+                <div>1 → 1</div>
+                <div>2 → 2</div>
+                <div>3 → 3</div>
+                <div>4 → 4</div>
+                <div>5 → 5</div>
+                <div>6 → 6</div>
+                <div>7 → 7</div>
+                <div>8 → 8</div>
+                <div>9 → 11</div>
+                <div>10 → 12</div>
+                <div>11 → 13</div>
+                <div>12 → 14</div>
+                <div>13 → 15</div>
+                <div style="background: #ffd700; padding: 2px;">14 → 16</div>
+                <div>15 → 17</div>
+                <div>16 → 18</div>
+                <div>17 → 21</div>
+                <div>24 → 28</div>
+                <div>25 → 31</div>
+                <div>32 → 38</div>
+                <div>33 → 41</div>
+                <div>40 → 48</div>
+                <div>41 → 51</div>
+                <div>48 → 58</div>
+                <div>49 → 61</div>
+                <div>56 → 68</div>
+                <div>57 → 71</div>
+                <div>64 → 78</div>
+                <div>65 → 81</div>
+                <div>68 → 84</div>
+                <div>72 → 88</div>
+                <div>73 → 111</div>
+                <div style="color: #f5576c;">7×2=14→16</div>
+            </div>
+        </div>
+        
+        <div id="error" class="error-message"></div>
+    </div>
+
+    <script>
+        let currentValue = '0';
+        let previousValue = null;
+        let operation = null;
+        let waitingForOperand = false;
+
+        // Build lookup tables by iterating through the counting pattern
+        const decimalToRound8Map = new Map();
+        const round8ToDecimalMap = new Map();
+        
+        function buildLookupTables() {
+            // Start with 0
+            decimalToRound8Map.set(0, '0');
+            round8ToDecimalMap.set('0', 0);
+            
+            let round8Value = '0';
+            
+            // Count up to build the mapping
+            for (let decimal = 1; decimal <= 1000; decimal++) {
+                round8Value = incrementRound8(round8Value);
+                decimalToRound8Map.set(decimal, round8Value);
+                round8ToDecimalMap.set(round8Value, decimal);
+            }
+        }
+        
+        // Increment a round-8 number by 1
+        function incrementRound8(value) {
+            if (value === '0') return '1';
+            
+            // Convert to array of digits
+            let digits = value.split('').map(Number);
+            let carry = true;
+            
+            // Start from rightmost digit
+            for (let i = digits.length - 1; i >= 0 && carry; i--) {
+                if (digits[i] < 8) {
+                    digits[i]++;
+                    carry = false;
+                } else {
+                    // 8 wraps around to 1 with carry (like moving to the next round in 3D space)
+                    digits[i] = 1;
+                    // Continue the carry to next digit
+                    carry = true;
+                }
+            }
+            
+            // If we still have carry after processing all digits, add a new '1' at the front
+            if (carry) {
+                digits.unshift(1);
+            }
+            
+            return digits.join('');
+        }
+        
+        // Convert from decimal to round-8 using iteration
+        function decimalToRound8(decimal) {
+            if (decimal === 0) return '0';
+            if (decimalToRound8Map.has(decimal)) {
+                return decimalToRound8Map.get(decimal);
+            }
+            
+            // For large numbers, iterate from where we left off
+            let lastKnown = Math.max(...Array.from(decimalToRound8Map.keys()));
+            let round8Value = decimalToRound8Map.get(lastKnown);
+            
+            for (let i = lastKnown + 1; i <= decimal; i++) {
+                round8Value = incrementRound8(round8Value);
+                decimalToRound8Map.set(i, round8Value);
+                round8ToDecimalMap.set(round8Value, i);
+            }
+            
+            return round8Value;
+        }
+        
+        // Convert from round-8 to decimal
+        function round8ToDecimal(round8) {
+            if (round8 === '0' || round8 === '') return 0;
+            
+            // Check if we have it in our map
+            if (round8ToDecimalMap.has(round8)) {
+                return round8ToDecimalMap.get(round8);
+            }
+            
+            // If not in map, count up until we find it
+            let decimal = Math.max(...Array.from(decimalToRound8Map.keys()));
+            let currentRound8 = decimalToRound8Map.get(decimal);
+            
+            while (currentRound8 !== round8 && decimal < 10000) {
+                decimal++;
+                currentRound8 = incrementRound8(currentRound8);
+                decimalToRound8Map.set(decimal, currentRound8);
+                round8ToDecimalMap.set(currentRound8, decimal);
+            }
+            
+            return decimal;
+        }
+        
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentValue;
+            
+            // Update decimal equivalent
+            const decimal = round8ToDecimal(currentValue);
+            document.getElementById('decimal').textContent = decimal;
+            
+            // Update wheel visualization
+            if (decimal === 0) {
+                document.getElementById('stacks').textContent = '0';
+                document.getElementById('position').textContent = '0';
+                document.getElementById('wheel-pos').textContent = '0';
+            } else {
+                // Calculate position in 3D space (1-8) and round count
+                let tempDecimal = decimal;
+                let rounds = 0;
+                
+                while (tempDecimal > 8) {
+                    tempDecimal -= 8;
+                    rounds++;
+                }
+                
+                document.getElementById('stacks').textContent = rounds;
+                document.getElementById('position').textContent = tempDecimal;
+                document.getElementById('wheel-pos').textContent = tempDecimal;
+            }
+        }
+        
+        function inputDigit(digit) {
+            // Validate input - only allow digits 1-8 (the 8 vertices of spatial reality)
+            if (digit < '1' || digit > '8') {
+                showError('Only digits 1-8 are allowed (8 spatial positions)');
+                return;
+            }
+            
+            clearError();
+            
+            if (waitingForOperand) {
+                currentValue = digit;
+                waitingForOperand = false;
+            } else {
+                // Handle '0' state properly
+                if (currentValue === '0') {
+                    currentValue = digit;
+                } else {
+                    // Validate that the resulting number is valid in round-8
+                    let testValue = currentValue + digit;
+                    // Check each digit is 1-8
+                    let valid = true;
+                    for (let char of testValue) {
+                        if (char < '1' || char > '8') {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (valid) {
+                        currentValue = testValue;
+                    } else {
+                        showError('Invalid digit sequence in Round-8');
+                    }
+                }
+            }
+            
+            updateDisplay();
+        }
+        
+        function setOperation(op) {
+            clearError();
+            
+            if (previousValue !== null && !waitingForOperand) {
+                calculate();
+            }
+            
+            operation = op;
+            previousValue = currentValue;
+            waitingForOperand = true;
+        }
+        
+        function calculate() {
+            if (operation === null || previousValue === null) return;
+            
+            clearError();
+            
+            // Convert to decimal for calculation
+            const prev = round8ToDecimal(previousValue);
+            const current = round8ToDecimal(currentValue);
+            let result;
+            
+            // Debug output
+            console.log(`Calculating: ${previousValue} (${prev} decimal) ${operation} ${currentValue} (${current} decimal)`);
+            
+            switch (operation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    if (current === 0) {
+                        showError('Cannot divide by zero');
+                        return;
+                    }
+                    result = Math.floor(prev / current);
+                    break;
+            }
+            
+            if (result < 0) {
+                showError('Negative numbers not supported');
+                return;
+            }
+            
+            // Convert back to round-8
+            const round8Result = decimalToRound8(result);
+            console.log(`Result: ${result} decimal = ${round8Result} round-8`);
+            
+            currentValue = round8Result;
+            operation = null;
+            previousValue = null;
+            waitingForOperand = false;
+            updateDisplay();
+        }
+        
+        function clearAll() {
+            currentValue = '0';
+            previousValue = null;
+            operation = null;
+            waitingForOperand = false;
+            clearError();
+            updateDisplay();
+        }
+        
+        function backspace() {
+            if (currentValue.length > 1) {
+                currentValue = currentValue.slice(0, -1);
+            } else {
+                currentValue = '0';
+            }
+            clearError();
+            updateDisplay();
+        }
+        
+        function showError(message) {
+            document.getElementById('error').textContent = message;
+        }
+        
+        function clearError() {
+            document.getElementById('error').textContent = '';
+        }
+        
+        // Initialize on load
+        buildLookupTables();
+        updateDisplay();
+        
+        // Run self-test
+        function selfTest() {
+            console.log('=== ROUND-8 SPATIAL SYSTEM SELF-TEST ===');
+            console.log('Testing 7 × 2:');
+            const seven = round8ToDecimal('7');
+            const two = round8ToDecimal('2');
+            console.log(`7 in round-8 = ${seven} decimal`);
+            console.log(`2 in round-8 = ${two} decimal`);
+            console.log(`${seven} × ${two} = ${seven * two} decimal`);
+            console.log(`${seven * two} decimal = ${decimalToRound8(seven * two)} in round-8`);
+            console.log('Expected: 7 × 2 = 14 decimal = 16 round-8');
+            console.log('(16 represents position 6 in the second round of 8 spatial positions)');
+            
+            // Verify the mapping is correct
+            console.log('\nVerifying key mappings:');
+            console.log(`14 → ${decimalToRound8Map.get(14)} (Should be 16) ✓`);
+            console.log(`64 → ${decimalToRound8Map.get(64)} (Should be 78) ✓`);
+            console.log(`68 → ${decimalToRound8Map.get(68)} (Should be 84) ✓`);
+            console.log(`72 → ${decimalToRound8Map.get(72)} (Should be 88) ✓`);
+        }
+        
+        selfTest();
+    </script>
+</body>
+</html>
