@@ -28,6 +28,10 @@
 ## Stratimux Concept Library
 1. [Round8](https://github.com/Phuire-Research/Round8) @ [npm](https://www.npmjs.com/package/round8)
 
+## Projects
+1. [SCS](https://youtu.be/tNsZyfANW8A) - Proof of Concept Bidirectional Higher Ordered Computation Paradigm.
+2. UnHex - The Utilization of Round8 as a Complete Binary Replacement to Provide Quantum Proof Binary for any Method of Computation built upon the Breakthrough of Bidirectionl Higher Order Reasoning.
+
 ### What is Muxification?
 Muxification is a Multiplex of Quantitative and Qualitative Reasoning. Stratimux represents a Code as Proof of Concept for this new System. Where a Concept in this system is something in the pursuit of being fully measured, rather than nebulous or abstract. That goes a step further than traditional methods, including the ability to demuxify concepts.
 
