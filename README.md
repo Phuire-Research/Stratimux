@@ -19,11 +19,14 @@
 * Hot Loading
 * No Dependency Injection
 
-### Getting Started
+## Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
 * [v0.3.22 Migration Guide](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md) - **Required for v0.3.22 upgrade**
 * [Stratimux Agent Reference](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md) - Drop in reference sheet for utilization of Stratimux for Agent Environments Unfamiliar with Stratimux.
+
+## Stratimux Concept Library
+1. [Round8](https://github.com/Phuire-Research/Round8) @ [npm](https://www.npmjs.com/package/round8)
 
 ### What is Muxification?
 Muxification is a Multiplex of Quantitative and Qualitative Reasoning. Stratimux represents a Code as Proof of Concept for this new System. Where a Concept in this system is something in the pursuit of being fully measured, rather than nebulous or abstract. That goes a step further than traditional methods, including the ability to demuxify concepts.
@@ -35,7 +38,7 @@ Thankfully, this is the reason for the atomic behavior of your qualities combine
 
 When in doubt simplify.
 
-### Concept Index
+## Concept Index
 * [Action Strategy](https://github.com/Phuire-Research/Stratimux/blob/main/ActionStrategy.md) - Data structure that allows for Stratimux to be provably terminating.
 * [Muxium](https://github.com/Phuire-Research/Stratimux/blob/main/Muxium.md) - Governing concept that contains the set of concepts that formalizes each muxium.
 * [Concept](https://github.com/Phuire-Research/Stratimux/blob/main/Concept.md) - Concepts are composed of state, qualities, principles, and mode.
