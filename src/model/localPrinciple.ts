@@ -13,7 +13,7 @@ import { Deck, Stratideck } from './deck';
 import { BasePlanner, Planning, StagePlanner } from './stagePlanner/stagePlanner.type';
 import { MaybeEnhancedMuxiumQualities, Muxium, MuxiumLoad } from './muxium/muxium.type';
 import { Qualities } from './quality';
-import { getMuxiumState } from './muxium/muxiumHelpers';
+import { getMuxiumState, isMuxiumShape } from './muxium/muxiumHelpers';
 import { MuxiumDeck, MuxiumState } from '../concepts/muxium/muxium.concept';
 import { MuxiumQualities } from '../concepts/muxium/qualities';
 
@@ -72,10 +72,13 @@ export type LocalPrincipleFunction<C extends LoadConcepts, Q = void, S = void> =
  */
 export function createLocalPrinciple<C extends LoadConcepts, Q = void, S = void>(
   componentName: string,
-  muxium: Muxium<LoadConcepts & MuxiumDeck, MaybeEnhancedMuxiumQualities>,
+  muxium: unknown,
   principleFunc: LocalPrincipleFunction<C, Q, S>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): void {
+): boolean {
+  if (!isMuxiumShape<LoadConcepts & MuxiumDeck, MaybeEnhancedMuxiumQualities>(muxium)) {
+    return false;
+  }
   const origin = `LocalPrinciple:${componentName}`;
 
   // Create a planning scope to derive and recompose parameters
@@ -133,6 +136,7 @@ export function createLocalPrinciple<C extends LoadConcepts, Q = void, S = void>
     }),
     conclude(),
   ]);
+  return true;
 }
 
 /*#>*/

@@ -12,7 +12,7 @@ import {
   MuxiumState,
 } from '../../concepts/muxium/muxium.concept';
 import { MuxiumQualities } from '../../concepts/muxium/qualities';
-import { MuxiumLoad } from './muxium.type';
+import { MaybeEnhancedMuxiumQualities, Muxium, MuxiumLoad } from './muxium.type';
 import { createAction } from '../action/action';
 import { Action } from '../action/action.type';
 
@@ -193,4 +193,30 @@ export const getMuxiumState = <Q = void, C = void>(concepts: Concepts) =>
 export const accessMuxium = (concepts: Concepts) => (getMuxiumState(concepts).deck.d.muxium);
 
 export const isMuxiumOpen = (concepts: Concepts) => ((concepts[0].state as MuxiumState<MuxiumQualities, MuxiumLoad<any>>).open);
+
+export const muxiumCanonicalFunctionSurfaceKeySet = [
+  'subscribe',
+  'unsubscribe',
+  'close',
+  'dispatch',
+  'plan'
+] as const;
+
+export function isMuxiumShape<C extends LoadConcepts = LoadConcepts, Q = void>(
+  value: unknown
+): value is Muxium<C, Q> {
+  if (value === null || value === undefined) {
+    return false;
+  }
+  if (typeof value !== 'object') {
+    return false;
+  }
+  const candidate = value as Record<string, unknown>;
+  for (const key of muxiumCanonicalFunctionSurfaceKeySet) {
+    if (typeof candidate[key] !== 'function') {
+      return false;
+    }
+  }
+  return true;
+}
 /*#>*/
