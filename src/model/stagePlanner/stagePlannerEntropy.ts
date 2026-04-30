@@ -88,6 +88,15 @@ export function _dispatch<Q,C,S>(
           handleAddSelector(properties, plan.stages[plan.stage].selectors, plan.id);
         }
         manageQues(properties);
+        // Clear this plan's pending beat timers before applying the new stage's beat value.
+        // Without this, a setTimeout armed for the prior stage retains a closure over the
+        // prior stage index and fires execute() against the new stage's plan.beat — producing
+        // rapid-succession debounce collision when many stages each carry their own beat.
+        // Scope: this plan only, gated on iterateStage or setStage.
+        if (plan.timer.length > 0) {
+          plan.timer.forEach(t => clearTimeout(t));
+          plan.timer = [];
+        }
         const beat = plan.stages[plan.stage].beat;
         plan.beat = beat !== undefined ? beat : -1;
         stageDelimiter.prevActions = [];

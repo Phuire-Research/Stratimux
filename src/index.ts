@@ -4,7 +4,7 @@ define the current index file that exports all public functionality for the fram
 $>*/
 /*<#*/
 export { muxification } from './model/muxium/muxium';
-export { getMuxiumState, isMuxiumOpen } from './model/muxium/muxiumHelpers';
+export { getMuxiumState, isMuxiumOpen, isMuxiumShape, muxiumCanonicalFunctionSurfaceKeySet } from './model/muxium/muxiumHelpers';
 export { Muxium } from './model/muxium/muxium.type';
 export type {
   ActionNode,

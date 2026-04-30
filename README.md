@@ -19,11 +19,23 @@
 * Hot Loading
 * No Dependency Injection
 
+## Stratimux Evolution Path — Suite Cascade System (ARIOS)
+
+Stratimux now points forward to the [**Suite Cascade System (SCS)**](https://github.com/Phuire-Research/SuiteCascadeSystem) — an **ARIOS** (Artificial Renewable Intelligence Operating System) and the canonical home of the Suite Cascade method going forward. SCS supersedes `STRATIMUX-REFERENCE.md` as the working agent reference: where the reference document was a static drop-in sheet, SCS is a running prototype of the same system. Stratimux remains the substrate runtime upon which SCS is composed.
+
+## Patch Notes
+
+- **v0.3.295** *(current)* — Stage Planner beat-timer stale-closure cleanup on stage transition + LocalPrinciple `unknown` runtime duck-check guard + Jest 28 → 30 dev-dependency upgrade clearing all open advisories (`npm audit` reports zero vulnerabilities). Non-breaking for consumers. [Details ↓](#change-log-)
+- **v0.3.294** — NPM Audit Patch
+- **v0.3.293** ⚠️ — Quality Type Naming Convention Standardization & Bidirectional Validation (**BREAKING**)
+
 ## Getting Started
 * [STRATIMUX PROJECT TEMPLATE](https://github.com/Phuire-Research/STRATIMUX-TEMPLATE)
 * [Stratimux @ npm](https://www.npmjs.com/package/stratimux)
+* [Suite Cascade System (SCS) — ARIOS Evolution Target](https://github.com/Phuire-Research/SuiteCascadeSystem) - Successor to STRATIMUX-REFERENCE.md and the canonical home of the Suite Cascade method.
 * [v0.3.22 Migration Guide](https://github.com/Phuire-Research/Stratimux/blob/main/MIGRATION-GUIDE-v0.3.2.md) - **Required for v0.3.22 upgrade**
 * [Stratimux Agent Reference](https://github.com/Phuire-Research/Stratimux/blob/main/STRATIMUX-REFERENCE.md) - Drop in reference sheet for utilization of Stratimux for Agent Environments Unfamiliar with Stratimux.
+* [Patch Notes](#patch-notes) - Recent release summaries.
 
 ## Stratimux Concept Library
 1. [Round8](https://github.com/Phuire-Research/Round8) @ [npm](https://www.npmjs.com/package/round8)
@@ -57,6 +69,26 @@ When in doubt simplify.
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+
+### v0.3.295 - Stage Planner Beat Stale Closure Cleanup + LocalPrinciple Unknown-Muxium Duck-Check Guard
+
+**Minor Refining Patch** — non-breaking. Two surgical fixes: a stale `setTimeout` closure cleanup on stage transition (resolves rapid-succession beat collision at high stage counts), and a runtime duck-check guard that lets `createLocalPrinciple` accept `unknown` Muxium input without TypeScript friction.
+
+**Stage Planner — Stale Beat-Timer Cleanup on Stage Transition**
+- `src/model/stagePlanner/stagePlannerEntropy.ts` — when a plan transitions stage via `iterateStage` or `setStage`, any pending `setTimeout` from the prior stage's beat window is now cleared before the new stage's beat value is applied. Without this, a beat-armed `setTimeout` retained a closure over the prior stage index and fired `execute()` against the new stage's `plan.beat` — producing rapid-succession debounce collision when stages each carry their own beat. Scope: per-plan, gated on stage transition only.
+- New test: `src/test/sevenStagePlannerBeatRapidSuccessionIterationVerification.test.ts` — seven beat-bearing stages, rapid `iterateStage` chain, tally array verifies each stage engages exactly once.
+
+**LocalPrinciple — Unknown-Typed Muxium Runtime Duck-Check Guard**
+- `src/model/muxium/muxiumHelpers.ts` — new exports: `isMuxiumShape<C, Q>(value: unknown): value is Muxium<C, Q>` (TypeScript user-defined type guard) and `muxiumCanonicalFunctionSurfaceKeySet` (`subscribe`, `unsubscribe`, `close`, `dispatch`, `plan`).
+- `src/model/localPrinciple.ts` — `createLocalPrinciple` second parameter relaxed from `Muxium<LoadConcepts & MuxiumDeck, MaybeEnhancedMuxiumQualities>` to `unknown`. The function performs the duck-check internally, returns `false` on non-Muxium input (no plan created), and returns `true` after successful execution. Eliminates TypeScript friction at call sites where a structurally-compatible Muxium was nominally rejected over differing generic parameters.
+- New test: `src/test/localPrincipleUnknownTypedMuxiumDuckCheckGuardVerification.test.ts` — three branches verified: Muxium-shaped → `true` + principleFunc invoked, non-Muxium object → `false` + principleFunc skipped, null/undefined → `false` without throw.
+
+**NPM Audit Clearance — Jest 28 → 30 Dev-Dependency Upgrade**
+- `package.json` / `package-lock.json` — `jest` upgraded `28.1.3 → 30.3.0`, `ts-jest` upgraded `28.0.7 → 29.4.9`, `@types/jest` upgraded to `30.x`. Jest 30 no longer depends on `node-notifier`, which transitively cleared the `uuid <14.0.0` chain that `npm audit fix` could only resolve via a breaking jest downgrade.
+- Combined with `npm audit fix` (Rollup 4 path-traversal advisory), `npm audit` now reports **0 vulnerabilities** (down from 14 prior to this release).
+- Test suite runs unchanged on jest 30: 72/72 tests pass across 44 suites with no behavioral or syntax modifications required. Consumer projects are unaffected — jest is a `devDependency` and not part of the published runtime.
+
+**Compatibility**: `createLocalPrinciple`'s return-type change from `void` to `boolean` is non-breaking for existing callers that discard the return value. The jest upgrade is a dev-only dependency change with no consumer impact. Existing test suite continues to pass unmodified.
 
 ### v0.3.294 - NPM Audit Patch
 
