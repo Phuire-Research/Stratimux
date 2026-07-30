@@ -84,6 +84,24 @@ export function _dispatch<Q,C,S>(
           handleRemoveSelector(properties, plan.stages[plan.stage].selectors, plan.id);
         }
         plan.stage = next;
+        // Concluder Overflow hardening: an iterateStage or setStage advancement that lands
+        // OUTSIDE the bounds of the stages array — with no explicit conclude() stage to receive
+        // it — closes the plan cleanly, exactly as conclude() does. Previously the planner read
+        // the now-undefined stage below (.beat / .priority, and manageQues .firstRun) and threw
+        // "Cannot read properties of undefined" at runtime. The prior stage's selectors were
+        // already removed above; deletePlan removes the plan from currentPlans before re-running
+        // manageQues, so no out-of-scope stage is ever read.
+        if (next < 0 || next >= plan.stages.length) {
+          console.warn(
+            `Stratimux Stage Planner: plan "${plan.title}" (concept "${plan.conceptName}") advanced to ` +
+            `stage ${next}, out of scope of its ${plan.stages.length}-stage array, and was concluded cleanly. ` +
+            'Prefer concluding explicitly with conclude() in the returned stages, or ' +
+            'stage(({ stagePlanner }) => stagePlanner.conclude()) when a trailing conclude() cannot be placed. ' +
+            'The two are equivalent at runtime and differ only in the plan\'s resulting type complexity.'
+          );
+          deletePlan(properties, plan.id);
+          return;
+        }
         if (plan.stages[plan.stage]) {
           handleAddSelector(properties, plan.stages[plan.stage].selectors, plan.id);
         }
