@@ -21,11 +21,33 @@
 
 ## Stratimux Evolution Path — Suite Cascade System (ARIOS)
 
-Stratimux now points forward to the [**Suite Cascade System (SCS)**](https://github.com/Phuire-Research/SuiteCascadeSystem) — an **ARIOS** (Artificial Renewable Intelligence Operating System) and the canonical home of the Suite Cascade method going forward. SCS supersedes `STRATIMUX-REFERENCE.md` as the working agent reference: where the reference document was a static drop-in sheet, SCS is a running prototype of the same system. Stratimux remains the substrate runtime upon which SCS is composed.
+Stratimux now points forward to the [**Suite Cascade System (SCS)**](https://github.com/Phuire-Research/SuiteCascadeSystem) — an **ARIOS** (Augmented Renewable Intelligence Operating System) and the canonical home of the Suite Cascade method going forward. SCS supersedes `STRATIMUX-REFERENCE.md` as the working agent reference: where the reference document was a static drop-in sheet, SCS is a running prototype of the same system. Stratimux remains the substrate runtime upon which SCS is composed.
+
+### 🌉 First Public-Facing Product — the SCS-Bridge
+
+Released alongside **v0.3.296**, the **SCS-Bridge** is the first public-facing product built on Stratimux: an **open-source, extensible session manager** that stakes a claim on a new frontier of computing.
+
+**Claude Code as the installer.** The Bridge uses Claude Code itself as an automatic installer of the Suite Cascade System. Install once, globally, then call it from any project:
+
+```bash
+npm i -g scs-bridge   # install the SCS-Bridge globally
+scs                   # begin working with the SCS from where it is called
+```
+
+`scs` spawns and initializes the system on the project it is called in while **preserving your prior work** rather than displacing it, then manages your sessions from there: the work you normally lose at the context boundary — across compaction and rewind, the moments that used to cost a cycle and a manual reconstruction — simply continues.
+
+**A CLI independent by design.** The `scs` CLI stands on its own. It is decoupled from an accompanying **Electron application** that orchestrates **any number of Claude Code instances** in a compositional manner, through **independent window management** — the command line and the windowed experience each work in full, neither bound to the other.
+
+**The SCP — the driving experience of the SCS.** At the center is the **SCP (Suite Cascade Protocol)**, the **first Reference Design of a Stratimux Computer System**. *(SCS reads both ways — the **S**uite **C**ascade **S**ystem and the **S**tratimux **C**omputer **S**ystem.)* It begins proving the Stratimux paradigm as a **novel computation system** — a **hyper-personalized computer with the user in control**. What the field loosely calls an *agentic OS*, this is instead an **ARIOS** (Augmented Renewable Intelligence Operating System), grounded in **The ARIOS Case** within the [Suite Cascade System](https://github.com/Phuire-Research/SuiteCascadeSystem) repository.
+
+**Why it's different.** It runs on the **subscription substrate you already have**. If you work in Claude Code, the SCP operates at the **same cost as your current subscription** — and it lets you **prove advanced agentic functionality anchored directly into websites, while remaining within interactive sessions**. This is the first release of its kind.
+
+*Practice IS Proof — use it before you decide anything.*
 
 ## Patch Notes
 
-- **v0.3.295** *(current)* — Stage Planner beat-timer stale-closure cleanup on stage transition + LocalPrinciple `unknown` runtime duck-check guard + Jest 28 → 30 dev-dependency upgrade clearing all open advisories (`npm audit` reports zero vulnerabilities). Non-breaking for consumers. [Details ↓](#change-log-)
+- **v0.3.296** *(current)* — Stage Planner out-of-scope `iterateStage`/`setStage` advancement now concludes the plan cleanly (with an authoring `console.warn`) instead of throwing a runtime `undefined` error — a supported close path for plans too type-complex to carry a trailing `conclude()`. Non-breaking. Released alongside the **SCS-Bridge**, the first public-facing product built on Stratimux — an open-source, extensible session manager (`npm i -g scs-bridge` → `scs`). [Details ↓](#change-log-)
+- **v0.3.295** — Stage Planner beat-timer stale-closure cleanup on stage transition + LocalPrinciple `unknown` runtime duck-check guard + Jest 28 → 30 dev-dependency upgrade clearing all open advisories (`npm audit` reports zero vulnerabilities). Non-breaking. [Details ↓](#change-log-)
 - **v0.3.294** — NPM Audit Patch
 - **v0.3.293** ⚠️ — Quality Type Naming Convention Standardization & Bidirectional Validation (**BREAKING**)
 
@@ -67,8 +89,31 @@ When in doubt simplify.
 ### Want to learn more?
 * [The Impossible Halting Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/Index.md) - Original Paper for Stratimux
 * [Muxified Turing Machine](https://github.com/Phuire-Research/Stratimux/blob/main/The-Muxified-Turing-Machine.md) - The governing concept for this entire framework.:|
+* [Stratimux Technology Stack](http://scp-origin.com/your-moat) - The Muxified Turing Machine as a ground-up computation substrate and the Reference Design Marketplace built upon it: a problem rightfully undecidable for the Universal machine, but not-by-design for the Muxified one.
 
 ## Change Log ![Tests](https://github.com/Phuire-Research/Stratimux/actions/workflows/node.js.yml/badge.svg)
+
+### v0.3.296 - Stage Planner Out-of-Scope Clean Conclusion + Authoring Warning
+
+**Minor Refining Patch** — non-breaking. A plan that advances past the bounds of its stages array via `iterateStage` or `setStage` — without a trailing `conclude()` — now concludes cleanly instead of throwing a runtime `undefined` error. This is an intended, supported close path that eases plan authoring where a trailing Concluder stage is not viable.
+
+**Stage Planner — Out-of-Scope Advancement Concludes Cleanly**
+- `src/model/stagePlanner/stagePlannerEntropy.ts` — within `_dispatch`, immediately after a stage transition sets `plan.stage = next`, an out-of-scope index (`next < 0 || next >= plan.stages.length`) now concludes the plan via `deletePlan` and returns, rather than reading the now-undefined stage below (`.beat`, then `.priority`, and `manageQues`'s `.firstRun`) and throwing `TypeError: Cannot read properties of undefined`. `deletePlan` removes the plan from `currentPlans` before re-running `manageQues`, so no out-of-scope stage is ever read and adjacent concurrent plans are undisturbed. Covers both `iterateStage` and `setStage`.
+- **Why**: TypeScript's recursive type inference can refuse to accept a trailing `conclude()` stage (an arbitrary type overflow) once a preceding stage is sufficiently complex. Concluding by advancing out of scope is now a supported fallback for that case — the runtime behavior is identical to `conclude()`.
+
+**Authoring Warning — Informative Direction**
+- The clean conclusion emits a `console.warn` directing toward an explicit `conclude()` in the returned stages, or `stage(({ stagePlanner }) => stagePlanner.conclude())` when a trailing `conclude()` cannot be placed. The two are equivalent at runtime and differ only in the plan's resulting type complexity.
+
+**New Tests**
+- `src/test/stagePlannerKickIterateOutOfScopeConcludesCleanly.test.ts` — three Muxium-Kick stages each `iterateStage` into the next; the final unhandled kick iterates out of scope and concludes cleanly.
+- `src/test/stagePlannerKickSetStageOutOfScopeConcludesCleanly.test.ts` — `setStage` variant of the above, confirming both options flow through the same guard.
+- `src/test/stagePlannerSandwichedOutOfScopeDoesNotDisruptAdjacentPlans.test.ts` — an out-of-scope-concluding plan sandwiched between two counter plans that conclude via the `conclude()` pattern; all three reach conclusion, proving the mid-flight `deletePlan` → `manageQues` does not alter adjacent plans' stage placement.
+
+**Compatibility**: Non-breaking — no migration required. Existing plans that relied on the runtime *throwing* when iterating out of scope will instead conclude cleanly with a `console.warn`; explicit `conclude()` semantics are unchanged. Full suite: 75/75 tests pass across 47 suites.
+
+**Accompanying Visual**: The **Stratimux Technology Stack** — the Muxified Turing Machine substrate and the Reference Design Marketplace — is presented at [scp-origin.com/your-moat](http://scp-origin.com/your-moat). Linked under **Want to learn more?** above.
+
+**Release Context — the SCS-Bridge**: This update is released alongside the **SCS-Bridge**, the first public-facing product built on Stratimux — an open-source, extensible session manager that uses Claude Code as an automatic installer of the [Suite Cascade System](https://github.com/Phuire-Research/SuiteCascadeSystem) (`npm i -g scs-bridge` → `scs`). Its `scs` CLI is independent by design from an Electron application that orchestrates any number of Claude Code instances through independent window management; at the center is the **SCP (Suite Cascade Protocol)**, the first Reference Design of a Stratimux Computer System. The Stage Planner clean-conclusion work above hardens the substrate these sessions run upon. See **Stratimux Evolution Path** above.
 
 ### v0.3.295 - Stage Planner Beat Stale Closure Cleanup + LocalPrinciple Unknown-Muxium Duck-Check Guard
 
@@ -86,9 +131,9 @@ When in doubt simplify.
 **NPM Audit Clearance — Jest 28 → 30 Dev-Dependency Upgrade**
 - `package.json` / `package-lock.json` — `jest` upgraded `28.1.3 → 30.3.0`, `ts-jest` upgraded `28.0.7 → 29.4.9`, `@types/jest` upgraded to `30.x`. Jest 30 no longer depends on `node-notifier`, which transitively cleared the `uuid <14.0.0` chain that `npm audit fix` could only resolve via a breaking jest downgrade.
 - Combined with `npm audit fix` (Rollup 4 path-traversal advisory), `npm audit` now reports **0 vulnerabilities** (down from 14 prior to this release).
-- Test suite runs unchanged on jest 30: 72/72 tests pass across 44 suites with no behavioral or syntax modifications required. Consumer projects are unaffected — jest is a `devDependency` and not part of the published runtime.
+- Test suite runs unchanged on jest 30: 72/72 tests pass across 44 suites with no behavioral or syntax modifications required. Downstream projects are unaffected — jest is a `devDependency` and not part of the published runtime.
 
-**Compatibility**: `createLocalPrinciple`'s return-type change from `void` to `boolean` is non-breaking for existing callers that discard the return value. The jest upgrade is a dev-only dependency change with no consumer impact. Existing test suite continues to pass unmodified.
+**Compatibility**: `createLocalPrinciple`'s return-type change from `void` to `boolean` is non-breaking for existing callers that discard the return value. The jest upgrade is a dev-only dependency change with no downstream impact. Existing test suite continues to pass unmodified.
 
 ### v0.3.294 - NPM Audit Patch
 
