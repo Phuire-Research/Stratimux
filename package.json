@@ -40,7 +40,7 @@
     "Asynchronous Graph Programming",
     "Framework"
   ],
-  "author": "Micah T. Keller (public@phuire.org)",
+  "author": "Micah T. Keller (public@scp-origin.com)",
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^18.6.1",
